@@ -65,15 +65,15 @@ export function SustainabilitySection() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div ref={headerRef} className={`text-center max-w-3xl mx-auto space-y-4 mb-16 heading-entrance ${headerVisible ? 'revealed' : ''}`}>
-          <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full liquid-glass border border-brand-primary/20 text-xs font-semibold uppercase tracking-wider text-brand-primary dark:text-brand-aqua">
+          <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full glass-container border border-brand-primary/20 text-xs font-semibold uppercase tracking-wider text-brand-primary dark:text-brand-aqua">
             <ShieldCheck className="w-3.5 h-3.5" />
             Proposal Poin 6 • Keberlanjutan & Ketahanan Usaha
           </div>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-foreground tracking-tight">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight">
             Strategi Keberlanjutan &{" "}
-            <span className="text-gradient-brand">Skalabilitas Agensi</span>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-violet-600 dark:from-blue-400 dark:to-violet-400">Skalabilitas Agensi</span>
           </h2>
-          <p className="text-sm sm:text-base text-foreground/75 leading-relaxed">
+          <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed">
             Menjamin stabilitas operasional jangka panjang dan ketahanan bisnis melalui tiga pilar strategis: kontinuitas arus kas, kecepatan produksi cerdas, dan sinergi ekosistem.
           </p>
         </div>
@@ -85,7 +85,7 @@ export function SustainabilitySection() {
             return (
               <div
                 key={pillar.title}
-                className={`p-8 rounded-3xl liquid-glass-card border border-foreground/10 dark:border-white/10 hover:border-brand-primary/40 transition-all flex flex-col justify-between group relative overflow-hidden micro-lift morph-card-hover scroll-reveal-rotate stagger-${idx + 1} ${pillarsVisible ? 'revealed' : ''}`}
+                className={`p-8 rounded-3xl glass-container border border-slate-200 dark:border-white/10 hover:border-brand-primary/40 transition-all flex flex-col justify-between group relative overflow-hidden micro-lift morph-card-hover scroll-reveal-rotate stagger-${idx + 1} ${pillarsVisible ? 'revealed' : ''}`}
               >
                 <div
                   className={`absolute inset-0 bg-gradient-to-b ${pillar.gradient} opacity-40 pointer-events-none`}
@@ -101,23 +101,23 @@ export function SustainabilitySection() {
                     </span>
                   </div>
 
-                  <h3 className="text-xl font-bold text-foreground">
+                  <h3 className="text-xl font-bold text-slate-900 dark:text-white">
                     {pillar.title}
                   </h3>
 
-                  <p className="text-xs sm:text-sm text-foreground/75 leading-relaxed">
+                  <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
                     {pillar.desc}
                   </p>
 
                   <div className="pt-2 space-y-2.5">
-                    <p className="text-xs font-semibold text-foreground/80 uppercase tracking-wider">
+                    <p className="text-xs font-semibold text-slate-700 dark:text-slate-200 uppercase tracking-wider">
                       Mekanisme Operasional:
                     </p>
                     <ul className="space-y-2">
                       {pillar.benefits.map((b, i) => (
                         <li
                           key={i}
-                          className="flex items-start gap-2.5 text-xs text-foreground/80 leading-relaxed"
+                          className="flex items-start gap-2.5 text-xs text-slate-600 dark:text-slate-300 leading-relaxed"
                         >
                           <CheckCircle2 className="w-3.5 h-3.5 text-brand-aqua mt-0.5 shrink-0" />
                           <span>{b}</span>
@@ -127,7 +127,7 @@ export function SustainabilitySection() {
                   </div>
                 </div>
 
-                <div className="relative z-10 pt-6 mt-6 border-t border-foreground/10 dark:border-white/10 flex items-center gap-2 text-xs font-semibold text-brand-aqua">
+                <div className="relative z-10 pt-6 mt-6 border-t border-slate-200 dark:border-white/10 flex items-center gap-2 text-xs font-semibold text-brand-aqua">
                   <TrendingUp className="w-4 h-4" />
                   <span>Jaminan Kontinuitas Layanan</span>
                 </div>
@@ -137,16 +137,16 @@ export function SustainabilitySection() {
         </div>
 
         {/* Value Proposition Callout Card */}
-        <div className="p-6 sm:p-8 rounded-3xl liquid-glass border border-brand-aqua/20 flex flex-col sm:flex-row items-center justify-between gap-6 text-center sm:text-left">
+        <div className="p-6 sm:p-8 rounded-3xl glass-container border border-brand-aqua/20 flex flex-col sm:flex-row items-center justify-between gap-6 text-center sm:text-left">
           <div className="flex items-center gap-4">
             <div className="w-12 h-12 rounded-2xl bg-emerald-500/15 text-emerald-400 flex items-center justify-center shrink-0">
               <Zap className="w-6 h-6" />
             </div>
             <div>
-              <h4 className="text-base font-bold text-foreground">
+              <h4 className="text-base font-bold text-slate-900 dark:text-white">
                 Kesiapan Menghadapi Disrupsi AI & Industri Kreatif
               </h4>
-              <p className="text-xs sm:text-sm text-foreground/70">
+              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400">
                 Alih-alih terancam oleh perkembangan teknologi, Logia Creative menjadikannya pendorong efisiensi agar klien mendapatkan hasil lebih cepat dengan akurasi lebih tinggi.
               </p>
             </div>

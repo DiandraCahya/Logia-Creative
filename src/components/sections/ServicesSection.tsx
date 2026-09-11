@@ -136,24 +136,24 @@ export function ServicesSection({ onOpenCollaboration }: ServicesSectionProps) {
             <Layers className="w-3.5 h-3.5" />
             Proposal Poin 5 • Rumpun Layanan & Proyeksi Infrastruktur
           </div>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-foreground tracking-tight">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight">
             Spektrum Solusi{" "}
-            <span className="text-gradient-brand">Kreatif & Teknologi</span>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-violet-600 dark:from-blue-400 dark:to-violet-400">Kreatif & Teknologi</span>
           </h2>
-          <p className="text-sm sm:text-base text-foreground/75 leading-relaxed">
+          <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed">
             Dua rumpun kapabilitas utama yang dapat diakses secara terpisah maupun sebagai satu kesatuan solusi komprehensif.
           </p>
         </div>
 
         {/* Dual Tab Switcher */}
         <div className="flex justify-center mb-14">
-          <div className="p-1.5 rounded-full liquid-glass-pill border border-foreground/10 dark:border-white/10 flex items-center gap-2">
+          <div className="p-1.5 rounded-full glass-container flex items-center gap-2">
             <button
               onClick={() => setActiveStream("creative")}
               className={`flex items-center gap-2.5 px-6 py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all ${
                 activeStream === "creative"
-                  ? "bg-gradient-to-r from-brand-primary to-brand-aqua text-white shadow-md"
-                  : "text-foreground/70 hover:text-foreground hover:bg-foreground/[0.04]"
+                  ? "bg-gradient-to-r from-blue-600 to-brand-aqua text-white shadow-md"
+                  : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/5"
               }`}
             >
               <Palette className="w-4 h-4" />
@@ -165,7 +165,7 @@ export function ServicesSection({ onOpenCollaboration }: ServicesSectionProps) {
               className={`flex items-center gap-2.5 px-6 py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all ${
                 activeStream === "tech"
                   ? "bg-gradient-to-r from-brand-primary to-brand-slate text-white shadow-md"
-                  : "text-foreground/70 hover:text-foreground hover:bg-foreground/[0.04]"
+                  : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/5"
               }`}
             >
               <Code2 className="w-4 h-4" />
@@ -190,7 +190,7 @@ export function ServicesSection({ onOpenCollaboration }: ServicesSectionProps) {
                 return (
                   <div
                     key={srv.title}
-                    className="p-7 rounded-3xl liquid-glass-card border border-foreground/10 dark:border-white/10 hover:border-brand-aqua/40 transition-all flex flex-col justify-between group micro-lift"
+                    className="p-7 rounded-3xl glass-container border border-slate-200 dark:border-white/10 hover:border-brand-aqua/40 transition-all flex flex-col justify-between group micro-lift"
                   >
                     <div className="space-y-4">
                       <div className="w-12 h-12 rounded-2xl bg-brand-primary/10 text-brand-primary dark:text-brand-aqua flex items-center justify-center group-hover:scale-110 transition-transform">
@@ -200,23 +200,23 @@ export function ServicesSection({ onOpenCollaboration }: ServicesSectionProps) {
                         <span className="text-[11px] font-bold text-brand-aqua uppercase tracking-wider">
                           {srv.tagline}
                         </span>
-                        <h3 className="text-xl font-bold text-foreground mt-1">
+                        <h3 className="text-xl font-bold text-slate-900 dark:text-white mt-1">
                           {srv.title}
                         </h3>
                       </div>
-                      <p className="text-xs sm:text-sm text-foreground/75 leading-relaxed">
+                      <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
                         {srv.desc}
                       </p>
 
                       <div className="pt-2 space-y-2">
-                        <p className="text-xs font-semibold text-foreground/80 uppercase tracking-wider">
+                        <p className="text-xs font-semibold text-slate-700 dark:text-slate-200 uppercase tracking-wider">
                           Deliverables:
                         </p>
                         <ul className="space-y-1.5">
                           {srv.deliverables.map((d, i) => (
                             <li
                               key={i}
-                              className="flex items-start gap-2 text-xs text-foreground/75"
+                              className="flex items-start gap-2 text-xs text-slate-600 dark:text-slate-300"
                             >
                               <CheckCircle2 className="w-3.5 h-3.5 text-brand-aqua mt-0.5 shrink-0" />
                               <span>{d}</span>
@@ -226,11 +226,11 @@ export function ServicesSection({ onOpenCollaboration }: ServicesSectionProps) {
                       </div>
                     </div>
 
-                    <div className="pt-6 mt-6 border-t border-foreground/10 dark:border-white/10 flex flex-wrap gap-1.5">
+                    <div className="pt-6 mt-6 border-t border-slate-200 dark:border-white/10 flex flex-wrap gap-1.5">
                       {srv.tags.map((t) => (
                         <span
                           key={t}
-                          className="text-[10px] px-2.5 py-0.5 rounded-full bg-foreground/[0.04] dark:bg-white/[0.05] text-foreground/60"
+                          className="text-[10px] px-2.5 py-0.5 rounded-full bg-slate-100 dark:bg-white/[0.05] text-slate-600 dark:text-slate-400"
                         >
                           {t}
                         </span>
@@ -256,7 +256,7 @@ export function ServicesSection({ onOpenCollaboration }: ServicesSectionProps) {
                 return (
                   <div
                     key={srv.title}
-                    className="p-8 rounded-3xl liquid-glass-card border border-foreground/10 dark:border-white/10 hover:border-brand-primary/40 transition-all flex flex-col justify-between group micro-lift"
+                    className="p-8 rounded-3xl glass-container border border-slate-200 dark:border-white/10 hover:border-brand-primary/40 transition-all flex flex-col justify-between group micro-lift"
                   >
                     <div className="space-y-4">
                       <div className="w-12 h-12 rounded-2xl bg-brand-aqua/10 text-brand-aqua flex items-center justify-center group-hover:scale-110 transition-transform">
@@ -266,23 +266,23 @@ export function ServicesSection({ onOpenCollaboration }: ServicesSectionProps) {
                         <span className="text-[11px] font-bold text-brand-primary dark:text-brand-aqua uppercase tracking-wider">
                           {srv.tagline}
                         </span>
-                        <h3 className="text-2xl font-bold text-foreground mt-1">
+                        <h3 className="text-2xl font-bold text-slate-900 dark:text-white mt-1">
                           {srv.title}
                         </h3>
                       </div>
-                      <p className="text-xs sm:text-sm text-foreground/75 leading-relaxed">
+                      <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
                         {srv.desc}
                       </p>
 
                       <div className="pt-2 space-y-2">
-                        <p className="text-xs font-semibold text-foreground/80 uppercase tracking-wider">
+                        <p className="text-xs font-semibold text-slate-700 dark:text-slate-200 uppercase tracking-wider">
                           Deliverables & Spesifikasi:
                         </p>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                           {srv.deliverables.map((d, i) => (
                             <div
                               key={i}
-                              className="flex items-start gap-2 text-xs text-foreground/75 p-2 rounded-xl bg-foreground/[0.02] dark:bg-white/[0.02]"
+                              className="flex items-start gap-2 text-xs text-slate-600 dark:text-slate-300 p-2 rounded-xl bg-slate-50 dark:bg-white/[0.02]"
                             >
                               <CheckCircle2 className="w-3.5 h-3.5 text-brand-primary mt-0.5 shrink-0" />
                               <span>{d}</span>
@@ -292,7 +292,7 @@ export function ServicesSection({ onOpenCollaboration }: ServicesSectionProps) {
                       </div>
                     </div>
 
-                    <div className="pt-6 mt-6 border-t border-foreground/10 dark:border-white/10 flex flex-wrap gap-2">
+                    <div className="pt-6 mt-6 border-t border-slate-200 dark:border-white/10 flex flex-wrap gap-2">
                       {srv.tags.map((t) => (
                         <span
                           key={t}
@@ -346,10 +346,10 @@ export function ServicesSection({ onOpenCollaboration }: ServicesSectionProps) {
               <Coins className="w-4 h-4" />
               <span>Estimasi Alokasi Modal & Infrastruktur Awal</span>
             </div>
-            <h3 className="text-2xl font-bold text-foreground mt-1">
+            <h3 className="text-2xl font-bold text-slate-900 dark:text-white mt-1">
               Proyeksi Kesiapan Alat & Investasi Operasional
             </h3>
-            <p className="text-xs sm:text-sm text-foreground/70">
+            <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400">
               Ringkasan alokasi investasi awal untuk menjamin kualitas standar studio dan kelancaran eksekusi proyek klien.
             </p>
           </div>
@@ -358,19 +358,19 @@ export function ServicesSection({ onOpenCollaboration }: ServicesSectionProps) {
             {investmentBreakdown.map((item, idx) => (
               <div
                 key={item.category}
-                className={`p-6 rounded-3xl liquid-glass border border-foreground/10 dark:border-white/10 space-y-3 micro-lift morph-card-hover scroll-reveal-right stagger-${idx + 1} ${investVisible ? 'revealed' : ''}`}
+                className={`p-6 rounded-3xl glass-container border border-slate-200 dark:border-white/10 space-y-3 micro-lift morph-card-hover scroll-reveal-right stagger-${idx + 1} ${investVisible ? 'revealed' : ''}`}
               >
                 <div className="flex items-center justify-between">
                   <span className="text-2xl font-extrabold text-brand-primary dark:text-brand-aqua">
                     {item.percentage}
                   </span>
-                  <PieChart className="w-5 h-5 text-foreground/40" />
+                  <PieChart className="w-5 h-5 text-slate-400 dark:text-slate-500" />
                 </div>
-                <h4 className="text-sm font-bold text-foreground">{item.category}</h4>
+                <h4 className="text-sm font-bold text-slate-900 dark:text-white">{item.category}</h4>
                 <p className="text-[11px] font-semibold text-brand-aqua">
                   {item.amount}
                 </p>
-                <p className="text-xs text-foreground/75 leading-relaxed">
+                <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
                   {item.desc}
                 </p>
               </div>

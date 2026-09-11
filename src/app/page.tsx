@@ -22,7 +22,7 @@ export default function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
-    <main className="relative min-h-screen bg-background text-foreground overflow-x-hidden selection:bg-brand-primary selection:text-white">
+    <main className="relative min-h-screen bg-white dark:bg-slate-900 text-slate-900 dark:text-white overflow-x-hidden selection:bg-brand-primary selection:text-white">
       {/* Faux-3D Perspective Initial Splash Screen */}
       <SplashScreen />
 

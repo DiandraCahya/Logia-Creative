@@ -23,8 +23,23 @@ export function LiquidNavbar({ onOpenCollaboration }: LiquidNavbarProps) {
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState("");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0, opacity: 0 });
+  const navContainerRef = React.useRef<HTMLDivElement>(null);
 
-  // Scroll spy
+  useEffect(() => {
+    if (activeSection && navContainerRef.current) {
+      const activeLink = navContainerRef.current.querySelector(`[data-href="${activeSection}"]`) as HTMLElement;
+      if (activeLink) {
+        setIndicatorStyle({
+          left: activeLink.offsetLeft,
+          width: activeLink.offsetWidth,
+          opacity: 1,
+        });
+      }
+    } else {
+      setIndicatorStyle(prev => ({ ...prev, opacity: 0 }));
+    }
+  }, [activeSection]);
   useEffect(() => {
     const NAVBAR_OFFSET = 80;
 
@@ -98,17 +113,27 @@ export function LiquidNavbar({ onOpenCollaboration }: LiquidNavbarProps) {
           </a>
 
           {/* Desktop Nav */}
-          <div className="hidden lg:flex items-center gap-1 xl:gap-2">
+          <div ref={navContainerRef} className="hidden lg:flex items-center gap-1 xl:gap-2 relative">
+            <span
+              className="absolute bottom-0 h-0.5 bg-gradient-to-r from-blue-500 to-violet-500 rounded-full transition-all duration-300 pointer-events-none"
+              style={{
+                left: indicatorStyle.left,
+                width: indicatorStyle.width,
+                opacity: indicatorStyle.opacity,
+                transform: `translateX(0px)` // Can be optimized more if needed
+              }}
+            />
             {navLinks.map((link) => {
               const isActive = activeSection === link.href;
               return (
                 <a
                   key={link.name}
                   href={link.href}
+                  data-href={link.href}
                   onClick={(e) => handleNavClick(e, link.href)}
                   className={`
-                    link-slide px-4 py-2 text-sm font-medium transition-colors
-                    ${isActive ? "text-accent-primary font-semibold active" : "text-text-primary hover:text-accent-primary"}
+                    link-slide relative px-4 py-2 text-sm font-medium transition-all duration-300 active:scale-95
+                    ${isActive ? "text-accent-primary font-semibold" : "text-text-primary hover:text-accent-primary"}
                   `}
                 >
                   {link.name}

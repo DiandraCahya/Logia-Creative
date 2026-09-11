@@ -11,7 +11,6 @@ import {
   Milestone,
   CheckCircle2,
   Calendar,
-  ChevronRight,
   Sparkles,
 } from "lucide-react";
 
@@ -157,11 +156,11 @@ export function SWOTRoadmapSection() {
             <Milestone className="w-3.5 h-3.5" />
             Proposal Poin 4 • Analisis SWOT & Peta Jalan 5 Tahun
           </div>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-foreground tracking-tight">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight">
             Analisis Posisi Strategis &{" "}
             <span className="text-gradient-brand">Rencana 5 Tahun</span>
           </h2>
-          <p className="text-sm sm:text-base text-foreground/75 leading-relaxed">
+          <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed">
             Menghadapi dinamika pasar dengan pemahaman objektif atas kekuatan, kelemahan, peluang, dan ancaman, dipandu tahapan pertumbuhan bisnis yang terukur hingga 5 tahun ke depan.
           </p>
         </div>
@@ -170,10 +169,10 @@ export function SWOTRoadmapSection() {
         <div className="mb-24 space-y-8">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
-              <h3 className="text-2xl font-bold text-foreground">
+              <h3 className="text-2xl font-bold text-slate-900 dark:text-white">
                 Matriks Analisis SWOT Interaktif
               </h3>
-              <p className="text-xs sm:text-sm text-foreground/70">
+              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300">
                 Klik kuadran untuk mengeksplorasi poin rincian mitigasi dan strategi agensi.
               </p>
             </div>
@@ -195,7 +194,7 @@ export function SWOTRoadmapSection() {
                   className={`p-6 sm:p-7 rounded-3xl liquid-glass border transition-all cursor-pointer micro-lift morph-card-hover scroll-reveal stagger-${idx + 1} ${swotVisible ? 'revealed' : ''} ${
                     isExpanded
                       ? `${q.borderColor} shadow-lg shadow-black/5`
-                      : "border-foreground/10 dark:border-white/10 hover:border-foreground/20"
+                      : "border-slate-200 dark:border-white/10 hover:border-slate-300 dark:hover:border-white/20"
                   }`}
                 >
                   <div className="flex items-center justify-between mb-4">
@@ -205,16 +204,16 @@ export function SWOTRoadmapSection() {
                       >
                         <Icon className="w-5 h-5" />
                       </div>
-                      <h4 className="text-lg font-bold text-foreground">
+                      <h4 className="text-lg font-bold text-slate-900 dark:text-white">
                         {q.type}
                       </h4>
                     </div>
-                    <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-foreground/[0.04] dark:bg-white/[0.05] text-foreground/70">
+                    <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-slate-300">
                       {isExpanded ? "Tutup" : "Buka Detail"}
                     </span>
                   </div>
 
-                  <p className="text-xs sm:text-sm text-foreground/80 font-medium mb-3">
+                  <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 font-medium mb-3">
                     {q.summary}
                   </p>
 
@@ -225,12 +224,12 @@ export function SWOTRoadmapSection() {
                         animate={{ opacity: 1, height: "auto" }}
                         exit={{ opacity: 0, height: 0 }}
                         transition={{ duration: 0.3 }}
-                        className="space-y-2.5 pt-3 border-t border-foreground/10 dark:border-white/10 overflow-hidden"
+                        className="space-y-2.5 pt-3 border-t border-slate-200 dark:border-white/10 overflow-hidden"
                       >
                         {q.points.map((pt, i) => (
                           <li
                             key={i}
-                            className="flex items-start gap-2.5 text-xs text-foreground/75 leading-relaxed"
+                            className="flex items-start gap-2.5 text-xs text-slate-600 dark:text-slate-300 leading-relaxed"
                           >
                             <span className={`w-1.5 h-1.5 rounded-full mt-1.5 shrink-0 ${q.bgColor}`} />
                             <span>{pt}</span>
@@ -251,10 +250,10 @@ export function SWOTRoadmapSection() {
             <span className="text-xs font-bold uppercase tracking-widest text-brand-aqua">
               Strategic Timeline
             </span>
-            <h3 className="text-2xl sm:text-3xl font-bold text-foreground">
+            <h3 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">
               Peta Jalan Pertumbuhan 5 Tahun (5-Year Roadmap)
             </h3>
-            <p className="text-xs sm:text-sm text-foreground/70">
+            <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300">
               Tahapan evolusi terencana dari validasi awal hingga menjadi entitas rujukan nasional.
             </p>
           </div>
@@ -270,7 +269,7 @@ export function SWOTRoadmapSection() {
                   className={`px-4 sm:px-6 py-2.5 rounded-2xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-2 ${
                     active
                       ? "bg-gradient-to-r from-brand-primary to-brand-aqua text-white shadow-md shadow-brand-primary/30 scale-105"
-                      : "liquid-glass text-foreground/70 hover:text-foreground border border-foreground/10 dark:border-white/10"
+                      : "liquid-glass text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:text-white border border-slate-200 dark:border-white/10"
                   }`}
                 >
                   <Calendar className="w-3.5 h-3.5" />
@@ -283,17 +282,17 @@ export function SWOTRoadmapSection() {
           {/* Active Year Detail Showcase Card */}
           <div ref={roadmapRef} className={`p-8 sm:p-10 rounded-3xl liquid-glass-card border border-brand-primary/30 max-w-4xl mx-auto shadow-glass-glow relative overflow-hidden scroll-reveal-scale ${roadmapVisible ? 'revealed' : ''}`}>
             {/* Background year watermark */}
-            <span className="absolute -right-6 -bottom-8 text-8xl sm:text-9xl font-extrabold text-foreground/[0.03] dark:text-white/[0.03] select-none pointer-events-none">
+            <span className="absolute -right-6 -bottom-8 text-8xl sm:text-9xl font-extrabold text-slate-900 dark:text-white/[0.03] dark:text-white/[0.03] select-none pointer-events-none">
               0{selectedYear + 1}
             </span>
 
             <div className="space-y-6 relative z-10">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-foreground/10 dark:border-white/10">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-200 dark:border-white/10">
                 <div>
                   <span className="text-xs font-bold text-brand-primary dark:text-brand-aqua uppercase tracking-widest">
                     {roadmapYears[selectedYear].year}
                   </span>
-                  <h4 className="text-2xl sm:text-3xl font-extrabold text-foreground mt-1">
+                  <h4 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white mt-1">
                     {roadmapYears[selectedYear].phase}
                   </h4>
                 </div>
@@ -302,19 +301,19 @@ export function SWOTRoadmapSection() {
                 </div>
               </div>
 
-              <p className="text-xs sm:text-sm text-foreground/80 leading-relaxed italic bg-foreground/[0.02] dark:bg-white/[0.03] p-4 rounded-2xl border border-foreground/5 dark:border-white/5">
+              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed italic bg-slate-100 dark:bg-white/5 p-4 rounded-2xl border border-slate-200 dark:border-white/10">
                 Fokus Utama: &ldquo;{roadmapYears[selectedYear].focus}&rdquo;
               </p>
 
               <div>
-                <p className="text-xs font-semibold uppercase tracking-wider text-foreground/70 mb-3">
+                <p className="text-xs font-semibold uppercase tracking-wider text-slate-600 dark:text-slate-300 mb-3">
                   Key Milestone & Deliverables:
                 </p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {roadmapYears[selectedYear].milestones.map((m, idx) => (
                     <div
                       key={idx}
-                      className="p-3.5 rounded-2xl bg-foreground/[0.02] dark:bg-white/[0.02] border border-foreground/10 dark:border-white/10 flex items-start gap-3 text-xs text-foreground/80"
+                      className="p-3.5 rounded-2xl bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 flex items-start gap-3 text-xs text-slate-600 dark:text-slate-300"
                     >
                       <CheckCircle2 className="w-4 h-4 text-brand-aqua mt-0.5 shrink-0" />
                       <span>{m}</span>

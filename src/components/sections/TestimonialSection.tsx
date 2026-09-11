@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useScrollReveal } from "@/lib/useScrollReveal";
-import { Quote, MessageSquareQuote } from "lucide-react";
+import { Quote, MessageSquareQuote, Star, ChevronLeft, ChevronRight } from "lucide-react";
 
 const testimonials = [
   {
@@ -33,15 +33,46 @@ const testimonials = [
 
 export function TestimonialSection() {
   const [activeIndex, setActiveIndex] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+  const [touchStart, setTouchStart] = useState(0);
+  const [touchEnd, setTouchEnd] = useState(0);
   const { ref: sectionRef, isInView: sectionVisible } = useScrollReveal();
 
   // Auto-play slider
   useEffect(() => {
+    if (isPaused) return;
     const timer = setInterval(() => {
       setActiveIndex((prev) => (prev + 1) % testimonials.length);
     }, 6000);
     return () => clearInterval(timer);
-  }, []);
+  }, [isPaused]);
+
+  const handlePrev = () => {
+    setActiveIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length);
+  };
+
+  const handleNext = () => {
+    setActiveIndex((prev) => (prev + 1) % testimonials.length);
+  };
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > 50;
+    const isRightSwipe = distance < -50;
+    if (isLeftSwipe) handleNext();
+    if (isRightSwipe) handlePrev();
+    setTouchStart(0);
+    setTouchEnd(0);
+  };
 
   const activeTestimonial = testimonials[activeIndex];
 
@@ -61,22 +92,51 @@ export function TestimonialSection() {
             <MessageSquareQuote className="w-3.5 h-3.5" />
             Testimoni
           </div>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-foreground tracking-tight max-w-3xl mx-auto">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight max-w-3xl mx-auto">
             Apa Kata Mereka
           </h2>
         </div>
 
         {/* Featured Slider */}
         <div className={`transition-all duration-1000 transform ${sectionVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}>
-          <div className="glass-container p-8 sm:p-12 md:p-16 max-w-4xl mx-auto text-center border border-foreground/10 dark:border-white/10 shadow-xl relative micro-lift">
+          <div
+            className="glass-container p-8 sm:p-12 md:p-16 max-w-4xl mx-auto text-center border border-slate-200 dark:border-white/10 shadow-xl relative micro-lift group"
+            onMouseEnter={() => setIsPaused(true)}
+            onMouseLeave={() => setIsPaused(false)}
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+          >
+            {/* Arrows */}
+            <button
+              onClick={handlePrev}
+              className="absolute left-4 top-1/2 -translate-y-1/2 p-2 rounded-full glass-container opacity-0 group-hover:opacity-100 transition-opacity hover:bg-slate-100 dark:hover:bg-white/5 hidden md:block"
+              aria-label="Previous Testimonial"
+            >
+              <ChevronLeft className="w-6 h-6 text-slate-900 dark:text-white" />
+            </button>
+            <button
+              onClick={handleNext}
+              className="absolute right-4 top-1/2 -translate-y-1/2 p-2 rounded-full glass-container opacity-0 group-hover:opacity-100 transition-opacity hover:bg-slate-100 dark:hover:bg-white/5 hidden md:block"
+              aria-label="Next Testimonial"
+            >
+              <ChevronRight className="w-6 h-6 text-slate-900 dark:text-white" />
+            </button>
 
             {/* Quote mark decoration */}
-            <Quote className="w-12 h-12 text-brand-primary/20 mx-auto mb-8 transform -scale-x-100" />
+            <Quote className="w-12 h-12 text-brand-primary/20 mx-auto mb-6 transform -scale-x-100" />
+
+            {/* Rating */}
+            <div className="flex justify-center gap-1 mb-6">
+              {[...Array(activeTestimonial.rating)].map((_, i) => (
+                <Star key={i} className="w-5 h-5 text-amber-400 fill-amber-400" />
+              ))}
+            </div>
 
             {/* Slider Content */}
             <div className="min-h-[180px] sm:min-h-[140px] flex items-center justify-center">
               <div className="w-full transition-all duration-500 ease-in-out">
-                <p className="text-lg sm:text-xl md:text-2xl text-foreground/80 leading-relaxed italic mb-10 max-w-3xl mx-auto transition-opacity duration-300">
+                <p className="text-lg md:text-xl text-slate-700 dark:text-slate-200 leading-relaxed italic mb-10 max-w-3xl mx-auto transition-opacity duration-300">
                   "{activeTestimonial.content}"
                 </p>
 
@@ -87,10 +147,10 @@ export function TestimonialSection() {
                   </div>
 
                   <div className="text-left">
-                    <p className="font-bold text-foreground text-base">
+                    <p className="font-bold text-slate-900 dark:text-white text-base">
                       {activeTestimonial.name}
                     </p>
-                    <p className="text-sm text-foreground/60">
+                    <p className="text-sm text-slate-600 dark:text-slate-400">
                       {activeTestimonial.role}
                     </p>
                   </div>
@@ -108,7 +168,7 @@ export function TestimonialSection() {
                   className={`h-2 rounded-full transition-all duration-300 ${
                     i === activeIndex
                       ? 'w-8 bg-gradient-to-r from-brand-primary to-brand-aqua'
-                      : 'w-2 bg-foreground/20 hover:bg-foreground/40'
+                      : 'w-2 bg-slate-200 dark:bg-white/20 hover:bg-slate-300 dark:hover:bg-white/40'
                   }`}
                 />
               ))}
