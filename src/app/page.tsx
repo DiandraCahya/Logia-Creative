@@ -12,6 +12,8 @@ import { CompanyProfileSection } from "@/components/sections/CompanyProfileSecti
 import { SWOTRoadmapSection } from "@/components/sections/SWOTRoadmapSection";
 import { ServicesSection } from "@/components/sections/ServicesSection";
 import { SustainabilitySection } from "@/components/sections/SustainabilitySection";
+import { PortfolioSection } from "@/components/sections/PortfolioSection";
+import { TestimonialSection } from "@/components/sections/TestimonialSection";
 import { FooterSection } from "@/components/sections/FooterSection";
 import { CollaborationModal } from "@/components/CollaborationModal";
 import Image from "next/image";
@@ -84,6 +86,12 @@ export default function Home() {
 
       {/* Proposal Poin 5: Creative & Tech Services & Capital Projection */}
       <ServicesSection onOpenCollaboration={() => setIsModalOpen(true)} />
+
+      {/* Karya & Portfolio */}
+      <PortfolioSection />
+
+      {/* Client Testimonials */}
+      <TestimonialSection />
 
       {/* Proposal Poin 6: Sustainability Model */}
       <SustainabilitySection />
