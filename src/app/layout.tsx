@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
-import { SplashWrapper } from "@/components/SplashWrapper";
+import { ThemeProvider } from "@/components/ThemeProvider";
 
 const fontSans = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -57,11 +57,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="id" suppressHydrationWarning className="dark scroll-smooth">
-      <body className={`${fontSans.variable} font-sans antialiased selection:bg-accent-primary selection:text-white`}>
-        <SplashWrapper>
+    <html lang="id" suppressHydrationWarning className="scroll-smooth">
+      <body className={`${fontSans.variable} font-sans antialiased selection:bg-brand-primary selection:text-white`}>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem={false}
+          disableTransitionOnChange
+        >
           {children}
-        </SplashWrapper>
+        </ThemeProvider>
       </body>
     </html>
   );

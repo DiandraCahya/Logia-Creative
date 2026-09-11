@@ -1,7 +1,9 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
+import { SplashScreen } from "@/components/SplashScreen";
 import { LiquidNavbar } from "@/components/LiquidNavbar";
+import { Logo3DBackground } from "@/components/Logo3DBackground";
 import { ScrollProgress } from "@/components/ScrollProgress";
 import { MorphingBlob } from "@/components/MorphingBlob";
 import { HeroSection } from "@/components/sections/HeroSection";
@@ -16,94 +18,80 @@ import Image from "next/image";
 
 export default function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
-
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      setMousePos({
-        x: (e.clientX / window.innerWidth - 0.5) * 40,
-        y: (e.clientY / window.innerHeight - 0.5) * 40,
-      });
-    };
-
-    window.addEventListener("mousemove", handleMouseMove);
-    return () => window.removeEventListener("mousemove", handleMouseMove);
-  }, []);
 
   return (
-    <main
-      className="relative min-h-screen bg-bg-primary text-text-primary overflow-x-hidden selection:bg-accent-primary selection:text-white"
-      style={
-        {
-          "--mouse-x": `${mousePos.x}px`,
-          "--mouse-y": `${mousePos.y}px`,
-        } as React.CSSProperties
-      }
-    >
+    <main className="relative min-h-screen bg-background text-foreground overflow-x-hidden selection:bg-brand-primary selection:text-white">
+      {/* Faux-3D Perspective Initial Splash Screen */}
+      <SplashScreen />
+
       {/* Scroll progress indicator */}
       <ScrollProgress />
 
-      {/* Decorative background images — low opacity, blurred, non-intrusive */}
-      <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden hidden md:block" aria-hidden="true">
-        {/* Background Asset 1 */}
-        <div className="bg-aset bg-aset-1">
-          <Image
-            src="/asetbg1.png"
-            alt=""
-            fill
-            className="object-contain"
-            loading="lazy"
-            sizes="500px"
-          />
-        </div>
-        {/* Background Asset 2 */}
-        <div className="bg-aset bg-aset-2">
-          <Image
-            src="/asetbg2.png"
-            alt=""
-            fill
-            className="object-contain"
-            loading="lazy"
-            sizes="500px"
-          />
-        </div>
+      {/* 3D Logo Background — follows cursor on desktop */}
+      <Logo3DBackground />
 
-        {/* Morphing blob decorations (Max 2 total) */}
+      {/* Decorative background images — low opacity, blurred, non-intrusive */}
+      <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden" aria-hidden="true">
+        {/* Group 3 decoration — top-right */}
+        <div className="absolute -top-[10%] -right-[15%] w-[700px] h-[700px] opacity-[0.025] dark:opacity-[0.04]">
+          <Image
+            src="/Group 3.png"
+            alt=""
+            fill
+            className="object-contain blur-[2px]"
+            loading="lazy"
+            sizes="700px"
+          />
+        </div>
+        {/* Group 1 decoration — bottom-left */}
+        <div className="absolute bottom-[10%] -left-[10%] w-[400px] h-[400px] opacity-[0.03] dark:opacity-[0.05]">
+          <Image
+            src="/Group 1.png"
+            alt=""
+            fill
+            className="object-contain blur-[1px]"
+            loading="lazy"
+            sizes="400px"
+          />
+        </div>
+        {/* Morphing blob decorations */}
         <MorphingBlob
-          className="absolute top-[20%] -left-[10%] w-[600px] h-[600px] text-accent-primary blur-[100px]"
+          size="lg"
+          variant="slow"
+          className="absolute top-[40%] -left-[20%] bg-gradient-to-br from-brand-primary/[0.06] to-brand-aqua/[0.03] blur-[100px]"
         />
         <MorphingBlob
-          className="absolute bottom-[20%] -right-[10%] w-[400px] h-[400px] text-accent-secondary blur-[80px]"
+          size="md"
+          variant="alt"
+          className="absolute top-[70%] -right-[15%] bg-gradient-to-bl from-brand-mint/[0.05] to-brand-slate/[0.03] blur-[80px]"
         />
       </div>
 
-      {/* Floating Liquid Navbar */}
+      {/* Floating Liquid Glass Navbar */}
       <LiquidNavbar onOpenCollaboration={() => setIsModalOpen(true)} />
 
-      <div className="relative z-10 flex flex-col gap-24 md:gap-32 lg:gap-40 py-24 md:py-32 lg:py-40 container mx-auto">
-        {/* Hero Section */}
-        <HeroSection onOpenCollaboration={() => setIsModalOpen(true)} />
+      {/* Hero Section with Kinetic Typography & Parallax */}
+      <HeroSection onOpenCollaboration={() => setIsModalOpen(true)} />
 
-        {/* Profile, Visi, Misi */}
-        <CompanyProfileSection />
+      {/* Proposal Poin 3: Background & Target Market */}
+      <BackgroundTargetSection />
 
-        {/* Services */}
-        <ServicesSection onOpenCollaboration={() => setIsModalOpen(true)} />
+      {/* Proposal Poin 4 (Part 1): Profile, Visi, Misi, Filosofi */}
+      <CompanyProfileSection />
 
-        {/* Background & Target Market */}
-        <BackgroundTargetSection />
+      {/* Proposal Poin 4 (Part 2): SWOT Matrix & 5-Year Roadmap */}
+      <SWOTRoadmapSection />
 
-        {/* SWOT Matrix & 5-Year Roadmap */}
-        <SWOTRoadmapSection />
+      {/* Proposal Poin 5: Creative & Tech Services & Capital Projection */}
+      <ServicesSection onOpenCollaboration={() => setIsModalOpen(true)} />
 
-        {/* Sustainability Model */}
-        <SustainabilitySection />
-      </div>
+      {/* Proposal Poin 6: Sustainability Model */}
+      <SustainabilitySection />
 
-      {/* Footer */}
+      {/* Proposal Poin 7: Footer & Collaboration Closing */}
       <FooterSection onOpenCollaboration={() => setIsModalOpen(true)} />
 
-      {/* Interactive Collaboration Modal */}
+      {/* Interactive Collaboration Modal with Confetti Celebration */}
       <CollaborationModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}

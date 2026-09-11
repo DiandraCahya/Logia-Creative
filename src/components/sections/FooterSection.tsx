@@ -1,7 +1,9 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { useScrollReveal } from "@/lib/useScrollReveal";
 import Image from "next/image";
+import Link from "next/link";
 import {
   Sparkles,
   ArrowUp,
@@ -21,10 +23,13 @@ interface FooterSectionProps {
 
 export function FooterSection({ onOpenCollaboration }: FooterSectionProps) {
   const [wibTime, setWibTime] = useState<string>("");
+  const { ref: ctaRef, isInView: ctaVisible } = useScrollReveal();
+  const { ref: contactRef, isInView: contactVisible } = useScrollReveal();
 
   useEffect(() => {
     const updateTime = () => {
       const now = new Date();
+      // Formatter in WIB (Asia/Jakarta)
       const options: Intl.DateTimeFormatOptions = {
         timeZone: "Asia/Jakarta",
         hour: "2-digit",
@@ -46,28 +51,36 @@ export function FooterSection({ onOpenCollaboration }: FooterSectionProps) {
   };
 
   return (
-    <footer id="contact" className="relative pt-24 pb-12 overflow-hidden bg-transparent text-text-primary transition-colors duration-300">
-      <div className="max-w-7xl mx-auto px-6 md:px-8 lg:px-12 space-y-16">
+    <footer id="kontak" className="relative pt-20 pb-12 overflow-hidden border-t border-foreground/10 dark:border-white/10 bg-background">
+      {/* Background ambient light */}
+      <div className="absolute inset-0 pointer-events-none -z-10">
+        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[700px] h-[350px] bg-gradient-to-t from-brand-primary/10 via-brand-aqua/5 to-transparent blur-[140px]" />
+      </div>
 
-        {/* Call to Action */}
-        <div className="glass-container p-8 sm:p-14 text-center space-y-6">
-          <span className="text-sm font-semibold uppercase tracking-wider text-accent-primary mb-4 block">
-            Kolaborasi
-          </span>
-          <h2 className="text-headline max-w-3xl mx-auto">
-            Siap Berkolaborasi Mengaktualisasikan <span className="text-accent-primary">Potensi Bisnis Anda?</span>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
+        {/* Closing Impact CTA Banner */}
+        <div ref={ctaRef} className={`p-8 sm:p-14 rounded-3xl liquid-glass border border-brand-primary/30 relative overflow-hidden shadow-glass-glow text-center space-y-6 scroll-reveal ${ctaVisible ? 'revealed' : ''}`}>
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-brand-primary/15 border border-brand-primary/30 text-brand-primary dark:text-brand-aqua text-xs font-semibold uppercase tracking-wider">
+            <Sparkles className="w-3.5 h-3.5" />
+            Proposal Poin 7 • Penutup & Kolaborasi
+          </div>
+
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-foreground tracking-tight max-w-3xl mx-auto leading-tight">
+            Siap Berkolaborasi Mengaktualisasikan{" "}
+            <span className="text-gradient-brand">Potensi Bisnis Anda?</span>
           </h2>
-          <p className="text-body text-text-secondary max-w-2xl mx-auto">
-            Dari perumusan identitas visual hingga implementasi website performa tinggi, Logia Creative siap menjadi mitra andalan Anda.
+
+          <p className="text-sm sm:text-base text-foreground/75 max-w-2xl mx-auto leading-relaxed">
+            Mari diskusikan tantangan bisnis Anda hari ini. Dari perumusan identitas visual hingga implementasi website performa tinggi, Logia Creative siap menjadi mitra andalan Anda.
           </p>
 
-          <div className="pt-8 flex flex-wrap justify-center items-center gap-4">
+          <div className="pt-4 flex flex-wrap justify-center items-center gap-4">
             <button
               onClick={onOpenCollaboration}
-              className="px-8 py-4 rounded-full btn-collaborate btn-interactive flex items-center gap-2 group"
+              className="px-8 py-4 rounded-full bg-gradient-to-r from-brand-primary via-brand-aqua to-brand-slate text-white font-bold text-sm shadow-[0_10px_30px_rgba(14,165,233,0.4)] hover:shadow-[0_15px_40px_rgba(14,165,233,0.6)] transition-all flex items-center gap-2 group"
             >
-              <Sparkles className="w-4 h-4" />
-              <span>Mulai Diskusi Proyek</span>
+              <Sparkles className="w-4 h-4 text-brand-mint" />
+              <span>Mulai Diskusi Proyek Sekarang</span>
               <ArrowUpRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
             </button>
 
@@ -75,18 +88,17 @@ export function FooterSection({ onOpenCollaboration }: FooterSectionProps) {
               href="https://wa.me/6281234567890"
               target="_blank"
               rel="noopener noreferrer"
-              className="px-7 py-4 rounded-full bg-transparent border border-gray-300 dark:border-gray-600 font-semibold text-sm hover:bg-gray-200 dark:hover:bg-gray-700 btn-interactive flex items-center gap-2"
+              className="px-7 py-4 rounded-full liquid-glass border border-foreground/15 dark:border-white/15 text-foreground font-semibold text-sm hover:bg-foreground/[0.04] transition-all flex items-center gap-2"
             >
-              <Phone className="w-4 h-4 text-accent-secondary" />
-              <span>Chat WhatsApp</span>
+              <Phone className="w-4 h-4 text-brand-aqua" />
+              <span>Chat WhatsApp Langsung</span>
             </a>
           </div>
         </div>
 
         {/* Multi-Column Links & Info */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 pt-8 border-t border-gray-200 dark:border-gray-800">
-
-          {/* Brand Info */}
+        <div ref={contactRef} className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 pt-8 border-t border-foreground/10 dark:border-white/10 scroll-reveal ${contactVisible ? 'revealed' : ''}`}>
+          {/* Col 1: Brand Info */}
           <div className="lg:col-span-2 space-y-4">
             <div className="relative w-32 h-9">
               <Image
@@ -96,75 +108,153 @@ export function FooterSection({ onOpenCollaboration }: FooterSectionProps) {
                 className="object-contain"
               />
             </div>
-            <p className="text-sm text-text-secondary leading-relaxed max-w-sm">
-              Agensi kreatif dan teknologi terintegrasi yang menghadirkan solusi branding, perancangan antarmuka pengguna interaktif, dan automasi sistem kerja digital.
+            <p className="text-xs sm:text-sm text-foreground/70 leading-relaxed max-w-sm">
+              Agensi kreatif dan teknologi terintegrasi yang menghadirkan solusi branding, perancangan antarmuka pengguna interaktif, dan automasi sistem kerja digital bagi UMKM, startup, dan organisasi.
             </p>
 
-            <div className="glass-container inline-flex items-center gap-2 px-3 py-1.5 !rounded-full text-xs font-mono text-text-secondary">
-              <Clock className="w-3.5 h-3.5 text-accent-primary animate-pulse" />
-              <span>Studio Time: {wibTime || "17:00:00"} WIB</span>
+            {/* Live WIB Clock */}
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-foreground/[0.03] dark:bg-white/[0.04] border border-foreground/10 text-xs font-mono text-foreground/80">
+              <Clock className="w-3.5 h-3.5 text-brand-aqua animate-pulse" />
+              <span>Studio Time: {wibTime || "17:00:00"} WIB (UTC+7)</span>
             </div>
           </div>
 
-          {/* Links 1 */}
-          <div className="space-y-4 text-sm">
-            <h4 className="font-bold uppercase tracking-wider text-xs">Eksplorasi</h4>
-            <ul className="space-y-3 text-text-secondary">
-              <li><a href="#about" className="hover:text-accent-primary transition-colors">Tentang Kami</a></li>
-              <li><a href="#services" className="hover:text-accent-primary transition-colors">Layanan Utama</a></li>
-              <li><a href="#portfolio" className="hover:text-accent-primary transition-colors">Studi Kasus</a></li>
+          {/* Col 2: Navigation Links */}
+          <div className="space-y-3 text-xs sm:text-sm">
+            <h4 className="font-bold text-foreground uppercase tracking-wider text-xs">
+              Eksplorasi
+            </h4>
+            <ul className="space-y-2 text-foreground/70">
+              <li>
+                <a href="#tentang" className="hover:text-brand-primary transition-colors">
+                  Tentang & Latar Belakang
+                </a>
+              </li>
+              <li>
+                <a href="#tentang" className="hover:text-brand-primary transition-colors">
+                  Segmentasi Target Pasar
+                </a>
+              </li>
+              <li>
+                <a href="#swot-roadmap" className="hover:text-brand-primary transition-colors">
+                  Analisis SWOT
+                </a>
+              </li>
+              <li>
+                <a href="#swot-roadmap" className="hover:text-brand-primary transition-colors">
+                  5-Year Strategic Roadmap
+                </a>
+              </li>
+              <li>
+                <a href="#keberlanjutan" className="hover:text-brand-primary transition-colors">
+                  Model Keberlanjutan Usaha
+                </a>
+              </li>
             </ul>
           </div>
 
-          {/* Links 2 */}
-          <div className="space-y-4 text-sm">
-            <h4 className="font-bold uppercase tracking-wider text-xs">Layanan</h4>
-            <ul className="space-y-3 text-text-secondary">
-              <li><a href="#services" className="hover:text-accent-primary transition-colors">Brand Identity</a></li>
-              <li><a href="#services" className="hover:text-accent-primary transition-colors">UI/UX Design</a></li>
-              <li><a href="#services" className="hover:text-accent-primary transition-colors">Web Development</a></li>
+          {/* Col 3: Services Index */}
+          <div className="space-y-3 text-xs sm:text-sm">
+            <h4 className="font-bold text-foreground uppercase tracking-wider text-xs">
+              Layanan Utama
+            </h4>
+            <ul className="space-y-2 text-foreground/70">
+              <li>
+                <a href="#layanan" className="hover:text-brand-primary transition-colors">
+                  Brand Identity & Guidelines
+                </a>
+              </li>
+              <li>
+                <a href="#layanan" className="hover:text-brand-primary transition-colors">
+                  Social Media Content & Motion
+                </a>
+              </li>
+              <li>
+                <a href="#layanan" className="hover:text-brand-primary transition-colors">
+                  UI/UX Design & Web App
+                </a>
+              </li>
+              <li>
+                <a href="#layanan" className="hover:text-brand-primary transition-colors">
+                  Workflow Automation
+                </a>
+              </li>
+              <li>
+                <a href="#layanan" className="hover:text-brand-primary transition-colors">
+                  Integrated Creative + Tech
+                </a>
+              </li>
             </ul>
           </div>
 
-          {/* Contact */}
-          <div className="space-y-4 text-sm">
-            <h4 className="font-bold uppercase tracking-wider text-xs">Kontak</h4>
-            <ul className="space-y-3 text-text-secondary">
+          {/* Col 4: Contact & Social */}
+          <div className="space-y-3 text-xs sm:text-sm">
+            <h4 className="font-bold text-foreground uppercase tracking-wider text-xs">
+              Kontak & Kanal
+            </h4>
+            <ul className="space-y-2 text-foreground/70">
               <li className="flex items-center gap-2">
-                <Mail className="w-3.5 h-3.5 text-accent-primary" />
-                <a href="mailto:hello@logia.id" className="hover:text-accent-primary">hello@logia.id</a>
+                <Mail className="w-3.5 h-3.5 text-brand-primary" />
+                <a href="mailto:hello@logia.id" className="hover:text-brand-primary">
+                  hello@logia.id
+                </a>
               </li>
               <li className="flex items-center gap-2">
-                <Globe className="w-3.5 h-3.5 text-accent-secondary" />
+                <Phone className="w-3.5 h-3.5 text-brand-aqua" />
+                <a href="tel:+6281234567890" className="hover:text-brand-primary">
+                  +62 812-3456-7890
+                </a>
+              </li>
+              <li className="flex items-center gap-2">
+                <Globe className="w-3.5 h-3.5 text-brand-mint" />
                 <span>www.logia.id</span>
               </li>
               <li className="flex items-center gap-2">
-                <MapPin className="w-3.5 h-3.5 text-accent-primary" />
+                <MapPin className="w-3.5 h-3.5 text-amber-500" />
                 <span>Indonesia</span>
               </li>
             </ul>
+
             <div className="flex items-center gap-2 pt-2">
-              <div className="glass-container w-8 h-8 !rounded-full flex items-center justify-center text-text-secondary hover:text-accent-primary transition-colors">
+              <a
+                href="https://instagram.com"
+                target="_blank"
+                rel="noreferrer"
+                className="w-8 h-8 rounded-xl bg-foreground/[0.04] dark:bg-white/[0.05] border border-foreground/10 flex items-center justify-center text-foreground/70 hover:text-brand-primary transition-colors"
+                aria-label="Instagram"
+              >
                 <Instagram className="w-4 h-4" />
-              </div>
-              <div className="glass-container w-8 h-8 !rounded-full flex items-center justify-center text-text-secondary hover:text-accent-primary transition-colors">
+              </a>
+              <a
+                href="https://linkedin.com"
+                target="_blank"
+                rel="noreferrer"
+                className="w-8 h-8 rounded-xl bg-foreground/[0.04] dark:bg-white/[0.05] border border-foreground/10 flex items-center justify-center text-foreground/70 hover:text-brand-primary transition-colors"
+                aria-label="LinkedIn"
+              >
                 <Linkedin className="w-4 h-4" />
-              </div>
+              </a>
             </div>
           </div>
         </div>
 
-        {/* Big Watermark */}
+        {/* Massive Stylized Typography Watermark */}
         <div className="relative py-4 select-none pointer-events-none overflow-hidden text-center">
-          <span className="block text-5xl md:text-8xl lg:text-[10rem] font-black tracking-tighter text-gray-200 dark:text-gray-800 opacity-50 whitespace-nowrap">
+          <span className="block text-4xl sm:text-7xl md:text-8xl lg:text-[9.5rem] font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-foreground/[0.12] to-foreground/[0.04] whitespace-nowrap">
             LOGIA CREATIVE
           </span>
         </div>
 
-        {/* Bottom */}
-        <div className="pt-6 border-t border-gray-200 dark:border-gray-800 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-text-secondary">
-          <p>&copy; {new Date().getFullYear()} Logia Creative Agency. All rights reserved.</p>
-          <button onClick={scrollToTop} className="flex items-center gap-2 px-4 py-2 rounded-full border border-gray-200 dark:border-gray-800 hover:text-accent-primary transition-all group">
+        {/* Bottom Bar: Copyright & Back to Top */}
+        <div className="pt-6 border-t border-foreground/10 dark:border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-foreground/60">
+          <p>
+            &copy; {new Date().getFullYear()} Logia Creative Agency. All rights reserved. Mengintegrasikan Kreativitas dan Teknologi.
+          </p>
+
+          <button
+            onClick={scrollToTop}
+            className="flex items-center gap-2 px-4 py-2 rounded-full liquid-glass border border-foreground/10 text-foreground/80 hover:text-brand-primary hover:border-brand-primary transition-all group"
+          >
             <span>Kembali ke Atas</span>
             <ArrowUp className="w-3.5 h-3.5 transition-transform group-hover:-translate-y-0.5" />
           </button>
