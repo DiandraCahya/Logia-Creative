@@ -64,16 +64,15 @@ export function SustainabilitySection() {
     <section id="keberlanjutan" className="py-24 sm:py-32 relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <div ref={headerRef} className={`text-center max-w-3xl mx-auto space-y-4 mb-16 heading-entrance ${headerVisible ? 'revealed' : ''}`}>
-          <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full glass-container border border-brand-primary/20 text-xs font-semibold uppercase tracking-wider text-brand-primary dark:text-brand-aqua">
-            <ShieldCheck className="w-3.5 h-3.5" />
-            Proposal Poin 6 • Keberlanjutan & Ketahanan Usaha
-          </div>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+        <div ref={headerRef} className={`text-center max-w-3xl mx-auto mb-16 heading-entrance ${headerVisible ? 'revealed' : ''}`}>
+          <span className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-6 block font-mono">
+            07 — Keberlanjutan Usaha
+          </span>
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black leading-[1.1] tracking-tighter text-slate-900 dark:text-white mb-6">
             Strategi Keberlanjutan &{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-violet-600 dark:from-blue-400 dark:to-violet-400">Skalabilitas Agensi</span>
           </h2>
-          <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed">
+          <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed mx-auto max-w-2xl">
             Menjamin stabilitas operasional jangka panjang dan ketahanan bisnis melalui tiga pilar strategis: kontinuitas arus kas, kecepatan produksi cerdas, dan sinergi ekosistem.
           </p>
         </div>

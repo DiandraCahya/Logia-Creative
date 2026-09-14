@@ -54,28 +54,28 @@ export function BackgroundTargetSection() {
       <div className="max-w-7xl mx-auto px-6 md:px-8 lg:px-12" ref={ref}>
         {/* Section Header */}
         <div className={`text-center max-w-3xl mx-auto mb-16 transition-all duration-700 ${isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-          <span className="text-sm font-semibold uppercase tracking-wider text-accent-primary mb-4 block">
-            Target Pasar
+          <span className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-6 block font-mono">
+            02 — Target Pasar
           </span>
-          <h2 className="text-headline mb-6">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black leading-[1.1] tracking-tighter text-slate-900 dark:text-white mb-6">
             Solusi Spesifik Untuk Kebutuhan Anda
           </h2>
-          <p className="text-body text-text-secondary mx-auto max-w-2xl">
+          <p className="text-body text-slate-600 dark:text-slate-300 mx-auto max-w-2xl">
             Setiap industri memiliki tantangan unik. Kami mengadaptasi layanan kami untuk memberikan dampak maksimal pada skala bisnis Anda.
           </p>
         </div>
 
         {/* Tab Switcher */}
         <div className="flex justify-center mb-12">
-          <div className="glass-container flex items-center gap-2 p-1.5 !rounded-full">
+          <div className="glass-container flex items-center gap-2 p-1.5 !rounded-full overflow-x-auto hide-scrollbar max-w-full">
             {targetMarkets.map((market) => (
               <button
                 key={market.id}
                 onClick={() => setActiveTab(market.id)}
-                className={`px-6 py-2.5 rounded-full text-sm font-semibold transition-all btn-press flex items-center gap-2 ${
+                className={`px-6 py-2.5 rounded-full text-sm font-semibold transition-all btn-press flex items-center gap-2 whitespace-nowrap ${
                   activeTab === market.id
-                    ? "btn-collaborate shadow-md"
-                    : "text-text-secondary hover:text-text-primary hover:bg-black/5 dark:hover:bg-white/5"
+                    ? "grad-cta shadow-md"
+                    : "text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:text-white hover:bg-slate-100 dark:hover:bg-white/5"
                 }`}
               >
                 <market.icon className="w-4 h-4" />
@@ -108,17 +108,17 @@ export function BackgroundTargetSection() {
                       </div>
                       <div>
                         <h3 className="text-2xl font-bold mb-3">{market.title}</h3>
-                        <p className="text-sm text-text-secondary leading-relaxed italic border-l-2 border-accent-primary pl-4">
+                        <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed italic border-l-2 border-accent-primary pl-4">
                           &ldquo;{market.problemText}&rdquo;
                         </p>
                       </div>
                     </div>
 
                     <div className="flex-1 space-y-4">
-                      <h4 className="font-bold text-sm uppercase tracking-wider text-text-primary">Fokus Solusi</h4>
+                      <h4 className="font-bold text-sm uppercase tracking-wider text-slate-900 dark:text-white">Fokus Solusi</h4>
                       <ul className="space-y-3">
                         {market.solutions.map((item, i) => (
-                          <li key={i} className="flex items-start gap-3 text-sm text-text-secondary">
+                          <li key={i} className="flex items-start gap-3 text-sm text-slate-600 dark:text-slate-300">
                             <div className="w-1.5 h-1.5 rounded-full bg-accent-primary/60 shrink-0 mt-2" />
                             <span>{item}</span>
                           </li>

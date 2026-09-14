@@ -151,16 +151,15 @@ export function SWOTRoadmapSection() {
     <section id="swot-roadmap" className="py-24 sm:py-32 relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <div ref={headerRef} className={`text-center max-w-3xl mx-auto space-y-4 mb-16 heading-entrance ${headerVisible ? 'revealed' : ''}`}>
-          <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full liquid-glass border border-brand-primary/20 text-xs font-semibold uppercase tracking-wider text-brand-primary dark:text-brand-aqua">
-            <Milestone className="w-3.5 h-3.5" />
-            Proposal Poin 4 • Analisis SWOT & Peta Jalan 5 Tahun
-          </div>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+        <div ref={headerRef} className={`text-center max-w-3xl mx-auto mb-16 heading-entrance ${headerVisible ? 'revealed' : ''}`}>
+          <span className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-6 block font-mono">
+            03 — Analisis & Proyeksi
+          </span>
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black leading-[1.1] tracking-tighter text-slate-900 dark:text-white mb-6">
             Analisis Posisi Strategis &{" "}
-            <span className="text-gradient-brand">Rencana 5 Tahun</span>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-violet-600 dark:from-blue-400 dark:to-violet-400">Rencana 5 Tahun</span>
           </h2>
-          <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed">
+          <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed mx-auto max-w-2xl">
             Menghadapi dinamika pasar dengan pemahaman objektif atas kekuatan, kelemahan, peluang, dan ancaman, dipandu tahapan pertumbuhan bisnis yang terukur hingga 5 tahun ke depan.
           </p>
         </div>
@@ -268,7 +267,7 @@ export function SWOTRoadmapSection() {
                   onClick={() => setSelectedYear(index)}
                   className={`px-4 sm:px-6 py-2.5 rounded-2xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-2 ${
                     active
-                      ? "bg-gradient-to-r from-brand-primary to-brand-aqua text-white shadow-md shadow-brand-primary/30 scale-105"
+                      ? "grad-cta shadow-md scale-105"
                       : "liquid-glass text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:text-white border border-slate-200 dark:border-white/10"
                   }`}
                 >

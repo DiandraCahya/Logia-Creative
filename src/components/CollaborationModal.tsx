@@ -98,7 +98,7 @@ export function CollaborationModal({ isOpen, onClose }: CollaborationModalProps)
               {/* Close Button */}
               <button
                 onClick={onClose}
-                className="absolute top-5 right-5 p-2 rounded-full bg-bg-secondary text-text-secondary hover:text-text-primary hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors btn-press z-20"
+                className="absolute top-5 right-5 p-2 rounded-full bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors btn-press z-20"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -108,10 +108,10 @@ export function CollaborationModal({ isOpen, onClose }: CollaborationModalProps)
                   <div className="w-16 h-16 mx-auto rounded-full bg-accent-primary/10 text-accent-primary flex items-center justify-center">
                     <CheckCircle2 className="w-10 h-10" />
                   </div>
-                  <h3 className="text-2xl font-bold text-text-primary">
+                  <h3 className="text-2xl font-bold text-slate-900 dark:text-white">
                     Terima Kasih, {formData.name || "Mitra Hebat"}!
                   </h3>
-                  <p className="text-sm text-text-secondary max-w-md mx-auto leading-relaxed">
+                  <p className="text-sm text-slate-600 dark:text-slate-300 max-w-md mx-auto leading-relaxed">
                     Informasi proyek Anda telah diterima tim konsultan Logia Creative. Kami akan menghubungi Anda melalui kontak yang dicantumkan dalam 1x24 jam kerja.
                   </p>
 
@@ -131,10 +131,10 @@ export function CollaborationModal({ isOpen, onClose }: CollaborationModalProps)
                       <Sparkles className="w-3.5 h-3.5" />
                       Creative Partnership
                     </div>
-                    <h2 className="text-2xl sm:text-3xl font-bold text-text-primary mb-2">
+                    <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white mb-2">
                       Mulai Kolaborasi Bersama Logia
                     </h2>
-                    <p className="text-sm text-text-secondary">
+                    <p className="text-sm text-slate-600 dark:text-slate-300">
                       Diskusikan ide besar bisnis Anda. Kami bantu formulasi strategi kreatif dan implementasi teknologinya.
                     </p>
                   </div>
@@ -142,7 +142,7 @@ export function CollaborationModal({ isOpen, onClose }: CollaborationModalProps)
                   <form onSubmit={handleSubmit} className="space-y-6">
                     {/* Service Selection */}
                     <div>
-                      <label className="block text-xs font-semibold uppercase tracking-wider text-text-primary mb-3">
+                      <label className="block text-xs font-semibold uppercase tracking-wider text-slate-900 dark:text-white mb-3">
                         Pilih Kebutuhan Layanan
                       </label>
                       <div className="flex flex-wrap gap-2">
@@ -156,7 +156,7 @@ export function CollaborationModal({ isOpen, onClose }: CollaborationModalProps)
                               className={`text-xs px-4 py-2 rounded-full border transition-all btn-press ${
                                 active
                                   ? "bg-accent-primary text-white border-accent-primary"
-                                  : "bg-bg-primary text-text-secondary border-gray-200 dark:border-gray-800 hover:border-accent-primary/50"
+                                  : "bg-bg-primary text-slate-600 dark:text-slate-300 border-gray-200 dark:border-gray-800 hover:border-accent-primary/50"
                               }`}
                             >
                               {srv}
@@ -169,7 +169,7 @@ export function CollaborationModal({ isOpen, onClose }: CollaborationModalProps)
                     {/* Name & Brand */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-xs font-semibold text-text-primary mb-2">
+                        <label className="block text-xs font-semibold text-slate-900 dark:text-white mb-2">
                           Nama Lengkap *
                         </label>
                         <input
@@ -184,7 +184,7 @@ export function CollaborationModal({ isOpen, onClose }: CollaborationModalProps)
                         />
                       </div>
                       <div>
-                        <label className="block text-xs font-semibold text-text-primary mb-2">
+                        <label className="block text-xs font-semibold text-slate-900 dark:text-white mb-2">
                           Nama Brand / Usaha
                         </label>
                         <input
@@ -202,7 +202,7 @@ export function CollaborationModal({ isOpen, onClose }: CollaborationModalProps)
                     {/* Contact & Budget */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-xs font-semibold text-text-primary mb-2">
+                        <label className="block text-xs font-semibold text-slate-900 dark:text-white mb-2">
                           WhatsApp / Email *
                         </label>
                         <input
@@ -217,7 +217,7 @@ export function CollaborationModal({ isOpen, onClose }: CollaborationModalProps)
                         />
                       </div>
                       <div>
-                        <label className="block text-xs font-semibold text-text-primary mb-2">
+                        <label className="block text-xs font-semibold text-slate-900 dark:text-white mb-2">
                           Estimasi Budget
                         </label>
                         <select
@@ -236,7 +236,7 @@ export function CollaborationModal({ isOpen, onClose }: CollaborationModalProps)
 
                     {/* Notes */}
                     <div>
-                      <label className="block text-xs font-semibold text-text-primary mb-2">
+                      <label className="block text-xs font-semibold text-slate-900 dark:text-white mb-2">
                         Catatan Singkat / Ringkasan Ide Proyek
                       </label>
                       <textarea
@@ -252,7 +252,7 @@ export function CollaborationModal({ isOpen, onClose }: CollaborationModalProps)
 
                     {/* Fast Contact Channels & Submit Button */}
                     <div className="pt-4 flex flex-col sm:flex-row items-center justify-between gap-6 border-t border-gray-200 dark:border-gray-800">
-                      <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 text-xs text-text-secondary">
+                      <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 text-xs text-slate-600 dark:text-slate-300">
                         <span className="flex items-center gap-2">
                           <Mail className="w-4 h-4 text-accent-primary" />
                           hello@logia.id

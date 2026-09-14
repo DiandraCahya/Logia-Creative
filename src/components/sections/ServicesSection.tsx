@@ -131,16 +131,15 @@ export function ServicesSection({ onOpenCollaboration }: ServicesSectionProps) {
     <section id="layanan" className="py-24 sm:py-32 relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <div ref={headerRef} className={`text-center max-w-3xl mx-auto space-y-4 mb-16 heading-entrance ${headerVisible ? 'revealed' : ''}`}>
-          <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full liquid-glass border border-brand-primary/20 text-xs font-semibold uppercase tracking-wider text-brand-primary dark:text-brand-aqua">
-            <Layers className="w-3.5 h-3.5" />
-            Proposal Poin 5 • Rumpun Layanan & Proyeksi Infrastruktur
-          </div>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+        <div ref={headerRef} className={`text-center max-w-3xl mx-auto mb-16 heading-entrance ${headerVisible ? 'revealed' : ''}`}>
+          <span className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-6 block font-mono">
+            04 — Layanan Utama
+          </span>
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black leading-[1.1] tracking-tighter text-slate-900 dark:text-white mb-6">
             Spektrum Solusi{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-violet-600 dark:from-blue-400 dark:to-violet-400">Kreatif & Teknologi</span>
           </h2>
-          <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed">
+          <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed mx-auto max-w-2xl">
             Dua rumpun kapabilitas utama yang dapat diakses secara terpisah maupun sebagai satu kesatuan solusi komprehensif.
           </p>
         </div>
@@ -152,7 +151,7 @@ export function ServicesSection({ onOpenCollaboration }: ServicesSectionProps) {
               onClick={() => setActiveStream("creative")}
               className={`flex items-center gap-2.5 px-6 py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all ${
                 activeStream === "creative"
-                  ? "bg-gradient-to-r from-blue-600 to-brand-aqua text-white shadow-md"
+                  ? "grad-cta shadow-md"
                   : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/5"
               }`}
             >
@@ -164,7 +163,7 @@ export function ServicesSection({ onOpenCollaboration }: ServicesSectionProps) {
               onClick={() => setActiveStream("tech")}
               className={`flex items-center gap-2.5 px-6 py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all ${
                 activeStream === "tech"
-                  ? "bg-gradient-to-r from-brand-primary to-brand-slate text-white shadow-md"
+                  ? "grad-cta shadow-md"
                   : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/5"
               }`}
             >
@@ -174,7 +173,7 @@ export function ServicesSection({ onOpenCollaboration }: ServicesSectionProps) {
           </div>
         </div>
 
-        {/* Services Showcase Cards */}
+        {/* Services Showcase Cards (Editorial Block Style) */}
         <AnimatePresence mode="wait">
           {activeStream === "creative" && (
             <motion.div
@@ -183,58 +182,62 @@ export function ServicesSection({ onOpenCollaboration }: ServicesSectionProps) {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -15 }}
               transition={{ duration: 0.3 }}
-              className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16"
+              className="flex flex-col gap-0 mb-16 border-b border-slate-200 dark:border-white/10"
             >
               {creativeServices.map((srv) => {
                 const Icon = srv.icon;
                 return (
                   <div
                     key={srv.title}
-                    className="p-7 rounded-3xl glass-container border border-slate-200 dark:border-white/10 hover:border-brand-aqua/40 transition-all flex flex-col justify-between group micro-lift"
+                    className="py-10 border-t border-slate-200 dark:border-white/10 group relative"
                   >
-                    <div className="space-y-4">
-                      <div className="w-12 h-12 rounded-2xl bg-brand-primary/10 text-brand-primary dark:text-brand-aqua flex items-center justify-center group-hover:scale-110 transition-transform">
-                        <Icon className="w-6 h-6" />
-                      </div>
-                      <div>
-                        <span className="text-[11px] font-bold text-brand-aqua uppercase tracking-wider">
-                          {srv.tagline}
-                        </span>
-                        <h3 className="text-xl font-bold text-slate-900 dark:text-white mt-1">
+                    <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
+                      <div className="md:col-span-4 lg:col-span-3">
+                        <div className="w-12 h-12 rounded-2xl bg-blue-600/10 dark:bg-blue-400/10 text-blue-600 dark:text-blue-400 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                          <Icon className="w-6 h-6" />
+                        </div>
+                        <h3 className="text-xl md:text-2xl font-bold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
                           {srv.title}
                         </h3>
-                      </div>
-                      <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-                        {srv.desc}
-                      </p>
-
-                      <div className="pt-2 space-y-2">
-                        <p className="text-xs font-semibold text-slate-700 dark:text-slate-200 uppercase tracking-wider">
-                          Deliverables:
-                        </p>
-                        <ul className="space-y-1.5">
-                          {srv.deliverables.map((d, i) => (
-                            <li
-                              key={i}
-                              className="flex items-start gap-2 text-xs text-slate-600 dark:text-slate-300"
-                            >
-                              <CheckCircle2 className="w-3.5 h-3.5 text-brand-aqua mt-0.5 shrink-0" />
-                              <span>{d}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    </div>
-
-                    <div className="pt-6 mt-6 border-t border-slate-200 dark:border-white/10 flex flex-wrap gap-1.5">
-                      {srv.tags.map((t) => (
-                        <span
-                          key={t}
-                          className="text-[10px] px-2.5 py-0.5 rounded-full bg-slate-100 dark:bg-white/[0.05] text-slate-600 dark:text-slate-400"
-                        >
-                          {t}
+                        <span className="inline-block mt-2 text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
+                          {srv.tagline}
                         </span>
-                      ))}
+                      </div>
+
+                      <div className="md:col-span-8 lg:col-span-9 flex flex-col sm:flex-row gap-8">
+                        <div className="sm:w-1/2">
+                          <p className="text-sm md:text-base text-slate-600 dark:text-slate-300 leading-relaxed">
+                            {srv.desc}
+                          </p>
+                          <div className="mt-6 flex flex-wrap gap-2">
+                            {srv.tags.map((t) => (
+                              <span
+                                key={t}
+                                className="text-[10px] px-3 py-1 rounded-full bg-slate-100 dark:bg-white/[0.05] text-slate-600 dark:text-slate-400 font-mono"
+                              >
+                                {t}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+
+                        <div className="sm:w-1/2">
+                          <p className="text-xs font-semibold text-slate-700 dark:text-slate-200 uppercase tracking-wider mb-4">
+                            Deliverables:
+                          </p>
+                          <ul className="space-y-3">
+                            {srv.deliverables.map((d, i) => (
+                              <li
+                                key={i}
+                                className="flex items-start gap-3 text-sm text-slate-600 dark:text-slate-300"
+                              >
+                                <CheckCircle2 className="w-4 h-4 text-blue-500 dark:text-blue-400 mt-0.5 shrink-0 opacity-50" />
+                                <span>{d}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 );
@@ -249,58 +252,62 @@ export function ServicesSection({ onOpenCollaboration }: ServicesSectionProps) {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -15 }}
               transition={{ duration: 0.3 }}
-              className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16"
+              className="flex flex-col gap-0 mb-16 border-b border-slate-200 dark:border-white/10"
             >
               {technologyServices.map((srv) => {
                 const Icon = srv.icon;
                 return (
                   <div
                     key={srv.title}
-                    className="p-8 rounded-3xl glass-container border border-slate-200 dark:border-white/10 hover:border-brand-primary/40 transition-all flex flex-col justify-between group micro-lift"
+                    className="py-10 border-t border-slate-200 dark:border-white/10 group relative"
                   >
-                    <div className="space-y-4">
-                      <div className="w-12 h-12 rounded-2xl bg-brand-aqua/10 text-brand-aqua flex items-center justify-center group-hover:scale-110 transition-transform">
-                        <Icon className="w-6 h-6" />
-                      </div>
-                      <div>
-                        <span className="text-[11px] font-bold text-brand-primary dark:text-brand-aqua uppercase tracking-wider">
-                          {srv.tagline}
-                        </span>
-                        <h3 className="text-2xl font-bold text-slate-900 dark:text-white mt-1">
+                    <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
+                      <div className="md:col-span-4 lg:col-span-3">
+                        <div className="w-12 h-12 rounded-2xl bg-blue-600/10 dark:bg-blue-400/10 text-blue-600 dark:text-blue-400 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                          <Icon className="w-6 h-6" />
+                        </div>
+                        <h3 className="text-xl md:text-2xl font-bold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
                           {srv.title}
                         </h3>
+                        <span className="inline-block mt-2 text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
+                          {srv.tagline}
+                        </span>
                       </div>
-                      <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-                        {srv.desc}
-                      </p>
 
-                      <div className="pt-2 space-y-2">
-                        <p className="text-xs font-semibold text-slate-700 dark:text-slate-200 uppercase tracking-wider">
-                          Deliverables & Spesifikasi:
-                        </p>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                          {srv.deliverables.map((d, i) => (
-                            <div
-                              key={i}
-                              className="flex items-start gap-2 text-xs text-slate-600 dark:text-slate-300 p-2 rounded-xl bg-slate-50 dark:bg-white/[0.02]"
-                            >
-                              <CheckCircle2 className="w-3.5 h-3.5 text-brand-primary mt-0.5 shrink-0" />
-                              <span>{d}</span>
-                            </div>
-                          ))}
+                      <div className="md:col-span-8 lg:col-span-9 flex flex-col sm:flex-row gap-8">
+                        <div className="sm:w-1/2">
+                          <p className="text-sm md:text-base text-slate-600 dark:text-slate-300 leading-relaxed">
+                            {srv.desc}
+                          </p>
+                          <div className="mt-6 flex flex-wrap gap-2">
+                            {srv.tags.map((t) => (
+                              <span
+                                key={t}
+                                className="text-[10px] px-3 py-1 rounded-full bg-slate-100 dark:bg-white/[0.05] text-slate-600 dark:text-slate-400 font-mono"
+                              >
+                                {t}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+
+                        <div className="sm:w-1/2">
+                          <p className="text-xs font-semibold text-slate-700 dark:text-slate-200 uppercase tracking-wider mb-4">
+                            Deliverables:
+                          </p>
+                          <ul className="space-y-3">
+                            {srv.deliverables.map((d, i) => (
+                              <li
+                                key={i}
+                                className="flex items-start gap-3 text-sm text-slate-600 dark:text-slate-300"
+                              >
+                                <CheckCircle2 className="w-4 h-4 text-blue-500 dark:text-blue-400 mt-0.5 shrink-0 opacity-50" />
+                                <span>{d}</span>
+                              </li>
+                            ))}
+                          </ul>
                         </div>
                       </div>
-                    </div>
-
-                    <div className="pt-6 mt-6 border-t border-slate-200 dark:border-white/10 flex flex-wrap gap-2">
-                      {srv.tags.map((t) => (
-                        <span
-                          key={t}
-                          className="text-[10px] font-mono px-3 py-1 rounded-lg bg-brand-primary/10 text-brand-primary dark:text-brand-aqua font-medium"
-                        >
-                          {t}
-                        </span>
-                      ))}
                     </div>
                   </div>
                 );
@@ -310,19 +317,19 @@ export function ServicesSection({ onOpenCollaboration }: ServicesSectionProps) {
         </AnimatePresence>
 
         {/* Integrated Solutions Highlight Card */}
-        <div className="p-8 sm:p-10 rounded-3xl bg-gradient-to-r from-brand-navy via-brand-slate to-brand-navy border border-brand-aqua/30 text-white shadow-2xl relative overflow-hidden mb-16">
-          <div className="absolute -right-16 -top-16 w-80 h-80 bg-brand-aqua/20 rounded-full blur-3xl pointer-events-none" />
+        <div className="p-8 sm:p-10 rounded-3xl glass-container border border-slate-200 dark:border-white/10 relative overflow-hidden mb-16">
+          <div className="absolute -right-16 -top-16 w-80 h-80 bg-blue-600/10 dark:bg-blue-400/10 rounded-full blur-3xl pointer-events-none" />
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative z-10">
             <div className="lg:col-span-8 space-y-4">
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-brand-aqua/20 border border-brand-aqua/40 text-brand-mint text-xs font-bold uppercase tracking-wider">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-600/10 dark:bg-blue-400/10 border border-blue-600/20 dark:border-blue-400/20 text-blue-700 dark:text-blue-300 text-xs font-bold uppercase tracking-wider">
                 <Sparkles className="w-3.5 h-3.5" />
                 The Power of Integrated Synergy
               </div>
-              <h3 className="text-2xl sm:text-3xl font-extrabold text-white">
+              <h3 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">
                 Paket Solusi Terpadu: Mengapa Memadukan Creative + Tech?
               </h3>
-              <p className="text-xs sm:text-sm text-brand-light/80 leading-relaxed max-w-2xl">
+              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed max-w-2xl">
                 Menghindari friksi komunikasi antara agensi desain dan programmer pihak ketiga. Ketika identitas visual dirancang oleh tim yang sama yang membangun website, hasil akhir bekerja dengan harmoni visual maksimal, performa kode optimal, serta kecepatan peluncuran 40% lebih cepat.
               </p>
             </div>
@@ -330,7 +337,7 @@ export function ServicesSection({ onOpenCollaboration }: ServicesSectionProps) {
             <div className="lg:col-span-4 flex flex-col sm:flex-row lg:flex-col gap-3 justify-end">
               <button
                 onClick={onOpenCollaboration}
-                className="px-6 py-3 rounded-full bg-gradient-to-r from-brand-aqua to-brand-primary text-white font-semibold text-xs sm:text-sm hover:opacity-95 shadow-lg flex items-center justify-center gap-2 group"
+                className="px-6 py-3 rounded-full grad-cta shadow-lg flex items-center justify-center gap-2 group"
               >
                 <span>Konsultasi Paket Terpadu</span>
                 <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />

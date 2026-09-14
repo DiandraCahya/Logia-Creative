@@ -2,6 +2,24 @@
 @tailwind components;
 @tailwind utilities;
 
+@keyframes scroll-reel-char-rise {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scroll-reel-exit {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-12px);
+  }
+}
+
 @layer base {
   :root {
     --bg-primary: #ffffff;
@@ -11,6 +29,9 @@
     --text-tertiary: #94a3b8;
     --accent-primary: #2563eb;   /* blue-600 */
     --accent-secondary: #7c3aed; /* violet-600 */
+    --bg: #0a0a0a;
+    --silver: #e0e0e0;
+    --accent: #ff3c00;
   }
 
   .dark {
@@ -27,18 +48,40 @@
     box-sizing: border-box;
   }
 
-  html {
-    scroll-behavior: smooth;
-    scroll-padding-top: 80px;
-  }
+  /* Smooth anchor scrolling */
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 80px;
+}
 
-  body {
-    background-color: var(--bg-primary);
-    color: var(--text-primary);
-    transition: background-color 0.4s cubic-bezier(0.16, 1, 0.3, 1), color 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-    overflow-x: hidden;
-    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
-  }
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  transition: background-color 0.4s cubic-bezier(0.22, 1, 0.36, 1), color 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  overflow-x: hidden;
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+}
+}
+
+/* ============= GLOBAL TRANSITIONS ============= */
+.transition-all {
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.transition-transform {
+  transition-property: transform;
+  transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.transition-colors {
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.transition-opacity {
+  transition-property: opacity;
+  transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 /* ============= LIQUID GLASS SYSTEM ============= */
@@ -105,35 +148,36 @@ html:not(.dark) nav a:hover,
   color: #2563eb !important; /* blue-600 */
 }
 
-/* Button Kolaborasi - WAJIB TERLIHAT */
-html:not(.dark) .btn-collaborate,
-.light .btn-collaborate,
-.btn-collaborate {
-  background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%) !important;
+/* Button Kolaborasi / CTA Universal - grad-cta */
+.grad-cta {
+  background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
   color: #ffffff !important;
   font-weight: 600;
   border: 1px solid rgba(255, 255, 255, 0.25) !important;
   box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35) !important;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1) !important;
 }
 
-.btn-collaborate:hover {
+.grad-cta:hover {
   transform: translateY(-2px) !important;
   box-shadow: 0 6px 20px rgba(37, 99, 235, 0.5) !important;
 }
 
-.btn-collaborate:active {
+.grad-cta:active {
   transform: scale(0.96) !important;
 }
 
 /* DARK MODE - tambah glow agar menonjol */
-.dark .btn-collaborate {
+.dark .grad-cta {
   border-color: rgba(255, 255, 255, 0.35) !important;
   box-shadow: 0 0 20px rgba(124, 58, 237, 0.45) !important;
 }
 
-/* LIGHT MODE - tambah border gelap agar tidak tenggelam */
-html:not(.dark) .btn-collaborate {
+/* LIGHT MODE - override jadi biru, teks tetap putih */
+html:not(.dark) .grad-cta,
+.light .grad-cta {
+  background: linear-gradient(135deg, #1d4ed8 0%, #3b82f6 100%) !important;
+  color: #ffffff !important;
   border-color: #1e40af !important;
   box-shadow: 0 4px 14px rgba(37, 99, 235, 0.4) !important;
 }
@@ -154,11 +198,11 @@ html:not(.dark) h6,
   color: #0f172a !important; /* slate-900 */
 }
 
-html:not(.dark) p,
-html:not(.dark) span,
+html:not(.dark) p:not(.grad-cta):not(.btn-collaborate),
+html:not(.dark) span:not(.grad-cta):not(.btn-collaborate),
 html:not(.dark) div,
-.light p,
-.light span,
+.light p:not(.grad-cta):not(.btn-collaborate),
+.light span:not(.grad-cta):not(.btn-collaborate),
 .light div {
   color: #334155 !important; /* slate-700 */
 }
@@ -236,6 +280,109 @@ html:not(.dark) .asset-visible,
 .light .asset-visible {
   filter: brightness(0.9) contrast(1.1) !important;
   opacity: 0.8 !important;
+}
+
+@keyframes scroll-reel-char-rise {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scroll-reel-exit {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-12px);
+  }
+}
+
+/* Marquee */
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee-scroll linear infinite;
+}
+.marquee-group {
+  display: flex;
+  align-items: center;
+  gap: 2.5rem;
+  padding-right: 2.5rem;
+}
+.marquee-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 2.5rem;
+  font-size: clamp(1.25rem, 3vw, 2rem);
+  font-weight: 600;
+  white-space: nowrap;
+  color: var(--marquee-color, currentColor);
+}
+.marquee-dot { opacity: 0.4; font-size: 0.6em; }
+.marquee:hover .marquee-track { animation-play-state: paused; }
+@keyframes marquee-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+/* Case Row */
+.case-preview {
+  transition: opacity 0.3s ease, transform 0.4s cubic-bezier(0.22,1,0.36,1);
+}
+.case-row:last-child { border-bottom: 1px solid rgb(226 232 240); }
+.dark .case-row:last-child { border-bottom-color: rgba(255,255,255,0.1); }
+@media (hover: none) { .case-preview { display: none !important; } }
+
+/* Global Motion vars & Link Sweep */
+:root {
+  --ease-out-expo: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.link-sweep {
+  position: relative;
+  display: inline-block;
+}
+.link-sweep::after {
+  content: "";
+  position: absolute;
+  left: 0; bottom: -2px;
+  width: 100%; height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.4s var(--ease-out-expo);
+}
+.link-sweep:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+/* Statement oversized */
+.statement {
+  font-size: clamp(2.5rem, 7vw, 6rem);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+}
+
+/* Fade-up reveal umum */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.8s var(--ease-out-expo), transform 0.8s var(--ease-out-expo);
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track { animation: none; }
+  .reveal, .reveal.is-visible { opacity: 1; transform: none; transition: none; }
+  .link-sweep::after { transition: none; }
 }
 
 

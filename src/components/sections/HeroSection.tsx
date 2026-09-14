@@ -145,19 +145,49 @@ export function HeroSection({ onOpenCollaboration }: HeroSectionProps) {
               <span>Ideas into Impact • Creative & Technology Agency</span>
             </motion.div>
 
-            {/* Kinetic Typography Headline — word-by-word reveal */}
-            <motion.h1
-              initial={{ opacity: 0, y: 25 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.15 }}
-              className="text-4xl sm:text-5xl xl:text-6xl font-extrabold tracking-tight leading-[1.15] text-slate-900 dark:text-white"
-            >
-              Innovative Branding &{" "}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-violet-600 dark:from-blue-400 dark:to-violet-400 drop-shadow-sm">
-                Digital Solutions
-              </span>{" "}
-              Provider
-            </motion.h1>
+            {/* Kinetic Typography Headline — line-mask reveal */}
+            <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-[5.5rem] xl:text-[6.5vw] font-black tracking-tighter leading-[1.05] text-slate-900 dark:text-white uppercase flex flex-col">
+              <span className="overflow-hidden pb-1">
+                <motion.span
+                  initial={{ y: "100%" }}
+                  animate={{ y: 0 }}
+                  transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
+                  className="block"
+                >
+                  Innovative
+                </motion.span>
+              </span>
+              <span className="overflow-hidden pb-1">
+                <motion.span
+                  initial={{ y: "100%" }}
+                  animate={{ y: 0 }}
+                  transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.18 }}
+                  className="block text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-violet-600 dark:from-blue-400 dark:to-violet-400"
+                >
+                  Branding
+                </motion.span>
+              </span>
+              <span className="overflow-hidden pb-1">
+                <motion.span
+                  initial={{ y: "100%" }}
+                  animate={{ y: 0 }}
+                  transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.26 }}
+                  className="block"
+                >
+                  & Digital
+                </motion.span>
+              </span>
+              <span className="overflow-hidden pb-1">
+                <motion.span
+                  initial={{ y: "100%" }}
+                  animate={{ y: 0 }}
+                  transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.34 }}
+                  className="block"
+                >
+                  Solutions
+                </motion.span>
+              </span>
+            </h1>
 
             {/* Subtitle */}
             <motion.p
@@ -199,7 +229,7 @@ export function HeroSection({ onOpenCollaboration }: HeroSectionProps) {
             >
               <button
                 onClick={onOpenCollaboration}
-                className="w-full sm:w-auto px-7 py-3.5 rounded-full bg-gradient-to-r from-brand-primary via-brand-aqua to-brand-slate text-white text-sm font-semibold shadow-[0_10px_25px_rgba(14,165,233,0.4)] hover:shadow-[0_15px_35px_rgba(14,165,233,0.55)] transition-all flex items-center justify-center gap-2 group micro-glow"
+                className="w-full sm:w-auto px-7 py-3.5 rounded-full grad-cta shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2 group micro-glow"
               >
                 <Sparkles className="w-4 h-4 text-brand-mint animate-pulse" />
                 <span>Mulai Diskusi Proyek</span>
@@ -260,7 +290,7 @@ export function HeroSection({ onOpenCollaboration }: HeroSectionProps) {
             >
               {/* Liquid Glass Showcase Card */}
               <div
-                className="relative rounded-3xl p-6 sm:p-8 glass-container shadow-glass-glow group overflow-hidden"
+                className="relative rounded-3xl p-6 sm:p-8 glass-container shadow-glass-glow group overflow-hidden z-10"
                 style={{
                   border: isHovered ? "1px solid rgba(124, 58, 237, 0.5)" : "",
                   transform: "translateZ(30px)",
@@ -334,7 +364,8 @@ export function HeroSection({ onOpenCollaboration }: HeroSectionProps) {
               <motion.div
                 animate={{ y: [0, -8, 0] }}
                 transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute -top-4 -right-4 sm:-right-6 px-4 py-2.5 rounded-2xl glass-container shadow-xl border border-brand-mint/40 hidden sm:flex items-center gap-3"
+                className="absolute -top-3 -right-3 sm:-top-5 sm:-right-5 px-4 py-2.5 rounded-2xl glass-container shadow-xl border border-brand-mint/40 hidden sm:flex items-center gap-3 z-20 pointer-events-none"
+                style={{ transform: "translateZ(50px)" }}
               >
                 <div className="w-2.5 h-2.5 rounded-full bg-brand-mint animate-pulse" />
                 <div className="text-left">
@@ -346,7 +377,8 @@ export function HeroSection({ onOpenCollaboration }: HeroSectionProps) {
               <motion.div
                 animate={{ y: [0, 8, 0] }}
                 transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-                className="absolute -bottom-5 -left-4 sm:-left-6 px-4 py-2.5 rounded-2xl glass-container shadow-xl border border-brand-primary/40 hidden sm:flex items-center gap-3"
+                className="absolute -bottom-3 -left-3 sm:-bottom-5 sm:-left-5 px-4 py-2.5 rounded-2xl glass-container shadow-xl border border-brand-primary/40 hidden sm:flex items-center gap-3 z-20 pointer-events-none"
+                style={{ transform: "translateZ(60px)" }}
               >
                 <div className="w-8 h-8 rounded-xl bg-brand-primary/15 text-brand-primary flex items-center justify-center">
                   <Sparkles className="w-4 h-4" />

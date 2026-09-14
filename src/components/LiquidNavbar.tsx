@@ -133,7 +133,7 @@ export function LiquidNavbar({ onOpenCollaboration }: LiquidNavbarProps) {
                   onClick={(e) => handleNavClick(e, link.href)}
                   className={`
                     link-slide relative px-4 py-2 text-sm font-medium transition-all duration-300 active:scale-95
-                    ${isActive ? "text-accent-primary font-semibold" : "text-text-primary hover:text-accent-primary"}
+                    ${isActive ? "text-slate-900 dark:text-white font-semibold" : "text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400"}
                   `}
                 >
                   {link.name}
@@ -149,7 +149,7 @@ export function LiquidNavbar({ onOpenCollaboration }: LiquidNavbarProps) {
             {/* CTA */}
             <button
               onClick={onOpenCollaboration}
-              className="hidden sm:flex items-center gap-1.5 px-5 py-2.5 rounded-full text-sm font-semibold btn-interactive btn-collaborate"
+              className="hidden sm:flex items-center gap-1.5 px-5 py-2.5 rounded-full text-sm font-semibold btn-interactive grad-cta"
             >
               <Sparkles className="w-3.5 h-3.5" />
               <span>Kolaborasi</span>
@@ -159,7 +159,7 @@ export function LiquidNavbar({ onOpenCollaboration }: LiquidNavbarProps) {
             {/* Mobile Menu Toggle */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden p-2 rounded-xl text-text-primary hover:bg-bg-secondary btn-press"
+              className="lg:hidden p-2 rounded-xl text-slate-900 dark:text-white hover:bg-slate-100 dark:hover:bg-white/5 btn-press"
               aria-label="Toggle Mobile Menu"
             >
               {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -187,8 +187,8 @@ export function LiquidNavbar({ onOpenCollaboration }: LiquidNavbarProps) {
                     onClick={(e) => handleNavClick(e, link.href)}
                     className={`px-4 py-3 rounded-xl text-sm font-medium transition-colors ${
                       activeSection === link.href
-                        ? "text-accent-primary bg-accent-primary/5"
-                        : "text-text-primary hover:bg-bg-secondary"
+                        ? "text-blue-600 bg-blue-600/5 dark:text-blue-400 dark:bg-blue-400/10"
+                        : "text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5"
                     }`}
                   >
                     {link.name}
@@ -200,7 +200,7 @@ export function LiquidNavbar({ onOpenCollaboration }: LiquidNavbarProps) {
                   setMobileMenuOpen(false);
                   if (onOpenCollaboration) onOpenCollaboration();
                 }}
-                className="w-full py-3 rounded-xl text-center text-sm font-semibold btn-press flex items-center justify-center gap-2 btn-collaborate"
+                className="w-full py-3 rounded-xl text-center text-sm font-semibold btn-press flex items-center justify-center gap-2 grad-cta"
               >
                 <Sparkles className="w-4 h-4" />
                 Mulai Kolaborasi

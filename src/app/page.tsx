@@ -16,7 +16,41 @@ import { PortfolioSection } from "@/components/sections/PortfolioSection";
 import { TestimonialSection } from "@/components/sections/TestimonialSection";
 import { FooterSection } from "@/components/sections/FooterSection";
 import { CollaborationModal } from "@/components/CollaborationModal";
+import Marquee from "@/components/animations/Marquee";
+import SplitWords from "@/components/animations/SplitWords";
 import Image from "next/image";
+
+function MarqueeStrip() {
+  const words = [
+    "BRAND IDENTITY",
+    "UI/UX DESIGN",
+    "WEB DEVELOPMENT",
+    "SOCIAL MEDIA",
+    "MOTION GRAPHICS",
+    "AUTOMATION",
+  ];
+
+  return (
+    <div className="w-full py-6 border-y border-slate-200 dark:border-white/10 overflow-hidden bg-slate-50 dark:bg-slate-900/50 backdrop-blur-sm">
+      <Marquee items={words} speed={30} />
+    </div>
+  );
+}
+
+function StatementSection() {
+  return (
+    <section className="py-24 sm:py-32 flex items-center justify-center min-h-[50vh] relative overflow-hidden">
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-brand-primary/5 to-transparent pointer-events-none" />
+      <div className="max-w-6xl mx-auto px-6 text-center relative z-10">
+        <SplitWords
+          as="h2"
+          className="statement text-slate-900 dark:text-white"
+          text="Kami membangun identitas yang bisnis Anda butuhkan."
+        />
+      </div>
+    </section>
+  );
+}
 
 export default function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -74,18 +108,24 @@ export default function Home() {
 
       {/* Hero Section with Kinetic Typography & Parallax */}
       <HeroSection onOpenCollaboration={() => setIsModalOpen(true)} />
+      <MarqueeStrip />
 
       {/* Proposal Poin 3: Background & Target Market */}
       <BackgroundTargetSection />
 
       {/* Proposal Poin 4 (Part 1): Profile, Visi, Misi, Filosofi */}
       <CompanyProfileSection />
+      <MarqueeStrip />
 
       {/* Proposal Poin 4 (Part 2): SWOT Matrix & 5-Year Roadmap */}
       <SWOTRoadmapSection />
 
+      {/* Statement oversized */}
+      <StatementSection />
+
       {/* Proposal Poin 5: Creative & Tech Services & Capital Projection */}
       <ServicesSection onOpenCollaboration={() => setIsModalOpen(true)} />
+      <MarqueeStrip />
 
       {/* Karya & Portfolio */}
       <PortfolioSection />
