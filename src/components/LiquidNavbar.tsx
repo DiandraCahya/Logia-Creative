@@ -41,29 +41,34 @@ export function LiquidNavbar({ onOpenCollaboration }: LiquidNavbarProps) {
     }
   }, [activeSection]);
   useEffect(() => {
+    let raf = 0;
     const NAVBAR_OFFSET = 80;
 
     const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
+      if (raf) return;
+      raf = requestAnimationFrame(() => {
+        raf = 0;
+        setScrolled(window.scrollY > 20);
 
-      let currentSection = "";
-      for (let i = sectionIds.length - 1; i >= 0; i--) {
-        const el = document.getElementById(sectionIds[i]);
-        if (el) {
-          const rect = el.getBoundingClientRect();
-          if (rect.top <= NAVBAR_OFFSET + 2) {
-            currentSection = `#${sectionIds[i]}`;
-            break;
+        let currentSection = "";
+        for (let i = sectionIds.length - 1; i >= 0; i--) {
+          const el = document.getElementById(sectionIds[i]);
+          if (el) {
+            const rect = el.getBoundingClientRect();
+            if (rect.top <= NAVBAR_OFFSET + 2) {
+              currentSection = `#${sectionIds[i]}`;
+              break;
+            }
           }
         }
-      }
 
-      setActiveSection(currentSection);
+        setActiveSection(currentSection);
+      });
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
     handleScroll();
-    return () => window.removeEventListener("scroll", handleScroll);
+    return () => { window.removeEventListener("scroll", handleScroll); cancelAnimationFrame(raf); };
   }, []);
 
   const handleNavClick = useCallback(
@@ -90,7 +95,7 @@ export function LiquidNavbar({ onOpenCollaboration }: LiquidNavbarProps) {
         initial={{ y: -80, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-        className="fixed top-4 sm:top-6 left-0 right-0 z-40 flex justify-center px-4 pointer-events-none"
+        className="fixed top-4 sm:top-6 left-0 right-0 z-40 flex justify-center px-4 pointer-events-none pb-[env(safe-area-inset-bottom)]"
       >
         <div
           className={`glass-container pointer-events-auto w-full max-w-6xl mx-auto flex items-center justify-between px-4 sm:px-6 py-2.5 sm:py-3 !rounded-full`}
@@ -159,7 +164,7 @@ export function LiquidNavbar({ onOpenCollaboration }: LiquidNavbarProps) {
             {/* Mobile Menu Toggle */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden p-2 rounded-xl text-slate-900 dark:text-white hover:bg-slate-100 dark:hover:bg-white/5 btn-press"
+              className="lg:hidden p-2 rounded-xl text-slate-900 dark:text-white hover:bg-slate-100 dark:hover:bg-white/5 btn-press min-h-[44px] min-w-[44px] flex items-center justify-center"
               aria-label="Toggle Mobile Menu"
             >
               {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}

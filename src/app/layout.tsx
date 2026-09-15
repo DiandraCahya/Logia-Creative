@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import { PerformanceInit } from "@/components/PerformanceInit";
 
 const fontSans = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -59,6 +60,7 @@ export default function RootLayout({
   return (
     <html lang="id" suppressHydrationWarning className="scroll-smooth">
       <body className={`${fontSans.variable} font-sans antialiased selection:bg-brand-primary selection:text-white`}>
+        <PerformanceInit />
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"

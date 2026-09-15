@@ -1,11 +1,10 @@
 "use client";
 
 import React, { useState } from "react";
+import dynamic from "next/dynamic";
 import { SplashScreen } from "@/components/SplashScreen";
 import { LiquidNavbar } from "@/components/LiquidNavbar";
-import { Logo3DBackground } from "@/components/Logo3DBackground";
 import { ScrollProgress } from "@/components/ScrollProgress";
-import { MorphingBlob } from "@/components/MorphingBlob";
 import { HeroSection } from "@/components/sections/HeroSection";
 import { BackgroundTargetSection } from "@/components/sections/BackgroundTargetSection";
 import { CompanyProfileSection } from "@/components/sections/CompanyProfileSection";
@@ -19,6 +18,9 @@ import { CollaborationModal } from "@/components/CollaborationModal";
 import Marquee from "@/components/animations/Marquee";
 import SplitWords from "@/components/animations/SplitWords";
 import Image from "next/image";
+
+const Logo3DBackground = dynamic(() => import("@/components/Logo3DBackground").then(mod => mod.Logo3DBackground), { ssr: false });
+const MorphingBlob = dynamic(() => import("@/components/MorphingBlob").then(mod => mod.MorphingBlob), { ssr: false });
 
 function MarqueeStrip() {
   const words = [
@@ -56,7 +58,7 @@ export default function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
-    <main className="relative min-h-screen bg-white dark:bg-slate-900 text-slate-900 dark:text-white overflow-x-hidden selection:bg-brand-primary selection:text-white">
+    <main className="relative min-h-screen bg-white dark:bg-slate-900 text-slate-900 dark:text-white overflow-x-hidden selection:bg-brand-primary selection:text-white pb-[env(safe-area-inset-bottom)]">
       {/* Faux-3D Perspective Initial Splash Screen */}
       <SplashScreen />
 
@@ -69,25 +71,25 @@ export default function Home() {
       {/* Decorative background images — low opacity, blurred, non-intrusive */}
       <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden" aria-hidden="true">
         {/* Group 3 decoration — top-right */}
-        <div className="absolute -top-[10%] -right-[15%] w-[700px] h-[700px] opacity-[0.025] dark:opacity-[0.04]">
+        <div className="absolute -top-[10%] -right-[15%] w-[700px] h-[700px] opacity-[0.025] dark:opacity-[0.04] overflow-hidden">
           <Image
             src="/Group 3.png"
             alt=""
             fill
             className="object-contain blur-[2px]"
             loading="lazy"
-            sizes="700px"
+            sizes="(max-width: 768px) 100vw, 700px"
           />
         </div>
         {/* Group 1 decoration — bottom-left */}
-        <div className="absolute bottom-[10%] -left-[10%] w-[400px] h-[400px] opacity-[0.03] dark:opacity-[0.05]">
+        <div className="absolute bottom-[10%] -left-[10%] w-[400px] h-[400px] opacity-[0.03] dark:opacity-[0.05] overflow-hidden">
           <Image
             src="/Group 1.png"
             alt=""
             fill
             className="object-contain blur-[1px]"
             loading="lazy"
-            sizes="400px"
+            sizes="(max-width: 768px) 100vw, 400px"
           />
         </div>
         {/* Morphing blob decorations */}
@@ -111,33 +113,51 @@ export default function Home() {
       <MarqueeStrip />
 
       {/* Proposal Poin 3: Background & Target Market */}
-      <BackgroundTargetSection />
+      <section data-cv="true">
+        <BackgroundTargetSection />
+      </section>
 
       {/* Proposal Poin 4 (Part 1): Profile, Visi, Misi, Filosofi */}
-      <CompanyProfileSection />
+      <section data-cv="true">
+        <CompanyProfileSection />
+      </section>
       <MarqueeStrip />
 
       {/* Proposal Poin 4 (Part 2): SWOT Matrix & 5-Year Roadmap */}
-      <SWOTRoadmapSection />
+      <section data-cv="true">
+        <SWOTRoadmapSection />
+      </section>
 
       {/* Statement oversized */}
-      <StatementSection />
+      <section data-cv="true">
+        <StatementSection />
+      </section>
 
       {/* Proposal Poin 5: Creative & Tech Services & Capital Projection */}
-      <ServicesSection onOpenCollaboration={() => setIsModalOpen(true)} />
+      <section data-cv="true">
+        <ServicesSection onOpenCollaboration={() => setIsModalOpen(true)} />
+      </section>
       <MarqueeStrip />
 
       {/* Karya & Portfolio */}
-      <PortfolioSection />
+      <section data-cv="true">
+        <PortfolioSection />
+      </section>
 
       {/* Client Testimonials */}
-      <TestimonialSection />
+      <section data-cv="true">
+        <TestimonialSection />
+      </section>
 
       {/* Proposal Poin 6: Sustainability Model */}
-      <SustainabilitySection />
+      <section data-cv="true">
+        <SustainabilitySection />
+      </section>
 
       {/* Proposal Poin 7: Footer & Collaboration Closing */}
-      <FooterSection onOpenCollaboration={() => setIsModalOpen(true)} />
+      <section data-cv="true">
+        <FooterSection onOpenCollaboration={() => setIsModalOpen(true)} />
+      </section>
 
       {/* Interactive Collaboration Modal with Confetti Celebration */}
       <CollaborationModal

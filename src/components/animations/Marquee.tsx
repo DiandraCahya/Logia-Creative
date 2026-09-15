@@ -1,4 +1,7 @@
 "use client";
+import { useEffect, useRef, useState } from "react";
+import { usePerformanceTier } from "@/lib/usePerformanceTier";
+
 interface MarqueeProps {
   items: string[];
   speed?: number;
@@ -7,11 +10,33 @@ interface MarqueeProps {
 }
 
 export default function Marquee({ items, speed = 35, reverse = false, className = "" }: MarqueeProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [isPaused, setIsPaused] = useState(false);
+  const tier = usePerformanceTier();
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+
+    const io = new IntersectionObserver(([entry]) => {
+      setIsPaused(!entry.isIntersecting);
+    }, { threshold: 0 });
+
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
+  const effectiveSpeed = tier === "low" ? speed * 2.5 : speed;
+
   return (
-    <div className={`marquee overflow-hidden ${className}`} aria-hidden="true">
+    <div ref={containerRef} className={`marquee overflow-hidden ${className}`} aria-hidden="true">
       <div
         className="marquee-track"
-        style={{ animationDuration: `${speed}s`, animationDirection: reverse ? "reverse" : "normal" }}
+        style={{
+          animationDuration: `${effectiveSpeed}s`,
+          animationDirection: reverse ? "reverse" : "normal",
+          animationPlayState: isPaused ? 'paused' : 'running'
+        }}
       >
         {[0, 1].map((copy) => (
           <div key={copy} className="marquee-group">

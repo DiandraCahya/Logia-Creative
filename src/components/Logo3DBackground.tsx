@@ -1,53 +1,69 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import Image from "next/image";
+import { usePerformanceTier } from "@/lib/usePerformanceTier";
 
 export function Logo3DBackground() {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [rotation, setRotation] = useState({ x: 0, y: 0 });
-  const [isTouchDevice, setIsTouchDevice] = useState(false);
-  const rafId = useRef<number>(0);
-  const targetRotation = useRef({ x: 0, y: 0 });
+  const tier = usePerformanceTier();
 
   useEffect(() => {
-    // Detect touch/mobile devices
-    const isTouch =
-      window.matchMedia("(pointer: coarse)").matches ||
-      "ontouchstart" in window ||
-      window.innerWidth < 768;
-    setIsTouchDevice(isTouch);
-    if (isTouch) return;
+    if (tier === "low") return;
+
+    const el = containerRef.current;
+    if (!el) return;
+
+    let rafId = 0;
+    let targetX = 0;
+    let targetY = 0;
+    let currentX = 0;
+    let currentY = 0;
+    let inView = true;
+    let pageVisible = !document.hidden;
+
+    const io = new IntersectionObserver(([entry]) => {
+      inView = entry.isIntersecting;
+    }, { threshold: 0 });
+    io.observe(el);
+
+    const onVis = () => { pageVisible = !document.hidden; };
+    document.addEventListener("visibilitychange", onVis);
 
     const handleMouseMove = (e: MouseEvent) => {
       const cx = window.innerWidth / 2;
       const cy = window.innerHeight / 2;
-
-      const maxAngle = 15;
-      const rY = ((e.clientX - cx) / cx) * maxAngle;
-      const rX = ((e.clientY - cy) / cy) * -maxAngle;
-
-      targetRotation.current = { x: rX, y: rY };
+      const maxAngle = tier === "medium" ? 8 : 15;
+      targetY = ((e.clientX - cx) / cx) * maxAngle;
+      targetX = ((e.clientY - cy) / cy) * -maxAngle;
     };
 
     const animate = () => {
-      setRotation((prev) => ({
-        x: prev.x + (targetRotation.current.x - prev.x) * 0.1,
-        y: prev.y + (targetRotation.current.y - prev.y) * 0.1,
-      }));
-      rafId.current = requestAnimationFrame(animate);
+      rafId = requestAnimationFrame(animate);
+      if (!inView || !pageVisible) return;
+
+      currentX += (targetX - currentX) * 0.1;
+      currentY += (targetY - currentY) * 0.1;
+
+      // Update inner div style directly to avoid React state overhead
+      const inner = el.firstElementChild as HTMLDivElement;
+      if (inner) {
+        inner.style.transform = `rotateX(${currentX}deg) rotateY(${currentY}deg) translateZ(20px)`;
+      }
     };
 
     window.addEventListener("mousemove", handleMouseMove, { passive: true });
-    rafId.current = requestAnimationFrame(animate);
+    rafId = requestAnimationFrame(animate);
 
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
-      cancelAnimationFrame(rafId.current);
+      document.removeEventListener("visibilitychange", onVis);
+      io.disconnect();
+      cancelAnimationFrame(rafId);
     };
-  }, []);
+  }, [tier]);
 
-  if (isTouchDevice) return null;
+  if (tier === "low") return null;
 
   return (
     <div
@@ -59,7 +75,6 @@ export function Logo3DBackground() {
       <div
         className="relative w-[600px] h-[600px]"
         style={{
-          transform: `rotateX(${rotation.x}deg) rotateY(${rotation.y}deg) translateZ(20px)`,
           transformStyle: "preserve-3d",
           willChange: "transform",
         }}
@@ -71,7 +86,6 @@ export function Logo3DBackground() {
           className="object-contain opacity-[0.04]"
           sizes="600px"
           priority={false}
-          loading="lazy"
         />
       </div>
     </div>
