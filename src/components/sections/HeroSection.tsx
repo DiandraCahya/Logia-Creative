@@ -360,34 +360,42 @@ export function HeroSection({ onOpenCollaboration }: HeroSectionProps) {
                 </div>
               </div>
 
-              {/* Floating Floating Stat Badges */}
-              <motion.div
-                animate={{ y: [0, -8, 0] }}
-                transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute -top-3 -right-3 sm:-top-5 sm:-right-5 px-4 py-2.5 rounded-2xl glass-container shadow-xl border border-brand-mint/40 hidden sm:flex items-center gap-3 z-20 pointer-events-none"
-                style={{ transform: "translateZ(50px)" }}
+              {/* Floating Stat Badges - elevated in front of the 3D card */}
+              <div
+                className="absolute -top-4 -right-3 sm:-top-6 sm:-right-6 z-30"
+                style={{ transform: "translateZ(100px)", transformStyle: "preserve-3d" }}
               >
-                <div className="w-2.5 h-2.5 rounded-full bg-brand-mint animate-pulse" />
-                <div className="text-left">
-                  <p className="text-[10px] text-slate-500 dark:text-slate-400 font-medium">Integrasi Sistem</p>
-                  <p className="text-xs font-bold text-slate-900 dark:text-white">100% Terpadu</p>
-                </div>
-              </motion.div>
+                <motion.div
+                  animate={{ y: [0, -8, 0] }}
+                  transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut" }}
+                  className="px-4 py-2.5 rounded-2xl bg-white/95 dark:bg-slate-900/90 backdrop-blur-xl shadow-2xl border border-brand-mint/50 flex items-center gap-3 select-none hover:scale-105 transition-transform"
+                >
+                  <div className="w-2.5 h-2.5 rounded-full bg-brand-mint animate-pulse shrink-0" />
+                  <div className="text-left whitespace-nowrap">
+                    <p className="text-[10px] text-slate-500 dark:text-slate-400 font-medium">Integrasi Sistem</p>
+                    <p className="text-xs font-bold text-slate-900 dark:text-white">100% Terpadu</p>
+                  </div>
+                </motion.div>
+              </div>
 
-              <motion.div
-                animate={{ y: [0, 8, 0] }}
-                transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-                className="absolute -bottom-3 -left-3 sm:-bottom-5 sm:-left-5 px-4 py-2.5 rounded-2xl glass-container shadow-xl border border-brand-primary/40 hidden sm:flex items-center gap-3 z-20 pointer-events-none"
-                style={{ transform: "translateZ(60px)" }}
+              <div
+                className="absolute -bottom-4 -left-3 sm:-bottom-6 sm:-left-6 z-30"
+                style={{ transform: "translateZ(100px)", transformStyle: "preserve-3d" }}
               >
-                <div className="w-8 h-8 rounded-xl bg-brand-primary/15 text-brand-primary flex items-center justify-center">
-                  <Sparkles className="w-4 h-4" />
-                </div>
-                <div className="text-left">
-                  <p className="text-[10px] text-slate-500 dark:text-slate-400 font-medium">Target Efisiensi</p>
-                  <p className="text-xs font-bold text-brand-primary">Hemat Waktu & Biaya</p>
-                </div>
-              </motion.div>
+                <motion.div
+                  animate={{ y: [0, 8, 0] }}
+                  transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+                  className="px-4 py-2.5 rounded-2xl bg-white/95 dark:bg-slate-900/90 backdrop-blur-xl shadow-2xl border border-brand-primary/50 flex items-center gap-3 select-none hover:scale-105 transition-transform"
+                >
+                  <div className="w-8 h-8 rounded-xl bg-brand-primary/15 text-brand-primary flex items-center justify-center shrink-0">
+                    <Sparkles className="w-4 h-4" />
+                  </div>
+                  <div className="text-left whitespace-nowrap">
+                    <p className="text-[10px] text-slate-500 dark:text-slate-400 font-medium">Target Efisiensi</p>
+                    <p className="text-xs font-bold text-brand-primary">Hemat Waktu & Biaya</p>
+                  </div>
+                </motion.div>
+              </div>
             </div>
           </motion.div>
         </div>

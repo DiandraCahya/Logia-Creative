@@ -98,7 +98,9 @@ export function LiquidNavbar({ onOpenCollaboration }: LiquidNavbarProps) {
         className="fixed top-4 sm:top-6 left-0 right-0 z-40 flex justify-center px-4 pointer-events-none pb-[env(safe-area-inset-bottom)]"
       >
         <div
-          className={`glass-container pointer-events-auto w-full max-w-6xl mx-auto flex items-center justify-between px-4 sm:px-6 py-2.5 sm:py-3 !rounded-full`}
+          className={`glass-container pointer-events-auto w-fit max-w-[95vw] mx-auto flex items-center justify-between sm:justify-center gap-3 sm:gap-6 lg:gap-8 px-4 sm:px-6 py-2 sm:py-2.5 !rounded-full shadow-lg transition-all duration-300 ${
+            scrolled ? "shadow-xl border-white/25 dark:border-white/15 bg-white/80 dark:bg-slate-900/80" : ""
+          }`}
         >
           {/* Logo */}
           <a

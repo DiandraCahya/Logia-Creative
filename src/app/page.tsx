@@ -114,7 +114,7 @@ export default function Home() {
 
       {/* Proposal Poin 3: Background & Target Market */}
       <section data-cv="true">
-        <BackgroundTargetSection />
+        <BackgroundTargetSection onOpenCollaboration={() => setIsModalOpen(true)} />
       </section>
 
       {/* Proposal Poin 4 (Part 1): Profile, Visi, Misi, Filosofi */}
