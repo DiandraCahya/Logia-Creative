@@ -62,41 +62,41 @@ export function SplashScreen({ onComplete }: SplashScreenProps) {
             filter: "blur(12px)",
             transition: { duration: 0.65, ease: [0.16, 1, 0.3, 1] },
           }}
-          className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#071324] text-white"
+          className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black text-white"
         >
           {/* Ambient Cosmic Background Glows */}
           <div className="absolute inset-0 overflow-hidden pointer-events-none">
             <motion.div
               animate={{
                 scale: [1, 1.25, 1],
-                opacity: [0.3, 0.6, 0.3],
+                opacity: [0.15, 0.3, 0.15],
                 x: [0, 20, 0],
                 y: [0, -30, 0],
               }}
               transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
-              className="absolute -top-[20%] -left-[10%] w-[500px] h-[500px] morph-blob bg-gradient-to-br from-brand-primary/30 to-brand-aqua/20 blur-[130px]"
+              className="absolute -top-[20%] -left-[10%] w-[500px] h-[500px] morph-blob bg-gradient-to-br from-white/20 to-white/10 blur-[130px]"
             />
             <motion.div
               animate={{
                 scale: [1.2, 1, 1.2],
-                opacity: [0.25, 0.5, 0.25],
+                opacity: [0.15, 0.25, 0.15],
                 x: [0, -30, 0],
                 y: [0, 40, 0],
               }}
               transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-              className="absolute -bottom-[20%] -right-[10%] w-[550px] h-[550px] morph-blob-alt bg-gradient-to-tl from-brand-slate/40 via-brand-mint/20 to-transparent blur-[140px]"
+              className="absolute -bottom-[20%] -right-[10%] w-[550px] h-[550px] morph-blob-alt bg-gradient-to-tl from-white/20 via-white/5 to-transparent blur-[140px]"
             />
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(7,19,36,0.85)_100%)]" />
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.9)_100%)]" />
           </div>
 
           {/* Typing Animation "Logia" */}
-          <div className="relative z-10 flex items-center justify-center drop-shadow-[0_10px_25px_rgba(37,99,235,0.35)]">
-            <h1 className="text-6xl md:text-8xl font-black leading-[1.2] pb-[0.15em] overflow-visible inline-block">
-              <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 select-none inline-block">
+          <div className="relative z-10 flex items-center justify-center drop-shadow-[0_10px_25px_rgba(255,255,255,0.15)] py-4">
+            <h1 className="text-6xl md:text-8xl font-black leading-normal overflow-visible inline-flex items-center p-2">
+              <span className="bg-clip-text text-transparent bg-gradient-to-r from-white via-gray-300 to-gray-500 select-none">
                 {LOGIA_TEXT.slice(0, typedCount)}
               </span>
               {showCursor && (
-                <span className="inline-block text-blue-400 font-light select-none ml-1 animate-pulse" aria-hidden="true">
+                <span className="inline-block text-white font-light select-none ml-1 animate-pulse" aria-hidden="true">
                   |
                 </span>
               )}

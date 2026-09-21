@@ -91,7 +91,7 @@ export function HeroSection({ onOpenCollaboration }: HeroSectionProps) {
             scale: [1, 1.15, 1],
           }}
           transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute top-1/4 -left-32 w-96 h-96 sm:w-[520px] sm:h-[520px] morph-blob bg-brand-primary/20 dark:bg-brand-primary/25 blur-[120px]"
+          className="absolute top-1/4 -left-32 w-96 h-96 sm:w-[520px] sm:h-[520px] morph-blob bg-gray-500/10 dark:bg-white/5 blur-[120px]"
         />
         <motion.div
           animate={{
@@ -100,7 +100,7 @@ export function HeroSection({ onOpenCollaboration }: HeroSectionProps) {
             scale: [1, 1.2, 1],
           }}
           transition={{ duration: 14, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute top-1/3 -right-32 w-96 h-96 sm:w-[560px] sm:h-[560px] morph-blob-alt bg-brand-aqua/20 dark:bg-brand-aqua/20 blur-[130px]"
+          className="absolute top-1/3 -right-32 w-96 h-96 sm:w-[560px] sm:h-[560px] morph-blob-alt bg-gray-400/10 dark:bg-white/10 blur-[130px]"
         />
         <motion.div
           animate={{
@@ -108,7 +108,7 @@ export function HeroSection({ onOpenCollaboration }: HeroSectionProps) {
             opacity: [0.15, 0.35, 0.15],
           }}
           transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute bottom-10 left-1/2 -translate-x-1/2 w-[600px] h-[350px] morph-blob bg-brand-mint/15 dark:bg-brand-slate/40 blur-[140px]"
+          className="absolute bottom-10 left-1/2 -translate-x-1/2 w-[600px] h-[350px] morph-blob bg-gray-600/10 dark:bg-white/5 blur-[140px]"
         />
 
         {/* Background decoration image */}
@@ -136,11 +136,11 @@ export function HeroSection({ onOpenCollaboration }: HeroSectionProps) {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
-              className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full liquid-glass border border-brand-primary/30 text-xs font-semibold tracking-wide text-brand-primary dark:text-brand-aqua shadow-sm"
+              className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full liquid-glass border border-gray-300 dark:border-white/30 text-xs font-semibold tracking-wide text-gray-800 dark:text-gray-200 shadow-sm"
             >
               <span className="flex h-2 w-2 relative">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-aqua opacity-75" />
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-brand-primary" />
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-gray-400 opacity-75" />
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-gray-600 dark:bg-white" />
               </span>
               <span>Ideas into Impact • Creative & Technology Agency</span>
             </motion.div>
@@ -162,7 +162,7 @@ export function HeroSection({ onOpenCollaboration }: HeroSectionProps) {
                   initial={{ y: "100%" }}
                   animate={{ y: 0 }}
                   transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.18 }}
-                  className="block text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-violet-600 dark:from-blue-400 dark:to-violet-400"
+                  className="block text-transparent bg-clip-text bg-gradient-to-r from-gray-500 to-gray-800 dark:from-white dark:to-gray-400"
                 >
                   Branding
                 </motion.span>
@@ -308,7 +308,7 @@ export function HeroSection({ onOpenCollaboration }: HeroSectionProps) {
                 {/* Card Header */}
                 <div className="flex items-center justify-between pb-6 border-b border-slate-200 dark:border-white/10">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-brand-primary to-brand-aqua p-2 flex items-center justify-center text-white shadow-md">
+                    <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-gray-700 to-black p-2 flex items-center justify-center text-white shadow-md">
                       <Zap className="w-5 h-5" />
                     </div>
                     <div>
@@ -316,7 +316,7 @@ export function HeroSection({ onOpenCollaboration }: HeroSectionProps) {
                       <p className="text-[11px] text-slate-500 dark:text-slate-400">Creative & Technology Convergence</p>
                     </div>
                   </div>
-                  <span className="text-[10px] px-2.5 py-1 rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 font-semibold border border-emerald-500/20">
+                  <span className="text-[10px] px-2.5 py-1 rounded-full bg-gray-100 dark:bg-white/10 text-gray-800 dark:text-white font-semibold border border-gray-200 dark:border-white/20">
                     Live Ecosystem
                   </span>
                 </div>
@@ -359,7 +359,6 @@ export function HeroSection({ onOpenCollaboration }: HeroSectionProps) {
                   </div>
                 </div>
               </div>
-
               {/* Floating Stat Badges - elevated in front of the 3D card */}
               <div
                 className="absolute -top-4 -right-3 sm:-top-6 sm:-right-6 z-30"
@@ -396,6 +395,34 @@ export function HeroSection({ onOpenCollaboration }: HeroSectionProps) {
                   </div>
                 </motion.div>
               </div>
+              {/* Floating Floating Stat Badges */}
+              <motion.div
+                animate={{ y: [0, -8, 0] }}
+                transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut" }}
+                className="absolute -top-3 -right-3 sm:-top-5 sm:-right-5 px-4 py-2.5 rounded-2xl glass-container shadow-xl border border-gray-200 dark:border-white/20 hidden sm:flex items-center gap-3 z-20 pointer-events-none"
+                style={{ transform: "translateZ(50px)" }}
+              >
+                <div className="w-2.5 h-2.5 rounded-full bg-gray-500 dark:bg-white animate-pulse" />
+                <div className="text-left">
+                  <p className="text-[10px] text-slate-500 dark:text-slate-400 font-medium">Integrasi Sistem</p>
+                  <p className="text-xs font-bold text-slate-900 dark:text-white">100% Terpadu</p>
+                </div>
+              </motion.div>
+
+              <motion.div
+                animate={{ y: [0, 8, 0] }}
+                transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+                className="absolute -bottom-3 -left-3 sm:-bottom-5 sm:-left-5 px-4 py-2.5 rounded-2xl glass-container shadow-xl border border-gray-200 dark:border-white/20 hidden sm:flex items-center gap-3 z-20 pointer-events-none"
+                style={{ transform: "translateZ(60px)" }}
+              >
+                <div className="w-8 h-8 rounded-xl bg-gray-100 dark:bg-white/10 text-gray-800 dark:text-white flex items-center justify-center">
+                  <Sparkles className="w-4 h-4" />
+                </div>
+                <div className="text-left">
+                  <p className="text-[10px] text-slate-500 dark:text-slate-400 font-medium">Target Efisiensi</p>
+                  <p className="text-xs font-bold text-slate-900 dark:text-white">Hemat Waktu & Biaya</p>
+                </div>
+              </motion.div>
             </div>
           </motion.div>
         </div>

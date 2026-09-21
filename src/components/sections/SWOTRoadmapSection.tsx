@@ -155,12 +155,12 @@ export function SWOTRoadmapSection() {
           <span className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-6 block font-mono">
             03 — Analisis & Proyeksi
           </span>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black leading-[1.1] tracking-tighter text-slate-900 dark:text-white mb-6">
-            Analisis Posisi Strategis &{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-violet-600 dark:from-blue-400 dark:to-violet-400">Rencana 5 Tahun</span>
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black leading-[1.1] tracking-tighter text-black dark:text-white mb-6 uppercase">
+            SWOT &{" "}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-gray-500 to-gray-800 dark:from-white dark:to-gray-400">Roadmap</span>
           </h2>
-          <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed mx-auto max-w-2xl">
-            Menghadapi dinamika pasar dengan pemahaman objektif atas kekuatan, kelemahan, peluang, dan ancaman, dipandu tahapan pertumbuhan bisnis yang terukur hingga 5 tahun ke depan.
+          <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 leading-relaxed mx-auto max-w-2xl">
+            Posisi strategis & proyeksi terukur 5 tahun ke depan.
           </p>
         </div>
 

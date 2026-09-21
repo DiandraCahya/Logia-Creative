@@ -58,7 +58,7 @@ export default function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
-    <main className="relative min-h-screen bg-white dark:bg-slate-900 text-slate-900 dark:text-white overflow-x-hidden selection:bg-brand-primary selection:text-white pb-[env(safe-area-inset-bottom)]">
+    <main className="relative min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)] overflow-x-hidden selection:bg-gray-300 dark:selection:bg-gray-700 selection:text-black dark:selection:text-white pb-[env(safe-area-inset-bottom)]">
       {/* Faux-3D Perspective Initial Splash Screen */}
       <SplashScreen />
 
@@ -96,12 +96,12 @@ export default function Home() {
         <MorphingBlob
           size="lg"
           variant="slow"
-          className="absolute top-[40%] -left-[20%] bg-gradient-to-br from-brand-primary/[0.06] to-brand-aqua/[0.03] blur-[100px]"
+          className="absolute top-[40%] -left-[20%] bg-gradient-to-br from-white/[0.04] to-transparent blur-[100px]"
         />
         <MorphingBlob
           size="md"
           variant="alt"
-          className="absolute top-[70%] -right-[15%] bg-gradient-to-bl from-brand-mint/[0.05] to-brand-slate/[0.03] blur-[80px]"
+          className="absolute top-[70%] -right-[15%] bg-gradient-to-bl from-white/[0.04] to-transparent blur-[80px]"
         />
       </div>
 

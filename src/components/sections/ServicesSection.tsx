@@ -135,12 +135,12 @@ export function ServicesSection({ onOpenCollaboration }: ServicesSectionProps) {
           <span className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-6 block font-mono">
             04 — Layanan Utama
           </span>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black leading-[1.1] tracking-tighter text-slate-900 dark:text-white mb-6">
-            Spektrum Solusi{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-violet-600 dark:from-blue-400 dark:to-violet-400">Kreatif & Teknologi</span>
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black leading-[1.1] tracking-tighter text-black dark:text-white mb-6 uppercase">
+            Services &{" "}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-gray-500 to-gray-800 dark:from-white dark:to-gray-400">Capabilities</span>
           </h2>
-          <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed mx-auto max-w-2xl">
-            Dua rumpun kapabilitas utama yang dapat diakses secara terpisah maupun sebagai satu kesatuan solusi komprehensif.
+          <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 leading-relaxed mx-auto max-w-2xl">
+            Solusi terpadu kreatif dan teknologi.
           </p>
         </div>
 

@@ -68,12 +68,12 @@ export function SustainabilitySection() {
           <span className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-6 block font-mono">
             07 — Keberlanjutan Usaha
           </span>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black leading-[1.1] tracking-tighter text-slate-900 dark:text-white mb-6">
-            Strategi Keberlanjutan &{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-violet-600 dark:from-blue-400 dark:to-violet-400">Skalabilitas Agensi</span>
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black leading-[1.1] tracking-tighter text-black dark:text-white mb-6 uppercase">
+            Sustainability &{" "}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-gray-500 to-gray-800 dark:from-white dark:to-gray-400">Scale</span>
           </h2>
-          <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed mx-auto max-w-2xl">
-            Menjamin stabilitas operasional jangka panjang dan ketahanan bisnis melalui tiga pilar strategis: kontinuitas arus kas, kecepatan produksi cerdas, dan sinergi ekosistem.
+          <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 leading-relaxed mx-auto max-w-2xl">
+            Stabilitas operasional dan ketahanan ekosistem jangka panjang.
           </p>
         </div>
 

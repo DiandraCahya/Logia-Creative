@@ -24,24 +24,27 @@
   :root {
     --bg-primary: #ffffff;
     --bg-secondary: #f9fafb;
-    --text-primary: #0f172a;
-    --text-secondary: #475569;
-    --text-tertiary: #94a3b8;
-    --accent-primary: #2563eb;   /* blue-600 */
-    --accent-secondary: #7c3aed; /* violet-600 */
-    --bg: #0a0a0a;
-    --silver: #e0e0e0;
-    --accent: #ff3c00;
+    --text-primary: #000000;
+    --text-secondary: #333333;
+    --text-tertiary: #555555;
+    --accent-primary: #000000;
+    --accent-secondary: #222222;
+    --bg: #ffffff;
+    --silver: #333333;
+    --accent: #000000;
   }
 
   .dark {
-    --bg-primary: #0f172a;
-    --bg-secondary: #1e293b;
-    --text-primary: #f8fafc;
-    --text-secondary: #cbd5e1;
-    --text-tertiary: #64748b;
-    --accent-primary: #3b82f6;
-    --accent-secondary: #8b5cf6;
+    --bg-primary: #0a0a0a;
+    --bg-secondary: #111111;
+    --text-primary: #ffffff;
+    --text-secondary: #a3a3a3;
+    --text-tertiary: #525252;
+    --accent-primary: #ffffff;
+    --accent-secondary: #e5e5e5;
+    --bg: #0a0a0a;
+    --silver: #e0e0e0;
+    --accent: #ffffff;
   }
 
   * {
@@ -205,17 +208,18 @@ html:not(.dark) nav a:hover,
 
 /* Button Kolaborasi / CTA Universal - grad-cta */
 .grad-cta {
-  background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
-  color: #ffffff !important;
+  background: #ffffff !important;
+  color: #000000 !important;
   font-weight: 600;
   border: 1px solid rgba(255, 255, 255, 0.25) !important;
-  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35) !important;
+  box-shadow: 0 4px 14px rgba(255, 255, 255, 0.15) !important;
   transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1) !important;
 }
 
 .grad-cta:hover {
+  background: #e5e5e5 !important;
   transform: translateY(-2px) !important;
-  box-shadow: 0 6px 20px rgba(37, 99, 235, 0.5) !important;
+  box-shadow: 0 6px 20px rgba(255, 255, 255, 0.25) !important;
 }
 
 .grad-cta:active {
@@ -225,16 +229,21 @@ html:not(.dark) nav a:hover,
 /* DARK MODE - tambah glow agar menonjol */
 .dark .grad-cta {
   border-color: rgba(255, 255, 255, 0.35) !important;
-  box-shadow: 0 0 20px rgba(124, 58, 237, 0.45) !important;
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.2) !important;
 }
 
-/* LIGHT MODE - override jadi biru, teks tetap putih */
+/* LIGHT MODE - override jadi hitam, teks putih */
 html:not(.dark) .grad-cta,
 .light .grad-cta {
-  background: linear-gradient(135deg, #1d4ed8 0%, #3b82f6 100%) !important;
+  background: #000000 !important;
   color: #ffffff !important;
-  border-color: #1e40af !important;
-  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.4) !important;
+  border-color: #000000 !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2) !important;
+}
+
+html:not(.dark) .grad-cta:hover,
+.light .grad-cta:hover {
+  background: #222222 !important;
 }
 
 /* Text colors - LIGHT MODE */
@@ -250,7 +259,7 @@ html:not(.dark) h6,
 .light h4,
 .light h5,
 .light h6 {
-  color: #0f172a !important; /* slate-900 */
+  color: #000000 !important;
 }
 
 html:not(.dark) p:not(.grad-cta):not(.btn-collaborate),
@@ -259,24 +268,24 @@ html:not(.dark) div,
 .light p:not(.grad-cta):not(.btn-collaborate),
 .light span:not(.grad-cta):not(.btn-collaborate),
 .light div {
-  color: #334155 !important; /* slate-700 */
+  color: #333333 !important;
 }
 
 /* Links */
-html:not(.dark) a:not(.btn-collaborate),
-.light a:not(.btn-collaborate) {
-  color: #2563eb !important; /* blue-600 */
+html:not(.dark) a:not(.grad-cta):not(.btn-collaborate),
+.light a:not(.grad-cta):not(.btn-collaborate) {
+  color: #000000 !important;
 }
 
-html:not(.dark) a:hover:not(.btn-collaborate),
-.light a:hover:not(.btn-collaborate) {
-  color: #1e40af !important; /* blue-800 */
+html:not(.dark) a:hover:not(.grad-cta):not(.btn-collaborate),
+.light a:hover:not(.grad-cta):not(.btn-collaborate) {
+  color: #555555 !important;
 }
 
 /* Icons */
 html:not(.dark) svg,
 .light svg {
-  color: #475569 !important; /* slate-600 */
+  color: #000000 !important;
 }
 
 /* Cards */

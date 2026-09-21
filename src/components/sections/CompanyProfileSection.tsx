@@ -55,11 +55,11 @@ export function CompanyProfileSection() {
           <div className={`lg:col-span-5 lg:sticky lg:top-32 transition-all duration-700 ${isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
             <div className="mb-10">
               <span className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-6 block font-mono">
-                01 — Profil Agency
+                01 — Profile
               </span>
-              <h2 className="text-4xl sm:text-5xl lg:text-[4.5rem] font-black leading-[1.05] tracking-tighter text-slate-900 dark:text-white overflow-hidden pb-2">
-                <span className="block translate-y-0">Fondasi Nilai</span>
-                <span className="block text-blue-600 dark:text-blue-400">& Arah Langkah</span>
+              <h2 className="text-4xl sm:text-5xl lg:text-[4.5rem] font-black leading-[1.05] tracking-tighter text-black dark:text-white overflow-hidden pb-2 uppercase">
+                <span className="block translate-y-0">Fondasi</span>
+                <span className="block text-gray-500 dark:text-gray-400">& Nilai</span>
               </h2>
             </div>
 
