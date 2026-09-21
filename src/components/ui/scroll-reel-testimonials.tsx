@@ -83,7 +83,7 @@ export function ScrollReelTestimonials({ testimonials, className }: { testimonia
       {/* Active Quote Overlay */}
       <div className="sticky top-0 h-[100vh] w-full flex flex-col items-center justify-center z-20 px-4 md:px-24 pointer-events-none text-center">
         <div className="max-w-4xl mx-auto flex flex-col items-center">
-          <h3 className="text-3xl md:text-5xl lg:text-6xl font-bold leading-tight mb-12 drop-shadow-2xl text-slate-900 dark:text-white">
+          <h3 className="text-[clamp(1.5rem,3vw,2.5rem)] font-bold leading-[1.3] mb-12 drop-shadow-2xl text-black dark:text-white">
             {activeTestimonial.quote.split("").map((char, i) => (
               <motion.span
                 key={`${activeIndex}-${i}`}
@@ -104,10 +104,10 @@ export function ScrollReelTestimonials({ testimonials, className }: { testimonia
             transition={{ type: "spring", stiffness: 100, damping: 20, delay: 0.3 }}
             className="flex flex-col items-center gap-4"
           >
-            <div className="w-16 h-16 rounded-full overflow-hidden relative shadow-xl border-2 border-white/20">
+            <div className="w-16 h-16 rounded-full overflow-hidden relative shadow-md border-2 border-black/10 dark:border-white/10">
                <Image src={activeTestimonial.image} alt={activeTestimonial.author} fill className="object-cover" />
             </div>
-            <p className="text-lg md:text-xl font-mono text-brand-primary dark:text-brand-aqua uppercase tracking-widest font-bold drop-shadow-md">
+            <p className="text-sm font-semibold text-[#666666] dark:text-[#999999] uppercase tracking-wider">
               — {activeTestimonial.author}
             </p>
           </motion.div>

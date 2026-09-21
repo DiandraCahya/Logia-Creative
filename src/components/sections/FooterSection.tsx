@@ -2,11 +2,8 @@
 
 import React, { useState, useEffect } from "react";
 import { useScrollReveal } from "@/lib/useScrollReveal";
-import ChipSentence from "@/components/animations/ChipSentence";
 import Image from "next/image";
-import Link from "next/link";
 import {
-  Sparkles,
   ArrowUp,
   Mail,
   Phone,
@@ -15,7 +12,7 @@ import {
   Instagram,
   Linkedin,
   Globe,
-  ArrowUpRight,
+  ArrowRight,
 } from "lucide-react";
 
 interface FooterSectionProps {
@@ -30,7 +27,6 @@ export function FooterSection({ onOpenCollaboration }: FooterSectionProps) {
   useEffect(() => {
     const updateTime = () => {
       const now = new Date();
-      // Formatter in WIB (Asia/Jakarta)
       const options: Intl.DateTimeFormatOptions = {
         timeZone: "Asia/Jakarta",
         hour: "2-digit",
@@ -52,28 +48,41 @@ export function FooterSection({ onOpenCollaboration }: FooterSectionProps) {
   };
 
   return (
-    <footer id="kontak" className="relative pt-20 pb-12 overflow-hidden border-t border-slate-200 dark:border-white/10 bg-transparent">
-      {/* Background ambient light */}
-      <div className="absolute inset-0 pointer-events-none -z-10">
-        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[700px] h-[350px] bg-gradient-to-t from-brand-primary/10 via-brand-aqua/5 to-transparent blur-[140px]" />
-      </div>
+    <footer id="kontak" className="relative pt-20 pb-12 overflow-hidden border-t border-black/5 dark:border-white/5 bg-white dark:bg-[#0a0a0a]">
+      <div className="max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-12 space-y-20">
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
-        {/* Closing Impact CTA Banner */}
-        <div ref={ctaRef} className={`p-8 sm:p-14 lg:p-20 rounded-[2.5rem] glass-container border border-slate-200 dark:border-white/10 relative overflow-hidden shadow-glass-glow text-center space-y-6 transition-all duration-700 ${ctaVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}>
-          <div className="absolute -top-24 -right-24 w-64 h-64 bg-blue-600/5 dark:bg-blue-400/5 rounded-full blur-3xl pointer-events-none" />
-          <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-blue-600/5 dark:bg-blue-400/5 rounded-full blur-3xl pointer-events-none" />
+        {/* Closing Impact CTA Banner - Black Solid */}
+        <div
+          ref={ctaRef}
+          className={`p-10 sm:p-16 lg:p-24 rounded-[2rem] bg-black text-white relative overflow-hidden shadow-2xl text-center space-y-8 transition-all duration-700 ${
+            ctaVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'
+          }`}
+        >
+          {/* Subtle geometric overlay */}
+          <div className="absolute inset-0 opacity-10 bg-[linear-gradient(to_right,#ffffff_1px,transparent_1px),linear-gradient(to_bottom,#ffffff_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)] pointer-events-none" />
 
-          <div className="relative z-10">
-            <ChipSentence onOpenCollaboration={onOpenCollaboration} />
+          <div className="relative z-10 max-w-3xl mx-auto flex flex-col items-center">
+            <h2 className="text-[clamp(2.5rem,5vw,4.5rem)] font-extrabold tracking-tight leading-[1.1] mb-6">
+              Ready to elevate your brand?
+            </h2>
+            <p className="text-[#999999] text-base sm:text-lg mb-10 max-w-xl leading-relaxed">
+              Mari diskusikan bagaimana kami bisa membantu mentransformasi identitas visual dan infrastruktur digital bisnis Anda ke level selanjutnya.
+            </p>
+            <button
+              onClick={onOpenCollaboration}
+              className="px-8 py-4 bg-white text-black text-sm font-bold rounded-full hover:scale-[1.02] active:scale-[0.98] transition-transform duration-200 flex items-center gap-2 group"
+            >
+              <span>Mulai Diskusi Proyek</span>
+              <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+            </button>
           </div>
         </div>
 
         {/* Multi-Column Links & Info */}
-        <div ref={contactRef} className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 pt-8 border-t border-slate-200 dark:border-white/10 transition-all duration-700 ${contactVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+        <div ref={contactRef} className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 pt-8 transition-all duration-700 ${contactVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
           {/* Col 1: Brand Info */}
-          <div className="lg:col-span-2 space-y-4">
-            <div className="relative w-32 h-9">
+          <div className="lg:col-span-2 space-y-6">
+            <div className="relative w-32 h-10">
               <Image
                 src="/LOGO.png"
                 alt="Logia Creative Logo"
@@ -81,119 +90,109 @@ export function FooterSection({ onOpenCollaboration }: FooterSectionProps) {
                 className="object-contain"
               />
             </div>
-            <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed max-w-sm">
+            <p className="text-sm text-[#666666] dark:text-[#999999] leading-relaxed max-w-sm">
               Agensi kreatif dan teknologi terintegrasi yang menghadirkan solusi branding, perancangan antarmuka pengguna interaktif, dan automasi sistem kerja digital bagi UMKM, startup, dan organisasi.
             </p>
 
             {/* Live WIB Clock */}
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-100 dark:bg-white/[0.04] border border-slate-200 dark:border-white/10 text-xs font-mono text-slate-700 dark:text-slate-300">
-              <Clock className="w-3.5 h-3.5 text-brand-aqua animate-pulse" />
-              <span>Studio Time: {wibTime || "17:00:00"} WIB (UTC+7)</span>
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-black/[0.03] dark:bg-white/[0.03] border border-black/5 dark:border-white/5 text-xs font-mono text-black dark:text-white">
+              <Clock className="w-3.5 h-3.5 animate-pulse" />
+              <span>Studio Time: {wibTime || "17:00:00"} WIB</span>
             </div>
           </div>
 
           {/* Col 2: Navigation Links */}
-          <div className="space-y-3 text-xs sm:text-sm">
-            <h4 className="font-bold text-slate-900 dark:text-white uppercase tracking-wider text-xs">
+          <div className="space-y-4 text-sm">
+            <h4 className="font-bold text-black dark:text-white uppercase tracking-wider text-xs mb-6">
               Eksplorasi
             </h4>
-            <ul className="space-y-2 text-slate-600 dark:text-slate-400">
+            <ul className="space-y-3 text-[#666666] dark:text-[#999999]">
               <li>
-                <a href="#tentang" className="hover:text-blue-600 transition-colors link-sweep">
-                  Tentang & Latar Belakang
+                <a href="#about" className="hover:text-black dark:hover:text-white transition-colors">
+                  Tentang Logia
                 </a>
               </li>
               <li>
-                <a href="#tentang" className="hover:text-blue-600 transition-colors link-sweep">
-                  Segmentasi Target Pasar
+                <a href="#portfolio" className="hover:text-black dark:hover:text-white transition-colors">
+                  Target Pasar
                 </a>
               </li>
               <li>
-                <a href="#swot-roadmap" className="hover:text-blue-600 transition-colors link-sweep">
-                  Analisis SWOT
+                <a href="#portfolio" className="hover:text-black dark:hover:text-white transition-colors">
+                  Selected Work
                 </a>
               </li>
               <li>
-                <a href="#swot-roadmap" className="hover:text-blue-600 transition-colors link-sweep">
-                  5-Year Strategic Roadmap
-                </a>
-              </li>
-              <li>
-                <a href="#keberlanjutan" className="hover:text-blue-600 transition-colors link-sweep">
-                  Model Keberlanjutan Usaha
+                <a href="#pricing" className="hover:text-black dark:hover:text-white transition-colors">
+                  Katalog Harga
                 </a>
               </li>
             </ul>
           </div>
 
           {/* Col 3: Services Index */}
-          <div className="space-y-3 text-xs sm:text-sm">
-            <h4 className="font-bold text-slate-900 dark:text-white uppercase tracking-wider text-xs">
+          <div className="space-y-4 text-sm">
+            <h4 className="font-bold text-black dark:text-white uppercase tracking-wider text-xs mb-6">
               Layanan Utama
             </h4>
-            <ul className="space-y-2 text-slate-600 dark:text-slate-400">
+            <ul className="space-y-3 text-[#666666] dark:text-[#999999]">
               <li>
-                <a href="#layanan" className="hover:text-blue-600 transition-colors link-sweep">
-                  Brand Identity & Guidelines
+                <a href="#layanan" className="hover:text-black dark:hover:text-white transition-colors">
+                  Brand Identity & Visual Design
                 </a>
               </li>
               <li>
-                <a href="#layanan" className="hover:text-blue-600 transition-colors link-sweep">
-                  Social Media Content & Motion
+                <a href="#layanan" className="hover:text-black dark:hover:text-white transition-colors">
+                  UI/UX & Web Development
                 </a>
               </li>
               <li>
-                <a href="#layanan" className="hover:text-blue-600 transition-colors link-sweep">
-                  UI/UX Design & Web App
+                <a href="#layanan" className="hover:text-black dark:hover:text-white transition-colors">
+                  Social Media Management
                 </a>
               </li>
               <li>
-                <a href="#layanan" className="hover:text-blue-600 transition-colors link-sweep">
+                <a href="#layanan" className="hover:text-black dark:hover:text-white transition-colors">
                   Workflow Automation
-                </a>
-              </li>
-              <li>
-                <a href="#layanan" className="hover:text-blue-600 transition-colors link-sweep">
-                  Integrated Creative + Tech
                 </a>
               </li>
             </ul>
           </div>
 
           {/* Col 4: Contact & Social */}
-          <div className="space-y-3 text-xs sm:text-sm">
-            <h4 className="font-bold text-slate-900 dark:text-white uppercase tracking-wider text-xs">
-              Kontak & Kanal
+          <div className="space-y-4 text-sm">
+            <h4 className="font-bold text-black dark:text-white uppercase tracking-wider text-xs mb-6">
+              Kontak
             </h4>
-            <ul className="space-y-2 text-slate-600 dark:text-slate-400">
+            <ul className="space-y-3 text-[#666666] dark:text-[#999999]">
               <li className="flex items-center gap-2">
-                <Mail className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
-                <a href="mailto:hello@logia.id" className="hover:text-blue-600 transition-colors link-sweep">
+                <Mail className="w-4 h-4 text-black dark:text-white" />
+                <a href="mailto:hello@logia.id" className="hover:text-black dark:hover:text-white transition-colors">
                   hello@logia.id
                 </a>
               </li>
               <li className="flex items-center gap-2">
-                <Phone className="w-3.5 h-3.5 text-brand-aqua" />
-                <a href="tel:+6281234567890" className="hover:text-blue-600 transition-colors link-sweep">
+                <Phone className="w-4 h-4 text-black dark:text-white" />
+                <a href="tel:+6281234567890" className="hover:text-black dark:hover:text-white transition-colors">
                   +62 812-3456-7890
                 </a>
               </li>
               <li className="flex items-center gap-2">
-                <Globe className="w-3.5 h-3.5 text-brand-mint" />
+                <Globe className="w-4 h-4 text-black dark:text-white" />
                 <span>www.logia.id</span>
               </li>
               <li className="flex items-center gap-2">
-                <MapPin className="w-3.5 h-3.5 text-amber-500" />
+                <MapPin className="w-4 h-4 text-black dark:text-white" />
                 <span>Indonesia</span>
               </li>
             </ul>
 
-            <div className="flex items-center gap-2 pt-2">
+            <div className="flex items-center gap-2 pt-4">
               <a
                 href="https://instagram.com"
                 target="_blank"
                 rel="noreferrer"
-                className="w-8 h-8 rounded-xl bg-slate-100 dark:bg-white/[0.05] border border-slate-200 dark:border-white/10 flex items-center justify-center text-slate-600 dark:text-slate-400 hover:text-blue-600 transition-colors"
+                className="w-10 h-10 rounded-full bg-black/5 dark:bg-white/5 flex items-center justify-center text-black dark:text-white hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors"
                 aria-label="Instagram"
               >
                 <Instagram className="w-4 h-4" />
@@ -202,7 +201,7 @@ export function FooterSection({ onOpenCollaboration }: FooterSectionProps) {
                 href="https://linkedin.com"
                 target="_blank"
                 rel="noreferrer"
-                className="w-8 h-8 rounded-xl bg-slate-100 dark:bg-white/[0.05] border border-slate-200 dark:border-white/10 flex items-center justify-center text-slate-600 dark:text-slate-400 hover:text-blue-600 transition-colors"
+                className="w-10 h-10 rounded-full bg-black/5 dark:bg-white/5 flex items-center justify-center text-black dark:text-white hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors"
                 aria-label="LinkedIn"
               >
                 <Linkedin className="w-4 h-4" />
@@ -212,21 +211,21 @@ export function FooterSection({ onOpenCollaboration }: FooterSectionProps) {
         </div>
 
         {/* Massive Stylized Typography Watermark */}
-        <div className="relative py-4 select-none pointer-events-none overflow-hidden text-center">
-          <span className="block text-5xl sm:text-7xl md:text-8xl lg:text-[9.5rem] font-black tracking-tighter text-slate-900/10 dark:text-white/10 whitespace-nowrap">
+        <div className="relative py-4 select-none pointer-events-none overflow-hidden text-center border-t border-black/5 dark:border-white/5 pt-12">
+          <span className="block text-[clamp(3rem,10vw,12rem)] font-black tracking-tighter text-black/5 dark:text-white/5 whitespace-nowrap">
             LOGIA CREATIVE
           </span>
         </div>
 
         {/* Bottom Bar: Copyright & Back to Top */}
-        <div className="pt-6 border-t border-slate-200 dark:border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500 dark:text-slate-400">
+        <div className="pb-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-semibold text-[#666666] dark:text-[#999999]">
           <p>
-            &copy; {new Date().getFullYear()} Logia Creative Agency. All rights reserved. Mengintegrasikan Kreativitas dan Teknologi.
+            &copy; {new Date().getFullYear()} Logia Creative Agency. All rights reserved.
           </p>
 
           <button
             onClick={scrollToTop}
-            className="flex items-center gap-2 px-4 py-2 rounded-full glass-container border border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-300 hover:text-blue-600 hover:border-blue-600 transition-all group active:scale-95"
+            className="flex items-center gap-2 px-4 py-2 rounded-full border border-black/10 dark:border-white/10 hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-all group"
           >
             <span>Kembali ke Atas</span>
             <ArrowUp className="w-3.5 h-3.5 transition-transform group-hover:-translate-y-0.5" />

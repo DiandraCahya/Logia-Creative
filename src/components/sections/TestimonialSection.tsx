@@ -4,6 +4,24 @@ import { ScrollReelTestimonials } from "@/components/ui/scroll-reel-testimonials
 
 const TESTIMONIALS = [
   {
+    quote: "Logia Creative transformed our brand completely. The result exceeded expectations.",
+    author: "Ahmad Rizki - Founder Kopi Nusantara",
+    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop",
+    alt: "Ahmad Rizki",
+  },
+  {
+    quote: "Professional, creative, and very detail-oriented. Highly recommended.",
+    author: "Sari Dewi - CEO Batik Modern",
+    image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=400&fit=crop",
+    alt: "Sari Dewi",
+  },
+  {
+    quote: "The best creative agency we've worked with. Fast delivery and great communication.",
+    author: "Budi Santoso - Marketing Director",
+    image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff0e?w=400&h=400&fit=crop",
+    alt: "Budi Santoso",
+  },
+  {
     quote: "Kualitas desain mereka membawa identitas brand kami ke level yang belum pernah kami bayangkan.",
     author: "Budi Santoso",
     image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=800&auto=format&fit=crop",
@@ -67,9 +85,11 @@ const TESTIMONIALS = [
 
 export function TestimonialSection() {
   return (
-    <section className="w-full min-h-[100vh] pt-20 bg-transparent flex flex-col items-center justify-center relative z-10 pointer-events-none">
+    <section className="w-full min-h-[100vh] pt-24 md:pt-32 pb-12 bg-white dark:bg-[#0a0a0a] flex flex-col items-center justify-center relative z-10 pointer-events-none">
       <div className="pointer-events-auto w-full flex flex-col items-center h-full">
-        <h2 className="text-3xl md:text-5xl font-black mb-12 uppercase text-slate-900 dark:text-white tracking-tighter px-4 text-center">Testimoni dari mereka</h2>
+        <h2 className="text-[clamp(2rem,4vw,3.5rem)] font-extrabold tracking-[-0.02em] text-black dark:text-white mb-16 text-center">
+          Testimoni Klien
+        </h2>
         <ScrollReelTestimonials testimonials={TESTIMONIALS} className="flex-1 w-full" />
       </div>
     </section>

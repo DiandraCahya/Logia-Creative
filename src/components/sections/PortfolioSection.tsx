@@ -187,18 +187,18 @@ function PortfolioCard({ project, gridVisible, idx }: { project: any, gridVisibl
         </div>
 
         {/* Content */}
-        <div className="p-6 flex flex-col flex-grow" style={{ transform: "translateZ(40px)" }}>
-          <span className="inline-block text-[11px] font-bold text-brand-primary dark:text-brand-aqua uppercase tracking-wider mb-2 transition-transform duration-300 group-hover:-translate-y-1">
+        <div className="p-6 flex flex-col flex-grow bg-white dark:bg-[#111]" style={{ transform: "translateZ(40px)" }}>
+          <span className="inline-block text-[11px] font-bold text-[#666666] dark:text-[#999999] uppercase tracking-wider mb-2 transition-transform duration-300 group-hover:-translate-y-1">
             {project.category}
           </span>
-          <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-6 flex-grow group-hover:text-brand-primary transition-colors whitespace-pre-line">
+          <h3 className="text-xl font-bold text-black dark:text-white mb-6 flex-grow transition-colors whitespace-pre-line">
             {project.title}
           </h3>
           <div className="flex flex-wrap gap-2 mt-auto transition-transform duration-300 group-hover:-translate-y-1">
             {project.tags.map((tag: string) => (
               <span
                 key={tag}
-                className="text-[10px] px-2.5 py-1 bg-brand-primary/10 dark:bg-brand-aqua/10 text-brand-primary dark:text-brand-aqua rounded-full font-medium uppercase"
+                className="text-[10px] px-2.5 py-1 bg-black/5 dark:bg-white/5 text-black dark:text-white border border-black/10 dark:border-white/10 rounded-full font-medium uppercase"
               >
                 {tag}
               </span>
@@ -279,8 +279,8 @@ export function PortfolioSection() {
               onClick={() => setActiveCategory(category)}
               className={`px-5 py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all duration-300 ${
                 activeCategory === category
-                  ? "grad-cta shadow-md"
-                  : "glass-container text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:text-white hover:bg-slate-100 dark:bg-white/5"
+                  ? "bg-black text-white dark:bg-white dark:text-black shadow-md"
+                  : "bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 text-[#666666] dark:text-[#999999] hover:text-black dark:hover:text-white"
               }`}
             >
               {category}
@@ -347,8 +347,8 @@ export function PortfolioSection() {
                   onClick={() => setActiveCategory(category)}
                   className={`px-5 py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all duration-300 ${
                     activeCategory === category
-                      ? "grad-cta shadow-md"
-                      : "glass-container text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:text-white hover:bg-slate-100 dark:bg-white/5"
+                      ? "bg-black text-white dark:bg-white dark:text-black shadow-md"
+                      : "bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 text-[#666666] dark:text-[#999999] hover:text-black dark:hover:text-white"
                   }`}
                 >
                   {category}

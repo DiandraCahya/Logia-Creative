@@ -262,14 +262,6 @@ html:not(.dark) h6,
   color: #000000 !important;
 }
 
-html:not(.dark) p:not(.grad-cta):not(.btn-collaborate),
-html:not(.dark) span:not(.grad-cta):not(.btn-collaborate),
-html:not(.dark) div,
-.light p:not(.grad-cta):not(.btn-collaborate),
-.light span:not(.grad-cta):not(.btn-collaborate),
-.light div {
-  color: #333333 !important;
-}
 
 /* Links */
 html:not(.dark) a:not(.grad-cta):not(.btn-collaborate),

@@ -1,429 +1,249 @@
 "use client";
 
-import React, { useRef, useState, useEffect } from "react";
-import Image from "next/image";
+import React, { useRef, useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
-import {
-  Sparkles,
-  ArrowRight,
-  ShieldCheck,
-  Zap,
-  Layers,
-  Palette,
-  Code2,
-  CheckCircle2,
-} from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
 interface HeroSectionProps {
   onOpenCollaboration?: () => void;
 }
 
-const pillBadges = [
-  { label: "Modern", icon: Zap, color: "text-amber-400" },
-  { label: "Kreatif", icon: Palette, color: "text-brand-aqua" },
-  { label: "Profesional", icon: ShieldCheck, color: "text-emerald-400" },
-  { label: "Inovatif", icon: Layers, color: "text-brand-mint" },
-];
-
-export function HeroSection({ onOpenCollaboration }: HeroSectionProps) {
-  const cardRef = useRef<HTMLDivElement>(null);
+/* ── 3D Interactive Floating Shape ── */
+function InteractiveShape() {
+  const containerRef = useRef<HTMLDivElement>(null);
   const [transform, setTransform] = useState({ rx: 0, ry: 0, px: 50, py: 50 });
   const [isHovered, setIsHovered] = useState(false);
+  const rafRef = useRef<number>(0);
 
-  useEffect(() => {
-    // Only apply if not reduced motion and hover is supported
-    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce), (hover: none)");
-    if (mediaQuery.matches) return;
-
-    let requestId: number;
-
-    const handleMouseMove = (e: MouseEvent) => {
-      if (!cardRef.current || !isHovered) return;
-      const rect = cardRef.current.getBoundingClientRect();
+  const handleMouseMove = useCallback(
+    (e: MouseEvent) => {
+      if (!containerRef.current || !isHovered) return;
+      const rect = containerRef.current.getBoundingClientRect();
       const x = (e.clientX - rect.left) / rect.width - 0.5;
       const y = (e.clientY - rect.top) / rect.height - 0.5;
-
       const px = ((e.clientX - rect.left) / rect.width) * 100;
       const py = ((e.clientY - rect.top) / rect.height) * 100;
 
-      cancelAnimationFrame(requestId);
-      requestId = requestAnimationFrame(() => {
-        setTransform({ rx: -y * 14, ry: x * 14, px, py });
+      cancelAnimationFrame(rafRef.current);
+      rafRef.current = requestAnimationFrame(() => {
+        setTransform({ rx: -y * 20, ry: x * 20, px, py });
       });
-    };
+    },
+    [isHovered]
+  );
 
-    const handleMouseLeave = () => {
-      cancelAnimationFrame(requestId);
+  useEffect(() => {
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce), (hover: none)");
+    if (mq.matches) return;
+
+    const el = containerRef.current;
+    if (!el) return;
+
+    const onEnter = () => setIsHovered(true);
+    const onLeave = () => {
+      cancelAnimationFrame(rafRef.current);
       setTransform({ rx: 0, ry: 0, px: 50, py: 50 });
       setIsHovered(false);
     };
 
-    const handleMouseEnter = () => setIsHovered(true);
-
-    const el = cardRef.current;
-    if (el) {
-      window.addEventListener('mousemove', handleMouseMove, { passive: true });
-      el.addEventListener('mouseleave', handleMouseLeave);
-      el.addEventListener('mouseenter', handleMouseEnter);
-    }
+    window.addEventListener("mousemove", handleMouseMove, { passive: true });
+    el.addEventListener("mouseenter", onEnter);
+    el.addEventListener("mouseleave", onLeave);
 
     return () => {
-      if (el) {
-        window.removeEventListener('mousemove', handleMouseMove);
-        el.removeEventListener('mouseleave', handleMouseLeave);
-        el.removeEventListener('mouseenter', handleMouseEnter);
-      }
-      cancelAnimationFrame(requestId);
+      window.removeEventListener("mousemove", handleMouseMove);
+      el.removeEventListener("mouseenter", onEnter);
+      el.removeEventListener("mouseleave", onLeave);
+      cancelAnimationFrame(rafRef.current);
     };
-  }, [isHovered]);
+  }, [handleMouseMove]);
 
+  return (
+    <div
+      ref={containerRef}
+      className="w-64 h-64 sm:w-80 sm:h-80 lg:w-[420px] lg:h-[420px] relative cursor-pointer"
+      style={{ perspective: 1200 }}
+    >
+      <div
+        className="w-full h-full relative transition-transform duration-200 ease-out will-change-transform"
+        style={{
+          transform: `rotateX(${transform.rx}deg) rotateY(${transform.ry}deg)`,
+          transformStyle: "preserve-3d",
+        }}
+      >
+        {/* Outer cube face — front */}
+        <div
+          className="absolute inset-0 border border-black/10 dark:border-white/10 rounded-3xl bg-black/[0.01] dark:bg-white/[0.02]"
+          style={{ transform: "translateZ(50px)" }}
+        />
+        {/* Outer cube face — back */}
+        <div
+          className="absolute inset-0 border border-black/5 dark:border-white/5 rounded-3xl"
+          style={{ transform: "translateZ(-50px)" }}
+        />
+        {/* Outer cube face — left */}
+        <div
+          className="absolute top-0 bottom-0 left-0 w-[100px] border border-black/5 dark:border-white/5 rounded-xl origin-left"
+          style={{ transform: "rotateY(90deg) translateZ(0px)" }}
+        />
+        {/* Outer cube face — right */}
+        <div
+          className="absolute top-0 bottom-0 right-0 w-[100px] border border-black/5 dark:border-white/5 rounded-xl origin-right"
+          style={{ transform: "rotateY(-90deg) translateZ(0px)" }}
+        />
+
+        {/* Inner rotating ring */}
+        <motion.div
+          animate={{ rotate: 360 }}
+          transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
+          className="absolute inset-12 border border-black/[0.06] dark:border-white/[0.06] rounded-full"
+          style={{ transform: "translateZ(25px)" }}
+        />
+
+        {/* Second inner ring — counter-rotate */}
+        <motion.div
+          animate={{ rotate: -360 }}
+          transition={{ duration: 35, repeat: Infinity, ease: "linear" }}
+          className="absolute inset-20 border border-black/[0.04] dark:border-white/[0.04] rounded-full"
+          style={{ transform: "translateZ(35px)" }}
+        />
+
+        {/* Specular highlight following cursor */}
+        <div
+          className="absolute inset-0 rounded-3xl pointer-events-none transition-opacity duration-300"
+          style={{
+            background: `radial-gradient(circle 200px at ${transform.px}% ${transform.py}%, rgba(192,192,192,${isHovered ? 0.15 : 0}), transparent)`,
+            transform: "translateZ(51px)",
+          }}
+        />
+
+        {/* Center metallic dot */}
+        <div
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3 h-3 rounded-full"
+          style={{
+            background: "linear-gradient(135deg, #C0C0C0 0%, #808080 50%, #C0C0C0 100%)",
+            transform: "translateZ(60px)",
+            boxShadow: "0 0 20px rgba(192,192,192,0.3)",
+          }}
+        />
+
+        {/* Floating corner accents */}
+        <motion.div
+          animate={{ y: [0, -6, 0] }}
+          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute top-6 right-6 w-8 h-8 border border-black/10 dark:border-white/10 rounded-lg"
+          style={{ transform: "translateZ(70px)" }}
+        />
+        <motion.div
+          animate={{ y: [0, 6, 0] }}
+          transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+          className="absolute bottom-6 left-6 w-6 h-6 border border-black/10 dark:border-white/10 rounded-full"
+          style={{ transform: "translateZ(70px)" }}
+        />
+      </div>
+    </div>
+  );
+}
+
+/* ── Easing ── */
+const ease = [0.16, 1, 0.3, 1] as const;
+
+export function HeroSection({ onOpenCollaboration }: HeroSectionProps) {
   return (
     <section
       id="top"
-      className="relative min-h-screen pt-32 pb-20 sm:pt-40 sm:pb-32 flex items-center justify-center overflow-hidden"
+      className="relative min-h-screen flex items-center justify-center overflow-hidden pt-24 pb-20 sm:pt-32 sm:pb-28"
     >
-      {/* Dynamic Ambient Background Lights — now with morphing blobs */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none -z-10">
-        <motion.div
-          animate={{
-            x: [0, 40, 0],
-            y: [0, -40, 0],
-            scale: [1, 1.15, 1],
-          }}
-          transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute top-1/4 -left-32 w-96 h-96 sm:w-[520px] sm:h-[520px] morph-blob bg-gray-500/10 dark:bg-white/5 blur-[120px]"
-        />
-        <motion.div
-          animate={{
-            x: [0, -50, 0],
-            y: [0, 50, 0],
-            scale: [1, 1.2, 1],
-          }}
-          transition={{ duration: 14, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute top-1/3 -right-32 w-96 h-96 sm:w-[560px] sm:h-[560px] morph-blob-alt bg-gray-400/10 dark:bg-white/10 blur-[130px]"
-        />
-        <motion.div
-          animate={{
-            scale: [1, 1.3, 1],
-            opacity: [0.15, 0.35, 0.15],
-          }}
-          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute bottom-10 left-1/2 -translate-x-1/2 w-[600px] h-[350px] morph-blob bg-gray-600/10 dark:bg-white/5 blur-[140px]"
-        />
-
-        {/* Background decoration image */}
-        <div className="absolute top-0 right-0 w-[600px] h-[600px] opacity-[0.03] dark:opacity-[0.05]">
-          <Image
-            src="/Group 3.png"
-            alt=""
-            fill
-            className="object-contain"
-            loading="lazy"
-            aria-hidden="true"
-          />
-        </div>
-
-        {/* Subtle dot matrix grid */}
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#0ea5e90a_1px,transparent_1px),linear-gradient(to_bottom,#0ea5e90a_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_40%,#000_70%,transparent_100%)]" />
+      {/* Subtle grid background */}
+      <div className="absolute inset-0 -z-10 pointer-events-none">
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(128,128,128,0.03)_1px,transparent_1px),linear-gradient(to_bottom,rgba(128,128,128,0.03)_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_40%,#000_70%,transparent_100%)]" />
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
-          {/* Left Column: Kinetic Typography & CTAs */}
-          <div className="lg:col-span-7 flex flex-col items-start text-left space-y-6">
-            {/* Top Announcement Chip */}
-            <motion.div
+      <div className="max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-12 w-full">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-8 items-center">
+          {/* Left: Typography & CTA */}
+          <div className="flex flex-col items-start space-y-8">
+            {/* Overline */}
+            <motion.span
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full liquid-glass border border-gray-300 dark:border-white/30 text-xs font-semibold tracking-wide text-gray-800 dark:text-gray-200 shadow-sm"
+              transition={{ duration: 0.6, ease }}
+              className="text-xs font-semibold uppercase tracking-[0.15em] text-[#666666] dark:text-[#666666]"
             >
-              <span className="flex h-2 w-2 relative">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-gray-400 opacity-75" />
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-gray-600 dark:bg-white" />
-              </span>
-              <span>Ideas into Impact • Creative & Technology Agency</span>
-            </motion.div>
+              Creative & Technology Agency
+            </motion.span>
 
-            {/* Kinetic Typography Headline — line-mask reveal */}
-            <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-[5.5rem] xl:text-[6.5vw] font-black tracking-tighter leading-[1.05] text-slate-900 dark:text-white uppercase flex flex-col">
-              <span className="overflow-hidden pb-1">
+            {/* Headline — max 7 words */}
+            <h1 className="text-[clamp(2.5rem,8vw,5rem)] font-extrabold leading-[1.05] tracking-[-0.02em] text-black dark:text-white">
+              <span className="overflow-hidden block pb-1">
                 <motion.span
                   initial={{ y: "100%" }}
                   animate={{ y: 0 }}
-                  transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
+                  transition={{ duration: 0.8, ease, delay: 0.1 }}
                   className="block"
                 >
-                  Innovative
+                  Craft Your
                 </motion.span>
               </span>
-              <span className="overflow-hidden pb-1">
+              <span className="overflow-hidden block pb-1">
                 <motion.span
                   initial={{ y: "100%" }}
                   animate={{ y: 0 }}
-                  transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.18 }}
-                  className="block text-transparent bg-clip-text bg-gradient-to-r from-gray-500 to-gray-800 dark:from-white dark:to-gray-400"
+                  transition={{ duration: 0.8, ease, delay: 0.2 }}
+                  className="block text-transparent bg-clip-text"
+                  style={{
+                    backgroundImage:
+                      "linear-gradient(135deg, #C0C0C0 0%, #808080 50%, #C0C0C0 100%)",
+                  }}
                 >
-                  Branding
-                </motion.span>
-              </span>
-              <span className="overflow-hidden pb-1">
-                <motion.span
-                  initial={{ y: "100%" }}
-                  animate={{ y: 0 }}
-                  transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.26 }}
-                  className="block"
-                >
-                  & Digital
-                </motion.span>
-              </span>
-              <span className="overflow-hidden pb-1">
-                <motion.span
-                  initial={{ y: "100%" }}
-                  animate={{ y: 0 }}
-                  transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.34 }}
-                  className="block"
-                >
-                  Solutions
+                  Brand Identity.
                 </motion.span>
               </span>
             </h1>
 
-            {/* Subtitle */}
+            {/* Subheadline — 2 kalimat pendek */}
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.3 }}
-              className="text-base sm:text-lg xl:text-xl text-slate-600 dark:text-slate-300 font-normal leading-relaxed max-w-2xl"
+              transition={{ duration: 0.8, ease, delay: 0.35 }}
+              className="text-base sm:text-lg text-[#1A1A1A] dark:text-[#999999] leading-relaxed max-w-lg font-normal"
             >
-              Mengintegrasikan Kreativitas dan Teknologi untuk Pertumbuhan Bisnis Anda. Kami merancang identitas visual yang tajam sekaligus membangun website cepat yang siap menampung lonjakan pesanan klien Anda tanpa drama sistem tumbang.
+              Kami merancang identitas visual dan membangun website cepat
+              untuk bisnis yang ingin terlihat serius.
             </motion.p>
-
-            {/* 4 Brand Pillars / Badges */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.45 }}
-              className="flex flex-wrap gap-2.5 pt-2"
-            >
-              {pillBadges.map((pill) => {
-                const Icon = pill.icon;
-                return (
-                  <div
-                    key={pill.label}
-                    className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-slate-100 dark:bg-white/[0.05] border border-slate-200 dark:border-white/10 text-xs font-medium text-slate-700 dark:text-slate-300 backdrop-blur-sm micro-lift"
-                  >
-                    <Icon className={`w-3.5 h-3.5 ${pill.color}`} />
-                    <span>{pill.label}</span>
-                  </div>
-                );
-              })}
-            </motion.div>
 
             {/* CTA Buttons */}
             <motion.div
-              initial={{ opacity: 0, y: 25 }}
+              initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.6 }}
-              className="flex flex-wrap items-center gap-4 pt-4 w-full sm:w-auto"
+              transition={{ duration: 0.8, ease, delay: 0.5 }}
+              className="flex flex-wrap items-center gap-4 pt-2"
             >
               <button
                 onClick={onOpenCollaboration}
-                className="w-full sm:w-auto px-7 py-3.5 rounded-full grad-cta shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2 group micro-glow"
+                className="px-8 py-4 bg-black dark:bg-white text-white dark:text-black !text-white dark:!text-black text-sm font-semibold rounded-full hover:scale-[1.02] active:scale-[0.98] transition-transform duration-200 flex items-center gap-2 group"
               >
-                <Sparkles className="w-4 h-4 text-brand-mint animate-pulse" />
-                <span>Mulai Diskusi Proyek</span>
-                <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+                <span className="!text-white dark:!text-black">Mulai Proyek</span>
+                <ArrowRight className="w-4 h-4 !text-white dark:!text-black transition-transform group-hover:translate-x-1" />
               </button>
 
               <a
-                href="#layanan"
-                onClick={(e) => {
-                  e.preventDefault();
-                  const el = document.getElementById("layanan");
-                  if (el) {
-                    window.scrollTo({
-                      top: el.getBoundingClientRect().top + window.scrollY - 96,
-                      behavior: "smooth",
-                    });
-                  }
-                }}
-                className="w-full sm:w-auto px-7 py-3.5 rounded-full bg-slate-100 dark:bg-white/[0.06] hover:bg-slate-200 dark:hover:bg-white/[0.1] text-slate-900 dark:text-white text-sm font-semibold border border-slate-200 dark:border-white/15 backdrop-blur-md transition-all flex items-center justify-center gap-2 micro-glow"
+                href="#portfolio"
+                className="px-8 py-4 text-sm font-semibold text-black dark:text-white !text-black dark:!text-white border border-black/15 dark:border-white/15 rounded-full hover:bg-black/5 dark:hover:bg-white/5 transition-colors duration-200"
               >
-                <span>Lihat Hasil Kerja</span>
+                Lihat Portfolio
               </a>
-            </motion.div>
-
-            {/* Quick Proof Metrics */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.8, delay: 0.75 }}
-              className="pt-6 border-t border-slate-200 dark:border-white/10 flex flex-wrap items-center gap-6 sm:gap-10 text-xs text-slate-600 dark:text-slate-400"
-            >
-              <div className="flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-brand-aqua" />
-                <span>Satu Meja: Desainer & Web Developer Langsung</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-brand-primary" />
-                <span>Estimasi & Ruang Lingkup Transparan</span>
-              </div>
             </motion.div>
           </div>
 
-          {/* Right Column: 3D Interactive Mockup Card */}
+          {/* Right: 3D Interactive Element */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.9, rotateY: 15 }}
-            animate={{ opacity: 1, scale: 1, rotateY: 0 }}
-            transition={{ duration: 1, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-            className="lg:col-span-5 relative"
-            style={{ perspective: 1200 }}
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 1.2, ease, delay: 0.3 }}
+            className="flex items-center justify-center"
           >
-            <div
-              ref={cardRef}
-              className="relative mx-auto max-w-md lg:max-w-none transition-transform duration-200 ease-out will-change-transform"
-              style={{
-                transform: `rotateX(${transform.rx}deg) rotateY(${transform.ry}deg) translateZ(0)`,
-                transformStyle: "preserve-3d",
-              }}
-            >
-              {/* Liquid Glass Showcase Card */}
-              <div
-                className="relative rounded-3xl p-6 sm:p-8 glass-container shadow-glass-glow group overflow-hidden z-10"
-                style={{
-                  border: isHovered ? "1px solid rgba(124, 58, 237, 0.5)" : "",
-                  transform: "translateZ(30px)",
-                }}
-              >
-                {/* Specular Glare overlay responding to mouse */}
-                <div
-                  className="absolute inset-0 pointer-events-none transition-opacity duration-300"
-                  style={{
-                    background: `radial-gradient(circle 250px at ${transform.px}% ${transform.py}%, rgba(124,58,237,0.15), transparent)`,
-                    opacity: isHovered ? 1 : 0
-                  }}
-                />
-
-                {/* Card Header */}
-                <div className="flex items-center justify-between pb-6 border-b border-slate-200 dark:border-white/10">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-gray-700 to-black p-2 flex items-center justify-center text-white shadow-md">
-                      <Zap className="w-5 h-5" />
-                    </div>
-                    <div>
-                      <h4 className="text-sm font-bold text-slate-900 dark:text-white">Logia Convergence Engine</h4>
-                      <p className="text-[11px] text-slate-500 dark:text-slate-400">Creative & Technology Convergence</p>
-                    </div>
-                  </div>
-                  <span className="text-[10px] px-2.5 py-1 rounded-full bg-gray-100 dark:bg-white/10 text-gray-800 dark:text-white font-semibold border border-gray-200 dark:border-white/20">
-                    Live Ecosystem
-                  </span>
-                </div>
-
-                {/* Visual Identity Image Preview from brand board */}
-                <div className="relative w-full h-52 sm:h-60 my-6 rounded-2xl overflow-hidden border border-slate-200 dark:border-white/10 shadow-inner">
-                  <Image
-                    src="/image 2.png"
-                    alt="Logia Creative Brand Identity"
-                    fill
-                    className="object-cover object-top micro-zoom"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent flex items-end p-4">
-                    <span className="text-white text-xs font-semibold tracking-wide">
-                      Brand Strategy & Visual Guidelines • Proposal Showcase
-                    </span>
-                  </div>
-                </div>
-
-                {/* Convergence Features Breakdown */}
-                <div className="grid grid-cols-2 gap-3 pt-2">
-                  <div className="p-3 rounded-xl bg-slate-50 dark:bg-white/[0.04] border border-slate-200 dark:border-white/10 micro-lift">
-                    <div className="flex items-center gap-2 text-brand-primary text-xs font-bold mb-1">
-                      <Palette className="w-4 h-4" />
-                      <span>Creative Stream</span>
-                    </div>
-                    <p className="text-[11px] text-slate-600 dark:text-slate-400">
-                      Brand Identity, Visual Assets, Social Content & Campaigns
-                    </p>
-                  </div>
-
-                  <div className="p-3 rounded-xl bg-slate-50 dark:bg-white/[0.04] border border-slate-200 dark:border-white/10 micro-lift">
-                    <div className="flex items-center gap-2 text-brand-aqua text-xs font-bold mb-1">
-                      <Code2 className="w-4 h-4" />
-                      <span>Tech Stream</span>
-                    </div>
-                    <p className="text-[11px] text-slate-600 dark:text-slate-400">
-                      High-Performance Web, UI/UX, Workflow Automation
-                    </p>
-                  </div>
-                </div>
-              </div>
-              {/* Floating Stat Badges - elevated in front of the 3D card */}
-              <div
-                className="absolute -top-4 -right-3 sm:-top-6 sm:-right-6 z-30"
-                style={{ transform: "translateZ(100px)", transformStyle: "preserve-3d" }}
-              >
-                <motion.div
-                  animate={{ y: [0, -8, 0] }}
-                  transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut" }}
-                  className="px-4 py-2.5 rounded-2xl bg-white/95 dark:bg-slate-900/90 backdrop-blur-xl shadow-2xl border border-brand-mint/50 flex items-center gap-3 select-none hover:scale-105 transition-transform"
-                >
-                  <div className="w-2.5 h-2.5 rounded-full bg-brand-mint animate-pulse shrink-0" />
-                  <div className="text-left whitespace-nowrap">
-                    <p className="text-[10px] text-slate-500 dark:text-slate-400 font-medium">Integrasi Sistem</p>
-                    <p className="text-xs font-bold text-slate-900 dark:text-white">100% Terpadu</p>
-                  </div>
-                </motion.div>
-              </div>
-
-              <div
-                className="absolute -bottom-4 -left-3 sm:-bottom-6 sm:-left-6 z-30"
-                style={{ transform: "translateZ(100px)", transformStyle: "preserve-3d" }}
-              >
-                <motion.div
-                  animate={{ y: [0, 8, 0] }}
-                  transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-                  className="px-4 py-2.5 rounded-2xl bg-white/95 dark:bg-slate-900/90 backdrop-blur-xl shadow-2xl border border-brand-primary/50 flex items-center gap-3 select-none hover:scale-105 transition-transform"
-                >
-                  <div className="w-8 h-8 rounded-xl bg-brand-primary/15 text-brand-primary flex items-center justify-center shrink-0">
-                    <Sparkles className="w-4 h-4" />
-                  </div>
-                  <div className="text-left whitespace-nowrap">
-                    <p className="text-[10px] text-slate-500 dark:text-slate-400 font-medium">Target Efisiensi</p>
-                    <p className="text-xs font-bold text-brand-primary">Hemat Waktu & Biaya</p>
-                  </div>
-                </motion.div>
-              </div>
-              {/* Floating Floating Stat Badges */}
-              <motion.div
-                animate={{ y: [0, -8, 0] }}
-                transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute -top-3 -right-3 sm:-top-5 sm:-right-5 px-4 py-2.5 rounded-2xl glass-container shadow-xl border border-gray-200 dark:border-white/20 hidden sm:flex items-center gap-3 z-20 pointer-events-none"
-                style={{ transform: "translateZ(50px)" }}
-              >
-                <div className="w-2.5 h-2.5 rounded-full bg-gray-500 dark:bg-white animate-pulse" />
-                <div className="text-left">
-                  <p className="text-[10px] text-slate-500 dark:text-slate-400 font-medium">Integrasi Sistem</p>
-                  <p className="text-xs font-bold text-slate-900 dark:text-white">100% Terpadu</p>
-                </div>
-              </motion.div>
-
-              <motion.div
-                animate={{ y: [0, 8, 0] }}
-                transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-                className="absolute -bottom-3 -left-3 sm:-bottom-5 sm:-left-5 px-4 py-2.5 rounded-2xl glass-container shadow-xl border border-gray-200 dark:border-white/20 hidden sm:flex items-center gap-3 z-20 pointer-events-none"
-                style={{ transform: "translateZ(60px)" }}
-              >
-                <div className="w-8 h-8 rounded-xl bg-gray-100 dark:bg-white/10 text-gray-800 dark:text-white flex items-center justify-center">
-                  <Sparkles className="w-4 h-4" />
-                </div>
-                <div className="text-left">
-                  <p className="text-[10px] text-slate-500 dark:text-slate-400 font-medium">Target Efisiensi</p>
-                  <p className="text-xs font-bold text-slate-900 dark:text-white">Hemat Waktu & Biaya</p>
-                </div>
-              </motion.div>
-            </div>
+            <InteractiveShape />
           </motion.div>
         </div>
       </div>

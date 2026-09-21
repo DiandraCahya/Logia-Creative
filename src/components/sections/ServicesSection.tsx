@@ -1,388 +1,115 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
+import { motion } from "framer-motion";
 import { useScrollReveal } from "@/lib/useScrollReveal";
-import { motion, AnimatePresence } from "framer-motion";
 import {
   Palette,
   Code2,
-  Sparkles,
-  Layers,
   Share2,
   Megaphone,
   MonitorCheck,
   Cpu,
-  CheckCircle2,
-  Coins,
-  ArrowRight,
-  Workflow,
-  PieChart,
 } from "lucide-react";
 
-const creativeServices = [
+/* ── Services Data (Simplified) ── */
+const services = [
   {
-    title: "Brand Identity & Visual Design",
+    title: "Brand Identity",
     icon: Palette,
-    tagline: "Logo Tajam, Aturan Warna Rapi, Berkas Siap Cetak",
-    desc: "Perancangan identitas merek dari nol atau perapian logo lama agar bisnis Anda terlihat kredibel di mata pembeli dan calon investor.",
-    deliverables: [
-      "File master vector SVG & PDF (garansi tajam di layar HP hingga spanduk 5 meter)",
-      "Buku pedoman merek (aturan warna RGB/CMYK, tipografi, dan larangan penggunaan)",
-      "Desain kemasan produk fisik (box, pouch, label stiker, pita unboxing)",
-      "Aset kartu nama dan amplop resmi siap kirim ke vendor percetakan",
-    ],
-    tags: ["Illustrator", "Photoshop", "Brand Book", "Vector"],
+    desc: "Logo tajam, sistem warna rapi, dan berkas siap cetak.",
   },
   {
-    title: "Social Media & Content Production",
-    icon: Share2,
-    tagline: "Konten yang Terarah, Bukan Sekadar Ramai Feed",
-    desc: "Materi visual yang dirancang untuk membangun kepercayaan calon pembeli, menjelaskan keunggulan produk tanpa teks yang membosankan.",
-    deliverables: [
-      "Paket template carousel edukasi dan promo produk siap pakai",
-      "Editing video pendek (Reels / TikTok) dengan subtitle dinamis",
-      "Kalender editorial bulanan agar tim Anda tidak bingung mau posting apa",
-      "Format micro-copy visual yang to the point dan mudah dibaca cepat",
-    ],
-    tags: ["After Effects", "Premiere", "Social Grid", "Motion"],
-  },
-  {
-    title: "Creative Campaign & Brand Activation",
-    icon: Megaphone,
-    tagline: "Materi Promosi Terpadu untuk Momen Penting",
-    desc: "Persiapan materi promosi untuk peluncuran menu baru, diskon tanggal kembar, hingga kebutuhan visual pameran atau bazaar.",
-    deliverables: [
-      "Konsep visual kampanye tematik (promo hari raya, seasonal launch)",
-      "Banner iklan siap tayang untuk Meta Ads (IG/FB) dan Google Display",
-      "Desain backdrop panggung, roll-up banner, dan x-banner bazaar",
-      "Pitch deck presentasi penawaran kerja sama yang meyakinkan",
-    ],
-    tags: ["Campaign Strategy", "Meta Ads", "Event Kit", "Pitch Deck"],
-  },
-];
-
-const technologyServices = [
-  {
-    title: "UI/UX Design & Modern Web Apps",
+    title: "UI/UX & Web Dev",
     icon: MonitorCheck,
-    tagline: "Website Next.js Cepat, Lolos Uji Google PageSpeed",
-    desc: "Kami merancang antarmuka di Figma dan langsung mengembangkannya dengan Next.js modern. Hasilnya: halaman dimuat instan tanpa jeda lemot.",
-    deliverables: [
-      "Desain antarmuka interaktif Figma dengan sistem komponen rapi",
-      "Company profile & landing page penawaran dengan konversi tinggi",
-      "Kode bersih Next.js, React, dan Tailwind CSS tanpa plugin sampah",
-      "Optimasi tampilan mobile dan kecepatan respon di jaringan 4G",
-    ],
-    tags: ["Next.js", "React", "TypeScript", "Tailwind CSS", "Figma"],
+    desc: "Website responsif dan elegan dengan performa kilat.",
   },
   {
-    title: "Reporting & Workflow Automation",
+    title: "Social Media",
+    icon: Share2,
+    desc: "Desain konten yang terarah untuk membangun trust audiens.",
+  },
+  {
+    title: "Workflow Automation",
     icon: Cpu,
-    tagline: "Hapus Rekap Manual, Hemat Waktu Admin Anda",
-    desc: "Admin Anda tidak perlu lagi begadang menyalin puluhan chat WhatsApp ke Excel. Pesanan atau data pendaftaran langsung tersinkronisasi otomatis.",
-    deliverables: [
-      "Penyambungan form pendaftaran langsung ke Google Sheets / Airtable",
-      "Notifikasi WhatsApp dan email otomatis saat ada transaksi masuk",
-      "Sistem verifikasi tiket acara dan rekap kehadiran tanpa kertas",
-      "Dashboard pemantauan data sederhana yang mudah diakses dari HP",
-    ],
-    tags: ["Automation", "Webhooks", "API Integration", "Dashboards"],
+    desc: "Integrasi sistem dan form untuk pangkas tugas admin manual.",
+  },
+  {
+    title: "Creative Campaign",
+    icon: Megaphone,
+    desc: "Materi promosi terpadu untuk momen peluncuran atau event.",
+  },
+  {
+    title: "Tech Convergence",
+    icon: Code2,
+    desc: "Sinkronisasi desain antarmuka dan basis kode tanpa friksi.",
   },
 ];
 
-const investmentBreakdown = [
-  {
-    category: "Hardware & Production Rig",
-    percentage: "40%",
-    amount: "Workstation & Display",
-    desc: "Perangkat komputasi spek tinggi untuk rendering desain, editing video, dan server development lokal.",
-  },
-  {
-    category: "Software & Cloud Licenses",
-    percentage: "25%",
-    amount: "Adobe CC, Figma, Cloud",
-    desc: "Langganan lisensi resmi software desain profesional, domain, hosting, dan database cloud terkelola.",
-  },
-  {
-    category: "Pemasaran & Portofolio",
-    percentage: "20%",
-    amount: "Paid Ads & Showcase",
-    desc: "Aktivasi promosi berbayar, kurasi studi kasus proyek, serta pencetakan sampel mockup fisik klien.",
-  },
-  {
-    category: "Cadangan & Legalitas",
-    percentage: "15%",
-    amount: "Operasional Awal",
-    desc: "Pengurusan legalitas usaha, rekening bisnis, dan dana talangan operasional fase inkubasi.",
-  },
-];
+const ease = [0.16, 1, 0.3, 1] as const;
 
-interface ServicesSectionProps {
-  onOpenCollaboration?: () => void;
-}
-
-export function ServicesSection({ onOpenCollaboration }: ServicesSectionProps) {
-  const [activeStream, setActiveStream] = useState<"creative" | "tech">("creative");
-  const { ref: headerRef, isInView: headerVisible } = useScrollReveal();
-  const { ref: cardsRef, isInView: cardsVisible } = useScrollReveal();
-  const { ref: investRef, isInView: investVisible } = useScrollReveal();
+export function ServicesSection() {
+  const { ref, isInView } = useScrollReveal();
 
   return (
-    <section id="layanan" className="py-24 sm:py-32 relative">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Section Header */}
-        <div ref={headerRef} className={`text-center max-w-3xl mx-auto mb-16 heading-entrance ${headerVisible ? 'revealed' : ''}`}>
-          <span className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-6 block font-mono">
-            04 — Layanan Utama
-          </span>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black leading-[1.1] tracking-tighter text-black dark:text-white mb-6 uppercase">
-            Services &{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-gray-500 to-gray-800 dark:from-white dark:to-gray-400">Capabilities</span>
-          </h2>
-          <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 leading-relaxed mx-auto max-w-2xl">
-            Solusi terpadu kreatif dan teknologi.
-          </p>
+    <section id="layanan" className="py-24 sm:py-32 relative bg-white dark:bg-[#0a0a0a]">
+      <div className="max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-12">
+        {/* Header */}
+        <div ref={ref} className="max-w-3xl mb-20">
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+            transition={{ duration: 0.6, ease }}
+            className="text-[clamp(2rem,5vw,3.5rem)] font-extrabold tracking-[-0.02em] text-black dark:text-white leading-[1.1] mb-6"
+          >
+            Layanan Kami
+          </motion.h2>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+            transition={{ duration: 0.6, ease, delay: 0.1 }}
+            className="text-base sm:text-lg text-[#1A1A1A] dark:text-[#999999] max-w-xl leading-relaxed"
+          >
+            Satu pintu untuk kebutuhan visual dan teknologi. Tidak perlu repot
+            mencari banyak vendor berbeda.
+          </motion.p>
         </div>
 
-        {/* Dual Tab Switcher */}
-        <div className="flex justify-center mb-14">
-          <div className="p-1.5 rounded-full glass-container flex items-center gap-2">
-            <button
-              onClick={() => setActiveStream("creative")}
-              className={`flex items-center gap-2.5 px-6 py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all ${
-                activeStream === "creative"
-                  ? "grad-cta shadow-md"
-                  : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/5"
-              }`}
-            >
-              <Palette className="w-4 h-4" />
-              <span>Creative Solutions</span>
-            </button>
-
-            <button
-              onClick={() => setActiveStream("tech")}
-              className={`flex items-center gap-2.5 px-6 py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all ${
-                activeStream === "tech"
-                  ? "grad-cta shadow-md"
-                  : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/5"
-              }`}
-            >
-              <Code2 className="w-4 h-4" />
-              <span>Technology Solutions</span>
-            </button>
-          </div>
-        </div>
-
-        {/* Services Showcase Cards (Editorial Block Style) */}
-        <AnimatePresence mode="wait">
-          {activeStream === "creative" && (
-            <motion.div
-              key="creative"
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -15 }}
-              transition={{ duration: 0.3 }}
-              className="flex flex-col gap-0 mb-16 border-b border-slate-200 dark:border-white/10"
-            >
-              {creativeServices.map((srv) => {
-                const Icon = srv.icon;
-                return (
-                  <div
-                    key={srv.title}
-                    className="py-10 border-t border-slate-200 dark:border-white/10 group relative"
-                  >
-                    <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
-                      <div className="md:col-span-4 lg:col-span-3">
-                        <div className="w-12 h-12 rounded-2xl bg-blue-600/10 dark:bg-blue-400/10 text-blue-600 dark:text-blue-400 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                          <Icon className="w-6 h-6" />
-                        </div>
-                        <h3 className="text-xl md:text-2xl font-bold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-                          {srv.title}
-                        </h3>
-                        <span className="inline-block mt-2 text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
-                          {srv.tagline}
-                        </span>
-                      </div>
-
-                      <div className="md:col-span-8 lg:col-span-9 flex flex-col sm:flex-row gap-8">
-                        <div className="sm:w-1/2">
-                          <p className="text-sm md:text-base text-slate-600 dark:text-slate-300 leading-relaxed">
-                            {srv.desc}
-                          </p>
-                          <div className="mt-6 flex flex-wrap gap-2">
-                            {srv.tags.map((t) => (
-                              <span
-                                key={t}
-                                className="text-[10px] px-3 py-1 rounded-full bg-slate-100 dark:bg-white/[0.05] text-slate-600 dark:text-slate-400 font-mono"
-                              >
-                                {t}
-                              </span>
-                            ))}
-                          </div>
-                        </div>
-
-                        <div className="sm:w-1/2">
-                          <p className="text-xs font-semibold text-slate-700 dark:text-slate-200 uppercase tracking-wider mb-4">
-                            Deliverables:
-                          </p>
-                          <ul className="space-y-3">
-                            {srv.deliverables.map((d, i) => (
-                              <li
-                                key={i}
-                                className="flex items-start gap-3 text-sm text-slate-600 dark:text-slate-300"
-                              >
-                                <CheckCircle2 className="w-4 h-4 text-blue-500 dark:text-blue-400 mt-0.5 shrink-0 opacity-50" />
-                                <span>{d}</span>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
-            </motion.div>
-          )}
-
-          {activeStream === "tech" && (
-            <motion.div
-              key="tech"
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -15 }}
-              transition={{ duration: 0.3 }}
-              className="flex flex-col gap-0 mb-16 border-b border-slate-200 dark:border-white/10"
-            >
-              {technologyServices.map((srv) => {
-                const Icon = srv.icon;
-                return (
-                  <div
-                    key={srv.title}
-                    className="py-10 border-t border-slate-200 dark:border-white/10 group relative"
-                  >
-                    <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
-                      <div className="md:col-span-4 lg:col-span-3">
-                        <div className="w-12 h-12 rounded-2xl bg-blue-600/10 dark:bg-blue-400/10 text-blue-600 dark:text-blue-400 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                          <Icon className="w-6 h-6" />
-                        </div>
-                        <h3 className="text-xl md:text-2xl font-bold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-                          {srv.title}
-                        </h3>
-                        <span className="inline-block mt-2 text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
-                          {srv.tagline}
-                        </span>
-                      </div>
-
-                      <div className="md:col-span-8 lg:col-span-9 flex flex-col sm:flex-row gap-8">
-                        <div className="sm:w-1/2">
-                          <p className="text-sm md:text-base text-slate-600 dark:text-slate-300 leading-relaxed">
-                            {srv.desc}
-                          </p>
-                          <div className="mt-6 flex flex-wrap gap-2">
-                            {srv.tags.map((t) => (
-                              <span
-                                key={t}
-                                className="text-[10px] px-3 py-1 rounded-full bg-slate-100 dark:bg-white/[0.05] text-slate-600 dark:text-slate-400 font-mono"
-                              >
-                                {t}
-                              </span>
-                            ))}
-                          </div>
-                        </div>
-
-                        <div className="sm:w-1/2">
-                          <p className="text-xs font-semibold text-slate-700 dark:text-slate-200 uppercase tracking-wider mb-4">
-                            Deliverables:
-                          </p>
-                          <ul className="space-y-3">
-                            {srv.deliverables.map((d, i) => (
-                              <li
-                                key={i}
-                                className="flex items-start gap-3 text-sm text-slate-600 dark:text-slate-300"
-                              >
-                                <CheckCircle2 className="w-4 h-4 text-blue-500 dark:text-blue-400 mt-0.5 shrink-0 opacity-50" />
-                                <span>{d}</span>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        {/* Integrated Solutions Highlight Card */}
-        <div className="p-8 sm:p-10 rounded-3xl glass-container border border-slate-200 dark:border-white/10 relative overflow-hidden mb-16">
-          <div className="absolute -right-16 -top-16 w-80 h-80 bg-blue-600/10 dark:bg-blue-400/10 rounded-full blur-3xl pointer-events-none" />
-
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative z-10">
-            <div className="lg:col-span-8 space-y-4">
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-600/10 dark:bg-blue-400/10 border border-blue-600/20 dark:border-blue-400/20 text-blue-700 dark:text-blue-300 text-xs font-bold uppercase tracking-wider">
-                <Sparkles className="w-3.5 h-3.5" />
-                The Power of Integrated Synergy
-              </div>
-              <h3 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">
-                Paket Solusi Terpadu: Mengapa Memadukan Creative + Tech?
-              </h3>
-              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed max-w-2xl">
-                Menghindari friksi komunikasi antara agensi desain dan programmer pihak ketiga. Ketika identitas visual dirancang oleh tim yang sama yang membangun website, hasil akhir bekerja dengan harmoni visual maksimal, performa kode optimal, serta kecepatan peluncuran 40% lebih cepat.
-              </p>
-            </div>
-
-            <div className="lg:col-span-4 flex flex-col sm:flex-row lg:flex-col gap-3 justify-end">
-              <button
-                onClick={onOpenCollaboration}
-                className="px-6 py-3 rounded-full grad-cta shadow-lg flex items-center justify-center gap-2 group"
+        {/* Grid 2 Kolom - Responsive */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-16">
+          {services.map((srv, idx) => {
+            const Icon = srv.icon;
+            return (
+              <motion.div
+                key={srv.title}
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-50px" }}
+                transition={{ duration: 0.8, ease, delay: idx * 0.1 }}
+                className="group cursor-default"
+                style={{ perspective: 1000 }}
               >
-                <span>Konsultasi Paket Terpadu</span>
-                <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* Capital & Infrastructure Projection Card */}
-        <div className="space-y-6">
-          <div className="text-left">
-            <div className="inline-flex items-center gap-2 text-brand-aqua text-xs font-bold uppercase tracking-wider">
-              <Coins className="w-4 h-4" />
-              <span>Estimasi Alokasi Modal & Infrastruktur Awal</span>
-            </div>
-            <h3 className="text-2xl font-bold text-slate-900 dark:text-white mt-1">
-              Proyeksi Kesiapan Alat & Investasi Operasional
-            </h3>
-            <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400">
-              Ringkasan alokasi investasi awal untuk menjamin kualitas standar studio dan kelancaran eksekusi proyek klien.
-            </p>
-          </div>
-
-          <div ref={investRef} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {investmentBreakdown.map((item, idx) => (
-              <div
-                key={item.category}
-                className={`p-6 rounded-3xl glass-container border border-slate-200 dark:border-white/10 space-y-3 micro-lift morph-card-hover scroll-reveal-right stagger-${idx + 1} ${investVisible ? 'revealed' : ''}`}
-              >
-                <div className="flex items-center justify-between">
-                  <span className="text-2xl font-extrabold text-brand-primary dark:text-brand-aqua">
-                    {item.percentage}
-                  </span>
-                  <PieChart className="w-5 h-5 text-slate-400 dark:text-slate-500" />
-                </div>
-                <h4 className="text-sm font-bold text-slate-900 dark:text-white">{item.category}</h4>
-                <p className="text-[11px] font-semibold text-brand-aqua">
-                  {item.amount}
-                </p>
-                <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-                  {item.desc}
-                </p>
-              </div>
-            ))}
-          </div>
+                {/* 3D Tilt Wrapper */}
+                <motion.div
+                  whileHover={{ rotateX: 2, rotateY: -2, y: -4 }}
+                  transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                  className="flex gap-6 items-start"
+                >
+                  <div className="w-14 h-14 rounded-2xl bg-black/[0.03] dark:bg-white/[0.03] border border-black/[0.05] dark:border-white/[0.05] flex items-center justify-center shrink-0 group-hover:bg-black group-hover:dark:bg-white transition-colors duration-300">
+                    <Icon className="w-6 h-6 text-black dark:text-white group-hover:text-white group-hover:dark:text-black transition-colors duration-300" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-black dark:text-white mb-2 tracking-tight">
+                      {srv.title}
+                    </h3>
+                    <p className="text-sm text-[#666666] dark:text-[#999999] leading-relaxed">
+                      {srv.desc}
+                    </p>
+                  </div>
+                </motion.div>
+              </motion.div>
+            );
+          })}
         </div>
       </div>
     </section>

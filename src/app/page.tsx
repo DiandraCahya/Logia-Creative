@@ -8,15 +8,13 @@ import { ScrollProgress } from "@/components/ScrollProgress";
 import { HeroSection } from "@/components/sections/HeroSection";
 import { BackgroundTargetSection } from "@/components/sections/BackgroundTargetSection";
 import { CompanyProfileSection } from "@/components/sections/CompanyProfileSection";
-import { SWOTRoadmapSection } from "@/components/sections/SWOTRoadmapSection";
 import { ServicesSection } from "@/components/sections/ServicesSection";
-import { SustainabilitySection } from "@/components/sections/SustainabilitySection";
 import { PortfolioSection } from "@/components/sections/PortfolioSection";
+import { PricingSection } from "@/components/sections/PricingSection";
 import { TestimonialSection } from "@/components/sections/TestimonialSection";
 import { FooterSection } from "@/components/sections/FooterSection";
 import { CollaborationModal } from "@/components/CollaborationModal";
 import Marquee from "@/components/animations/Marquee";
-import SplitWords from "@/components/animations/SplitWords";
 import Image from "next/image";
 
 const Logo3DBackground = dynamic(() => import("@/components/Logo3DBackground").then(mod => mod.Logo3DBackground), { ssr: false });
@@ -39,20 +37,6 @@ function MarqueeStrip() {
   );
 }
 
-function StatementSection() {
-  return (
-    <section className="py-24 sm:py-32 flex items-center justify-center min-h-[50vh] relative overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-brand-primary/5 to-transparent pointer-events-none" />
-      <div className="max-w-6xl mx-auto px-6 text-center relative z-10">
-        <SplitWords
-          as="h2"
-          className="statement text-slate-900 dark:text-white"
-          text="Kami membangun identitas yang bisnis Anda butuhkan."
-        />
-      </div>
-    </section>
-  );
-}
 
 export default function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -121,27 +105,20 @@ export default function Home() {
       <section data-cv="true">
         <CompanyProfileSection />
       </section>
-      <MarqueeStrip />
 
-      {/* Proposal Poin 4 (Part 2): SWOT Matrix & 5-Year Roadmap */}
+      {/* Creative & Tech Services */}
       <section data-cv="true">
-        <SWOTRoadmapSection />
+        <ServicesSection />
       </section>
-
-      {/* Statement oversized */}
-      <section data-cv="true">
-        <StatementSection />
-      </section>
-
-      {/* Proposal Poin 5: Creative & Tech Services & Capital Projection */}
-      <section data-cv="true">
-        <ServicesSection onOpenCollaboration={() => setIsModalOpen(true)} />
-      </section>
-      <MarqueeStrip />
 
       {/* Karya & Portfolio */}
       <section data-cv="true">
         <PortfolioSection />
+      </section>
+
+      {/* Pricing Catalog */}
+      <section data-cv="true">
+        <PricingSection />
       </section>
 
       {/* Client Testimonials */}
@@ -149,12 +126,7 @@ export default function Home() {
         <TestimonialSection />
       </section>
 
-      {/* Proposal Poin 6: Sustainability Model */}
-      <section data-cv="true">
-        <SustainabilitySection />
-      </section>
-
-      {/* Proposal Poin 7: Footer & Collaboration Closing */}
+      {/* Footer & Collaboration Closing */}
       <section data-cv="true">
         <FooterSection onOpenCollaboration={() => setIsModalOpen(true)} />
       </section>
