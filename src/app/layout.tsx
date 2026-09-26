@@ -1,13 +1,21 @@
 import type { Metadata } from "next";
-import { Plus_Jakarta_Sans } from "next/font/google";
+import { Fraunces, Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { PerformanceInit } from "@/components/PerformanceInit";
 
-const fontSans = Plus_Jakarta_Sans({
+const fontDisplay = Fraunces({
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700", "800"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-display",
+  display: "swap",
+});
+
+const fontSans = Inter({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
   variable: "--font-sans",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -59,7 +67,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="id" suppressHydrationWarning className="scroll-smooth">
-      <body className={`${fontSans.variable} font-sans antialiased selection:bg-brand-primary selection:text-white`}>
+      <body className={`${fontDisplay.variable} ${fontSans.variable} font-sans antialiased selection:bg-brand-primary selection:text-white`}>
         <PerformanceInit />
         <ThemeProvider
           attribute="class"

@@ -22,7 +22,10 @@
 
 @layer base {
   :root {
-    --bg-primary: #ffffff;
+    --font-display: "Fraunces", Georgia, serif;
+    --accent-bronze: #A08C6A;
+    --ease-out-expo: cubic-bezier(0.22, 1, 0.36, 1);
+    --bg-primary: #FAFAF8;
     --bg-secondary: #f9fafb;
     --text-primary: #000000;
     --text-secondary: #333333;
@@ -35,7 +38,7 @@
   }
 
   .dark {
-    --bg-primary: #0a0a0a;
+    --bg-primary: #0A0A0A;
     --bg-secondary: #111111;
     --text-primary: #ffffff;
     --text-secondary: #a3a3a3;
@@ -245,6 +248,12 @@ html:not(.dark) .grad-cta:hover,
 .light .grad-cta:hover {
   background: #222222 !important;
 }
+
+/* CTA dark banner keeps white headings in light mode */
+html:not(.dark) .cta-dark h1, html:not(.dark) .cta-dark h2, html:not(.dark) .cta-dark p, html:not(.dark) .cta-dark span, html:not(.dark) .cta-dark svg { color: #fff !important; }
+
+/* Display font utility */
+.font-display { font-family: var(--font-display); }
 
 /* Text colors - LIGHT MODE */
 html:not(.dark) h1,
