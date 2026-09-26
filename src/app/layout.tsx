@@ -63,8 +63,8 @@ export default function RootLayout({
         <PerformanceInit />
         <ThemeProvider
           attribute="class"
-          defaultTheme="dark"
-          enableSystem={false}
+          defaultTheme="system"
+          enableSystem
           disableTransitionOnChange
         >
           {children}
