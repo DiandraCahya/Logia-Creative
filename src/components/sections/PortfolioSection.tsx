@@ -315,7 +315,7 @@ export function PortfolioSection() {
 
       {/* Overlay Semua Project */}
       <div
-        className={`fixed inset-0 z-[100] bg-white/95 dark:bg-slate-950/90 backdrop-blur-xl transition-all duration-300 overflow-y-auto ${
+        className={`fixed inset-0 z-[100] bg-white/95 dark:bg-[#0a0a0a]/95 backdrop-blur-xl transition-all duration-300 overflow-y-auto ${
           showAllProjects ? 'opacity-100 visible' : 'opacity-0 invisible'
         }`}
         onClick={(e) => {
@@ -325,16 +325,16 @@ export function PortfolioSection() {
         <div className={`min-h-screen py-16 px-6 transition-transform duration-300 ${showAllProjects ? 'scale-100' : 'scale-95'}`}>
           <div className="max-w-7xl mx-auto">
             {/* Header Sticky */}
-            <div className="flex items-center justify-between mb-12 sticky top-0 z-10 py-4 bg-white/80 dark:bg-slate-950/80 backdrop-blur-md rounded-2xl px-6 border border-slate-200 dark:border-white/10">
+            <div className="flex items-center justify-between mb-12 sticky top-0 z-10 py-4 bg-white/80 dark:bg-[#0a0a0a]/80 backdrop-blur-md rounded-2xl px-6 border border-black/10 dark:border-white/10">
               <h2 className="font-display text-2xl sm:text-3xl font-medium text-black dark:text-white tracking-tighter">
                 Archive
               </h2>
               <button
                 onClick={() => setShowAllProjects(false)}
-                className="p-2 rounded-full glass-container hover:bg-slate-100 dark:hover:bg-white/5 transition-colors"
+                className="p-2 rounded-full min-h-[44px] min-w-[44px] flex items-center justify-center border border-black/10 dark:border-white/15 hover:bg-black/5 dark:hover:bg-white/10 transition-colors"
                 aria-label="Close"
               >
-                <X className="w-6 h-6 text-slate-900 dark:text-white" />
+                <X className="w-6 h-6 text-black dark:text-white" />
               </button>
             </div>
 
