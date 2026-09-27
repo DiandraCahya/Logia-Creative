@@ -278,10 +278,10 @@ export function BackgroundTargetSection({ onOpenCollaboration }: Props) {
           <div className="mt-8 text-center">
             <button
               onClick={onOpenCollaboration}
-              className="px-6 py-3 bg-black dark:bg-white text-white dark:text-black !text-white dark:!text-black text-sm font-semibold rounded-full hover:scale-[1.02] transition-transform duration-200 inline-flex items-center gap-2 group"
+              className="px-6 py-3 bg-black dark:bg-white text-white dark:text-black text-sm font-semibold rounded-full hover:scale-[1.02] transition-transform duration-200 inline-flex items-center gap-2 group"
             >
-              <span className="!text-white dark:!text-black">Konsultasikan Bisnis Anda</span>
-              <ArrowRight className="w-4 h-4 !text-white dark:!text-black group-hover:translate-x-1 transition-transform" />
+              <span>Konsultasikan Bisnis Anda</span>
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </button>
           </div>
         </div>

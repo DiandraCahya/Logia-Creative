@@ -235,6 +235,12 @@ html:not(.dark) .grad-cta:hover,
 html:not(.dark) .cta-dark h1,
 html:not(.dark) .cta-dark h2,
 html:not(.dark) .cta-dark p { color: #fff !important; }
+html:not(.dark) .cta-dark button,
+html:not(.dark) .cta-dark a[class*="bg-white"],
+.light .cta-dark button,
+.light .cta-dark a[class*="bg-white"] { color: #000 !important; }
+html:not(.dark) .cta-dark button svg,
+.light .cta-dark button svg { color: #000 !important; }
 
 /* Display font utility */
 .font-display { font-family: var(--font-display); }
@@ -257,20 +263,25 @@ html:not(.dark) h6,
 
 
 /* Links — exclude buttons whose class sets its own light-on-dark color */
-html:not(.dark) a:not(.grad-cta):not(.btn-collaborate):not([class*="bg-black"]),
-.light a:not(.grad-cta):not(.btn-collaborate):not([class*="bg-black"]) {
+html:not(.dark) a:not(.grad-cta):not(.btn-collaborate):not([class*="bg-black"]):not([class*="bg-white"]),
+.light a:not(.grad-cta):not(.btn-collaborate):not([class*="bg-black"]):not([class*="bg-white"]) {
   color: #000000 !important;
 }
 
-html:not(.dark) a:hover:not(.grad-cta):not(.btn-collaborate):not([class*="bg-black"]),
-.light a:hover:not(.grad-cta):not(.btn-collaborate):not([class*="bg-black"]) {
+html:not(.dark) a:hover:not(.grad-cta):not(.btn-collaborate):not([class*="bg-black"]):not([class*="bg-white"]),
+.light a:hover:not(.grad-cta):not(.btn-collaborate):not([class*="bg-black"]):not([class*="bg-white"]) {
   color: #555555 !important;
 }
 
-/* Icons */
-html:not(.dark) svg,
-.light svg {
+/* Icons: jangan timpa ikon di permukaan gelap (tombol solid, banner cta-dark) */
+html:not(.dark) :not(.cta-dark):not([class*="bg-black"]) > svg,
+html:not(.dark) svg:not([class*="text-white"]):not([class*="!text-white"]),
+.light svg:not([class*="text-white"]):not([class*="!text-white"]) {
   color: #000000 !important;
+}
+html:not(.dark) .cta-dark svg,
+html:not(.dark) [class*="bg-black"] svg {
+  color: inherit !important;
 }
 
 /* Cards */
