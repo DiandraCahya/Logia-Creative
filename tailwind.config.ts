@@ -10,6 +10,7 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        "accent-bronze": "#A08C6A",
         brand: {
           primary: "#0EA5E9", // Primary Blue
           aqua: "#67C7D2",    // Gradient Aqua

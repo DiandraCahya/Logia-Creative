@@ -54,7 +54,7 @@ export function FooterSection({ onOpenCollaboration }: FooterSectionProps) {
         {/* Closing Impact CTA Banner - Black Solid */}
         <div
           ref={ctaRef}
-          className={`cta-dark p-10 sm:p-16 lg:p-24 rounded-[2rem] bg-black text-white relative overflow-hidden shadow-2xl text-center space-y-8 transition-all duration-700 ${
+          className={`cta-dark p-6 sm:p-16 lg:p-24 rounded-[2rem] bg-black text-white relative overflow-hidden shadow-2xl text-center space-y-8 transition-all duration-700 ${
             ctaVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'
           }`}
         >
