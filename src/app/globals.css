@@ -406,26 +406,11 @@ html:not(.dark) footer a:hover,
     padding: 12px 16px !important;
   }
 
-  /* Logo 3D smaller on mobile */
-  .logo-3d {
-    width: 200px !important;
-    height: 200px !important;
-  }
-
   /* Disable heavy animations on mobile */
   .glass-container:hover {
     transform: none !important;
   }
 
-  /* Splash screen mobile */
-  .splash-screen h1 {
-    font-size: 3rem !important;
-  }
-
-  .splash-screen .logo-3d {
-    width: 150px !important;
-    height: 150px !important;
-  }
 }
 
 /* Tablet */
@@ -441,11 +426,6 @@ html:not(.dark) footer a:hover,
   .glass-container:hover {
     transform: none !important;
     background: rgba(255, 255, 255, 0.05) !important;
-  }
-
-  /* Disable 3D mouse tracking on touch */
-  .logo-3d {
-    transform: none !important;
   }
 
   /* Larger touch targets */
