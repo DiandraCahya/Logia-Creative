@@ -58,9 +58,6 @@ export function FooterSection({ onOpenCollaboration }: FooterSectionProps) {
             ctaVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'
           }`}
         >
-          {/* Subtle geometric overlay */}
-          <div className="absolute inset-0 opacity-10 bg-[linear-gradient(to_right,#ffffff_1px,transparent_1px),linear-gradient(to_bottom,#ffffff_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)] pointer-events-none" />
-
           <div className="relative z-10 max-w-3xl mx-auto flex flex-col items-center">
             <h2 className="text-white font-display font-medium tracking-[-0.02em] text-[clamp(2.5rem,5vw,4.5rem)] leading-[1.1] mb-6">
               Ready to elevate your brand?

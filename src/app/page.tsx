@@ -15,10 +15,8 @@ import { TestimonialSection } from "@/components/sections/TestimonialSection";
 import { FooterSection } from "@/components/sections/FooterSection";
 import { CollaborationModal } from "@/components/CollaborationModal";
 import Marquee from "@/components/animations/Marquee";
-import Image from "next/image";
 
 const Logo3DBackground = dynamic(() => import("@/components/Logo3DBackground").then(mod => mod.Logo3DBackground), { ssr: false });
-const MorphingBlob = dynamic(() => import("@/components/MorphingBlob").then(mod => mod.MorphingBlob), { ssr: false });
 
 function MarqueeStrip() {
   const words = [
@@ -51,43 +49,6 @@ export default function Home() {
 
       {/* 3D Logo Background — follows cursor on desktop */}
       <Logo3DBackground />
-
-      {/* Decorative background images — low opacity, blurred, non-intrusive */}
-      <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden" aria-hidden="true">
-        {/* Group 3 decoration — top-right */}
-        <div className="absolute -top-[10%] -right-[15%] w-[700px] h-[700px] opacity-[0.025] dark:opacity-[0.04] overflow-hidden">
-          <Image
-            src="/Group 3.png"
-            alt=""
-            fill
-            className="object-contain blur-[2px]"
-            loading="lazy"
-            sizes="(max-width: 768px) 100vw, 700px"
-          />
-        </div>
-        {/* Group 1 decoration — bottom-left */}
-        <div className="absolute bottom-[10%] -left-[10%] w-[400px] h-[400px] opacity-[0.03] dark:opacity-[0.05] overflow-hidden">
-          <Image
-            src="/Group 1.png"
-            alt=""
-            fill
-            className="object-contain blur-[1px]"
-            loading="lazy"
-            sizes="(max-width: 768px) 100vw, 400px"
-          />
-        </div>
-        {/* Morphing blob decorations */}
-        <MorphingBlob
-          size="lg"
-          variant="slow"
-          className="absolute top-[40%] -left-[20%] bg-gradient-to-br from-white/[0.04] to-transparent blur-[100px]"
-        />
-        <MorphingBlob
-          size="md"
-          variant="alt"
-          className="absolute top-[70%] -right-[15%] bg-gradient-to-bl from-white/[0.04] to-transparent blur-[80px]"
-        />
-      </div>
 
       {/* Floating Liquid Glass Navbar */}
       <LiquidNavbar onOpenCollaboration={() => setIsModalOpen(true)} />
