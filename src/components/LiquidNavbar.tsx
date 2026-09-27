@@ -11,13 +11,15 @@ interface LiquidNavbarProps {
 }
 
 const navLinks = [
-  { name: "Home", href: "#home" },
+  { name: "Home", href: "#top" },
   { name: "About", href: "#about" },
-  { name: "Services", href: "#services" },
-  { name: "Contact", href: "#contact" },
+  { name: "Services", href: "#layanan" },
+  { name: "Portfolio", href: "#portfolio" },
+  { name: "Pricing", href: "#pricing" },
+  { name: "Contact", href: "#kontak" },
 ];
 
-const sectionIds = ["home", "about", "services", "contact"];
+const sectionIds = ["top", "about", "layanan", "portfolio", "pricing", "kontak"];
 
 export function LiquidNavbar({ onOpenCollaboration }: LiquidNavbarProps) {
   const [scrolled, setScrolled] = useState(false);
@@ -104,8 +106,8 @@ export function LiquidNavbar({ onOpenCollaboration }: LiquidNavbarProps) {
         >
           {/* Logo */}
           <a
-            href="#home"
-            onClick={(e) => handleNavClick(e, "#home")}
+            href="#top"
+            onClick={(e) => handleNavClick(e, "#top")}
             className="flex items-center gap-2 group cursor-pointer"
           >
             <div className="relative w-24 sm:w-28 h-7 sm:h-8 transition-transform duration-300 group-hover:scale-105">

@@ -1,5 +1,6 @@
 "use client";
 import { useRef, useState } from "react";
+import Image from "next/image";
 
 interface CaseRowProps {
   index: string;
@@ -38,7 +39,7 @@ export default function CaseRow({ index, title, category, description, image, on
           transform: `translate(-50%, -50%) scale(${preview.show ? 1 : 0.85}) rotate(${preview.show ? 0 : -4}deg)`,
         }}
       >
-        <img src={image} alt="" className="w-64 h-40 object-cover rounded-xl shadow-2xl" />
+        <Image src={image} alt="" width={256} height={160} className="w-64 h-40 object-cover rounded-xl shadow-2xl" />
       </div>
 
       <div className="flex flex-col md:flex-row md:items-center gap-3 md:gap-8 px-2">

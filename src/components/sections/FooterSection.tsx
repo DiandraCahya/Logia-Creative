@@ -188,24 +188,24 @@ export function FooterSection({ onOpenCollaboration }: FooterSectionProps) {
             </ul>
 
             <div className="flex items-center gap-2 pt-4">
-              <a
-                href="https://instagram.com"
-                target="_blank"
-                rel="noreferrer"
-                className="w-10 h-10 rounded-full bg-black/5 dark:bg-white/5 flex items-center justify-center text-black dark:text-white hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors"
-                aria-label="Instagram"
+              <button
+                type="button"
+                disabled
+                aria-label="Instagram — segera hadir"
+                title="Instagram — segera hadir"
+                className="w-10 h-10 rounded-full bg-black/5 dark:bg-white/5 flex items-center justify-center text-black/40 dark:text-white/40 cursor-not-allowed"
               >
                 <Instagram className="w-4 h-4" />
-              </a>
-              <a
-                href="https://linkedin.com"
-                target="_blank"
-                rel="noreferrer"
-                className="w-10 h-10 rounded-full bg-black/5 dark:bg-white/5 flex items-center justify-center text-black dark:text-white hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors"
-                aria-label="LinkedIn"
+              </button>
+              <button
+                type="button"
+                disabled
+                aria-label="LinkedIn — segera hadir"
+                title="LinkedIn — segera hadir"
+                className="w-10 h-10 rounded-full bg-black/5 dark:bg-white/5 flex items-center justify-center text-black/40 dark:text-white/40 cursor-not-allowed"
               >
                 <Linkedin className="w-4 h-4" />
-              </a>
+              </button>
             </div>
           </div>
         </div>

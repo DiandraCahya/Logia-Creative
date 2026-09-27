@@ -19,6 +19,7 @@ import {
   useReducedMotion,
 } from "motion/react"
 import { ArrowLeft, Menu } from "lucide-react"
+import Image from "next/image"
 
 import { cn } from "@/lib/utils"
 
@@ -421,10 +422,11 @@ export function HeroCarousel({
               animate={{ height: i === index ? fullH : halfH }}
               transition={spring}
             >
-              <img
+              <Image
                 src={item.image}
                 alt=""
                 draggable={false}
+                fill
                 className="h-full w-full object-cover"
                 style={{ objectPosition: "50% 26%" }}
               />
