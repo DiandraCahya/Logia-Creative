@@ -13,6 +13,27 @@ export function SplashScreen({ onComplete }: SplashScreenProps) {
   const doneRef = useRef(onComplete);
   doneRef.current = onComplete;
 
+  const TEXT = "LOGIA CREATIVE";
+  const [n, setN] = useState(0);
+
+  useEffect(() => {
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduced) {
+      setN(TEXT.length);
+      return;
+    }
+    const t = setInterval(() => {
+      setN((v) => {
+        if (v >= TEXT.length) {
+          clearInterval(t);
+          return v;
+        }
+        return v + 1;
+      });
+    }, 70);
+    return () => clearInterval(t);
+  }, []);
+
   const handleExit = React.useCallback(() => {
     setIsVisible(false);
     setTimeout(() => {
@@ -39,8 +60,11 @@ export function SplashScreen({ onComplete }: SplashScreenProps) {
           className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[var(--bg-primary)] text-[var(--text-primary)] dark:bg-[#0A0A0A] dark:text-white"
         >
           <div className="relative z-10 flex flex-col items-center gap-6 px-6 text-center">
-            <p className="font-display text-4xl md:text-6xl font-medium tracking-[-0.02em] select-none">
-              LOGIA CREATIVE
+            <p aria-label={TEXT} className="font-display text-4xl md:text-6xl font-medium tracking-[-0.02em] select-none">
+              {TEXT.slice(0, n)}
+              {n < TEXT.length && (
+                <motion.span aria-hidden="true" animate={{ opacity: [1, 0] }} transition={{ duration: 0.5, repeat: Infinity }} className="text-[var(--accent-bronze)]">|</motion.span>
+              )}
             </p>
             {/* thin progress indicator */}
             <div
