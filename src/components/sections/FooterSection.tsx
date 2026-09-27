@@ -54,7 +54,7 @@ export function FooterSection({ onOpenCollaboration }: FooterSectionProps) {
         {/* Closing Impact CTA Banner - Black Solid */}
         <div
           ref={ctaRef}
-          className={`p-10 sm:p-16 lg:p-24 rounded-[2rem] bg-black text-white relative overflow-hidden shadow-2xl text-center space-y-8 transition-all duration-700 ${
+          className={`cta-dark p-10 sm:p-16 lg:p-24 rounded-[2rem] bg-black text-white relative overflow-hidden shadow-2xl text-center space-y-8 transition-all duration-700 ${
             ctaVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'
           }`}
         >
@@ -62,7 +62,7 @@ export function FooterSection({ onOpenCollaboration }: FooterSectionProps) {
           <div className="absolute inset-0 opacity-10 bg-[linear-gradient(to_right,#ffffff_1px,transparent_1px),linear-gradient(to_bottom,#ffffff_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)] pointer-events-none" />
 
           <div className="relative z-10 max-w-3xl mx-auto flex flex-col items-center">
-            <h2 className="text-[clamp(2.5rem,5vw,4.5rem)] font-extrabold tracking-tight leading-[1.1] mb-6">
+            <h2 className="text-white font-display font-medium tracking-[-0.02em] text-[clamp(2.5rem,5vw,4.5rem)] leading-[1.1] mb-6">
               Ready to elevate your brand?
             </h2>
             <p className="text-[#999999] text-base sm:text-lg mb-10 max-w-xl leading-relaxed">
