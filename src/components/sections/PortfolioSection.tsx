@@ -266,7 +266,8 @@ export function PortfolioSection() {
         <div
           className="text-center max-w-3xl mx-auto mb-16 px-4"
         >
-          <SplitWords as="h2" text="Selected Work" className="text-4xl sm:text-5xl lg:text-6xl font-black leading-[1.1] tracking-tighter text-slate-900 dark:text-white mb-6 uppercase" />
+          <p className="text-[var(--accent-bronze)] uppercase tracking-[0.2em] text-xs font-semibold mb-4">Portfolio</p>
+          <SplitWords as="h2" text="Selected Work" className="font-display font-medium tracking-[-0.02em] text-[clamp(2rem,4vw,3.5rem)] text-black dark:text-white mb-4" />
         </div>
 
         {/* Filter Tabs */}
@@ -287,7 +288,7 @@ export function PortfolioSection() {
         </div>
 
         {/* Portfolio List using HeroCarousel */}
-        <div ref={gridRef} className={`w-full h-[100vh] min-h-[100vh] overflow-hidden transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+        <div ref={gridRef} className={`w-full h-[85vh] min-h-[85vh] overflow-hidden transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${
           (gridVisible && !isExiting) ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
         }`}>
           {carouselItems.length > 0 ? (
@@ -303,7 +304,7 @@ export function PortfolioSection() {
         <div className="text-center mt-16 px-4">
           <button
             onClick={() => setShowAllProjects(true)}
-            className="w-16 h-16 rounded-full glass-container border border-brand-primary/30 text-brand-primary dark:text-brand-aqua font-semibold text-sm hover:bg-brand-primary hover:text-white transition-all shadow-sm hover:shadow-md flex items-center justify-center mx-auto group"
+            className="w-16 h-16 rounded-full bg-black text-white dark:bg-white dark:text-black font-semibold text-sm hover:scale-[1.04] active:scale-[0.97] transition-transform shadow-md flex items-center justify-center mx-auto group"
             aria-label="View All Projects"
           >
             <ArrowRight className="w-6 h-6 transition-transform group-hover:translate-x-1" />
