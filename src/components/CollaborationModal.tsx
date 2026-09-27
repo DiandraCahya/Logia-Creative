@@ -98,14 +98,14 @@ export function CollaborationModal({ isOpen, onClose }: CollaborationModalProps)
               {/* Close Button */}
               <button
                 onClick={onClose}
-                className="absolute top-5 right-5 p-2 rounded-full bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors btn-press z-20"
+                className="absolute top-5 right-5 p-2 rounded-full bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors active:scale-95 z-20"
               >
                 <X className="w-5 h-5" />
               </button>
 
               {submitted ? (
                 <div className="text-center py-10 space-y-4">
-                  <div className="w-16 h-16 mx-auto rounded-full bg-accent-primary/10 text-accent-primary flex items-center justify-center">
+                  <div className="w-16 h-16 mx-auto rounded-full bg-accent-bronze/10 text-accent-bronze flex items-center justify-center">
                     <CheckCircle2 className="w-10 h-10" />
                   </div>
                   <h3 className="text-2xl font-bold text-slate-900 dark:text-white">
@@ -118,7 +118,7 @@ export function CollaborationModal({ isOpen, onClose }: CollaborationModalProps)
                   <div className="pt-6">
                     <button
                       onClick={handleReset}
-                      className="px-8 py-3 rounded-full btn-collaborate text-white font-semibold text-sm btn-press"
+                      className="px-8 py-3 rounded-full bg-black text-white dark:bg-white dark:text-black font-semibold text-sm active:scale-95"
                     >
                       Selesai & Tutup
                     </button>
@@ -127,7 +127,7 @@ export function CollaborationModal({ isOpen, onClose }: CollaborationModalProps)
               ) : (
                 <div>
                   <div className="mb-8">
-                    <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-accent-primary/10 text-accent-primary text-xs font-semibold uppercase tracking-wider mb-3">
+                    <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-accent-bronze/10 text-accent-bronze text-xs font-semibold uppercase tracking-wider mb-3">
                       <Sparkles className="w-3.5 h-3.5" />
                       Creative Partnership
                     </div>
@@ -153,10 +153,10 @@ export function CollaborationModal({ isOpen, onClose }: CollaborationModalProps)
                               type="button"
                               key={srv}
                               onClick={() => toggleService(srv)}
-                              className={`text-xs px-4 py-2 rounded-full border transition-all btn-press ${
+                              className={`text-xs px-4 py-2 rounded-full border transition-all active:scale-95 ${
                                 active
-                                  ? "bg-accent-primary text-white border-accent-primary"
-                                  : "bg-bg-primary text-slate-600 dark:text-slate-300 border-gray-200 dark:border-gray-800 hover:border-accent-primary/50"
+                                  ? "bg-accent-bronze text-white border-accent-bronze"
+                                  : "bg-[var(--bg-primary)] text-slate-600 dark:text-slate-300 border-gray-200 dark:border-gray-800 hover:border-accent-bronze/50"
                               }`}
                             >
                               {srv}
@@ -180,7 +180,7 @@ export function CollaborationModal({ isOpen, onClose }: CollaborationModalProps)
                           onChange={(e) =>
                             setFormData({ ...formData, name: e.target.value })
                           }
-                          className="w-full px-4 py-3 rounded-xl bg-bg-primary border border-gray-200 dark:border-gray-800 text-sm focus:outline-none focus:border-accent-primary transition-colors"
+                          className="w-full px-4 py-3 rounded-xl bg-[var(--bg-primary)] border border-gray-200 dark:border-gray-800 text-sm focus:outline-none focus:border-accent-bronze transition-colors"
                         />
                       </div>
                       <div>
@@ -194,7 +194,7 @@ export function CollaborationModal({ isOpen, onClose }: CollaborationModalProps)
                           onChange={(e) =>
                             setFormData({ ...formData, brandName: e.target.value })
                           }
-                          className="w-full px-4 py-3 rounded-xl bg-bg-primary border border-gray-200 dark:border-gray-800 text-sm focus:outline-none focus:border-accent-primary transition-colors"
+                          className="w-full px-4 py-3 rounded-xl bg-[var(--bg-primary)] border border-gray-200 dark:border-gray-800 text-sm focus:outline-none focus:border-accent-bronze transition-colors"
                         />
                       </div>
                     </div>
@@ -213,7 +213,7 @@ export function CollaborationModal({ isOpen, onClose }: CollaborationModalProps)
                           onChange={(e) =>
                             setFormData({ ...formData, contact: e.target.value })
                           }
-                          className="w-full px-4 py-3 rounded-xl bg-bg-primary border border-gray-200 dark:border-gray-800 text-sm focus:outline-none focus:border-accent-primary transition-colors"
+                          className="w-full px-4 py-3 rounded-xl bg-[var(--bg-primary)] border border-gray-200 dark:border-gray-800 text-sm focus:outline-none focus:border-accent-bronze transition-colors"
                         />
                       </div>
                       <div>
@@ -223,7 +223,7 @@ export function CollaborationModal({ isOpen, onClose }: CollaborationModalProps)
                         <select
                           value={selectedBudget}
                           onChange={(e) => setSelectedBudget(e.target.value)}
-                          className="w-full px-4 py-3 rounded-xl bg-bg-primary border border-gray-200 dark:border-gray-800 text-sm focus:outline-none focus:border-accent-primary transition-colors"
+                          className="w-full px-4 py-3 rounded-xl bg-[var(--bg-primary)] border border-gray-200 dark:border-gray-800 text-sm focus:outline-none focus:border-accent-bronze transition-colors"
                         >
                           {budgetRanges.map((b) => (
                             <option key={b} value={b}>
@@ -246,7 +246,7 @@ export function CollaborationModal({ isOpen, onClose }: CollaborationModalProps)
                         onChange={(e) =>
                           setFormData({ ...formData, notes: e.target.value })
                         }
-                        className="w-full px-4 py-3 rounded-xl bg-bg-primary border border-gray-200 dark:border-gray-800 text-sm focus:outline-none focus:border-accent-primary resize-none transition-colors"
+                        className="w-full px-4 py-3 rounded-xl bg-[var(--bg-primary)] border border-gray-200 dark:border-gray-800 text-sm focus:outline-none focus:border-accent-bronze resize-none transition-colors"
                       />
                     </div>
 
@@ -254,19 +254,19 @@ export function CollaborationModal({ isOpen, onClose }: CollaborationModalProps)
                     <div className="pt-4 flex flex-col sm:flex-row items-center justify-between gap-6 border-t border-gray-200 dark:border-gray-800">
                       <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 text-xs text-slate-600 dark:text-slate-300">
                         <span className="flex items-center gap-2">
-                          <Mail className="w-4 h-4 text-accent-primary" />
+                          <Mail className="w-4 h-4 text-accent-bronze" />
                           hello@logia.id
                         </span>
                         <span className="hidden sm:inline">•</span>
                         <span className="flex items-center gap-2">
-                          <Phone className="w-4 h-4 text-accent-secondary" />
+                          <Phone className="w-4 h-4 text-accent-bronze" />
                           +62 812-3456-7890
                         </span>
                       </div>
 
                       <button
                         type="submit"
-                        className="w-full sm:w-auto px-8 py-3 rounded-full btn-collaborate text-white text-sm font-semibold btn-press flex items-center justify-center gap-2"
+                        className="w-full sm:w-auto px-8 py-3 rounded-full bg-black text-white dark:bg-white dark:text-black text-sm font-semibold active:scale-95 flex items-center justify-center gap-2"
                       >
                         <Send className="w-4 h-4" />
                         Kirim Pesan

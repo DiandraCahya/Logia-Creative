@@ -215,7 +215,6 @@ export function PortfolioSection() {
   const [displayedCategory, setDisplayedCategory] = useState("Semua");
   const [isExiting, setIsExiting] = useState(false);
   const [showAllProjects, setShowAllProjects] = useState(false);
-  const { ref: headerRef, isInView: headerVisible } = useScrollReveal();
   const { ref: gridRef, isInView: gridVisible } = useScrollReveal();
 
   useEffect(() => {
@@ -265,8 +264,7 @@ export function PortfolioSection() {
 
         {/* Section Header */}
         <div
-          ref={headerRef}
-          className={`text-center max-w-3xl mx-auto mb-16 px-4 heading-entrance ${headerVisible ? 'revealed' : ''}`}
+          className="text-center max-w-3xl mx-auto mb-16 px-4"
         >
           <SplitWords as="h2" text="Selected Work" className="text-4xl sm:text-5xl lg:text-6xl font-black leading-[1.1] tracking-tighter text-slate-900 dark:text-white mb-6 uppercase" />
         </div>

@@ -158,7 +158,7 @@ export function LiquidNavbar({ onOpenCollaboration }: LiquidNavbarProps) {
             {/* CTA */}
             <button
               onClick={onOpenCollaboration}
-              className="hidden sm:flex items-center gap-1.5 px-5 py-2.5 rounded-full text-sm font-semibold btn-interactive grad-cta"
+              className="hidden sm:flex items-center gap-1.5 px-5 py-2.5 rounded-full text-sm font-semibold grad-cta"
             >
               <Sparkles className="w-3.5 h-3.5" />
               <span>Kolaborasi</span>
@@ -168,7 +168,7 @@ export function LiquidNavbar({ onOpenCollaboration }: LiquidNavbarProps) {
             {/* Mobile Menu Toggle */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden p-2 rounded-xl text-slate-900 dark:text-white hover:bg-slate-100 dark:hover:bg-white/5 btn-press min-h-[44px] min-w-[44px] flex items-center justify-center"
+              className="lg:hidden p-2 rounded-xl text-slate-900 dark:text-white hover:bg-slate-100 dark:hover:bg-white/5 active:scale-95 min-h-[44px] min-w-[44px] flex items-center justify-center"
               aria-label="Toggle Mobile Menu"
             >
               {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -209,7 +209,7 @@ export function LiquidNavbar({ onOpenCollaboration }: LiquidNavbarProps) {
                   setMobileMenuOpen(false);
                   if (onOpenCollaboration) onOpenCollaboration();
                 }}
-                className="w-full py-3 rounded-xl text-center text-sm font-semibold btn-press flex items-center justify-center gap-2 grad-cta"
+                className="w-full py-3 rounded-xl text-center text-sm font-semibold active:scale-95 flex items-center justify-center gap-2 grad-cta"
               >
                 <Sparkles className="w-4 h-4" />
                 Mulai Kolaborasi

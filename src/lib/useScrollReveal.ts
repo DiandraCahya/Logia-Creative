@@ -47,12 +47,3 @@ export function useScrollReveal({
 
   return { ref, isInView };
 }
-
-/**
- * Hook for staggered children reveal.
- * Observes a parent container; when visible, adds 'revealed' class.
- */
-export function useStaggerReveal(options?: UseScrollRevealOptions) {
-  const { ref, isInView } = useScrollReveal(options);
-  return { ref, isInView, className: isInView ? "revealed" : "" };
-}

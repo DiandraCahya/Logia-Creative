@@ -221,15 +221,15 @@ export function HeroSection({ onOpenCollaboration }: HeroSectionProps) {
             >
               <button
                 onClick={onOpenCollaboration}
-                className="px-8 py-4 bg-black dark:bg-white text-white dark:text-black !text-white dark:!text-black text-sm font-semibold rounded-full hover:scale-[1.02] active:scale-[0.98] transition-transform duration-200 flex items-center gap-2 group"
+                className="px-8 py-4 bg-black text-white dark:bg-white dark:text-black text-sm font-semibold rounded-full hover:scale-[1.02] active:scale-[0.98] transition-transform duration-200 flex items-center gap-2 group"
               >
-                <span className="!text-white dark:!text-black">Mulai Proyek</span>
-                <ArrowRight className="w-4 h-4 !text-white dark:!text-black transition-transform group-hover:translate-x-1" />
+                <span>Mulai Proyek</span>
+                <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
               </button>
 
               <a
                 href="#portfolio"
-                className="px-8 py-4 text-sm font-semibold text-black dark:text-white !text-black dark:!text-white border border-black/15 dark:border-white/15 rounded-full hover:bg-black/5 dark:hover:bg-white/5 transition-colors duration-200"
+                className="px-8 py-4 text-sm font-semibold text-black dark:text-white border border-black/15 dark:border-white/15 rounded-full hover:bg-black/5 dark:hover:bg-white/5 transition-colors duration-200"
               >
                 Lihat Portfolio
               </a>
