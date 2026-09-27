@@ -1,6 +1,6 @@
 "use client";
 
-import { ScrollReelTestimonials } from "@/components/ui/scroll-reel-testimonials";
+import { TestimonialCarousel } from "@/components/ui/testimonial-carousel";
 
 const TESTIMONIALS = [
   {
@@ -85,12 +85,15 @@ const TESTIMONIALS = [
 
 export function TestimonialSection() {
   return (
-    <section className="w-full min-h-[100vh] pt-24 md:pt-32 pb-12 bg-white dark:bg-[#0a0a0a] flex flex-col items-center justify-center relative z-10 pointer-events-none">
-      <div className="pointer-events-auto w-full flex flex-col items-center h-full">
-        <h2 className="text-[clamp(2rem,4vw,3.5rem)] font-extrabold tracking-[-0.02em] text-black dark:text-white mb-16 text-center">
+    <section id="testimoni" className="w-full py-24 md:py-32 bg-white dark:bg-[#0a0a0a] flex flex-col items-center justify-center relative z-10 border-t border-black/5 dark:border-white/5">
+      <div className="w-full max-w-4xl mx-auto px-6 flex flex-col items-center">
+        <p className="text-[var(--accent-bronze)] uppercase tracking-[0.2em] text-xs font-semibold mb-4">
+          Testimoni
+        </p>
+        <h2 className="font-display font-medium tracking-[-0.02em] text-[clamp(2rem,4vw,3.5rem)] text-black dark:text-white mb-12 text-center">
           Testimoni Klien
         </h2>
-        <ScrollReelTestimonials testimonials={TESTIMONIALS} className="flex-1 w-full" />
+        <TestimonialCarousel testimonials={TESTIMONIALS} />
       </div>
     </section>
   );
