@@ -181,17 +181,17 @@ function PortfolioCard({ project, gridVisible, idx }: { project: any, gridVisibl
             src={project.image}
             alt={project.title.replace(/\n/g, ' ')}
             fill
-            className="object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+            className="object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700 ease-out"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
         </div>
 
         {/* Content */}
-        <div className="p-6 flex flex-col flex-grow bg-white dark:bg-[#111]" style={{ transform: "translateZ(40px)" }}>
+        <div className="p-6 flex flex-col flex-grow bg-white dark:bg-[#111] border-t border-black/5 dark:border-white/10" style={{ transform: "translateZ(40px)" }}>
           <span className="inline-block text-[11px] font-bold text-[#666666] dark:text-[#999999] uppercase tracking-wider mb-2 transition-transform duration-300 group-hover:-translate-y-1">
             {project.category}
           </span>
-          <h3 className="text-xl font-bold text-black dark:text-white mb-6 flex-grow transition-colors whitespace-pre-line">
+          <h3 className="font-display text-xl font-medium text-black dark:text-white mb-6 flex-grow transition-colors whitespace-pre-line">
             {project.title}
           </h3>
           <div className="flex flex-wrap gap-2 mt-auto transition-transform duration-300 group-hover:-translate-y-1">
@@ -327,7 +327,7 @@ export function PortfolioSection() {
           <div className="max-w-7xl mx-auto">
             {/* Header Sticky */}
             <div className="flex items-center justify-between mb-12 sticky top-0 z-10 py-4 bg-white/80 dark:bg-slate-950/80 backdrop-blur-md rounded-2xl px-6 border border-slate-200 dark:border-white/10">
-              <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white uppercase tracking-tighter">
+              <h2 className="font-display text-2xl sm:text-3xl font-medium text-black dark:text-white tracking-tighter">
                 Archive
               </h2>
               <button
