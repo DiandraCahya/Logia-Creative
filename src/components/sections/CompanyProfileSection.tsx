@@ -56,7 +56,7 @@ export function CompanyProfileSection() {
             }`}
           >
             <div className="mb-10">
-              <h2 className="text-[clamp(2rem,4vw,3.5rem)] font-extrabold leading-[1.05] tracking-[-0.02em] text-black dark:text-white mb-4">
+              <h2 className="font-display font-medium text-[clamp(2rem,4vw,3.5rem)] leading-[1.05] tracking-[-0.02em] text-black dark:text-white mb-4">
                 Tentang Logia.
               </h2>
               <p className="text-[#666666] dark:text-[#999999] text-base leading-relaxed">

@@ -174,7 +174,7 @@ export function HeroSection({ onOpenCollaboration }: HeroSectionProps) {
             </motion.span>
 
             {/* Headline — max 7 words */}
-            <h1 className="text-[clamp(2.5rem,8vw,5rem)] font-extrabold leading-[1.05] tracking-[-0.02em] text-black dark:text-white">
+            <h1 className="font-display font-medium text-[clamp(2.5rem,8vw,5rem)] leading-[1.05] tracking-[-0.02em] text-black dark:text-white">
               <span className="overflow-hidden block pb-1">
                 <motion.span
                   initial={{ y: "100%" }}

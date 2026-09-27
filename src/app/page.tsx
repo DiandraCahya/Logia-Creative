@@ -31,7 +31,7 @@ function MarqueeStrip() {
   ];
 
   return (
-    <div className="w-full py-6 border-y border-slate-200 dark:border-white/10 overflow-hidden bg-slate-50 dark:bg-slate-900/50 backdrop-blur-sm">
+    <div className="w-full py-6 border-y border-black/10 dark:border-white/10 overflow-hidden bg-transparent">
       <Marquee items={words} speed={30} />
     </div>
   );

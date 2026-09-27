@@ -142,11 +142,14 @@ export function BackgroundTargetSection({ onOpenCollaboration }: Props) {
   const ActiveIcon = currentMarket.icon;
 
   return (
-    <section id="portfolio" className="py-24 md:py-32 relative bg-black/[0.02] dark:bg-white/[0.02] border-t border-black/5 dark:border-white/5">
+    <section id="target-pasar" className="py-24 md:py-32 relative bg-black/[0.02] dark:bg-white/[0.02] border-t border-black/5 dark:border-white/5">
       <div className="max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-12 relative z-10" ref={ref}>
         {/* Header */}
         <div className={`text-center max-w-2xl mx-auto mb-16 transition-all duration-700 ${isInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
-          <h2 className="text-[clamp(2rem,4vw,3.5rem)] font-extrabold tracking-[-0.02em] text-black dark:text-white mb-4">
+          <p className="text-[var(--accent-bronze)] uppercase tracking-[0.2em] text-xs font-semibold mb-4">
+            Target Pasar
+          </p>
+          <h2 className="font-display font-medium text-[clamp(2rem,4vw,3.5rem)] tracking-[-0.02em] text-black dark:text-white mb-4">
             Target Pasar
           </h2>
           <p className="text-base text-[#666666] dark:text-[#999999]">
