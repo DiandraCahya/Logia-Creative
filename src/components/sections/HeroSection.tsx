@@ -82,7 +82,8 @@ function InteractiveShape() {
             fill
             className="object-cover"
             sizes="(max-width: 640px) 256px, (max-width: 1024px) 320px, 420px"
-            priority={false}
+            priority
+            fetchPriority="high"
           />
         </div>
 
@@ -106,7 +107,7 @@ export function HeroSection({ onOpenCollaboration }: HeroSectionProps) {
   return (
     <section
       id="top"
-      className="relative min-h-screen flex items-center justify-center overflow-hidden pt-24 pb-20 sm:pt-32 sm:pb-28"
+      className="relative min-h-[92svh] flex items-center justify-center overflow-hidden pt-24 pb-16 sm:pt-32 sm:pb-28"
     >
       <div className="max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-12 w-full">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-8 items-center">

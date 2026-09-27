@@ -45,7 +45,7 @@ export const metadata: Metadata = {
     siteName: "Logia Creative",
     images: [
       {
-        url: "/image 2.png",
+        url: "/LOGO.png",
         width: 1200,
         height: 630,
         alt: "Logia Creative Brand Identity & Overview",

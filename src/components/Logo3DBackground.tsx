@@ -83,8 +83,9 @@ export function Logo3DBackground() {
           src="/LOGO.png"
           alt=""
           fill
+          loading="lazy"
           className="object-contain opacity-[0.04]"
-          sizes="600px"
+          sizes="(max-width: 768px) 0px, 600px"
           priority={false}
         />
       </div>

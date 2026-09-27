@@ -252,6 +252,7 @@ export function HeroCarousel({
             alt=""
             aria-hidden
             draggable={false}
+            loading={index === 0 ? "eager" : "lazy"}
             className="absolute inset-0 h-full w-full object-cover"
             initial={{ scale: reduced ? 1.28 : 1.42 }}
             animate={{ scale: 1.28 }}

@@ -13,10 +13,10 @@ import { PortfolioSection } from "@/components/sections/PortfolioSection";
 import { PricingSection } from "@/components/sections/PricingSection";
 import { TestimonialSection } from "@/components/sections/TestimonialSection";
 import { FooterSection } from "@/components/sections/FooterSection";
-import { CollaborationModal } from "@/components/CollaborationModal";
 import Marquee from "@/components/animations/Marquee";
 
 const Logo3DBackground = dynamic(() => import("@/components/Logo3DBackground").then(mod => mod.Logo3DBackground), { ssr: false });
+const CollaborationModal = dynamic(() => import("@/components/CollaborationModal").then(mod => mod.CollaborationModal), { ssr: false });
 
 function MarqueeStrip() {
   const words = [

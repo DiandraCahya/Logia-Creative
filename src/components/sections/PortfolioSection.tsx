@@ -181,6 +181,8 @@ function PortfolioCard({ project, gridVisible, idx }: { project: any, gridVisibl
             src={project.image}
             alt={project.title.replace(/\n/g, ' ')}
             fill
+            loading="lazy"
+            sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
             className="object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700 ease-out"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />

@@ -152,6 +152,8 @@ export function CompanyProfileSection() {
                           src="/LOGO.png"
                           alt="Logo Logia"
                           fill
+                          loading="lazy"
+                          sizes="128px"
                           className="object-contain"
                         />
                       </div>
