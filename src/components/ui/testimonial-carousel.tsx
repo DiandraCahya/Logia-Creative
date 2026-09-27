@@ -7,7 +7,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 
 export interface Testimonial {
   quote: string;
-  author: string;
+  author?: string;
   role?: string;
   image: string;
   alt: string;
@@ -90,8 +90,11 @@ export function TestimonialCarousel({ testimonials }: { testimonials: Testimonia
                   &ldquo;{t.quote}&rdquo;
                 </blockquote>
                 <figcaption className="mt-6 text-sm text-[#666666] dark:text-[#999999]">
-                  <span className="font-semibold text-black dark:text-white">{t.author}</span>
-                  {t.role ? ` — ${t.role}` : ""}
+                  {t.author ? (
+                    <span className="font-semibold text-black dark:text-white">{t.author}</span>
+                  ) : null}
+                  {t.author && t.role ? " — " : ""}
+                  {t.role}
                 </figcaption>
               </figure>
             </div>
@@ -107,7 +110,7 @@ export function TestimonialCarousel({ testimonials }: { testimonials: Testimonia
         >
           <ChevronLeft className="w-5 h-5" aria-hidden="true" />
         </button>
-        <div className="flex items-center gap-2" role="tablist" aria-label="Pilih testimoni">
+        <div className="flex items-center gap-2" role="group" aria-label="Pilih testimoni">
           {testimonials.map((_, i) => (
             <button
               key={i}

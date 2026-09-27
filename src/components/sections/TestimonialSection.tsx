@@ -2,84 +2,44 @@
 
 import { TestimonialCarousel } from "@/components/ui/testimonial-carousel";
 
+// ponytail: placeholder testimonials — role-only, no real-person names.
+// Replace with real client quotes + photos when the owner supplies them.
 const TESTIMONIALS = [
   {
-    quote: "Logia Creative transformed our brand completely. The result exceeded expectations.",
-    author: "Ahmad Rizki - Founder Kopi Nusantara",
+    quote: "Identitas brand kami terliat jauh lebih profesional setelah bekerja sama dengan Logia Creative.",
+    role: "Founder, UMKM Kuliner",
     image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop",
-    alt: "Ahmad Rizki",
+    alt: "Ilustrasi placeholder klien UMKM",
   },
   {
-    quote: "Professional, creative, and very detail-oriented. Highly recommended.",
-    author: "Sari Dewi - CEO Batik Modern",
+    quote: "Proses kerjanya rapi dan hasil desainnya konsisten dari awal sampai serah-terima.",
+    role: "Pemilik Brand Fashion Lokal",
     image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=400&fit=crop",
-    alt: "Sari Dewi",
+    alt: "Ilustrasi placeholder klien brand fashion",
   },
   {
-    quote: "The best creative agency we've worked with. Fast delivery and great communication.",
-    author: "Budi Santoso - Marketing Director",
+    quote: "Website-nya cepat, rapi di mobile, dan mudah kami kelola sendiri setelahnya.",
+    role: "Marketing, Startup Layanan Jasa",
     image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff0e?w=400&h=400&fit=crop",
-    alt: "Budi Santoso",
+    alt: "Ilustrasi placeholder klien startup",
   },
   {
-    quote: "Kualitas desain mereka membawa identitas brand kami ke level yang belum pernah kami bayangkan.",
-    author: "Budi Santoso",
-    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=800&auto=format&fit=crop",
-    alt: "Portrait of Budi Santoso",
+    quote: "Setiap detail visual dikerjakan dengan teliti — hasil akhirnya sesuai ekspektasi kami.",
+    role: "Direktur, Perusahaan Jasa Profesional",
+    image: "https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=400&h=400&fit=crop",
+    alt: "Ilustrasi placeholder klien korporat",
   },
   {
-    quote: "Pengembangan website yang super cepat, responsif, dan sangat elegan. Konversi kami naik 40%.",
-    author: "Dian Sastro",
-    image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=800&auto=format&fit=crop",
-    alt: "Portrait of Dian Sastro",
+    quote: "Konten sosmed yang dibuat membuat feed kami terliat konsisten dan rapi.",
+    role: "Pemilik Bisnis Produk Digital",
+    image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&h=400&fit=crop",
+    alt: "Ilustrasi placeholder klien produk digital",
   },
   {
-    quote: "Pendekatan UI/UX yang mereka terapkan sangat berfokus pada pengguna nyata. Sangat memuaskan.",
-    author: "Reza Rahadian",
-    image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=800&auto=format&fit=crop",
-    alt: "Portrait of Reza Rahadian",
-  },
-  {
-    quote: "Pendekatan strategis yang tajam. Brand kami kini jauh lebih dikenal.",
-    author: "Arief Muhammad",
-    image: "https://images.unsplash.com/photo-1531427186611-ecfd6d936c79?q=80&w=800&auto=format&fit=crop",
-    alt: "Portrait of Arief Muhammad",
-  },
-  {
-    quote: "Website yang dibangun sangat stabil walau traffic sedang memuncak.",
-    author: "Nadiem Makarim",
-    image: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?q=80&w=800&auto=format&fit=crop",
-    alt: "Portrait of Nadiem Makarim",
-  },
-  {
-    quote: "Desain UI/UX yang modern dan user-friendly. Sangat direkomendasikan!",
-    author: "Putri Tanjung",
-    image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=800&auto=format&fit=crop",
-    alt: "Portrait of Putri Tanjung",
-  },
-  {
-    quote: "Otomatisasi alur kerja membuat tim kami 3x lebih produktif.",
-    author: "William Tanuwijaya",
-    image: "https://images.unsplash.com/photo-1556157382-97eda2d62296?q=80&w=800&auto=format&fit=crop",
-    alt: "Portrait of William Tanuwijaya",
-  },
-  {
-    quote: "Detail pada setiap pixel sangat diperhatikan. Hasil akhir sempurna.",
-    author: "Alinea Fitri",
-    image: "https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=800&auto=format&fit=crop",
-    alt: "Portrait of Alinea Fitri",
-  },
-  {
-    quote: "Kolaborasi yang luar biasa. Mereka mengerti visi kami dari hari pertama.",
-    author: "Rio Dewanto",
-    image: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=800&auto=format&fit=crop",
-    alt: "Portrait of Rio Dewanto",
-  },
-  {
-    quote: "Inovasi digital yang mereka bawa merubah total cara kami berbisnis.",
-    author: "Susi Pudjiastuti",
-    image: "https://images.unsplash.com/photo-1558898479-33c0057a5d12?q=80&w=800&auto=format&fit=crop",
-    alt: "Portrait of Susi Pudjiastuti",
+    quote: "Otomatisasi yang dipasang menghemat waktu tim kami untuk hal-hal lain.",
+    role: "Operasional, UMKM Distributor",
+    image: "https://images.unsplash.com/photo-1531427186611-ecfd6d936c79?w=400&h=400&fit=crop",
+    alt: "Ilustrasi placeholder klien distributor",
   },
 ];
 
@@ -90,9 +50,12 @@ export function TestimonialSection() {
         <p className="text-[var(--accent-bronze)] uppercase tracking-[0.2em] text-xs font-semibold mb-4">
           Testimoni
         </p>
-        <h2 className="font-display font-medium tracking-[-0.02em] text-[clamp(2rem,4vw,3.5rem)] text-black dark:text-white mb-12 text-center">
+        <h2 className="font-display font-medium tracking-[-0.02em] text-[clamp(2rem,4vw,3.5rem)] text-black dark:text-white mb-3 text-center">
           Testimoni Klien
         </h2>
+        <p className="text-xs text-neutral-500 dark:text-neutral-400 mb-12 text-center">
+          Contoh testimoni — akan diganti dengan klien nyata.
+        </p>
         <TestimonialCarousel testimonials={TESTIMONIALS} />
       </div>
     </section>
