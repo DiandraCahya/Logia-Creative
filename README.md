@@ -110,7 +110,13 @@ Website ini dibangun menggunakan stack modern:
    npm run dev
    ```
 
-4. Buka peramban dan akses alamat:
+4. **Setup email form kolaborasi** (wajib agar form berfungsi):
+   ```bash
+   cp .env.example .env.local
+   ```
+   Isi `RESEND_API_KEY` di `.env.local` dengan API key dari [resend.com/api-keys](https://resend.com/api-keys) (gratis). Untuk dev, `COLLABORATION_FROM` bisa tetap `onboarding@resend.dev`; untuk produksi gunakan alamat dari domain yang sudah diverifikasi di Resend. Untuk deploy di Vercel, tambahkan ketiga variabel yang sama di Project Settings → Environment Variables.
+
+5. Buka peramban dan akses alamat:
    ```
    http://localhost:3000
    ```
