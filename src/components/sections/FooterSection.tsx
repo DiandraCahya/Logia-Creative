@@ -207,11 +207,11 @@ export function FooterSection({ onOpenCollaboration }: FooterSectionProps) {
           </div>
         </div>
 
-        {/* Massive Stylized Typography Watermark */}
-        <div className="relative py-4 select-none pointer-events-none overflow-hidden text-center border-t border-black/5 dark:border-white/5 pt-12">
-          <span className="block text-[clamp(3rem,10vw,12rem)] font-black tracking-tighter text-black/5 dark:text-white/5 whitespace-nowrap">
-            LOGIA CREATIVE
-          </span>
+        {/* Watermark */}
+        <div className="relative py-4 select-none pointer-events-none overflow-hidden border-t border-black/5 dark:border-white/5 pt-12" aria-hidden="true">
+          <p className="block w-full max-w-full text-center leading-none font-black tracking-tighter text-black/5 dark:text-white/5 whitespace-nowrap text-[clamp(2rem,8.5vw,9rem)]">
+            Logia Creative
+          </p>
         </div>
 
         {/* Bottom Bar: Copyright & Back to Top */}
