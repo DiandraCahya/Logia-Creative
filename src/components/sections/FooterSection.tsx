@@ -97,7 +97,7 @@ export function FooterSection({ onOpenCollaboration }: FooterSectionProps) {
             {/* Live WIB Clock */}
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-black/[0.03] dark:bg-white/[0.03] border border-black/5 dark:border-white/5 text-xs font-mono text-black dark:text-white">
               <Clock className="w-3.5 h-3.5 animate-pulse" />
-              <span>Studio Time: {wibTime || "17:00:00"} WIB</span>
+              <span>Studio Time: {wibTime || "--:--:--"} WIB</span>
             </div>
           </div>
 
