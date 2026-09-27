@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useRef, useState, useEffect, useCallback } from "react";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 
@@ -71,42 +72,19 @@ function InteractiveShape() {
           transformStyle: "preserve-3d",
         }}
       >
-        {/* Outer cube face — front */}
         <div
-          className="absolute inset-0 border border-black/10 dark:border-white/10 rounded-3xl bg-black/[0.01] dark:bg-white/[0.02]"
+          className="absolute inset-0 overflow-hidden rounded-3xl border border-black/10 dark:border-white/10"
           style={{ transform: "translateZ(50px)" }}
-        />
-        {/* Outer cube face — back */}
-        <div
-          className="absolute inset-0 border border-black/5 dark:border-white/5 rounded-3xl"
-          style={{ transform: "translateZ(-50px)" }}
-        />
-        {/* Outer cube face — left */}
-        <div
-          className="absolute top-0 bottom-0 left-0 w-[100px] border border-black/5 dark:border-white/5 rounded-xl origin-left"
-          style={{ transform: "rotateY(90deg) translateZ(0px)" }}
-        />
-        {/* Outer cube face — right */}
-        <div
-          className="absolute top-0 bottom-0 right-0 w-[100px] border border-black/5 dark:border-white/5 rounded-xl origin-right"
-          style={{ transform: "rotateY(-90deg) translateZ(0px)" }}
-        />
-
-        {/* Inner rotating ring */}
-        <motion.div
-          animate={{ rotate: 360 }}
-          transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
-          className="absolute inset-12 border border-black/[0.06] dark:border-white/[0.06] rounded-full"
-          style={{ transform: "translateZ(25px)" }}
-        />
-
-        {/* Second inner ring — counter-rotate */}
-        <motion.div
-          animate={{ rotate: -360 }}
-          transition={{ duration: 35, repeat: Infinity, ease: "linear" }}
-          className="absolute inset-20 border border-black/[0.04] dark:border-white/[0.04] rounded-full"
-          style={{ transform: "translateZ(35px)" }}
-        />
+        >
+          <Image
+            src="/chaewon.jpg"
+            alt="Potret kreatif Logia Creative"
+            fill
+            className="object-cover"
+            sizes="(max-width: 640px) 256px, (max-width: 1024px) 320px, 420px"
+            priority={false}
+          />
+        </div>
 
         {/* Specular highlight following cursor */}
         <div
@@ -115,30 +93,6 @@ function InteractiveShape() {
             background: `radial-gradient(circle 200px at ${transform.px}% ${transform.py}%, rgba(192,192,192,${isHovered ? 0.15 : 0}), transparent)`,
             transform: "translateZ(51px)",
           }}
-        />
-
-        {/* Center metallic dot */}
-        <div
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3 h-3 rounded-full"
-          style={{
-            background: "linear-gradient(135deg, #C0C0C0 0%, #808080 50%, #C0C0C0 100%)",
-            transform: "translateZ(60px)",
-            boxShadow: "0 0 20px rgba(192,192,192,0.3)",
-          }}
-        />
-
-        {/* Floating corner accents */}
-        <motion.div
-          animate={{ y: [0, -6, 0] }}
-          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute top-6 right-6 w-8 h-8 border border-black/10 dark:border-white/10 rounded-lg"
-          style={{ transform: "translateZ(70px)" }}
-        />
-        <motion.div
-          animate={{ y: [0, 6, 0] }}
-          transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-          className="absolute bottom-6 left-6 w-6 h-6 border border-black/10 dark:border-white/10 rounded-full"
-          style={{ transform: "translateZ(70px)" }}
         />
       </div>
     </div>
