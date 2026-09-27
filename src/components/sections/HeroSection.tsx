@@ -168,7 +168,7 @@ export function HeroSection({ onOpenCollaboration }: HeroSectionProps) {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, ease }}
-              className="text-xs font-semibold uppercase tracking-[0.15em] text-[#666666] dark:text-[#666666]"
+              className="text-xs font-semibold uppercase tracking-[0.15em] text-[#666666] dark:text-[#999999]"
             >
               Creative & Technology Agency
             </motion.span>

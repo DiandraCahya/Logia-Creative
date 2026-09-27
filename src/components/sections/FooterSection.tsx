@@ -113,7 +113,7 @@ export function FooterSection({ onOpenCollaboration }: FooterSectionProps) {
                 </a>
               </li>
               <li>
-                <a href="#portfolio" className="hover:text-black dark:hover:text-white transition-colors">
+                <a href="#target-pasar" className="hover:text-black dark:hover:text-white transition-colors">
                   Target Pasar
                 </a>
               </li>
