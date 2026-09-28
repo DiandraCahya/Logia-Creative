@@ -48,13 +48,13 @@ export function FooterSection({ onOpenCollaboration }: FooterSectionProps) {
   };
 
   return (
-    <footer id="kontak" className="relative pt-20 pb-12 overflow-hidden border-t border-black/5 dark:border-white/5 bg-white dark:bg-[#0a0a0a]">
-      <div className="max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-12 space-y-20">
+    <footer id="kontak" className="relative pt-6 sm:pt-20 pb-6 sm:pb-12 overflow-hidden max-w-[100vw] border-t border-black/5 dark:border-white/5 bg-white dark:bg-[#0a0a0a]">
+      <div className="max-w-[1400px] mx-auto px-4 sm:px-8 lg:px-12 space-y-6 sm:space-y-20">
 
         {/* Closing Impact CTA Banner - Black Solid */}
         <div
           ref={ctaRef}
-          className={`cta-dark p-6 sm:p-16 lg:p-24 rounded-[2rem] bg-black text-white relative overflow-hidden shadow-2xl text-center space-y-8 transition-all duration-700 ${
+          className={`cta-dark p-6 sm:p-16 lg:p-24 rounded-[1.25rem] sm:rounded-[2rem] bg-black text-white relative overflow-hidden shadow-2xl text-center space-y-4 sm:space-y-8 transition-all duration-700 ${
             ctaVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'
           }`}
         >
@@ -76,10 +76,10 @@ export function FooterSection({ onOpenCollaboration }: FooterSectionProps) {
         </div>
 
         {/* Multi-Column Links & Info */}
-        <div ref={contactRef} className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 pt-8 transition-all duration-700 ${contactVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+        <div ref={contactRef} className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 sm:gap-10 pt-4 sm:pt-8 text-[12px] sm:text-sm transition-all duration-700 ${contactVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
           {/* Col 1: Brand Info */}
-          <div className="lg:col-span-2 space-y-6">
-            <div className="relative w-32 h-10">
+          <div className="lg:col-span-2 space-y-4">
+            <div className="relative w-24 h-7">
               <Image
                 src="/LOGO.png"
                 alt="Logia Creative Logo"
@@ -215,14 +215,14 @@ export function FooterSection({ onOpenCollaboration }: FooterSectionProps) {
         </div>
 
         {/* Bottom Bar: Copyright & Back to Top */}
-        <div className="pb-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-semibold text-[#666666] dark:text-[#999999]">
+        <div className="pb-4 sm:pb-8 flex flex-col items-center justify-between gap-3 text-[12px] font-semibold text-[#666666] dark:text-[#999999]">
           <p>
             &copy; {new Date().getFullYear()} Logia Creative Agency. All rights reserved.
           </p>
 
           <button
             onClick={scrollToTop}
-            className="flex items-center gap-2 px-4 py-2 rounded-full border border-black/10 dark:border-white/10 hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-all group"
+            className="flex items-center gap-2 px-4 py-2 min-h-[44px] rounded-full border border-black/10 dark:border-white/10 hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-all group"
           >
             <span>Kembali ke Atas</span>
             <ArrowUp className="w-3.5 h-3.5 transition-transform group-hover:-translate-y-0.5" />
