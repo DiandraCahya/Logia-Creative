@@ -126,7 +126,7 @@ export function CollaborationModal({ isOpen, onClose }: CollaborationModalProps)
   return (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto" role="dialog" aria-modal="true" aria-label="Formulir kolaborasi">
+        <div className="fixed inset-0 z-50 flex items-start sm:items-center justify-center p-3 sm:p-4 overflow-y-auto overscroll-contain" role="dialog" aria-modal="true" aria-label="Formulir kolaborasi">
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -140,9 +140,9 @@ export function CollaborationModal({ isOpen, onClose }: CollaborationModalProps)
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             transition={{ type: "spring", damping: 25, stiffness: 300 }}
-            className="relative w-full max-w-2xl z-10 my-8 overflow-hidden"
+            className="relative w-full max-w-2xl z-10 my-4 sm:my-8 max-h-[92dvh] overflow-y-auto overscroll-contain"
           >
-            <div className="rounded-3xl bg-white dark:bg-[#111] border border-black/10 dark:border-white/10 shadow-2xl p-6 sm:p-8">
+            <div className="rounded-3xl bg-white dark:bg-[#111] border border-black/10 dark:border-white/10 shadow-2xl p-5 sm:p-8 pb-[max(1.5rem,env(safe-area-inset-bottom))]">
               <button
                 onClick={onClose}
                 aria-label="Tutup formulir"
@@ -157,7 +157,7 @@ export function CollaborationModal({ isOpen, onClose }: CollaborationModalProps)
                     <div className="w-16 h-16 mx-auto rounded-full bg-accent-bronze/10 text-accent-bronze flex items-center justify-center">
                       <CheckCircle2 className="w-10 h-10" />
                     </div>
-                    <h3 className="text-2xl font-bold text-slate-900 dark:text-white">
+                    <h3 className="text-2xl font-semibold text-slate-900 dark:text-white">
                       Terima Kasih, {formData.name || "Mitra Hebat"}!
                     </h3>
                     <p className="text-sm text-slate-600 dark:text-slate-300 max-w-md mx-auto leading-relaxed">
@@ -166,7 +166,7 @@ export function CollaborationModal({ isOpen, onClose }: CollaborationModalProps)
                   </div>
                   {receipt ? (
                     <div className="rounded-2xl border border-black/10 dark:border-white/10 bg-slate-50 dark:bg-white/5 p-5 text-left text-sm">
-                      <p className="flex items-center gap-2 font-bold text-slate-900 dark:text-white mb-3">
+                      <p className="flex items-center gap-2 font-semibold text-slate-900 dark:text-white mb-3">
                         <ReceiptIcon className="w-4 h-4 text-accent-bronze" />
                         Struk — {receipt.id}
                       </p>
@@ -181,7 +181,7 @@ export function CollaborationModal({ isOpen, onClose }: CollaborationModalProps)
                             <div className="flex justify-between gap-4"><dt>Sisa</dt><dd className="font-medium text-right">{formatIDR(receipt.sisa!)}</dd></div>
                           </>
                         )}
-                        <div className="flex justify-between gap-4"><dt>Status</dt><dd className="font-bold text-accent-bronze text-right">Menunggu DP</dd></div>
+                        <div className="flex justify-between gap-4"><dt>Status</dt><dd className="font-semibold text-accent-bronze text-right">Menunggu DP</dd></div>
                       </dl>
                       <ul className="mt-3 space-y-1 text-xs text-slate-500 dark:text-slate-400 list-disc list-inside">
                         {RECEIPT_TERMS.map((t) => <li key={t}>{t}</li>)}
@@ -208,12 +208,12 @@ export function CollaborationModal({ isOpen, onClose }: CollaborationModalProps)
                 </div>
               ) : (
                 <div>
-                  <div className="mb-8">
+                  <div className="mb-5 sm:mb-8">
                     <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-accent-bronze/10 text-accent-bronze text-xs font-semibold uppercase tracking-wider mb-3">
                       <Sparkles className="w-3.5 h-3.5" />
                       Creative Partnership
                     </div>
-                    <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white mb-2">
+                    <h2 className="text-2xl sm:text-3xl font-semibold text-slate-900 dark:text-white mb-2">
                       Mulai Kolaborasi Bersama Logia
                     </h2>
                     <p className="text-sm text-slate-600 dark:text-slate-300">
@@ -221,7 +221,7 @@ export function CollaborationModal({ isOpen, onClose }: CollaborationModalProps)
                     </p>
                   </div>
 
-                  <form onSubmit={handleSubmit} noValidate className="space-y-6">
+                  <form onSubmit={handleSubmit} noValidate className="space-y-4 sm:space-y-6">
                     <div>
                       <span id="svc-label" className="block text-xs font-semibold uppercase tracking-wider text-slate-900 dark:text-white mb-3">
                         Pilih Kebutuhan Layanan
