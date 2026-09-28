@@ -236,7 +236,7 @@ export function HeroSection({ onOpenCollaboration }: HeroSectionProps) {
                   initial={{ y: "100%" }}
                   animate={{ y: 0 }}
                   transition={{ duration: 0.8, ease, delay: 0.2 }}
-                  className="block text-transparent bg-clip-text"
+                  className="hero-gradient block text-transparent bg-clip-text"
                   style={{
                     backgroundImage:
                       "linear-gradient(135deg, #C0C0C0 0%, #808080 50%, #C0C0C0 100%)",

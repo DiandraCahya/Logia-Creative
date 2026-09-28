@@ -8,8 +8,13 @@ export function ThemeToggle() {
   useEffect(() => setMounted(true), []);
   if (!mounted) return <button className="p-2 rounded-lg glass-container min-h-[44px] min-w-[44px]" aria-label="Toggle theme" disabled />;
   const isDark = resolvedTheme === "dark";
+  const toggle = () => {
+    document.documentElement.classList.add("disable-transitions");
+    setTheme(isDark ? "light" : "dark");
+    setTimeout(() => document.documentElement.classList.remove("disable-transitions"), 150);
+  };
   return (
-    <button onClick={() => setTheme(isDark ? "light" : "dark")} className="p-2 rounded-lg glass-container min-h-[44px] min-w-[44px] flex items-center justify-center" aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}>
+    <button onClick={toggle} className="p-2 rounded-lg glass-container min-h-[44px] min-w-[44px] flex items-center justify-center" aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}>
       {isDark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
     </button>
   );
