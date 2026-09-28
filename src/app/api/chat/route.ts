@@ -1,7 +1,7 @@
 import { NextRequest } from "next/server";
 import { PACKAGES, SINGLE_SERVICES } from "@/lib/rate-card";
 
-const MODEL = process.env.GROQ_MODEL || "llama-3.3-70b-versatile";
+const MODEL = process.env.GROQ_MODEL || "openai/gpt-oss-20b";
 const WINDOW_MS = 60_000;
 const MAX_HITS = 10;
 const hits = new Map<string, number[]>();

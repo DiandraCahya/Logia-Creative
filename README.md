@@ -165,7 +165,7 @@ Salin `.env.example` ke `.env.local` (sudah di `.gitignore`, jangan commit nilai
 | `RESEND_API_KEY` | API key Resend — dipakai API route saat runtime (Vercel tidak bisa memanggil MCP) |
 | `RESEND_FROM` | Alamat pengirim default API route |
 | `GROQ_API_KEY` | Server-only, **tanpa** prefix `NEXT_PUBLIC_` |
-| `GROQ_MODEL` | Model Groq, mis. `llama-3.3-70b-versatile` (cek daftar terkini) |
+| `GROQ_MODEL` | Model Groq, mis. `openai/gpt-oss-20b` (cek daftar terkini via `/models`) |
 
 Catatan: `onboarding@resend.dev` tanpa domain terverifikasi hanya bisa kirim ke email pemilik akun Resend. Struk selalu berstatus **Menunggu DP** — belum ada payment gateway.
 
