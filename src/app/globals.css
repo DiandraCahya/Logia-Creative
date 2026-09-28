@@ -257,8 +257,13 @@ html:not(.dark) .cta-dark button svg,
 }
 
 /* Button fg token: solid di kedua tema, tanpa gradient text */
-:root { --btn-fg: #ffffff; }
-.dark { --btn-fg: #000000; }
+:root { --btn-fg: #ffffff; --btn-text: #ffffff; }
+.dark { --btn-fg: #000000; --btn-text: #000000; }
+.no-trans, .no-trans *, .no-trans *::before, .no-trans *::after {
+  transition: none !important;
+  animation: none !important;
+}
+.btn-solid { color: var(--btn-text) !important; }
 
 /* Fallback: gradient text tanpa bg-clip support tetap terbaca */
 @supports not (background-clip: text) {

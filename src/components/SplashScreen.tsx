@@ -82,17 +82,15 @@ export function SplashScreen({ onComplete }: SplashScreenProps) {
           </div>
 
           {/* Skip Button */}
-          <motion.button
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
+          <button
             onClick={handleExit}
             aria-label="Skip intro"
-            className="absolute bottom-8 right-8 z-20 flex items-center gap-2 px-4 py-2 rounded-full text-xs font-medium text-black/60 hover:text-black bg-black/5 hover:bg-black/10 border border-black/10 dark:text-white/70 dark:hover:text-white dark:bg-white/5 dark:hover:bg-white/10 dark:border-white/10 backdrop-blur-md transition-all group"
+            className="absolute bottom-8 right-8 z-20 flex items-center gap-2 px-4 py-2 rounded-full text-xs font-medium group"
+            style={{ color: "var(--text-secondary)" }}
           >
             Skip Intro
-            <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" />
-          </motion.button>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </button>
         </motion.div>
       )}
     </AnimatePresence>

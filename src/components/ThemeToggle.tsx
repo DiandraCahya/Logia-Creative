@@ -9,9 +9,9 @@ export function ThemeToggle() {
   if (!mounted) return <button className="p-2 rounded-lg glass-container min-h-[44px] min-w-[44px]" aria-label="Toggle theme" disabled />;
   const isDark = resolvedTheme === "dark";
   const toggle = () => {
-    document.documentElement.classList.add("theme-toggling");
+    document.documentElement.classList.add("theme-toggling", "no-trans", "disable-transitions");
     setTheme(isDark ? "light" : "dark");
-    setTimeout(() => document.documentElement.classList.remove("theme-toggling"), 150);
+    setTimeout(() => document.documentElement.classList.remove("theme-toggling", "no-trans", "disable-transitions"), 200);
   };
   return (
     <button onClick={toggle} className="p-2 rounded-lg glass-container min-h-[44px] min-w-[44px] flex items-center justify-center" aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}>

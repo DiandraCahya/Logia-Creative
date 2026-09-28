@@ -263,7 +263,8 @@ export function HeroSection({ onOpenCollaboration }: HeroSectionProps) {
             >
               <button
                 onClick={onOpenCollaboration}
-                className="px-8 py-4 min-h-[48px] bg-black text-white dark:bg-white dark:text-black text-[var(--btn-fg,#fff)] text-sm font-semibold rounded-full hover:scale-[1.02] active:scale-[0.98] transition-transform duration-200 flex items-center gap-2 group"
+                style={{ color: "var(--btn-text)" }}
+                className="btn-solid px-8 py-4 min-h-[48px] bg-black dark:bg-white text-sm font-semibold rounded-full flex items-center gap-2 group"
               >
                 <span>Mulai Proyek</span>
                 <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
