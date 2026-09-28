@@ -50,7 +50,7 @@ export function CollaborationModal({ isOpen, onClose }: CollaborationModalProps)
     setExporting("png");
     try {
       const { default: html2canvas } = await import("html2canvas");
-      const canvas = await html2canvas(receiptRef.current, { scale: 2, backgroundColor: "#ffffff", logging: false });
+      const canvas = await html2canvas(receiptRef.current, { scale: 2, backgroundColor: "#ffffff", logging: false, useCORS: true });
       const a = document.createElement("a");
       a.download = `${receipt?.id ?? "struk"}.png`;
       a.href = canvas.toDataURL("image/png");
@@ -68,11 +68,12 @@ export function CollaborationModal({ isOpen, onClose }: CollaborationModalProps)
         import("html2canvas"),
         import("jspdf"),
       ]);
-      const canvas = await html2canvas(receiptRef.current, { scale: 2, backgroundColor: "#ffffff", logging: false });
-      const imgW = 190;
+      const canvas = await html2canvas(receiptRef.current, { scale: 2, backgroundColor: "#ffffff", logging: false, useCORS: true });
+      const imgW = 72; // 80mm kurang margin
       const imgH = (canvas.height * imgW) / canvas.width;
-      const pdf = new jsPDF({ unit: "mm", format: "a4" });
-      pdf.addImage(canvas.toDataURL("image/png"), "PNG", 10, 10, imgW, Math.min(imgH, 277));
+      const pageH = Math.max(imgH + 16, 120);
+      const pdf = new jsPDF({ unit: "mm", format: [80, pageH] });
+      pdf.addImage(canvas.toDataURL("image/png"), "PNG", 4, 8, imgW, imgH);
       pdf.save(`${receipt?.id ?? "struk"}.pdf`);
     } finally {
       setExporting(null);

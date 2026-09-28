@@ -1,5 +1,6 @@
 "use client";
 import React, { forwardRef } from "react";
+import Image from "next/image";
 import { formatIDR, RECEIPT_TERMS, type Receipt } from "@/lib/receipt";
 
 // Isolated receipt DOM: only this ref is screenshotted/exported.
@@ -9,13 +10,16 @@ export const ReceiptView = forwardRef<HTMLDivElement, { receipt: Receipt }>(
     return (
       <div
         ref={ref}
-        className="bg-white text-slate-900 rounded-xl border border-slate-200 p-6 text-sm"
-        style={{ pageBreakInside: "avoid", overflow: "hidden" }}
+        className="bg-white text-slate-900 rounded-xl border border-slate-200 p-6 text-sm w-full max-w-[480px] mx-auto"
+        style={{ pageBreakInside: "avoid", overflow: "hidden", backgroundColor: "#ffffff", color: "#0f172a" }}
       >
-        <div className="text-center pb-4 border-b border-slate-200">
-          <p className="text-xs tracking-[0.2em] uppercase text-slate-500">Logia Creative</p>
-          <p className="font-semibold text-base mt-1">Struk Pemesanan {receipt.id}</p>
-          <p className="text-xs text-slate-500 mt-1 tabular-nums">{receipt.timestamp}</p>
+        <div className="flex items-center gap-3 pb-4 border-b border-slate-200">
+          <Image src="/logo-logia.svg" alt="Logo Logia Creative" width={40} height={40} className="rounded-lg" />
+          <div>
+            <p className="text-xs tracking-[0.2em] uppercase text-slate-500">Logia Creative</p>
+            <p className="font-semibold text-base">Struk Pemesanan {receipt.id}</p>
+            <p className="text-xs text-slate-500 tabular-nums">{receipt.timestamp}</p>
+          </div>
         </div>
         <dl className="py-4 space-y-2 tabular-nums">
           <div className="flex justify-between gap-4"><dt className="text-slate-500">Pelanggan</dt><dd className="font-medium text-right">{receipt.customer}{receipt.brand ? ` (${receipt.brand})` : ""}</dd></div>
