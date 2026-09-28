@@ -46,7 +46,9 @@ html {
 body {
   background-color: var(--bg-primary);
   color: var(--text-primary);
-  transition: background-color 0.4s cubic-bezier(0.22, 1, 0.36, 1), color 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  /* ponytail: hanya background yang ditransisikan; transisi color bikin
+     teks tombol terlihat "hilang" sesaat saat toggle tema */
+  transition: background-color 0.4s cubic-bezier(0.22, 1, 0.36, 1);
   overflow-x: hidden;
   font-feature-settings: "cv02", "cv03", "cv04", "cv11";
 }
@@ -244,6 +246,15 @@ html:not(.dark) .cta-dark button svg,
 
 /* Display font utility */
 .font-display { font-family: var(--font-display); }
+
+/* Fallback: gradient text tanpa bg-clip support tetap terbaca */
+@supports not (background-clip: text) {
+  .text-transparent.bg-clip-text,
+  span.text-transparent.bg-clip-text {
+    background: none !important;
+    color: var(--text-primary) !important;
+  }
+}
 
 /* Text colors - LIGHT MODE */
 html:not(.dark) h1,
