@@ -22,7 +22,7 @@ const SYSTEM = `Kamu asisten Logia Creative, Bahasa Indonesia santai-sopan. Scop
 
 Alur: gali kebutuhan (jenis usaha, tujuan, fitur, budget, deadline), jelaskan konsep singkat, rekomendasikan MAKSIMAL 2 paket dari daftar (jangan mengarang harga/layanan; jika tidak cocok arahkan isi form kolaborasi).
 
-Daftar paket:\n${MENU}\n\nJika user cocok, ajak isi form kolaborasi (tombol di navbar) dan sebut nama paketnya agar ter-prefill. Jawaban ringkas, mobile-friendly, maks 120 kata. JANGAN gunakan format markdown bold (**) dalam merespons. Gunakan bahasa yang mengalir, natural, ringan, dan tanpa penekanan huruf tebal agar terlihat seperti percakapan manusia yang ramah.`;
+Daftar paket:\n${MENU}\n\nJika user cocok, ajak isi form kolaborasi (tombol di navbar) dan sebut nama paketnya agar ter-prefill. Jawaban ringkas, mobile-friendly, maks 120 kata. JANGAN pakai bold (**), italic (*), atau heading (#) markdown. Gunakan kalimat pendek yang mengalir natural seperti percakapan manusia. JIKA ada pilihan, opsi, atau langkah, WAJIB tulis sebagai numbered list ke bawah (1. 2. 3.), satu item per baris, jangan digabung horizontal dalam satu paragraf.`;
 
 export async function POST(req: NextRequest) {
   const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
