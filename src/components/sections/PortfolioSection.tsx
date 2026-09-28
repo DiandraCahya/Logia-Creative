@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { motion, useMotionValue, useSpring } from "motion/react";
+import { motion, useMotionValue, useSpring } from "framer-motion";
 import { useScrollReveal } from "@/lib/useScrollReveal";
 import Image from "next/image";
 import { ArrowRight, X } from "lucide-react";

@@ -17,7 +17,7 @@ import {
   motion,
   useMotionValue,
   useReducedMotion,
-} from "motion/react"
+} from "framer-motion"
 import { ArrowLeft, Menu } from "lucide-react"
 import Image from "next/image"
 
