@@ -177,9 +177,9 @@ export function CollaborationModal({ isOpen, onClose }: CollaborationModalProps)
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             transition={{ type: "spring", damping: 25, stiffness: 300 }}
-            className="relative w-full max-w-2xl z-10 my-4 sm:my-8 max-h-[92dvh] overflow-y-auto overscroll-contain"
+            className="relative w-full max-w-2xl z-10 my-4 sm:my-8 min-h-[100dvh] sm:min-h-0 max-h-[100dvh] sm:max-h-[92dvh] overflow-y-auto overscroll-contain flex flex-col"
           >
-            <div className="rounded-3xl bg-white dark:bg-[#111] border border-black/10 dark:border-white/10 shadow-2xl p-5 sm:p-8 pb-[max(1.5rem,env(safe-area-inset-bottom))]">
+            <div className="rounded-3xl bg-white dark:bg-[#111] border border-black/10 dark:border-white/10 shadow-2xl p-4 sm:p-8 pb-32 sm:pb-8 flex-1">
               <button
                 onClick={onClose}
                 aria-label="Tutup formulir"
@@ -246,7 +246,7 @@ export function CollaborationModal({ isOpen, onClose }: CollaborationModalProps)
                     </p>
                   </div>
 
-                  <form onSubmit={handleSubmit} noValidate className="space-y-4 sm:space-y-6">
+                  <form onSubmit={handleSubmit} noValidate className="space-y-3 sm:space-y-6">
                     <div>
                       <span id="svc-label" className="block text-xs font-semibold uppercase tracking-wider text-slate-900 dark:text-white mb-3">
                         Pilih Kebutuhan Layanan
@@ -389,7 +389,7 @@ export function CollaborationModal({ isOpen, onClose }: CollaborationModalProps)
                       <button
                         type="submit"
                         disabled={status === "loading"}
-                        className="w-full sm:w-auto px-8 py-3 min-h-[48px] rounded-full bg-black text-white dark:bg-white dark:text-black text-sm font-semibold active:scale-95 flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-wait"
+                        className="w-full sm:w-auto px-8 h-12 min-h-[48px] rounded-full bg-black text-white dark:bg-white dark:text-black text-sm font-semibold active:scale-95 flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-wait"
                       >
                         {status === "loading" ? (
                           <>

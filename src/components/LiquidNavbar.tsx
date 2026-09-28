@@ -181,8 +181,9 @@ export function LiquidNavbar({ onOpenCollaboration }: LiquidNavbarProps) {
             {/* Mobile Menu Toggle */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden p-2 rounded-xl text-slate-900 dark:text-white hover:bg-slate-100 dark:hover:bg-white/5 active:scale-95 min-h-[44px] min-w-[44px] flex items-center justify-center"
+              className="lg:hidden p-2 rounded-xl text-slate-900 dark:text-white hover:bg-slate-100 dark:hover:bg-white/5 active:scale-95 min-h-[48px] min-w-[48px] flex items-center justify-center"
               aria-label="Toggle Mobile Menu"
+              aria-expanded={mobileMenuOpen}
             >
               {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
