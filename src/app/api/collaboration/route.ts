@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Resend } from "resend";
+import { PACKAGES } from "@/lib/rate-card";
+import { buildReceipt, formatIDR, wibTimestamp, RECEIPT_TERMS } from "@/lib/receipt";
 
 const TO = process.env.COLLABORATION_TO || "nextkokknock@gmail.com";
 const FROM = process.env.COLLABORATION_FROM || "onboarding@resend.dev";
@@ -57,23 +59,49 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Layanan email belum dikonfigurasi." }, { status: 500 });
   }
 
+  // Paket dari SATU sumber (rate-card); fallback: baris layanan pertama
+  const pkgName = PACKAGES.find((p) => services.includes(p.name))?.name
+    ?? PACKAGES.find((p) => services.some((s) => s.includes(p.name.split(" ")[0])))?.name
+    ?? null;
+  const receipt = pkgName ? buildReceipt(pkgName, name, brandName, contact) : null;
+
   const resend = new Resend(apiKey);
-  const subject = `Inquiry kolaborasi: ${name}${brandName ? ` (${brandName})` : ""}`;
-  const html = `
-    <h2>Inquiry baru dari website Logia Creative</h2>
-    <p><b>Nama:</b> ${esc(name)}</p>
-    <p><b>Brand:</b> ${esc(brandName) || "-"}</p>
-    <p><b>Kontak:</b> ${esc(contact)}</p>
-    <p><b>Budget:</b> ${esc(budget) || "-"}</p>
-    <p><b>Layanan:</b> ${services.map(esc).join(", ") || "-"}</p>
-    <p><b>Catatan:</b></p>
-    <p>${esc(notes).replace(/\n/g, "<br>") || "-"}</p>
-  `;
+  const stamp = wibTimestamp();
+  const receiptBlock = receipt ? `
+    <table cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-top:16px;border:1px solid #e5e5e5;border-radius:8px;">
+      <tr><td style="padding:16px;font-family:Arial,sans-serif;font-size:14px;line-height:22px;color:#111;">
+        <b>STRUK LOGIA CREATIVE</b><br>
+        ID: ${esc(receipt.id)}<br>
+        Waktu: ${esc(receipt.timestamp)}<br>
+        Pelanggan: ${esc(receipt.customer)}${receipt.brand ? ` (${esc(receipt.brand)})` : ""}<br>
+        Kontak: ${esc(receipt.contact)}<br>
+        Paket: ${esc(receipt.packageName)} — ${esc(receipt.priceLabel)}<br>
+        ${receipt.total != null ? `Total: ${formatIDR(receipt.total)}<br>DP 50%: ${formatIDR(receipt.dp!)}<br>Sisa: ${formatIDR(receipt.sisa!)}<br>` : ""}
+        Status: <b>Menunggu DP</b>
+        <br><br><span style="font-size:12px;color:#555;">${RECEIPT_TERMS.map(esc).join("<br>")}</span>
+      </td></tr>
+    </table>` : "";
+  const subject = `Inquiry kolaborasi: ${name}${brandName ? ` (${brandName})` : ""}${receipt ? ` [${receipt.id}]` : ""}`;
+  const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"></head><body style="margin:0;padding:16px;background:#fafafa;">
+    <table cellpadding="0" cellspacing="0" border="0" width="100%" style="max-width:600px;margin:0 auto;background:#ffffff;border:1px solid #e5e5e5;border-radius:8px;">
+      <tr><td style="padding:20px;font-family:Arial,sans-serif;font-size:14px;line-height:22px;color:#111;">
+        <h2 style="margin:0 0 12px;font-size:18px;">Inquiry baru dari website Logia Creative</h2>
+        <p><b>Nama:</b> ${esc(name)}</p>
+        <p><b>Brand:</b> ${esc(brandName) || "-"}</p>
+        <p><b>Kontak:</b> ${esc(contact)}</p>
+        <p><b>Budget:</b> ${esc(budget) || "-"}</p>
+        <p><b>Layanan:</b> ${services.map(esc).join(", ") || "-"}</p>
+        <p><b>Catatan:</b></p>
+        <p>${esc(notes).replace(/\n/g, "<br>") || "-"}</p>
+        <p style="font-size:12px;color:#555;">Diterima: ${esc(stamp)}</p>
+      </td></tr>
+    </table>${receiptBlock}
+  </body></html>`;
 
   try {
     const { error } = await resend.emails.send({ from: FROM, to: TO, subject, html });
     if (error) return NextResponse.json({ error: "Gagal mengirim email." }, { status: 502 });
-    return NextResponse.json({ ok: true });
+    return NextResponse.json({ ok: true, receipt });
   } catch {
     return NextResponse.json({ error: "Gagal mengirim email." }, { status: 502 });
   }

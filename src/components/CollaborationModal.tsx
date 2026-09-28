@@ -2,19 +2,19 @@
 
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Send, Sparkles, CheckCircle2, Phone, Mail, AlertCircle, Loader2 } from "lucide-react";
+import { X, Send, Sparkles, CheckCircle2, Phone, Mail, AlertCircle, Loader2, Printer, Receipt as ReceiptIcon } from "lucide-react";
+import { PACKAGES } from "@/lib/rate-card";
+import { formatIDR, RECEIPT_TERMS, type Receipt } from "@/lib/receipt";
 
 interface CollaborationModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
+// Opsi layanan = nama paket dari rate-card (SATU sumber) + opsi umum
 const serviceOptions = [
-  "Brand Identity & Visual Design",
-  "Social Media & Content Production",
-  "UI/UX & Web Development",
-  "Reporting & Workflow Automation",
-  "Integrated Creative + Tech Package",
+  ...PACKAGES.map((p) => p.name),
+  "Layanan Satuan / Custom",
 ];
 
 const budgetRanges = [
@@ -28,7 +28,7 @@ type Status = "idle" | "loading" | "success" | "error";
 
 export function CollaborationModal({ isOpen, onClose }: CollaborationModalProps) {
   const [selectedServices, setSelectedServices] = useState<string[]>([
-    "Integrated Creative + Tech Package",
+    PACKAGES[2]?.name ?? "GROWTH PACKAGE",
   ]);
   const [selectedBudget, setSelectedBudget] = useState("Rp 5 - 15 Juta");
   const [formData, setFormData] = useState({
@@ -40,6 +40,7 @@ export function CollaborationModal({ isOpen, onClose }: CollaborationModalProps)
   const [status, setStatus] = useState<Status>("idle");
   const [errorMsg, setErrorMsg] = useState("");
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+  const [receipt, setReceipt] = useState<Receipt | null>(null);
 
   const toggleService = (service: string) => {
     setSelectedServices((prev) =>
@@ -83,6 +84,7 @@ export function CollaborationModal({ isOpen, onClose }: CollaborationModalProps)
       const data = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(data.error || "Gagal mengirim. Coba lagi.");
 
+      setReceipt((data.receipt as Receipt) ?? null);
       setStatus("success");
       try {
         const confettiModule = await import("canvas-confetti");
@@ -109,6 +111,7 @@ export function CollaborationModal({ isOpen, onClose }: CollaborationModalProps)
     setStatus("idle");
     setErrorMsg("");
     setFieldErrors({});
+    setReceipt(null);
     setFormData({ name: "", brandName: "", contact: "", notes: "" });
     onClose();
   };
@@ -149,17 +152,52 @@ export function CollaborationModal({ isOpen, onClose }: CollaborationModalProps)
               </button>
 
               {status === "success" ? (
-                <div className="text-center py-10 space-y-4">
-                  <div className="w-16 h-16 mx-auto rounded-full bg-accent-bronze/10 text-accent-bronze flex items-center justify-center">
-                    <CheckCircle2 className="w-10 h-10" />
+                <div className="py-6 space-y-5">
+                  <div className="text-center space-y-3">
+                    <div className="w-16 h-16 mx-auto rounded-full bg-accent-bronze/10 text-accent-bronze flex items-center justify-center">
+                      <CheckCircle2 className="w-10 h-10" />
+                    </div>
+                    <h3 className="text-2xl font-bold text-slate-900 dark:text-white">
+                      Terima Kasih, {formData.name || "Mitra Hebat"}!
+                    </h3>
+                    <p className="text-sm text-slate-600 dark:text-slate-300 max-w-md mx-auto leading-relaxed">
+                      Pesan Anda sudah terkirim. Kami akan menghubungi Anda melalui kontak yang dicantumkan dalam 1x24 jam kerja.
+                    </p>
                   </div>
-                  <h3 className="text-2xl font-bold text-slate-900 dark:text-white">
-                    Terima Kasih, {formData.name || "Mitra Hebat"}!
-                  </h3>
-                  <p className="text-sm text-slate-600 dark:text-slate-300 max-w-md mx-auto leading-relaxed">
-                    Pesan Anda sudah terkirim. Kami akan menghubungi Anda melalui kontak yang dicantumkan dalam 1x24 jam kerja.
-                  </p>
-                  <div className="pt-6">
+                  {receipt ? (
+                    <div className="rounded-2xl border border-black/10 dark:border-white/10 bg-slate-50 dark:bg-white/5 p-5 text-left text-sm">
+                      <p className="flex items-center gap-2 font-bold text-slate-900 dark:text-white mb-3">
+                        <ReceiptIcon className="w-4 h-4 text-accent-bronze" />
+                        Struk — {receipt.id}
+                      </p>
+                      <dl className="space-y-1.5 text-slate-700 dark:text-slate-300">
+                        <div className="flex justify-between gap-4"><dt>Waktu</dt><dd className="font-medium text-right">{receipt.timestamp}</dd></div>
+                        <div className="flex justify-between gap-4"><dt>Pelanggan</dt><dd className="font-medium text-right">{receipt.customer}{receipt.brand ? ` (${receipt.brand})` : ""}</dd></div>
+                        <div className="flex justify-between gap-4"><dt>Paket</dt><dd className="font-medium text-right">{receipt.packageName} — {receipt.priceLabel}</dd></div>
+                        {receipt.total != null && (
+                          <>
+                            <div className="flex justify-between gap-4"><dt>Total</dt><dd className="font-medium text-right">{formatIDR(receipt.total)}</dd></div>
+                            <div className="flex justify-between gap-4"><dt>DP 50%</dt><dd className="font-medium text-right">{formatIDR(receipt.dp!)}</dd></div>
+                            <div className="flex justify-between gap-4"><dt>Sisa</dt><dd className="font-medium text-right">{formatIDR(receipt.sisa!)}</dd></div>
+                          </>
+                        )}
+                        <div className="flex justify-between gap-4"><dt>Status</dt><dd className="font-bold text-accent-bronze text-right">Menunggu DP</dd></div>
+                      </dl>
+                      <ul className="mt-3 space-y-1 text-xs text-slate-500 dark:text-slate-400 list-disc list-inside">
+                        {RECEIPT_TERMS.map((t) => <li key={t}>{t}</li>)}
+                      </ul>
+                    </div>
+                  ) : (
+                    <p className="text-xs text-slate-500 dark:text-slate-400 text-center">Struk email ikut terkirim ke tim kami.</p>
+                  )}
+                  <div className="flex flex-col sm:flex-row gap-3 justify-center pt-2">
+                    <button
+                      onClick={() => window.print()}
+                      className="px-6 py-3 min-h-[48px] rounded-full border border-black/15 dark:border-white/15 text-sm font-semibold flex items-center justify-center gap-2 active:scale-95"
+                    >
+                      <Printer className="w-4 h-4" />
+                      Print / Simpan
+                    </button>
                     <button
                       onClick={handleReset}
                       className="px-8 py-3 min-h-[48px] rounded-full bg-black text-white dark:bg-white dark:text-black font-semibold text-sm active:scale-95"
