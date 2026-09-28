@@ -236,11 +236,7 @@ export function HeroSection({ onOpenCollaboration }: HeroSectionProps) {
                   initial={{ y: "100%" }}
                   animate={{ y: 0 }}
                   transition={{ duration: 0.8, ease, delay: 0.2 }}
-                  className="hero-gradient block text-transparent bg-clip-text"
-                  style={{
-                    backgroundImage:
-                      "linear-gradient(135deg, #C0C0C0 0%, #808080 50%, #C0C0C0 100%)",
-                  }}
+                  className="block text-black dark:text-white"
                 >
                   Brand Identity.
                 </motion.span>
@@ -267,7 +263,7 @@ export function HeroSection({ onOpenCollaboration }: HeroSectionProps) {
             >
               <button
                 onClick={onOpenCollaboration}
-                className="px-8 py-4 bg-black text-white dark:bg-white dark:text-black text-sm font-semibold rounded-full hover:scale-[1.02] active:scale-[0.98] transition-transform duration-200 flex items-center gap-2 group"
+                className="px-8 py-4 min-h-[48px] bg-black text-white dark:bg-white dark:text-black text-[var(--btn-fg,#fff)] text-sm font-semibold rounded-full hover:scale-[1.02] active:scale-[0.98] transition-transform duration-200 flex items-center gap-2 group"
               >
                 <span>Mulai Proyek</span>
                 <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
@@ -275,7 +271,7 @@ export function HeroSection({ onOpenCollaboration }: HeroSectionProps) {
 
               <a
                 href="#portfolio"
-                className="px-8 py-4 text-sm font-semibold text-black dark:text-white border border-black/15 dark:border-white/15 rounded-full hover:bg-black/5 dark:hover:bg-white/5 transition-colors duration-200"
+                className="px-8 py-4 min-h-[48px] inline-flex items-center text-sm font-semibold text-black dark:text-white border border-black/15 dark:border-white/15 rounded-full hover:bg-black/5 dark:hover:bg-white/5 transition-colors duration-200"
               >
                 Lihat Portfolio
               </a>

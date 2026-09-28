@@ -67,7 +67,7 @@ export function FooterSection({ onOpenCollaboration }: FooterSectionProps) {
             </p>
             <button
               onClick={onOpenCollaboration}
-              className="px-8 py-4 bg-white text-black text-sm font-bold rounded-full hover:scale-[1.02] active:scale-[0.98] transition-transform duration-200 flex items-center gap-2 group"
+              className="px-8 py-4 min-h-[48px] bg-white text-black text-sm font-bold rounded-full hover:scale-[1.02] active:scale-[0.98] transition-transform duration-200 flex items-center gap-2 group"
             >
               <span>Mulai Diskusi Proyek</span>
               <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
