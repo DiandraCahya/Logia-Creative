@@ -19,21 +19,33 @@ function InteractiveShape() {
   const target = useRef({ rx: 0, ry: 0, px: 50, py: 50 });
   const current = useRef({ rx: 0, ry: 0, px: 50, py: 50 });
   const [gyroOn, setGyroOn] = useState(false);
-  const [gyroNeeded, setGyroNeeded] = useState(false);
-  const [gyroDenied, setGyroDenied] = useState(false);
-  const [gyroStatus, setGyroStatus] = useState<"idle" | "aktif" | "tidak ada sensor" | "error">("idle");
+  const [gyroStatus, setGyroStatus] = useState<"idle" | "aktif" | "tidak ada sensor">("idle");
+  const [platform, setPlatform] = useState<"desktop" | "android" | "ios">("desktop");
   const hoverRef = useRef(false);
   const inViewRef = useRef(true);
   const gyroOnRef = useRef(false);
+  const platformRef = useRef<"desktop" | "android" | "ios">("desktop");
 
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const el = containerRef.current;
     if (!el) return;
 
-    // Detect iOS permission API — needs user gesture
+    // Platform detection: iOS (ada requestPermission) vs Android (auto) vs desktop (mouse)
     const DOE = window.DeviceOrientationEvent as unknown as OrientEvent | undefined;
-    if (typeof DOE?.requestPermission === "function") setGyroNeeded(true);
+    const isIOS = typeof DOE?.requestPermission === "function";
+    const isTouch =
+      window.matchMedia("(pointer: coarse)").matches || "ontouchstart" in window;
+    const pf: "desktop" | "android" | "ios" = isIOS ? "ios" : isTouch ? "android" : "desktop";
+    platformRef.current = pf;
+    setPlatform(pf);
+
+    // Android: gyro otomatis aktif saat load (tidak butuh permission)
+    if (pf === "android") {
+      gyroOnRef.current = true;
+      setGyroOn(true);
+      setGyroStatus("aktif");
+    }
 
     let raf = 0;
     let dragging = false;
@@ -64,7 +76,9 @@ function InteractiveShape() {
     io.observe(el);
 
     const onMouse = (e: MouseEvent) => {
-      if (!hoverRef.current || gyroOnRef.current) return;
+      // Desktop: mouse follow SELALU aktif, tidak pernah diganggu gyro
+      if (platformRef.current !== "desktop" && gyroOnRef.current) return;
+      if (!hoverRef.current) return;
       const r = el.getBoundingClientRect();
       const x = (e.clientX - r.left) / r.width - 0.5;
       const y = (e.clientY - r.top) / r.height - 0.5;
@@ -80,7 +94,9 @@ function InteractiveShape() {
     };
     const onLeave = () => {
       hoverRef.current = false;
-      if (!gyroOnRef.current) target.current = { rx: 0, ry: 0, px: 50, py: 50 };
+      // Desktop selalu reset ke tengah saat keluar; mobile hanya jika gyro mati
+      if (platformRef.current === "desktop" || !gyroOnRef.current)
+        target.current = { rx: 0, ry: 0, px: 50, py: 50 };
     };
     // touch-drag fallback (pointer events, no sensor needed)
     const onDown = (e: PointerEvent) => {
@@ -89,7 +105,8 @@ function InteractiveShape() {
       lastY = e.clientY;
     };
     const onMove = (e: PointerEvent) => {
-      if (!dragging || gyroOnRef.current) return;
+      // Drag fallback hanya untuk mobile (iOS tanpa gyro / Android sensor mati)
+      if (!dragging || platformRef.current === "desktop" || gyroOnRef.current) return;
       const dx = (e.clientX - lastX) / 120;
       const dy = (e.clientY - lastY) / 120;
       lastX = e.clientX;
@@ -105,7 +122,8 @@ function InteractiveShape() {
       dragging = false;
     };
     const onOrient = (e: DeviceOrientationEvent) => {
-      if (e.beta == null || e.gamma == null) return;
+      // Hanya proses saat gyro aktif (Android auto / setelah izin)
+      if (!gyroOnRef.current || e.beta == null || e.gamma == null) return;
       if (process.env.NODE_ENV === "development")
         console.log("[gyro] beta:", e.beta?.toFixed(1), "gamma:", e.gamma?.toFixed(1));
       // beta: front-back tilt [-180,180], gamma: left-right [-90,90]
@@ -151,43 +169,18 @@ function InteractiveShape() {
     };
   }, []);
 
-  // requestPermission() dipanggil LANGSUNG dari handler tap, bukan dari promise chain terpisah
-  const enableGyro = useCallback(async () => {
-    try {
-      const DOE = window.DeviceOrientationEvent as unknown as OrientEvent | undefined;
-      if (
-        typeof window.DeviceOrientationEvent !== "undefined" &&
-        typeof DOE?.requestPermission === "function"
-      ) {
-        const permission = await DOE.requestPermission();
-        if (permission === "granted") {
-          gyroOnRef.current = true;
-          setGyroOn(true);
-          setGyroNeeded(false);
-          setGyroStatus("aktif");
-        } else {
-          setGyroDenied(true);
-          setGyroStatus("error");
-        }
-      } else {
-        // Android / desktop fallback: langsung pasang listener, tanpa tombol izin
-        gyroOnRef.current = true;
-        setGyroOn(true);
-        setGyroNeeded(false);
-        setGyroStatus("aktif");
-      }
-    } catch (err) {
-      console.error("Gyro permission error:", err);
-      setGyroDenied(true);
-      setGyroStatus("error");
-    }
+  // Hanya untuk Android: aktifkan gyro dari user tap (sensor ada, tidak butuh permission)
+  const enableGyro = useCallback(() => {
+    gyroOnRef.current = true;
+    setGyroOn(true);
+    setGyroStatus("aktif");
   }, []);
 
   return (
     <div className="flex flex-col items-center gap-3">
       <div
         ref={containerRef}
-        className="w-28 h-28 sm:w-80 sm:h-80 lg:w-[420px] lg:h-[420px] relative cursor-pointer touch-pan-y"
+        className="w-32 h-32 sm:w-80 sm:h-80 lg:w-[420px] lg:h-[420px] relative cursor-pointer touch-pan-y"
         style={{ perspective: 1200 }}
       >
         <div
@@ -216,23 +209,20 @@ function InteractiveShape() {
           />
         </div>
       </div>
-      {(gyroNeeded || gyroDenied) && !gyroOn ? (
+      {platform === "android" && !gyroOn ? (
         <button
           id="gyro-btn"
           type="button"
           onClick={enableGyro}
           className="min-h-[48px] min-w-[48px] px-6 py-3 rounded-full text-xs font-semibold border border-black/15 dark:border-white/15 text-black dark:text-white active:scale-95"
         >
-          {gyroDenied ? "Sensor ditolak, ketuk untuk coba lagi" : "Aktifkan efek gerak"}
+          Aktifkan efek gerak
         </button>
-      ) : (
-        <p
-          aria-live="polite"
-          className="text-[11px] font-normal text-[#666666] dark:text-[#999999]"
-        >
-          Gyro: {gyroOn ? gyroStatus : "nonaktif, geser foto untuk efek gerak"}
+      ) : platform === "ios" ? (
+        <p className="text-[11px] font-normal text-[#666666] dark:text-[#999999]">
+          Efek gerak untuk iOS segera hadir
         </p>
-      )}
+      ) : null}
     </div>
   );
 }
@@ -247,9 +237,9 @@ export function HeroSection({ onOpenCollaboration }: HeroSectionProps) {
       className="relative min-h-[92svh] flex items-center justify-center overflow-hidden pt-24 pb-16 sm:pt-32 sm:pb-28"
     >
       <div className="max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-12 w-full">
-        <div className="grid grid-cols-[minmax(0,1.15fr)_auto] lg:grid-cols-2 gap-4 lg:gap-8 items-center">
+        <div className="flex flex-row items-center lg:grid lg:grid-cols-2 gap-4 lg:gap-8">
           {/* Left: Typography & CTA */}
-          <div className="flex flex-col items-start space-y-4 lg:space-y-8 min-w-0">
+          <div className="flex-1 min-w-0 flex flex-col items-start space-y-4 lg:space-y-8">
             {/* Overline */}
             <motion.span
               initial={{ opacity: 0, y: 20 }}
@@ -325,7 +315,7 @@ export function HeroSection({ onOpenCollaboration }: HeroSectionProps) {
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1.2, ease, delay: 0.3 }}
-            className="flex items-center justify-center"
+            className="shrink-0 flex items-center justify-center"
           >
             <InteractiveShape />
           </motion.div>
