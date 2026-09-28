@@ -152,6 +152,23 @@ Logia-Creative/
 
 ---
 
+---
+
+## 🔑 Environment Variables
+
+Salin `.env.example` ke `.env.local` (sudah di `.gitignore`, jangan commit nilai asli):
+
+| Key | Keterangan |
+|---|---|
+| `COLLABORATION_TO` | Email tujuan inquiry form |
+| `COLLABORATION_FROM` | Pengirim (dev: `onboarding@resend.dev`) |
+| `RESEND_API_KEY` | API key Resend — dipakai API route saat runtime (Vercel tidak bisa memanggil MCP) |
+| `RESEND_FROM` | Alamat pengirim default API route |
+| `GROQ_API_KEY` | Server-only, **tanpa** prefix `NEXT_PUBLIC_` |
+| `GROQ_MODEL` | Model Groq, mis. `llama-3.3-70b-versatile` (cek daftar terkini) |
+
+Catatan: `onboarding@resend.dev` tanpa domain terverifikasi hanya bisa kirim ke email pemilik akun Resend. Struk selalu berstatus **Menunggu DP** — belum ada payment gateway.
+
 <div align="center">
 
 Dokumentasi repositori website company profile **LOGIA CREATIVE**.

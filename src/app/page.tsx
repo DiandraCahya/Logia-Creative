@@ -17,6 +17,7 @@ import Marquee from "@/components/animations/Marquee";
 
 const Logo3DBackground = dynamic(() => import("@/components/Logo3DBackground").then(mod => mod.Logo3DBackground), { ssr: false });
 const CollaborationModal = dynamic(() => import("@/components/CollaborationModal").then(mod => mod.CollaborationModal), { ssr: false });
+const ChatWidget = dynamic(() => import("@/components/ChatWidget").then(mod => mod.ChatWidget), { ssr: false });
 
 function MarqueeStrip() {
   const words = [
@@ -97,6 +98,9 @@ export default function Home() {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
       />
+
+      {/* AI chatbox pelanggan — lazy setelah idle */}
+      <ChatWidget />
     </main>
   );
 }
