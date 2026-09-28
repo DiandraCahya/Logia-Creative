@@ -21,8 +21,10 @@ function InteractiveShape() {
   const [gyroOn, setGyroOn] = useState(false);
   const [gyroNeeded, setGyroNeeded] = useState(false);
   const [gyroDenied, setGyroDenied] = useState(false);
+  const [gyroStatus, setGyroStatus] = useState<"idle" | "aktif" | "tidak ada sensor" | "error">("idle");
   const hoverRef = useRef(false);
   const inViewRef = useRef(true);
+  const gyroOnRef = useRef(false);
 
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
@@ -44,13 +46,13 @@ function InteractiveShape() {
       if (!inViewRef.current || document.hidden) return;
       const c = current.current;
       const t = target.current;
-      // low-pass smoothing
-      c.rx += (t.rx - c.rx) * 0.12;
-      c.ry += (t.ry - c.ry) * 0.12;
+      // low-pass smoothing: smoothed = smoothed * 0.9 + raw * 0.1
+      c.rx += (t.rx - c.rx) * 0.1;
+      c.ry += (t.ry - c.ry) * 0.1;
       c.px += (t.px - c.px) * 0.15;
       c.py += (t.py - c.py) * 0.15;
       if (tiltRef.current)
-        tiltRef.current.style.transform = `rotateX(${c.rx.toFixed(2)}deg) rotateY(${c.ry.toFixed(2)}deg)`;
+        tiltRef.current.style.transform = `perspective(1000px) rotateX(${c.rx.toFixed(2)}deg) rotateY(${c.ry.toFixed(2)}deg)`;
       if (glareRef.current)
         glareRef.current.style.background = `radial-gradient(circle 200px at ${c.px.toFixed(1)}% ${c.py.toFixed(1)}%, rgba(192,192,192,0.15), transparent)`;
     };
@@ -62,7 +64,7 @@ function InteractiveShape() {
     io.observe(el);
 
     const onMouse = (e: MouseEvent) => {
-      if (!hoverRef.current || gyroOn) return;
+      if (!hoverRef.current || gyroOnRef.current) return;
       const r = el.getBoundingClientRect();
       const x = (e.clientX - r.left) / r.width - 0.5;
       const y = (e.clientY - r.top) / r.height - 0.5;
@@ -78,7 +80,7 @@ function InteractiveShape() {
     };
     const onLeave = () => {
       hoverRef.current = false;
-      if (!gyroOn) target.current = { rx: 0, ry: 0, px: 50, py: 50 };
+      if (!gyroOnRef.current) target.current = { rx: 0, ry: 0, px: 50, py: 50 };
     };
     // touch-drag fallback (pointer events, no sensor needed)
     const onDown = (e: PointerEvent) => {
@@ -87,7 +89,7 @@ function InteractiveShape() {
       lastY = e.clientY;
     };
     const onMove = (e: PointerEvent) => {
-      if (!dragging || gyroOn) return;
+      if (!dragging || gyroOnRef.current) return;
       const dx = (e.clientX - lastX) / 120;
       const dy = (e.clientY - lastY) / 120;
       lastX = e.clientX;
@@ -104,12 +106,17 @@ function InteractiveShape() {
     };
     const onOrient = (e: DeviceOrientationEvent) => {
       if (e.beta == null || e.gamma == null) return;
+      if (process.env.NODE_ENV === "development")
+        console.log("[gyro] beta:", e.beta?.toFixed(1), "gamma:", e.gamma?.toFixed(1));
       // beta: front-back tilt [-180,180], gamma: left-right [-90,90]
+      // clamp beta/gamma ke -45..45 sebelum mapping
+      const beta = clamp(e.beta - 45, 45);
+      const gamma = clamp(e.gamma, 45);
       target.current = {
-        rx: clamp((e.beta - 45) * 0.4, 15),
-        ry: clamp(e.gamma * 0.5, 15),
-        px: 50 + clamp(e.gamma, 30),
-        py: 50 + clamp(e.beta - 45, 30),
+        rx: clamp(beta * 0.4, 15),
+        ry: clamp(gamma * 0.5, 15),
+        px: 50 + clamp(gamma, 30),
+        py: 50 + clamp(beta, 30),
       };
     };
 
@@ -121,9 +128,18 @@ function InteractiveShape() {
     window.addEventListener("pointerup", onUp, { passive: true });
     window.addEventListener("deviceorientation", onOrient);
 
+    // Sensor mati = tidak ada event masuk dalam 3 detik setelah granted
+    let orientSeen = false;
+    const markSeen = () => { orientSeen = true; };
+    window.addEventListener("deviceorientation", markSeen, { once: true });
+    const noSensorTimer = window.setTimeout(() => {
+      if (gyroOnRef.current && !orientSeen) setGyroStatus("tidak ada sensor");
+    }, 3000);
+
     return () => {
       cancelAnimationFrame(raf);
       io.disconnect();
+      window.clearTimeout(noSensorTimer);
       window.removeEventListener("mousemove", onMouse);
       el.removeEventListener("mouseenter", onEnter);
       el.removeEventListener("mouseleave", onLeave);
@@ -131,23 +147,39 @@ function InteractiveShape() {
       window.removeEventListener("pointermove", onMove);
       window.removeEventListener("pointerup", onUp);
       window.removeEventListener("deviceorientation", onOrient);
+      window.removeEventListener("deviceorientation", markSeen);
     };
-  }, [gyroOn]);
+  }, []);
 
+  // requestPermission() dipanggil LANGSUNG dari handler tap, bukan dari promise chain terpisah
   const enableGyro = useCallback(async () => {
     try {
-      const DOE = window.DeviceOrientationEvent as unknown as OrientEvent;
-      if (typeof DOE?.requestPermission === "function") {
-        const res = await DOE.requestPermission();
-        if (res !== "granted") {
+      const DOE = window.DeviceOrientationEvent as unknown as OrientEvent | undefined;
+      if (
+        typeof window.DeviceOrientationEvent !== "undefined" &&
+        typeof DOE?.requestPermission === "function"
+      ) {
+        const permission = await DOE.requestPermission();
+        if (permission === "granted") {
+          gyroOnRef.current = true;
+          setGyroOn(true);
+          setGyroNeeded(false);
+          setGyroStatus("aktif");
+        } else {
           setGyroDenied(true);
-          return;
+          setGyroStatus("error");
         }
+      } else {
+        // Android / desktop fallback: langsung pasang listener, tanpa tombol izin
+        gyroOnRef.current = true;
+        setGyroOn(true);
+        setGyroNeeded(false);
+        setGyroStatus("aktif");
       }
-      setGyroOn(true);
-      setGyroNeeded(false);
-    } catch {
+    } catch (err) {
+      console.error("Gyro permission error:", err);
       setGyroDenied(true);
+      setGyroStatus("error");
     }
   }, []);
 
@@ -184,13 +216,22 @@ function InteractiveShape() {
           />
         </div>
       </div>
-      {(gyroNeeded || gyroDenied) && !gyroOn && (
+      {(gyroNeeded || gyroDenied) && !gyroOn ? (
         <button
+          id="gyro-btn"
+          type="button"
           onClick={enableGyro}
-          className="min-h-[44px] px-5 py-2 rounded-full text-xs font-semibold border border-black/15 dark:border-white/15 text-black dark:text-white active:scale-95"
+          className="min-h-[48px] min-w-[48px] px-6 py-3 rounded-full text-xs font-semibold border border-black/15 dark:border-white/15 text-black dark:text-white active:scale-95"
         >
-          {gyroDenied ? "Sensor ditolak — ketuk untuk coba lagi" : "Aktifkan efek gerak"}
+          {gyroDenied ? "Sensor ditolak, ketuk untuk coba lagi" : "Aktifkan efek gerak"}
         </button>
+      ) : (
+        <p
+          aria-live="polite"
+          className="text-[11px] font-normal text-[#666666] dark:text-[#999999]"
+        >
+          Gyro: {gyroOn ? gyroStatus : "nonaktif, geser foto untuk efek gerak"}
+        </p>
       )}
     </div>
   );
