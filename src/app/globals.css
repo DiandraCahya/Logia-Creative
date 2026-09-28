@@ -437,6 +437,15 @@ html:not(.dark) footer a:hover,
     transform: none !important;
   }
 
+  /* Perf caps: lighter blur + no will-change on mobile GPUs */
+  .glass-container,
+  html:not(.dark) .glass-container,
+  .light .glass-container {
+    backdrop-filter: blur(8px) saturate(140%) !important;
+    -webkit-backdrop-filter: blur(8px) saturate(140%) !important;
+  }
+  .will-change-transform { will-change: auto !important; }
+
 }
 
 /* Tablet */

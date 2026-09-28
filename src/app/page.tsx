@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import dynamic from "next/dynamic";
-import { SplashScreen } from "@/components/SplashScreen";
+const SplashScreen = dynamic(() => import("@/components/SplashScreen").then(mod => mod.SplashScreen), { ssr: false });
 import { LiquidNavbar } from "@/components/LiquidNavbar";
 import { ScrollProgress } from "@/components/ScrollProgress";
 import { HeroSection } from "@/components/sections/HeroSection";
