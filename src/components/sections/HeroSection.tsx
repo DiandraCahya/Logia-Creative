@@ -9,93 +9,189 @@ interface HeroSectionProps {
   onOpenCollaboration?: () => void;
 }
 
-/* ── 3D Interactive Floating Shape ── */
+/* ── 3D Interactive Floating Shape: mouse + gyroscope ── */
+type OrientEvent = DeviceOrientationEvent & { requestPermission?: () => Promise<string> };
+
 function InteractiveShape() {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [transform, setTransform] = useState({ rx: 0, ry: 0, px: 50, py: 50 });
-  const [isHovered, setIsHovered] = useState(false);
-  const rafRef = useRef<number>(0);
-
-  const handleMouseMove = useCallback(
-    (e: MouseEvent) => {
-      if (!containerRef.current || !isHovered) return;
-      const rect = containerRef.current.getBoundingClientRect();
-      const x = (e.clientX - rect.left) / rect.width - 0.5;
-      const y = (e.clientY - rect.top) / rect.height - 0.5;
-      const px = ((e.clientX - rect.left) / rect.width) * 100;
-      const py = ((e.clientY - rect.top) / rect.height) * 100;
-
-      cancelAnimationFrame(rafRef.current);
-      rafRef.current = requestAnimationFrame(() => {
-        setTransform({ rx: -y * 20, ry: x * 20, px, py });
-      });
-    },
-    [isHovered]
-  );
+  const tiltRef = useRef<HTMLDivElement>(null);
+  const glareRef = useRef<HTMLDivElement>(null);
+  const target = useRef({ rx: 0, ry: 0, px: 50, py: 50 });
+  const current = useRef({ rx: 0, ry: 0, px: 50, py: 50 });
+  const [gyroOn, setGyroOn] = useState(false);
+  const [gyroNeeded, setGyroNeeded] = useState(false);
+  const [gyroDenied, setGyroDenied] = useState(false);
+  const hoverRef = useRef(false);
+  const inViewRef = useRef(true);
 
   useEffect(() => {
-    const mq = window.matchMedia("(prefers-reduced-motion: reduce), (hover: none)");
-    if (mq.matches) return;
-
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const el = containerRef.current;
     if (!el) return;
 
-    const onEnter = () => setIsHovered(true);
+    // Detect iOS permission API — needs user gesture
+    const DOE = window.DeviceOrientationEvent as unknown as OrientEvent | undefined;
+    if (typeof DOE?.requestPermission === "function") setGyroNeeded(true);
+
+    let raf = 0;
+    let dragging = false;
+    let lastX = 0;
+    let lastY = 0;
+    const clamp = (v: number, m: number) => Math.max(-m, Math.min(m, v));
+
+    const render = () => {
+      raf = requestAnimationFrame(render);
+      if (!inViewRef.current || document.hidden) return;
+      const c = current.current;
+      const t = target.current;
+      // low-pass smoothing
+      c.rx += (t.rx - c.rx) * 0.12;
+      c.ry += (t.ry - c.ry) * 0.12;
+      c.px += (t.px - c.px) * 0.15;
+      c.py += (t.py - c.py) * 0.15;
+      if (tiltRef.current)
+        tiltRef.current.style.transform = `rotateX(${c.rx.toFixed(2)}deg) rotateY(${c.ry.toFixed(2)}deg)`;
+      if (glareRef.current)
+        glareRef.current.style.background = `radial-gradient(circle 200px at ${c.px.toFixed(1)}% ${c.py.toFixed(1)}%, rgba(192,192,192,0.15), transparent)`;
+    };
+    raf = requestAnimationFrame(render);
+
+    const io = new IntersectionObserver(([e]) => {
+      inViewRef.current = e.isIntersecting;
+    });
+    io.observe(el);
+
+    const onMouse = (e: MouseEvent) => {
+      if (!hoverRef.current || gyroOn) return;
+      const r = el.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width - 0.5;
+      const y = (e.clientY - r.top) / r.height - 0.5;
+      target.current = {
+        rx: clamp(-y * 20, 15),
+        ry: clamp(x * 20, 15),
+        px: ((e.clientX - r.left) / r.width) * 100,
+        py: ((e.clientY - r.top) / r.height) * 100,
+      };
+    };
+    const onEnter = () => {
+      hoverRef.current = true;
+    };
     const onLeave = () => {
-      cancelAnimationFrame(rafRef.current);
-      setTransform({ rx: 0, ry: 0, px: 50, py: 50 });
-      setIsHovered(false);
+      hoverRef.current = false;
+      if (!gyroOn) target.current = { rx: 0, ry: 0, px: 50, py: 50 };
+    };
+    // touch-drag fallback (pointer events, no sensor needed)
+    const onDown = (e: PointerEvent) => {
+      dragging = true;
+      lastX = e.clientX;
+      lastY = e.clientY;
+    };
+    const onMove = (e: PointerEvent) => {
+      if (!dragging || gyroOn) return;
+      const dx = (e.clientX - lastX) / 120;
+      const dy = (e.clientY - lastY) / 120;
+      lastX = e.clientX;
+      lastY = e.clientY;
+      target.current = {
+        rx: clamp(target.current.rx - dy * 8, 15),
+        ry: clamp(target.current.ry + dx * 8, 15),
+        px: 50,
+        py: 50,
+      };
+    };
+    const onUp = () => {
+      dragging = false;
+    };
+    const onOrient = (e: DeviceOrientationEvent) => {
+      if (e.beta == null || e.gamma == null) return;
+      // beta: front-back tilt [-180,180], gamma: left-right [-90,90]
+      target.current = {
+        rx: clamp((e.beta - 45) * 0.4, 15),
+        ry: clamp(e.gamma * 0.5, 15),
+        px: 50 + clamp(e.gamma, 30),
+        py: 50 + clamp(e.beta - 45, 30),
+      };
     };
 
-    window.addEventListener("mousemove", handleMouseMove, { passive: true });
+    window.addEventListener("mousemove", onMouse, { passive: true });
     el.addEventListener("mouseenter", onEnter);
     el.addEventListener("mouseleave", onLeave);
+    el.addEventListener("pointerdown", onDown);
+    window.addEventListener("pointermove", onMove, { passive: true });
+    window.addEventListener("pointerup", onUp, { passive: true });
+    window.addEventListener("deviceorientation", onOrient);
 
     return () => {
-      window.removeEventListener("mousemove", handleMouseMove);
+      cancelAnimationFrame(raf);
+      io.disconnect();
+      window.removeEventListener("mousemove", onMouse);
       el.removeEventListener("mouseenter", onEnter);
       el.removeEventListener("mouseleave", onLeave);
-      cancelAnimationFrame(rafRef.current);
+      el.removeEventListener("pointerdown", onDown);
+      window.removeEventListener("pointermove", onMove);
+      window.removeEventListener("pointerup", onUp);
+      window.removeEventListener("deviceorientation", onOrient);
     };
-  }, [handleMouseMove]);
+  }, [gyroOn]);
+
+  const enableGyro = useCallback(async () => {
+    try {
+      const DOE = window.DeviceOrientationEvent as unknown as OrientEvent;
+      if (typeof DOE?.requestPermission === "function") {
+        const res = await DOE.requestPermission();
+        if (res !== "granted") {
+          setGyroDenied(true);
+          return;
+        }
+      }
+      setGyroOn(true);
+      setGyroNeeded(false);
+    } catch {
+      setGyroDenied(true);
+    }
+  }, []);
 
   return (
-    <div
-      ref={containerRef}
-      className="w-64 h-64 sm:w-80 sm:h-80 lg:w-[420px] lg:h-[420px] relative cursor-pointer"
-      style={{ perspective: 1200 }}
-    >
+    <div className="flex flex-col items-center gap-3">
       <div
-        className="w-full h-full relative transition-transform duration-200 ease-out will-change-transform"
-        style={{
-          transform: `rotateX(${transform.rx}deg) rotateY(${transform.ry}deg)`,
-          transformStyle: "preserve-3d",
-        }}
+        ref={containerRef}
+        className="w-64 h-64 sm:w-80 sm:h-80 lg:w-[420px] lg:h-[420px] relative cursor-pointer touch-none"
+        style={{ perspective: 1200 }}
       >
         <div
-          className="absolute inset-0 overflow-hidden rounded-3xl border border-black/10 dark:border-white/10"
-          style={{ transform: "translateZ(50px)" }}
+          ref={tiltRef}
+          className="w-full h-full relative will-change-transform"
+          style={{ transformStyle: "preserve-3d" }}
         >
-          <Image
-            src="/chaewon.jpg"
-            alt="Potret kreatif Logia Creative"
-            fill
-            className="object-cover"
-            sizes="(max-width: 640px) 256px, (max-width: 1024px) 320px, 420px"
-            priority
-            fetchPriority="high"
+          <div
+            className="absolute inset-0 overflow-hidden rounded-3xl border border-black/10 dark:border-white/10"
+            style={{ transform: "translateZ(50px)" }}
+          >
+            <Image
+              src="/chaewon.jpg"
+              alt="Potret kreatif Logia Creative"
+              fill
+              className="object-cover"
+              sizes="(max-width: 640px) 256px, (max-width: 1024px) 320px, 420px"
+              priority
+              fetchPriority="high"
+            />
+          </div>
+          <div
+            ref={glareRef}
+            className="absolute inset-0 rounded-3xl pointer-events-none"
+            style={{ transform: "translateZ(51px)" }}
           />
         </div>
-
-        {/* Specular highlight following cursor */}
-        <div
-          className="absolute inset-0 rounded-3xl pointer-events-none transition-opacity duration-300"
-          style={{
-            background: `radial-gradient(circle 200px at ${transform.px}% ${transform.py}%, rgba(192,192,192,${isHovered ? 0.15 : 0}), transparent)`,
-            transform: "translateZ(51px)",
-          }}
-        />
       </div>
+      {(gyroNeeded || gyroDenied) && !gyroOn && (
+        <button
+          onClick={enableGyro}
+          className="min-h-[44px] px-5 py-2 rounded-full text-xs font-semibold border border-black/15 dark:border-white/15 text-black dark:text-white active:scale-95"
+        >
+          {gyroDenied ? "Sensor ditolak — ketuk untuk coba lagi" : "Aktifkan efek gerak"}
+        </button>
+      )}
     </div>
   );
 }
