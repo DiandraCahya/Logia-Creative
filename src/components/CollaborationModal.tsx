@@ -1,10 +1,11 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Send, Sparkles, CheckCircle2, Phone, Mail, AlertCircle, Loader2, Printer, Receipt as ReceiptIcon } from "lucide-react";
+import { X, Send, Sparkles, CheckCircle2, Phone, Mail, AlertCircle, Loader2, ImageDown, FileDown } from "lucide-react";
 import { PACKAGES } from "@/lib/rate-card";
-import { formatIDR, RECEIPT_TERMS, type Receipt } from "@/lib/receipt";
+import type { Receipt } from "@/lib/receipt";
+import { ReceiptView } from "./Receipt";
 
 interface CollaborationModalProps {
   isOpen: boolean;
@@ -41,6 +42,42 @@ export function CollaborationModal({ isOpen, onClose }: CollaborationModalProps)
   const [errorMsg, setErrorMsg] = useState("");
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [receipt, setReceipt] = useState<Receipt | null>(null);
+  const [exporting, setExporting] = useState<"png" | "pdf" | null>(null);
+  const receiptRef = useRef<HTMLDivElement>(null);
+
+  const exportPNG = async () => {
+    if (!receiptRef.current || exporting) return;
+    setExporting("png");
+    try {
+      const { default: html2canvas } = await import("html2canvas");
+      const canvas = await html2canvas(receiptRef.current, { scale: 2, backgroundColor: "#ffffff", logging: false });
+      const a = document.createElement("a");
+      a.download = `${receipt?.id ?? "struk"}.png`;
+      a.href = canvas.toDataURL("image/png");
+      a.click();
+    } finally {
+      setExporting(null);
+    }
+  };
+
+  const exportPDF = async () => {
+    if (!receiptRef.current || exporting) return;
+    setExporting("pdf");
+    try {
+      const [{ default: html2canvas }, { jsPDF }] = await Promise.all([
+        import("html2canvas"),
+        import("jspdf"),
+      ]);
+      const canvas = await html2canvas(receiptRef.current, { scale: 2, backgroundColor: "#ffffff", logging: false });
+      const imgW = 190;
+      const imgH = (canvas.height * imgW) / canvas.width;
+      const pdf = new jsPDF({ unit: "mm", format: "a4" });
+      pdf.addImage(canvas.toDataURL("image/png"), "PNG", 10, 10, imgW, Math.min(imgH, 277));
+      pdf.save(`${receipt?.id ?? "struk"}.pdf`);
+    } finally {
+      setExporting(null);
+    }
+  };
 
   const toggleService = (service: string) => {
     setSelectedServices((prev) =>
@@ -165,38 +202,26 @@ export function CollaborationModal({ isOpen, onClose }: CollaborationModalProps)
                     </p>
                   </div>
                   {receipt ? (
-                    <div className="rounded-2xl border border-black/10 dark:border-white/10 bg-slate-50 dark:bg-white/5 p-5 text-left text-sm">
-                      <p className="flex items-center gap-2 font-semibold text-slate-900 dark:text-white mb-3">
-                        <ReceiptIcon className="w-4 h-4 text-accent-bronze" />
-                        Struk — {receipt.id}
-                      </p>
-                      <dl className="space-y-1.5 text-slate-700 dark:text-slate-300">
-                        <div className="flex justify-between gap-4"><dt>Waktu</dt><dd className="font-medium text-right">{receipt.timestamp}</dd></div>
-                        <div className="flex justify-between gap-4"><dt>Pelanggan</dt><dd className="font-medium text-right">{receipt.customer}{receipt.brand ? ` (${receipt.brand})` : ""}</dd></div>
-                        <div className="flex justify-between gap-4"><dt>Paket</dt><dd className="font-medium text-right">{receipt.packageName} — {receipt.priceLabel}</dd></div>
-                        {receipt.total != null && (
-                          <>
-                            <div className="flex justify-between gap-4"><dt>Total</dt><dd className="font-medium text-right">{formatIDR(receipt.total)}</dd></div>
-                            <div className="flex justify-between gap-4"><dt>DP 50%</dt><dd className="font-medium text-right">{formatIDR(receipt.dp!)}</dd></div>
-                            <div className="flex justify-between gap-4"><dt>Sisa</dt><dd className="font-medium text-right">{formatIDR(receipt.sisa!)}</dd></div>
-                          </>
-                        )}
-                        <div className="flex justify-between gap-4"><dt>Status</dt><dd className="font-semibold text-accent-bronze text-right">Menunggu DP</dd></div>
-                      </dl>
-                      <ul className="mt-3 space-y-1 text-xs text-slate-500 dark:text-slate-400 list-disc list-inside">
-                        {RECEIPT_TERMS.map((t) => <li key={t}>{t}</li>)}
-                      </ul>
-                    </div>
+                    <ReceiptView ref={receiptRef} receipt={receipt} />
                   ) : (
                     <p className="text-xs text-slate-500 dark:text-slate-400 text-center">Struk email ikut terkirim ke tim kami.</p>
                   )}
                   <div className="flex flex-col sm:flex-row gap-3 justify-center pt-2">
                     <button
-                      onClick={() => window.print()}
-                      className="px-6 py-3 min-h-[48px] rounded-full border border-black/15 dark:border-white/15 text-sm font-semibold flex items-center justify-center gap-2 active:scale-95"
+                      onClick={exportPNG}
+                      disabled={!receipt || exporting !== null}
+                      className="px-6 py-3 min-h-[48px] rounded-full border border-black/15 dark:border-white/15 text-sm font-semibold flex items-center justify-center gap-2 active:scale-95 disabled:opacity-50"
                     >
-                      <Printer className="w-4 h-4" />
-                      Print / Simpan
+                      <ImageDown className="w-4 h-4" />
+                      {exporting === "png" ? "Menyimpan..." : "Download PNG"}
+                    </button>
+                    <button
+                      onClick={exportPDF}
+                      disabled={!receipt || exporting !== null}
+                      className="px-6 py-3 min-h-[48px] rounded-full border border-black/15 dark:border-white/15 text-sm font-semibold flex items-center justify-center gap-2 active:scale-95 disabled:opacity-50"
+                    >
+                      <FileDown className="w-4 h-4" />
+                      {exporting === "pdf" ? "Menyimpan..." : "Download PDF"}
                     </button>
                     <button
                       onClick={handleReset}
