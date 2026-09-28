@@ -378,11 +378,26 @@ html:not(.dark) footer a:hover,
     padding-right: 16px !important;
   }
 
-  /* Section spacing */
+  /* Section spacing — mobile register, half desktop */
   section {
-    padding-top: 64px !important;
-    padding-bottom: 64px !important;
+    padding-top: 48px !important;
+    padding-bottom: 48px !important;
   }
+
+  /* Hero sizes to content, not viewport slab */
+  #top {
+    min-height: auto !important;
+    padding-top: 96px !important;
+    padding-bottom: 40px !important;
+  }
+
+  /* Footer compaction */
+  footer .space-y-20 { row-gap: 2.5rem !important; }
+  footer .cta-dark { padding: 1.75rem 1.25rem !important; border-radius: 1.25rem !important; }
+
+  /* Hide non-essential decoration on mobile */
+  footer [aria-hidden="true"] { display: none !important; }
+  .marquee-item { font-size: 1.1rem !important; }
 
   /* Typography scale down */
   h1, .text-display {

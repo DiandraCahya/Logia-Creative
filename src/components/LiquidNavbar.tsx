@@ -43,6 +43,19 @@ export function LiquidNavbar({ onOpenCollaboration }: LiquidNavbarProps) {
     }
   }, [activeSection]);
   useEffect(() => {
+    if (!mobileMenuOpen) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setMobileMenuOpen(false);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = prev;
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [mobileMenuOpen]);
+  useEffect(() => {
     let raf = 0;
     const NAVBAR_OFFSET = 80;
 
@@ -97,10 +110,10 @@ export function LiquidNavbar({ onOpenCollaboration }: LiquidNavbarProps) {
         initial={{ y: -80, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-        className="fixed top-4 sm:top-6 left-0 right-0 z-40 flex justify-center px-4 pointer-events-none pb-[env(safe-area-inset-bottom)]"
+        className="fixed top-0 left-0 right-0 z-40 flex justify-center px-3 pt-[max(0.5rem,env(safe-area-inset-top))] pointer-events-none"
       >
         <div
-          className={`glass-container pointer-events-auto w-fit max-w-[95vw] mx-auto flex items-center justify-between sm:justify-center gap-3 sm:gap-6 lg:gap-8 px-4 sm:px-6 py-2 sm:py-2.5 !rounded-full shadow-lg transition-all duration-300 ${
+          className={`glass-container pointer-events-auto w-fit max-w-[95vw] mx-auto flex items-center justify-between sm:justify-center gap-2 sm:gap-6 lg:gap-8 px-3 sm:px-6 py-1.5 sm:py-2.5 !rounded-full shadow-lg transition-all duration-300 min-h-[52px] ${
             scrolled ? "shadow-xl border-white/25 dark:border-white/15 bg-white/80 dark:bg-slate-900/80" : ""
           }`}
         >
@@ -177,44 +190,58 @@ export function LiquidNavbar({ onOpenCollaboration }: LiquidNavbarProps) {
         </div>
       </motion.header>
 
-      {/* Mobile Menu */}
+      {/* Mobile Menu — full-screen sheet */}
       <AnimatePresence>
         {mobileMenuOpen && (
           <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.25 }}
-            className="fixed inset-x-4 top-20 z-30 lg:hidden"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="fixed inset-0 z-30 lg:hidden bg-black/40"
+            onClick={() => setMobileMenuOpen(false)}
           >
-            <div className="glass-container p-6 !rounded-3xl flex flex-col gap-4 shadow-xl">
-              <div className="flex flex-col gap-2">
+            <motion.div
+              initial={{ y: 24, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: 24, opacity: 0 }}
+              transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+              onClick={(e) => e.stopPropagation()}
+              className="absolute inset-x-0 top-0 max-h-[92dvh] overflow-y-auto rounded-b-3xl bg-white dark:bg-[#111] border-b border-black/10 dark:border-white/10 shadow-xl pt-[max(4.5rem,env(safe-area-inset-top))] pb-[max(1.5rem,env(safe-area-inset-bottom))] px-5"
+            >
+              <div className="flex flex-col gap-1">
                 {navLinks.map((link) => (
                   <a
                     key={link.name}
                     href={link.href}
                     onClick={(e) => handleNavClick(e, link.href)}
-                    className={`px-4 py-3 rounded-xl text-sm font-medium transition-colors ${
+                    className={`px-4 py-3 min-h-[48px] flex items-center rounded-xl text-base font-medium transition-colors ${
                       activeSection === link.href
-                        ? "text-blue-600 bg-blue-600/5 dark:text-blue-400 dark:bg-blue-400/10"
-                        : "text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5"
+                        ? "text-black dark:text-white bg-black/5 dark:bg-white/10"
+                        : "text-slate-600 dark:text-slate-300 active:bg-black/5 dark:active:bg-white/5"
                     }`}
                   >
                     {link.name}
                   </a>
                 ))}
               </div>
+              <div className="flex items-center gap-3 mt-4">
+                <div className="flex-1">
+                  <ThemeToggle />
+                </div>
+                <span className="text-xs text-slate-500 dark:text-slate-400">Ganti tema</span>
+              </div>
               <button
                 onClick={() => {
                   setMobileMenuOpen(false);
                   if (onOpenCollaboration) onOpenCollaboration();
                 }}
-                className="w-full py-3 rounded-xl text-center text-sm font-semibold active:scale-95 flex items-center justify-center gap-2 grad-cta"
+                className="mt-4 w-full py-3.5 min-h-[52px] rounded-2xl text-center text-sm font-semibold active:scale-[0.98] flex items-center justify-center gap-2 grad-cta"
               >
                 <Sparkles className="w-4 h-4" />
                 Mulai Kolaborasi
               </button>
-            </div>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
