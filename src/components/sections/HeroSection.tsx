@@ -155,7 +155,7 @@ function InteractiveShape() {
     <div className="flex flex-col items-center gap-3">
       <div
         ref={containerRef}
-        className="w-64 h-64 sm:w-80 sm:h-80 lg:w-[420px] lg:h-[420px] relative cursor-pointer touch-none"
+        className="w-64 h-64 sm:w-80 sm:h-80 lg:w-[420px] lg:h-[420px] relative cursor-pointer touch-pan-y"
         style={{ perspective: 1200 }}
       >
         <div

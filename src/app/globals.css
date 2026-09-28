@@ -363,7 +363,8 @@ html:not(.dark) footer a:hover,
 .marquee-track {
   display: flex;
   width: max-content;
-  animation: marquee-scroll linear infinite;
+  animation: marquee-scroll 35s linear infinite;
+  will-change: transform;
 }
 .marquee-group {
   display: flex;
