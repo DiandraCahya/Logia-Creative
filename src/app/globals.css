@@ -410,16 +410,16 @@ html:not(.dark) footer a:hover,
     padding-right: 16px !important;
   }
 
-  /* Section vertikal max 40px */
+  /* Section vertikal py-8 */
   section {
-    padding-top: 40px !important;
-    padding-bottom: 40px !important;
+    padding-top: 32px !important;
+    padding-bottom: 32px !important;
   }
 
-  /* Hero mobile max 60vh, dekorasi diringkas */
+  /* Hero mobile max 70vh, foto + teks jelas */
   #top {
     min-height: auto !important;
-    max-height: 60vh !important;
+    max-height: 70vh !important;
     overflow: hidden !important;
     padding-top: 88px !important;
     padding-bottom: 32px !important;

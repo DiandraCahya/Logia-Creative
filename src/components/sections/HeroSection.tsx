@@ -187,7 +187,7 @@ function InteractiveShape() {
     <div className="flex flex-col items-center gap-3">
       <div
         ref={containerRef}
-        className="w-64 h-64 sm:w-80 sm:h-80 lg:w-[420px] lg:h-[420px] relative cursor-pointer touch-pan-y"
+        className="w-28 h-28 sm:w-80 sm:h-80 lg:w-[420px] lg:h-[420px] relative cursor-pointer touch-pan-y"
         style={{ perspective: 1200 }}
       >
         <div
@@ -247,9 +247,9 @@ export function HeroSection({ onOpenCollaboration }: HeroSectionProps) {
       className="relative min-h-[92svh] flex items-center justify-center overflow-hidden pt-24 pb-16 sm:pt-32 sm:pb-28"
     >
       <div className="max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-12 w-full">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-8 items-center">
+        <div className="grid grid-cols-[minmax(0,1.15fr)_auto] lg:grid-cols-2 gap-4 lg:gap-8 items-center">
           {/* Left: Typography & CTA */}
-          <div className="flex flex-col items-start space-y-8">
+          <div className="flex flex-col items-start space-y-4 lg:space-y-8 min-w-0">
             {/* Overline */}
             <motion.span
               initial={{ opacity: 0, y: 20 }}
@@ -289,7 +289,7 @@ export function HeroSection({ onOpenCollaboration }: HeroSectionProps) {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, ease, delay: 0.35 }}
-              className="text-base sm:text-lg text-[#1A1A1A] dark:text-[#999999] leading-relaxed max-w-lg font-normal"
+              className="text-sm sm:text-lg text-[#1A1A1A] dark:text-[#999999] leading-relaxed max-w-lg font-normal line-clamp-2 sm:line-clamp-none"
             >
               Kami merancang identitas visual dan membangun website cepat
               untuk bisnis yang ingin terlihat serius.
@@ -300,12 +300,12 @@ export function HeroSection({ onOpenCollaboration }: HeroSectionProps) {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, ease, delay: 0.5 }}
-              className="flex flex-wrap items-center gap-4 pt-2"
+              className="flex flex-wrap items-center gap-3 sm:gap-4 pt-2"
             >
               <button
                 onClick={onOpenCollaboration}
                 style={{ color: "var(--btn-text)" }}
-                className="btn-solid px-8 py-4 min-h-[48px] bg-black dark:bg-white text-sm font-semibold rounded-full flex items-center gap-2 group"
+                className="btn-solid px-5 sm:px-8 py-3 sm:py-4 min-h-[48px] bg-black dark:bg-white text-sm font-semibold rounded-full flex items-center gap-2 group"
               >
                 <span>Mulai Proyek</span>
                 <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
@@ -313,7 +313,7 @@ export function HeroSection({ onOpenCollaboration }: HeroSectionProps) {
 
               <a
                 href="#portfolio"
-                className="px-8 py-4 min-h-[48px] inline-flex items-center text-sm font-semibold text-black dark:text-white border border-black/15 dark:border-white/15 rounded-full hover:bg-black/5 dark:hover:bg-white/5 transition-colors duration-200"
+                className="px-5 sm:px-8 py-3 sm:py-4 min-h-[48px] inline-flex items-center text-sm font-semibold text-black dark:text-white border border-black/15 dark:border-white/15 rounded-full hover:bg-black/5 dark:hover:bg-white/5 transition-colors duration-200"
               >
                 Lihat Portfolio
               </a>
