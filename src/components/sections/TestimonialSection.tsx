@@ -53,7 +53,7 @@ export function TestimonialSection() {
         <h2 className="font-display font-medium tracking-[-0.02em] text-[clamp(2rem,4vw,3.5rem)] text-black dark:text-white mb-3 text-center">
           Testimoni Klien
         </h2>
-        <p className="text-xs text-neutral-500 dark:text-neutral-400 mb-12 text-center">
+        <p className="text-sm text-neutral-500 dark:text-neutral-400 mb-8 sm:mb-12 text-center max-w-md px-2">
           Contoh testimoni — akan diganti dengan klien nyata.
         </p>
         <TestimonialCarousel testimonials={TESTIMONIALS} />

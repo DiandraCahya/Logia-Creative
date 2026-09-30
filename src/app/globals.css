@@ -132,7 +132,7 @@ html[data-perf="low"] .dark .glass-container {
     border-color: rgba(255, 255, 255, 0.15);
     box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
     transform: translateY(-2px);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
   }
 }
 
@@ -164,6 +164,8 @@ html:not(.dark) .glass-container:hover,
   background: rgba(255, 255, 255, 0.85) !important;
   border-color: rgba(0, 0, 0, 0.15) !important;
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12) !important;
+  transform: translateY(-2px);
+  transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 /* DARK MODE */
@@ -230,6 +232,8 @@ html:not(.dark) .grad-cta,
 html:not(.dark) .grad-cta:hover,
 .light .grad-cta:hover {
   background: #222222 !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25) !important;
 }
 
 /* CTA dark banner keeps white headings in light mode (exclude buttons, which carry their own colors) */
@@ -509,6 +513,10 @@ html:not(.dark) footer a:hover,
   .glass-container:hover {
     transform: none !important;
     background: rgba(255, 255, 255, 0.05) !important;
+  }
+  html:not(.dark) .glass-container:hover,
+  .light .glass-container:hover {
+    background: rgba(255, 255, 255, 0.7) !important;
   }
 
   /* Larger touch targets */

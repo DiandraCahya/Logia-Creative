@@ -77,7 +77,7 @@ export function TestimonialCarousel({ testimonials }: { testimonials: Testimonia
               aria-label={`Slide ${i + 1} dari ${testimonials.length}`}
               aria-hidden={i !== index}
             >
-              <figure className="mx-auto max-w-2xl rounded-2xl sm:rounded-3xl border border-black/5 dark:border-white/10 bg-black/[0.02] dark:bg-white/[0.03] p-4 sm:p-10 text-center">
+              <figure className="mx-auto max-w-2xl rounded-2xl sm:rounded-3xl border border-black/5 dark:border-white/10 bg-black/[0.02] dark:bg-white/[0.03] p-6 sm:p-10 text-center min-h-[240px] sm:min-h-0 flex flex-col justify-center">
                 <Image
                   src={t.image}
                   alt={t.alt}
@@ -86,7 +86,7 @@ export function TestimonialCarousel({ testimonials }: { testimonials: Testimonia
                   loading="lazy"
                   className="mx-auto mb-4 h-10 w-10 sm:h-16 sm:w-16 rounded-full object-cover"
                 />
-                <blockquote className="font-display text-[13px] sm:text-xl leading-relaxed text-black dark:text-white line-clamp-3">
+                <blockquote className="font-display text-[15px] sm:text-xl leading-relaxed text-black dark:text-white">
                   &ldquo;{t.quote}&rdquo;
                 </blockquote>
                 <figcaption className="mt-4 text-[13px] sm:text-sm text-[#666666] dark:text-[#999999]">
@@ -102,7 +102,7 @@ export function TestimonialCarousel({ testimonials }: { testimonials: Testimonia
         </motion.div>
       </div>
 
-      <div className="mt-4 sm:mt-8 flex items-center justify-center gap-3">
+      <div className="mt-6 sm:mt-8 flex items-center justify-center gap-1 sm:gap-3">
         <button
           onClick={prev}
           aria-label="Previous testimonial"
