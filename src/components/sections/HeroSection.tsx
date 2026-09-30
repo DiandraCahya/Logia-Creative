@@ -19,11 +19,16 @@ function InteractiveShape() {
   const target = useRef({ rx: 0, ry: 0, px: 50, py: 50 });
   const current = useRef({ rx: 0, ry: 0, px: 50, py: 50 });
   const [gyroOn, setGyroOn] = useState(false);
-  const [gyroStatus, setGyroStatus] = useState<"idle" | "aktif" | "tidak ada sensor">("idle");
+  const [gyroStatus, setGyroStatus] = useState<"idle" | "aktif" | "tidak ada sensor" | "butuh https">("idle");
   const [platform, setPlatform] = useState<"desktop" | "android" | "ios">("desktop");
+  const [debug, setDebug] = useState(false);
+  const [secureCtx, setSecureCtx] = useState(true);
+  const [debugVals, setDebugVals] = useState({ beta: "-", gamma: "-", abs: "-", count: 0 });
+  const debugRef = useRef(false);
   const hoverRef = useRef(false);
   const inViewRef = useRef(true);
   const gyroOnRef = useRef(false);
+  const orientCount = useRef(0);
   const platformRef = useRef<"desktop" | "android" | "ios">("desktop");
 
   useEffect(() => {
@@ -39,9 +44,19 @@ function InteractiveShape() {
     const pf: "desktop" | "android" | "ios" = isIOS ? "ios" : isTouch ? "android" : "desktop";
     platformRef.current = pf;
     setPlatform(pf);
+    // Debug: ?gyro=debug untuk logging nilai sensor di HP asli
+    const dbg = new URLSearchParams(window.location.search).has("gyro");
+    debugRef.current = dbg;
+    setDebug(dbg);
 
-    // Android: gyro otomatis aktif saat load (tidak butuh permission)
-    if (pf === "android") {
+    // Sensor API butuh secure context (HTTPS/localhost). HTTP = sensor diblokir browser.
+    const secure = window.isSecureContext;
+    setSecureCtx(secure);
+    if (!secure && pf !== "desktop") setGyroStatus("butuh https");
+
+    // Android: gyro otomatis aktif saat load (tidak butuh permission).
+    // Listener tetap di-attach untuk SEMUA platform — jangan tunggu tombol izin.
+    if (pf === "android" && secure) {
       gyroOnRef.current = true;
       setGyroOn(true);
       setGyroStatus("aktif");
@@ -121,11 +136,21 @@ function InteractiveShape() {
     const onUp = () => {
       dragging = false;
     };
+    // Listener absolut: catat event APA PUN agar tahu sensor fire atau tidak,
+    // bahkan sebelum izin / sebelum gyroOn (Android 13+ kirim null dulu).
+    // Throttle: state hanya di-update saat ?gyro=debug aktif, bukan tiap event.
+    let lastDbg = 0;
+    const onOrientRaw = (e: DeviceOrientationEvent) => {
+      orientCount.current += 1;
+      const now = performance.now();
+      if (debugRef.current && now - lastDbg > 500) {
+        lastDbg = now;
+        setDebugVals({ beta: String(e.beta), gamma: String(e.gamma), abs: String(e.absolute), count: orientCount.current });
+      }
+    };
     const onOrient = (e: DeviceOrientationEvent) => {
       // Hanya proses saat gyro aktif (Android auto / setelah izin)
       if (!gyroOnRef.current || e.beta == null || e.gamma == null) return;
-      if (process.env.NODE_ENV === "development")
-        console.log("[gyro] beta:", e.beta?.toFixed(1), "gamma:", e.gamma?.toFixed(1));
       // beta: front-back tilt [-180,180], gamma: left-right [-90,90]
       // clamp beta/gamma ke -45..45 sebelum mapping
       const beta = clamp(e.beta - 45, 45);
@@ -138,20 +163,20 @@ function InteractiveShape() {
       };
     };
 
+    // Listener deviceorientation di-attach SELALU (semua platform, tanpa nunggu izin).
+    // Cabang iOS requestPermission hanya mengaktifkan flag gyroOn, bukan attach listener.
     window.addEventListener("mousemove", onMouse, { passive: true });
     el.addEventListener("mouseenter", onEnter);
     el.addEventListener("mouseleave", onLeave);
     el.addEventListener("pointerdown", onDown);
     window.addEventListener("pointermove", onMove, { passive: true });
     window.addEventListener("pointerup", onUp, { passive: true });
+    window.addEventListener("deviceorientation", onOrientRaw);
     window.addEventListener("deviceorientation", onOrient);
 
     // Sensor mati = tidak ada event masuk dalam 3 detik setelah granted
-    let orientSeen = false;
-    const markSeen = () => { orientSeen = true; };
-    window.addEventListener("deviceorientation", markSeen, { once: true });
     const noSensorTimer = window.setTimeout(() => {
-      if (gyroOnRef.current && !orientSeen) setGyroStatus("tidak ada sensor");
+      if (gyroOnRef.current && orientCount.current === 0) setGyroStatus("tidak ada sensor");
     }, 3000);
 
     return () => {
@@ -164,8 +189,8 @@ function InteractiveShape() {
       el.removeEventListener("pointerdown", onDown);
       window.removeEventListener("pointermove", onMove);
       window.removeEventListener("pointerup", onUp);
+      window.removeEventListener("deviceorientation", onOrientRaw);
       window.removeEventListener("deviceorientation", onOrient);
-      window.removeEventListener("deviceorientation", markSeen);
     };
   }, []);
 
@@ -227,7 +252,16 @@ function InteractiveShape() {
         </button>
       ) : (platform === "ios" || platform === "android") && gyroStatus !== "idle" ? (
         <p className="text-[11px] font-normal text-[#666666] dark:text-[#999999]" aria-live="polite">
-          {gyroStatus === "aktif" ? "Efek gerak aktif — miringkan perangkat" : "Sensor gerak tidak tersedia — geser foto untuk efek 3D"}
+          {gyroStatus === "aktif"
+            ? "Efek gerak aktif, miringkan perangkat"
+            : gyroStatus === "butuh https"
+              ? "Sensor butuh HTTPS, buka lewat https atau localhost"
+              : "Sensor gerak tidak tersedia, geser foto untuk efek 3D"}
+        </p>
+      ) : null}
+      {debug && platform !== "desktop" ? (
+        <p className="font-mono text-[10px] text-black/60 dark:text-white/60" aria-hidden="true">
+          [gyro-debug] beta: {debugVals.beta} gamma: {debugVals.gamma} abs: {debugVals.abs} n: {debugVals.count} {secureCtx ? "https" : "http"}
         </p>
       ) : null}
     </div>
