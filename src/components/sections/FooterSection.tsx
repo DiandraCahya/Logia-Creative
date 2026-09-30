@@ -26,6 +26,7 @@ export function FooterSection({ onOpenCollaboration }: FooterSectionProps) {
 
   useEffect(() => {
     const updateTime = () => {
+      if (document.hidden) return; // skip tick saat tab tak terlihat
       const now = new Date();
       const options: Intl.DateTimeFormatOptions = {
         timeZone: "Asia/Jakarta",

@@ -27,7 +27,7 @@ export function TestimonialCarousel({ testimonials }: { testimonials: Testimonia
   }, []);
 
   useEffect(() => {
-    if (paused || reducedMotion || testimonials.length <= 1) return;
+    if (paused || reducedMotion || testimonials.length <= 1 || document.hidden) return;
     const t = setTimeout(() => setIndex((i) => go(i + 1, testimonials.length)), 5000);
     return () => clearTimeout(t);
   }, [index, paused, reducedMotion, testimonials.length]);
