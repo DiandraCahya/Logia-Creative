@@ -14,7 +14,9 @@ export const ReceiptView = forwardRef<HTMLDivElement, { receipt: Receipt }>(
         style={{ pageBreakInside: "avoid", overflow: "hidden", backgroundColor: "#ffffff", color: "#0f172a" }}
       >
         <div className="flex items-center gap-3 pb-4 border-b border-slate-200">
-          <Image src="/logo-logia.svg" alt="Logo Logia Creative" width={40} height={40} className="rounded-lg" />
+          <div className="relative w-24 h-7 shrink-0">
+            <Image src="/Group 3.png" alt="Logo Logia Creative" fill className="object-contain" />
+          </div>
           <div>
             <p className="text-xs tracking-[0.2em] uppercase text-slate-500">Logia Creative</p>
             <p className="font-semibold text-base">Struk Pemesanan {receipt.id}</p>

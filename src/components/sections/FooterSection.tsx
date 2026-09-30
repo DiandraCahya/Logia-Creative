@@ -81,7 +81,7 @@ export function FooterSection({ onOpenCollaboration }: FooterSectionProps) {
           <div className="lg:col-span-2 space-y-4">
             <div className="relative w-24 h-7">
               <Image
-                src="/LOGO.png"
+                src="/Group 3.png"
                 alt="Logia Creative Logo"
                 fill
                 className="object-contain"
