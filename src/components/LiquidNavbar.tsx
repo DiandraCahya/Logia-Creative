@@ -114,7 +114,7 @@ export function LiquidNavbar({ onOpenCollaboration }: LiquidNavbarProps) {
       >
         <div
           className={`glass-container pointer-events-auto w-fit max-w-[95vw] mx-auto flex items-center justify-between sm:justify-center gap-2 sm:gap-6 lg:gap-8 px-3 sm:px-6 py-1.5 sm:py-2.5 !rounded-full shadow-lg transition-all duration-300 min-h-[52px] max-h-[56px] ${
-            scrolled ? "shadow-xl border-white/25 dark:border-white/15 bg-white/80 dark:bg-slate-900/80" : ""
+            scrolled ? "shadow-xl border-black/10 dark:border-white/15 bg-white/80 dark:bg-black/80" : ""
           }`}
         >
           {/* Logo */}
@@ -125,7 +125,7 @@ export function LiquidNavbar({ onOpenCollaboration }: LiquidNavbarProps) {
           >
             <div className="relative w-20 sm:w-28 h-6 sm:h-8 transition-transform duration-300 group-hover:scale-105">
               <Image
-                src="/LOGO.png"
+                src="/Group 3.png"
                 alt="Logia Logo"
                 fill
                 className="object-contain"
@@ -137,7 +137,7 @@ export function LiquidNavbar({ onOpenCollaboration }: LiquidNavbarProps) {
           {/* Desktop Nav */}
           <div ref={navContainerRef} className="hidden lg:flex items-center gap-1 xl:gap-2 relative">
             <span
-              className="absolute bottom-0 h-0.5 bg-gradient-to-r from-blue-500 to-violet-500 rounded-full transition-all duration-300 pointer-events-none"
+              className="absolute bottom-0 h-0.5 bg-black dark:bg-white rounded-full transition-all duration-300 pointer-events-none"
               style={{
                 left: indicatorStyle.left,
                 width: indicatorStyle.width,
@@ -155,7 +155,7 @@ export function LiquidNavbar({ onOpenCollaboration }: LiquidNavbarProps) {
                   onClick={(e) => handleNavClick(e, link.href)}
                   className={`
                     link-slide relative px-4 py-2 text-sm font-medium transition-all duration-300 active:scale-95
-                    ${isActive ? "text-slate-900 dark:text-white font-semibold" : "text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400"}
+                    ${isActive ? "text-black dark:text-white font-semibold" : "text-neutral-600 dark:text-neutral-300 hover:text-black dark:hover:text-white"}
                   `}
                 >
                   {link.name}
@@ -220,7 +220,7 @@ export function LiquidNavbar({ onOpenCollaboration }: LiquidNavbarProps) {
                     className={`px-4 py-3 min-h-[48px] flex items-center rounded-xl text-base font-medium transition-colors ${
                       activeSection === link.href
                         ? "text-black dark:text-white bg-black/5 dark:bg-white/10"
-                        : "text-slate-600 dark:text-slate-300 active:bg-black/5 dark:active:bg-white/5"
+                        : "text-neutral-600 dark:text-neutral-300 active:bg-black/5 dark:active:bg-white/5"
                     }`}
                   >
                     {link.name}
@@ -231,7 +231,7 @@ export function LiquidNavbar({ onOpenCollaboration }: LiquidNavbarProps) {
                 <div className="flex-1">
                   <ThemeToggle />
                 </div>
-                <span className="text-xs text-slate-500 dark:text-slate-400">Ganti tema</span>
+                <span className="text-xs text-neutral-500 dark:text-neutral-400">Ganti tema</span>
               </div>
               <button
                 onClick={() => {

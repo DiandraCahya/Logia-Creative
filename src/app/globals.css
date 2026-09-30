@@ -189,7 +189,7 @@ html:not(.dark) nav a,
 
 html:not(.dark) nav a:hover,
 .light nav a:hover {
-  color: #2563eb !important; /* blue-600 */
+  color: #000 !important;
 }
 
 /* Button Kolaborasi / CTA Universal - grad-cta */
@@ -339,8 +339,8 @@ html:not(.dark) input:focus,
 html:not(.dark) textarea:focus,
 .light input:focus,
 .light textarea:focus {
-  border-color: #2563eb !important;
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1) !important;
+  border-color: #000 !important;
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1) !important;
 }
 
 /* Footer - TRANSPARENT */
@@ -363,7 +363,7 @@ html:not(.dark) footer a,
 
 html:not(.dark) footer a:hover,
 .light footer a:hover {
-  color: #2563eb !important;
+  color: #000 !important;
 }
 
 
