@@ -169,8 +169,15 @@ function InteractiveShape() {
     };
   }, []);
 
-  // Hanya untuk Android: aktifkan gyro dari user tap (sensor ada, tidak butuh permission)
-  const enableGyro = useCallback(() => {
+  // Mobile: Android auto-on + tap fallback; iOS butuh requestPermission via gesture
+  const enableGyro = useCallback(async () => {
+    try {
+      const DOE = window.DeviceOrientationEvent as unknown as OrientEvent | undefined;
+      if (typeof DOE?.requestPermission === "function") {
+        const res = await DOE.requestPermission();
+        if (res !== "granted") { setGyroStatus("tidak ada sensor"); return; }
+      }
+    } catch { setGyroStatus("tidak ada sensor"); return; }
     gyroOnRef.current = true;
     setGyroOn(true);
     setGyroStatus("aktif");
@@ -209,7 +216,7 @@ function InteractiveShape() {
           />
         </div>
       </div>
-      {platform === "android" && !gyroOn ? (
+      {(platform === "ios" || platform === "android") && !gyroOn ? (
         <button
           id="gyro-btn"
           type="button"
@@ -218,9 +225,9 @@ function InteractiveShape() {
         >
           Aktifkan efek gerak
         </button>
-      ) : platform === "ios" ? (
-        <p className="text-[11px] font-normal text-[#666666] dark:text-[#999999]">
-          Efek gerak untuk iOS segera hadir
+      ) : (platform === "ios" || platform === "android") && gyroStatus !== "idle" ? (
+        <p className="text-[11px] font-normal text-[#666666] dark:text-[#999999]" aria-live="polite">
+          {gyroStatus === "aktif" ? "Efek gerak aktif — miringkan perangkat" : "Sensor gerak tidak tersedia — geser foto untuk efek 3D"}
         </p>
       ) : null}
     </div>
