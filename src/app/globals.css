@@ -434,6 +434,31 @@ html:not(.dark) footer a:hover,
     gap: 16px !important;
   }
 
+  /* Mobile pass: hierarki section */
+  section > div[class*="max-w-"] h2,
+  footer h2 {
+    letter-spacing: -0.01em !important;
+    margin-bottom: 12px !important;
+  }
+  section > div[class*="max-w-"] > div:first-child p,
+  section .text-center p {
+    font-size: 14px !important;
+    line-height: 1.6 !important;
+  }
+
+  /* Pricing cards: padding lega, harga menonjol */
+  #pricing .rounded-3xl { padding: 24px 20px !important; }
+  #pricing .text-3xl { font-size: 26px !important; }
+
+  /* Target-market panel: padding lega */
+  #target-pasar .rounded-\[2rem\] { padding: 24px 20px !important; }
+
+  /* Portfolio carousel: tinggi proporsional mobile */
+  #portfolio .h-\[85vh\] { height: 70svh !important; min-height: 70svh !important; }
+
+  /* Testimoni: padding lega */
+  #testimoni { padding-left: 8px !important; padding-right: 8px !important; }
+
   /* Form mobile: full-height sheet, tidak tertutup keyboard */
   [role="dialog"] > div {
     min-height: 100dvh !important;
