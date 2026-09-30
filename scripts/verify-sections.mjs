@@ -21,6 +21,6 @@ if (!foot.includes("font-display")) fails.push("footer must use font-display");
 if (!foot.includes("id=\"kontak\"")) fails.push("footer must keep id=kontak");
 if (!foot.includes("Studio Time")) fails.push("footer must keep Studio Time");
 const page = read("src/app/page.tsx");
-if (!page.includes("border-y border-black/10 dark:border-white/10")) fails.push("marquee must use hairline border tokens");
+if (page.includes("MarqueeStrip") || page.includes("animations/Marquee")) fails.push("marquee must be removed from page");
 if (fails.length) { console.error(fails.join("\n")); process.exit(1); }
 console.log("sections: ok");

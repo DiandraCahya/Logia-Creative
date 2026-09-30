@@ -13,29 +13,10 @@ import { PortfolioSection } from "@/components/sections/PortfolioSection";
 import { PricingSection } from "@/components/sections/PricingSection";
 import { TestimonialSection } from "@/components/sections/TestimonialSection";
 import { FooterSection } from "@/components/sections/FooterSection";
-import Marquee from "@/components/animations/Marquee";
 
 const Logo3DBackground = dynamic(() => import("@/components/Logo3DBackground").then(mod => mod.Logo3DBackground), { ssr: false });
 const CollaborationModal = dynamic(() => import("@/components/CollaborationModal").then(mod => mod.CollaborationModal), { ssr: false });
 const ChatWidget = dynamic(() => import("@/components/ChatWidget").then(mod => mod.ChatWidget), { ssr: false });
-
-function MarqueeStrip() {
-  const words = [
-    "BRAND IDENTITY",
-    "UI/UX DESIGN",
-    "WEB DEVELOPMENT",
-    "SOCIAL MEDIA",
-    "MOTION GRAPHICS",
-    "AUTOMATION",
-  ];
-
-  return (
-    <div className="w-full py-6 border-y border-black/10 dark:border-white/10 overflow-hidden bg-transparent">
-      <Marquee items={words} speed={30} />
-    </div>
-  );
-}
-
 
 export default function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -56,7 +37,6 @@ export default function Home() {
 
       {/* Hero Section with Kinetic Typography & Parallax */}
       <HeroSection onOpenCollaboration={() => setIsModalOpen(true)} />
-      <MarqueeStrip />
 
       {/* Proposal Poin 3: Background & Target Market */}
       <section data-cv="true">

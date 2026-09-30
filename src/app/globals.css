@@ -309,7 +309,9 @@ html:not(.dark) svg:not([class*="text-white"]):not([class*="!text-white"]),
   color: #000000 !important;
 }
 html:not(.dark) .cta-dark svg,
-html:not(.dark) [class*="bg-black"] svg {
+html:not(.dark) [class*="bg-black"] svg,
+html:not(.dark) .grad-cta svg,
+.light .grad-cta svg {
   color: inherit !important;
 }
 
@@ -364,38 +366,6 @@ html:not(.dark) footer a:hover,
   color: #2563eb !important;
 }
 
-/* Marquee */
-.marquee-track {
-  display: flex;
-  width: max-content;
-  animation: marquee-scroll 35s linear infinite;
-  will-change: transform;
-}
-.marquee-group {
-  display: flex;
-  align-items: center;
-  gap: 2.5rem;
-  padding-right: 2.5rem;
-}
-.marquee-item {
-  display: inline-flex;
-  align-items: center;
-  gap: 2.5rem;
-  font-size: clamp(1.25rem, 3vw, 2rem);
-  font-weight: 600;
-  white-space: nowrap;
-  color: var(--marquee-color, currentColor);
-}
-.marquee-dot { opacity: 0.4; font-size: 0.6em; }
-.marquee:hover .marquee-track { animation-play-state: paused; }
-@keyframes marquee-scroll {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .marquee-track { animation: none; }
-}
 
 
 /* ============= MOBILE RESPONSIVE ============= */
@@ -457,7 +427,6 @@ html:not(.dark) footer a:hover,
 
   /* Hide non-essential decoration on mobile */
   footer [aria-hidden="true"] { display: none !important; }
-  .marquee-item { font-size: 1.1rem !important; }
 
   /* Grid to single column (kecuali carousel strip yang flex) */
   main .grid, footer .grid {
