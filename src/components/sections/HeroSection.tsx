@@ -275,9 +275,9 @@ export function HeroSection({ onOpenCollaboration }: HeroSectionProps) {
   return (
     <section
       id="top"
-      className="relative min-h-[92svh] flex items-center justify-center overflow-hidden pt-24 pb-16 sm:pt-32 sm:pb-28"
+      className="relative bg-transparent min-h-[92svh] flex items-center justify-center overflow-hidden pt-24 pb-16 sm:pt-32 sm:pb-28"
     >
-      <div className="max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-12 w-full">
+      <div className="relative z-10 max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-12 w-full">
         <div className="flex flex-row items-center lg:grid lg:grid-cols-2 gap-4 lg:gap-8">
           {/* Left: Typography & CTA */}
           <div className="flex-1 min-w-0 flex flex-col items-start space-y-4 lg:space-y-8">
