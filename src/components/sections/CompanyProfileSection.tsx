@@ -46,7 +46,7 @@ export function CompanyProfileSection() {
   ];
 
   return (
-    <section id="about" className="py-24 md:py-32 relative border-t border-black/[0.05] dark:border-white/[0.05]">
+    <section id="about" className="py-24 md:py-32 relative bg-transparent border-t border-black/[0.05] dark:border-white/[0.05]">
       <div className="max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-12" ref={ref}>
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
           {/* Left Column: Heading & Tabs */}
@@ -93,7 +93,7 @@ export function CompanyProfileSection() {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
                     transition={{ duration: 0.3 }}
-                    className="p-8 sm:p-12 border border-black/5 dark:border-white/5 bg-black/[0.02] dark:bg-white/[0.02] rounded-3xl"
+                    className="p-8 sm:p-12 glass-card rounded-3xl"
                   >
                     <h3 className="text-xl sm:text-2xl font-bold leading-[1.5] text-black dark:text-white mb-8">
                       "Menjadi mitra kreatif dan teknologi terdepan yang memberdayakan bisnis di Indonesia melalui integrasi identitas visual yang berkarakter dan solusi digital yang berdampak nyata."
@@ -119,7 +119,7 @@ export function CompanyProfileSection() {
                     {missions.map((m, idx) => (
                       <div
                         key={idx}
-                        className={`p-8 border border-black/5 dark:border-white/5 bg-black/[0.02] dark:bg-white/[0.02] rounded-3xl ${
+                        className={`p-8 glass-card rounded-3xl ${
                           idx === 2 ? "sm:col-span-2" : ""
                         }`}
                       >
@@ -146,7 +146,7 @@ export function CompanyProfileSection() {
                     transition={{ duration: 0.3 }}
                     className="space-y-6"
                   >
-                    <div className="p-10 border border-black/5 dark:border-white/5 bg-black/[0.02] dark:bg-white/[0.02] rounded-3xl flex flex-col sm:flex-row items-center justify-center gap-8">
+                    <div className="p-10 glass-card rounded-3xl flex flex-col sm:flex-row items-center justify-center gap-8">
                       <div className="relative w-32 h-16">
                         <Image
                           src="/LOGO.png"
@@ -172,7 +172,7 @@ export function CompanyProfileSection() {
                       {brandPillars.map((bp, idx) => (
                         <div
                           key={idx}
-                          className="p-6 border border-black/5 dark:border-white/5 bg-black/[0.02] dark:bg-white/[0.02] rounded-2xl flex flex-col gap-3"
+                          className="p-6 glass-card rounded-2xl flex flex-col gap-3"
                         >
                           <div className="w-2 h-2 rounded-full bg-black dark:bg-white" />
                           <div>

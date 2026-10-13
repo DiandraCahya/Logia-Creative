@@ -281,15 +281,6 @@ export function HeroSection({ onOpenCollaboration }: HeroSectionProps) {
         <div className="flex flex-row items-center lg:grid lg:grid-cols-2 gap-4 lg:gap-8">
           {/* Left: Typography & CTA */}
           <div className="flex-1 min-w-0 flex flex-col items-start space-y-4 lg:space-y-8">
-            {/* Overline */}
-            <motion.span
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, ease }}
-              className="text-xs font-semibold uppercase tracking-[0.15em] text-[#666666] dark:text-[#999999]"
-            >
-              Creative & Technology Agency
-            </motion.span>
 
             {/* Headline — max 7 words */}
             <h1 className="font-display font-medium text-[clamp(2.5rem,8vw,5rem)] leading-[1.05] tracking-[-0.02em] text-black dark:text-white">
@@ -335,11 +326,10 @@ export function HeroSection({ onOpenCollaboration }: HeroSectionProps) {
             >
               <button
                 onClick={onOpenCollaboration}
-                style={{ color: "var(--btn-text)" }}
-                className="btn-solid px-5 sm:px-8 py-3 sm:py-4 min-h-[48px] bg-black dark:bg-white text-sm font-semibold rounded-full flex items-center gap-2 group"
+                className="btn-solid px-5 sm:px-8 py-3 sm:py-4 min-h-[48px] bg-black dark:bg-white text-white dark:text-black text-sm font-semibold rounded-full flex items-center gap-2 group transition-transform hover:scale-[1.02] active:scale-[0.98]"
               >
                 <span>Mulai Proyek</span>
-                <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+                <ArrowRight className="w-4 h-4 text-white dark:text-black transition-transform group-hover:translate-x-1" />
               </button>
 
               <a

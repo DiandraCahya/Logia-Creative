@@ -66,6 +66,51 @@ export function buildReceipt(pkgName: string, customer: string, brand: string, c
   };
 }
 
+/** Draft pesanan hasil ekstraksi chatbot → prefill modal (submit tetap via /api/collaboration). */
+export interface CollabDraft {
+  name: string;
+  brandName: string;
+  contact: string;
+  budget: string;
+  services: string[];
+  notes: string;
+}
+
+/** Parse blok ```collab {...}``` dari balasan bot; null bila tak valid. Nama layanan difuzzy-match ke PACKAGES agar struk selalu terbit. */
+export function parseCollabBlock(text: string): CollabDraft | null {
+  const m = text.match(/```collab\s*([\s\S]*?)```/i);
+  if (!m) return null;
+  let raw: Record<string, unknown>;
+  try {
+    raw = JSON.parse(m[1]);
+  } catch {
+    return null;
+  }
+  const str = (v: unknown, max: number) => String(v ?? "").trim().slice(0, max);
+  const name = str(raw.name, 100);
+  const contact = str(raw.contact, 120);
+  const list = Array.isArray(raw.services) ? raw.services.map(String) : [];
+  const services = list
+    .map((s) => {
+      const hit = PACKAGES.find(
+        (p) => p.name.toLowerCase() === s.trim().toLowerCase() || s.toLowerCase().includes(p.name.split(" ")[0].toLowerCase())
+      );
+      if (hit) return hit.name;
+      return /satuan|custom/i.test(s) ? "Layanan Satuan / Custom" : null;
+    })
+    .filter((s): s is string => s !== null)
+    .slice(0, 8);
+  if (name.length < 2 || contact.length < 5 || services.length === 0) return null;
+  return {
+    name,
+    brandName: str(raw.brandName, 100),
+    contact,
+    budget: str(raw.budget, 80),
+    services,
+    notes: str(raw.notes, 2000),
+  };
+}
+
 /** Ringkasan T&C singkat untuk struk. */
 export const RECEIPT_TERMS = [
   "DP 50% untuk memulai pekerjaan; pelunasan sebelum handover/go-live.",

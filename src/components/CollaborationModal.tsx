@@ -1,15 +1,17 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Send, Sparkles, CheckCircle2, Phone, Mail, AlertCircle, Loader2, ImageDown, FileDown } from "lucide-react";
+import { X, Send, Sparkles, CheckCircle2, Phone, Mail, AlertCircle, Loader2, ImageDown, FileDown, MessageCircle } from "lucide-react";
 import { PACKAGES } from "@/lib/rate-card";
-import type { Receipt } from "@/lib/receipt";
+import type { CollabDraft, Receipt } from "@/lib/receipt";
 import { ReceiptView } from "./Receipt";
 
 interface CollaborationModalProps {
   isOpen: boolean;
   onClose: () => void;
+  initialDraft?: CollabDraft | null;
+  onDraftConsumed?: () => void;
 }
 
 // Opsi layanan = nama paket dari rate-card (SATU sumber) + opsi umum
@@ -25,13 +27,34 @@ const budgetRanges = [
   "> Rp 35 Juta",
 ];
 
+const CUSTOM_BUDGET = "Lainnya — ketik sendiri";
+
 type Status = "idle" | "loading" | "success" | "error";
 
-export function CollaborationModal({ isOpen, onClose }: CollaborationModalProps) {
+export function CollaborationModal({ isOpen, onClose, initialDraft, onDraftConsumed }: CollaborationModalProps) {
   const [selectedServices, setSelectedServices] = useState<string[]>([
     PACKAGES[2]?.name ?? "GROWTH PACKAGE",
   ]);
   const [selectedBudget, setSelectedBudget] = useState("Rp 5 - 15 Juta");
+  const [customBudget, setCustomBudget] = useState("");
+
+  // Prefill dari chatbot: draft dikonsumsi sekali saat modal dibuka
+  useEffect(() => {
+    if (isOpen && initialDraft) {
+      setFormData({ name: initialDraft.name, brandName: initialDraft.brandName, contact: initialDraft.contact, notes: initialDraft.notes });
+      setSelectedServices(initialDraft.services);
+      if (initialDraft.budget && !budgetRanges.includes(initialDraft.budget)) {
+        setSelectedBudget(CUSTOM_BUDGET);
+        setCustomBudget(initialDraft.budget);
+      } else if (initialDraft.budget) {
+        setSelectedBudget(initialDraft.budget);
+      }
+      setStatus("idle");
+      setFieldErrors({});
+      onDraftConsumed?.();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen, initialDraft]);
   const [formData, setFormData] = useState({
     name: "",
     brandName: "",
@@ -93,6 +116,7 @@ export function CollaborationModal({ isOpen, onClose }: CollaborationModalProps)
     if (formData.name.trim().length < 2) errs.name = "Nama wajib diisi (min. 2 karakter).";
     if (formData.contact.trim().length < 5) errs.contact = "Isi nomor WA atau email yang valid.";
     if (selectedServices.length === 0) errs.services = "Pilih minimal satu layanan.";
+    if (selectedBudget === CUSTOM_BUDGET && customBudget.trim().length < 3) errs.budget = "Tulis budget spesifik Anda (cth. Rp 7,5 juta).";
     setFieldErrors(errs);
     return Object.keys(errs).length === 0;
   };
@@ -114,7 +138,7 @@ export function CollaborationModal({ isOpen, onClose }: CollaborationModalProps)
           brandName: formData.brandName.trim(),
           contact: formData.contact.trim(),
           notes: formData.notes.trim(),
-          budget: selectedBudget,
+          budget: selectedBudget === CUSTOM_BUDGET ? customBudget.trim().slice(0, 80) : selectedBudget,
           services: selectedServices,
           website: "",
         }),
@@ -154,11 +178,18 @@ export function CollaborationModal({ isOpen, onClose }: CollaborationModalProps)
     onClose();
   };
 
+  // ponytail: nomor CP hardcode — pindah ke env/config bila multi-admin.
+  const waLink = receipt
+    ? `https://wa.me/6289521375477?text=${encodeURIComponent(
+        `Halo Logia Creative! Saya ${receipt.customer}${receipt.brand ? ` (${receipt.brand})` : ""} baru saja mengisi form kolaborasi.\n\nID: ${receipt.id}\nPaket: ${receipt.packageName} — ${receipt.priceLabel}\n\nSaya ingin langsung mengurus paket ini. Terima kasih!`
+      )}`
+    : "https://wa.me/6289521375477";
+
   const inputCls = (hasError: boolean) =>
-    `w-full px-4 py-3 rounded-xl bg-white dark:bg-[#1a1a1a] border text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none transition-colors min-h-[48px] ${
+    `w-full px-4 py-3.5 rounded-xl bg-white/80 dark:bg-white/[0.04] backdrop-blur-md border text-sm text-black dark:text-white placeholder:text-neutral-400 dark:placeholder:text-neutral-500 focus:outline-none transition-all min-h-[48px] shadow-sm ${
       hasError
-        ? "border-red-500 dark:border-red-400"
-        : "border-gray-300 dark:border-gray-700 focus:border-accent-bronze dark:focus:border-accent-bronze"
+        ? "border-red-500 dark:border-red-400 focus:ring-2 focus:ring-red-500/20"
+        : "border-black/15 dark:border-white/15 focus:border-[var(--accent-bronze)] dark:focus:border-[var(--accent-bronze)] focus:ring-2 focus:ring-[var(--accent-bronze)]/20"
     }`;
 
   return (
@@ -170,7 +201,7 @@ export function CollaborationModal({ isOpen, onClose }: CollaborationModalProps)
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 bg-black/60"
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm"
           />
 
           <motion.div
@@ -180,11 +211,14 @@ export function CollaborationModal({ isOpen, onClose }: CollaborationModalProps)
             transition={{ type: "spring", damping: 25, stiffness: 300 }}
             className="relative w-full max-w-2xl z-10 my-4 sm:my-8 min-h-[100dvh] sm:min-h-0 max-h-[100dvh] sm:max-h-[92dvh] overflow-y-auto overscroll-contain flex flex-col"
           >
-            <div className="rounded-3xl bg-white dark:bg-[#111] border border-black/10 dark:border-white/10 shadow-2xl p-4 sm:p-8 pb-32 sm:pb-8 flex-1">
+            <div className="glass-card rounded-[2rem] border border-black/10 dark:border-white/15 shadow-2xl p-6 sm:p-10 pb-32 sm:pb-10 flex-1 relative overflow-hidden">
+              {/* Ambient accent top highlight */}
+              <div className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-[var(--accent-bronze)] to-transparent opacity-80" />
+
               <button
                 onClick={onClose}
                 aria-label="Tutup formulir"
-                className="absolute top-5 right-5 p-2 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-full bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors active:scale-95 z-20"
+                className="absolute top-5 right-5 p-2.5 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-full bg-black/5 dark:bg-white/5 text-black dark:text-white hover:bg-black/10 dark:hover:bg-white/10 transition-colors active:scale-95 z-20"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -207,49 +241,61 @@ export function CollaborationModal({ isOpen, onClose }: CollaborationModalProps)
                   ) : (
                     <p className="text-xs text-slate-500 dark:text-slate-400 text-center">Struk email ikut terkirim ke tim kami.</p>
                   )}
-                  <div className="flex flex-col sm:flex-row gap-3 justify-center pt-2">
-                    <button
-                      onClick={exportPNG}
-                      disabled={!receipt || exporting !== null}
-                      className="px-6 py-3 min-h-[48px] rounded-full border border-black/15 dark:border-white/15 text-sm font-semibold flex items-center justify-center gap-2 active:scale-95 disabled:opacity-50"
+                  <div className="flex flex-col gap-3 pt-2">
+                    {/* btn-collaborate: dikecualikan dari override link lightmode (globals.css) agar teks tetap putih */}
+                    <a
+                      href={waLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="btn-collaborate w-full px-8 py-3 min-h-[48px] rounded-full bg-[#25D366] text-white font-semibold text-sm active:scale-95 flex items-center justify-center gap-2 hover:brightness-95"
                     >
-                      <ImageDown className="w-4 h-4" />
-                      {exporting === "png" ? "Menyimpan..." : "Download PNG"}
-                    </button>
-                    <button
-                      onClick={exportPDF}
-                      disabled={!receipt || exporting !== null}
-                      className="px-6 py-3 min-h-[48px] rounded-full border border-black/15 dark:border-white/15 text-sm font-semibold flex items-center justify-center gap-2 active:scale-95 disabled:opacity-50"
-                    >
-                      <FileDown className="w-4 h-4" />
-                      {exporting === "pdf" ? "Menyimpan..." : "Download PDF"}
-                    </button>
-                    <button
-                      onClick={handleReset}
-                      className="px-8 py-3 min-h-[48px] rounded-full bg-black text-white dark:bg-white dark:text-black font-semibold text-sm active:scale-95"
-                    >
-                      Selesai & Tutup
-                    </button>
+                      <MessageCircle className="w-4 h-4" />
+                      Hubungi via WhatsApp
+                    </a>
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                      <button
+                        onClick={exportPNG}
+                        disabled={!receipt || exporting !== null}
+                        className="w-full px-6 py-3 min-h-[48px] rounded-full border border-black/15 dark:border-white/15 text-black dark:text-white text-sm font-semibold flex items-center justify-center gap-2 active:scale-95 disabled:opacity-50"
+                      >
+                        <ImageDown className="w-4 h-4" />
+                        {exporting === "png" ? "Menyimpan..." : "Download PNG"}
+                      </button>
+                      <button
+                        onClick={exportPDF}
+                        disabled={!receipt || exporting !== null}
+                        className="w-full px-6 py-3 min-h-[48px] rounded-full border border-black/15 dark:border-white/15 text-black dark:text-white text-sm font-semibold flex items-center justify-center gap-2 active:scale-95 disabled:opacity-50"
+                      >
+                        <FileDown className="w-4 h-4" />
+                        {exporting === "pdf" ? "Menyimpan..." : "Download PDF"}
+                      </button>
+                      <button
+                        onClick={handleReset}
+                        className="w-full px-6 py-3 min-h-[48px] rounded-full bg-black text-white dark:bg-white dark:text-black font-semibold text-sm active:scale-95"
+                      >
+                        Selesai & Tutup
+                      </button>
+                    </div>
                   </div>
                 </div>
               ) : (
                 <div>
-                  <div className="mb-5 sm:mb-8">
-                    <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-accent-bronze/10 text-accent-bronze text-xs font-semibold uppercase tracking-wider mb-3">
+                  <div className="mb-6 sm:mb-8">
+                    <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[var(--accent-bronze)]/10 text-[var(--accent-bronze)] text-xs font-semibold uppercase tracking-wider mb-3 border border-[var(--accent-bronze)]/20">
                       <Sparkles className="w-3.5 h-3.5" />
-                      Creative Partnership
+                      Kemitraan Strategis
                     </div>
-                    <h2 className="text-2xl sm:text-3xl font-semibold text-slate-900 dark:text-white mb-2">
+                    <h2 className="text-2xl sm:text-3xl font-display font-medium tracking-tight text-black dark:text-white mb-2">
                       Mulai Kolaborasi Bersama Logia
                     </h2>
-                    <p className="text-sm text-slate-600 dark:text-slate-300">
+                    <p className="text-sm text-[#666666] dark:text-[#999999] leading-relaxed">
                       Diskusikan ide besar bisnis Anda. Kami bantu formulasi strategi kreatif dan implementasi teknologinya.
                     </p>
                   </div>
 
-                  <form onSubmit={handleSubmit} noValidate className="space-y-3 sm:space-y-6">
+                  <form onSubmit={handleSubmit} noValidate className="space-y-4 sm:space-y-6">
                     <div>
-                      <span id="svc-label" className="block text-xs font-semibold uppercase tracking-wider text-slate-900 dark:text-white mb-3">
+                      <span id="svc-label" className="block text-xs font-semibold uppercase tracking-wider text-black dark:text-white mb-3">
                         Pilih Kebutuhan Layanan
                       </span>
                       <div className="flex flex-wrap gap-2" role="group" aria-labelledby="svc-label">
@@ -261,12 +307,13 @@ export function CollaborationModal({ isOpen, onClose }: CollaborationModalProps)
                               key={srv}
                               onClick={() => toggleService(srv)}
                               aria-pressed={active}
-                              className={`text-xs px-4 py-2 min-h-[44px] rounded-full border transition-all active:scale-95 ${
+                              className={`text-xs px-4 py-2.5 min-h-[44px] rounded-full border transition-all duration-200 active:scale-95 flex items-center gap-2 ${
                                 active
-                                  ? "bg-accent-bronze text-white border-accent-bronze"
-                                  : "bg-white dark:bg-[#1a1a1a] text-slate-600 dark:text-slate-300 border-gray-300 dark:border-gray-700 hover:border-accent-bronze/50"
+                                  ? "bg-black text-white dark:bg-white dark:text-black border-black dark:border-white shadow-md font-semibold"
+                                  : "bg-black/[0.03] dark:bg-white/[0.04] text-[#444444] dark:text-[#CCCCCC] border-black/10 dark:border-white/10 hover:border-black/30 dark:hover:border-white/30 hover:bg-black/[0.06] dark:hover:bg-white/[0.08]"
                               }`}
                             >
+                              <span className={`w-1.5 h-1.5 rounded-full ${active ? "bg-[var(--accent-bronze)]" : "bg-neutral-400 dark:bg-neutral-600"}`} />
                               {srv}
                             </button>
                           );
@@ -279,7 +326,7 @@ export function CollaborationModal({ isOpen, onClose }: CollaborationModalProps)
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
-                        <label htmlFor="collab-name" className="block text-xs font-semibold text-slate-900 dark:text-white mb-2">
+                        <label htmlFor="collab-name" className="block text-xs font-semibold text-black dark:text-white mb-2">
                           Nama Lengkap *
                         </label>
                         <input
@@ -298,7 +345,7 @@ export function CollaborationModal({ isOpen, onClose }: CollaborationModalProps)
                         )}
                       </div>
                       <div>
-                        <label htmlFor="collab-brand" className="block text-xs font-semibold text-slate-900 dark:text-white mb-2">
+                        <label htmlFor="collab-brand" className="block text-xs font-semibold text-black dark:text-white mb-2">
                           Nama Brand / Usaha
                         </label>
                         <input
@@ -315,7 +362,7 @@ export function CollaborationModal({ isOpen, onClose }: CollaborationModalProps)
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
-                        <label htmlFor="collab-contact" className="block text-xs font-semibold text-slate-900 dark:text-white mb-2">
+                        <label htmlFor="collab-contact" className="block text-xs font-semibold text-black dark:text-white mb-2">
                           WhatsApp / Email *
                         </label>
                         <input
@@ -335,7 +382,7 @@ export function CollaborationModal({ isOpen, onClose }: CollaborationModalProps)
                         )}
                       </div>
                       <div>
-                        <label htmlFor="collab-budget" className="block text-xs font-semibold text-slate-900 dark:text-white mb-2">
+                        <label htmlFor="collab-budget" className="block text-xs font-semibold text-black dark:text-white mb-2">
                           Estimasi Budget
                         </label>
                         <select
@@ -345,16 +392,35 @@ export function CollaborationModal({ isOpen, onClose }: CollaborationModalProps)
                           className={inputCls(false)}
                         >
                           {budgetRanges.map((b) => (
-                            <option key={b} value={b}>
+                            <option key={b} value={b} className="bg-white dark:bg-[#1a1a1a] text-black dark:text-white">
                               {b}
                             </option>
                           ))}
+                          <option value={CUSTOM_BUDGET} className="bg-white dark:bg-[#1a1a1a] text-black dark:text-white">
+                            {CUSTOM_BUDGET}
+                          </option>
                         </select>
+                        {selectedBudget === CUSTOM_BUDGET && (
+                          <input
+                            id="collab-budget-custom"
+                            type="text"
+                            maxLength={80}
+                            placeholder="cth. Rp 7,5 juta / bulan"
+                            value={customBudget}
+                            onChange={(e) => setCustomBudget(e.target.value)}
+                            aria-label="Budget custom"
+                            aria-invalid={!!fieldErrors.budget}
+                            className={`${inputCls(!!fieldErrors.budget)} mt-2`}
+                          />
+                        )}
+                        {fieldErrors.budget && (
+                          <p role="alert" className="mt-1.5 text-xs font-medium text-red-600 dark:text-red-400">{fieldErrors.budget}</p>
+                        )}
                       </div>
                     </div>
 
                     <div>
-                      <label htmlFor="collab-notes" className="block text-xs font-semibold text-slate-900 dark:text-white mb-2">
+                      <label htmlFor="collab-notes" className="block text-xs font-semibold text-black dark:text-white mb-2">
                         Catatan Singkat / Ringkasan Ide Proyek
                       </label>
                       <textarea
@@ -374,33 +440,33 @@ export function CollaborationModal({ isOpen, onClose }: CollaborationModalProps)
                       </p>
                     )}
 
-                    <div className="pt-4 flex flex-col sm:flex-row items-center justify-between gap-6 border-t border-gray-200 dark:border-gray-800">
-                      <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 text-xs text-slate-600 dark:text-slate-300">
+                    <div className="pt-4 flex flex-col sm:flex-row items-center justify-between gap-6 border-t border-black/10 dark:border-white/10">
+                      <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 text-xs text-[#666666] dark:text-[#999999]">
                         <span className="flex items-center gap-2">
-                          <Mail className="w-4 h-4 text-accent-bronze" />
-                          hello@logia.id
+                          <Mail className="w-4 h-4 text-[var(--accent-bronze)]" />
+                          logiacreative.id@gmail.com
                         </span>
                         <span className="hidden sm:inline">•</span>
                         <span className="flex items-center gap-2">
-                          <Phone className="w-4 h-4 text-accent-bronze" />
-                          +62 812-3456-7890
+                          <Phone className="w-4 h-4 text-[var(--accent-bronze)]" />
+                          +62 895-2137-5477
                         </span>
                       </div>
 
                       <button
                         type="submit"
                         disabled={status === "loading"}
-                        className="w-full sm:w-auto px-8 h-12 min-h-[48px] rounded-full bg-black text-white dark:bg-white dark:text-black text-sm font-semibold active:scale-95 flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-wait"
+                        className="w-full sm:w-auto px-8 h-12 min-h-[48px] rounded-full bg-black text-white dark:bg-white dark:text-black text-sm font-semibold hover:scale-[1.02] active:scale-95 transition-transform flex items-center justify-center gap-2 shadow-lg disabled:opacity-60 disabled:cursor-wait"
                       >
                         {status === "loading" ? (
                           <>
-                            <Loader2 className="w-4 h-4 animate-spin" />
-                            Mengirim...
+                            <Loader2 className="w-4 h-4 animate-spin text-white dark:text-black" />
+                            <span>Mengirim...</span>
                           </>
                         ) : (
                           <>
-                            <Send className="w-4 h-4" />
-                            Kirim Pesan
+                            <Send className="w-4 h-4 text-white dark:text-black" />
+                            <span>Kirim Pesan</span>
                           </>
                         )}
                       </button>

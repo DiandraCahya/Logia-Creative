@@ -49,13 +49,13 @@ export function FooterSection({ onOpenCollaboration }: FooterSectionProps) {
   };
 
   return (
-    <footer id="kontak" className="relative pt-6 sm:pt-20 pb-6 sm:pb-12 overflow-hidden max-w-[100vw] border-t border-black/5 dark:border-white/5 bg-white dark:bg-[#0a0a0a]">
+    <footer id="kontak" className="relative pt-6 sm:pt-20 pb-6 sm:pb-12 overflow-hidden max-w-[100vw] border-t border-black/5 dark:border-white/5 bg-transparent">
       <div className="max-w-[1400px] mx-auto px-4 sm:px-8 lg:px-12 space-y-6 sm:space-y-20">
 
-        {/* Closing Impact CTA Banner - Black Solid */}
+        {/* Closing Impact CTA Banner - Glassmorphism */}
         <div
           ref={ctaRef}
-          className={`cta-dark p-6 sm:p-16 lg:p-24 rounded-[1.25rem] sm:rounded-[2rem] bg-black text-white relative overflow-hidden shadow-2xl text-center space-y-4 sm:space-y-8 transition-all duration-700 ${
+          className={`cta-dark p-6 sm:p-16 lg:p-24 rounded-[1.25rem] sm:rounded-[2rem] bg-black dark:bg-[#0a0a0a] text-white border border-black/10 dark:border-white/15 relative overflow-hidden shadow-2xl text-center space-y-4 sm:space-y-8 transition-all duration-700 ${
             ctaVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'
           }`}
         >
@@ -63,15 +63,15 @@ export function FooterSection({ onOpenCollaboration }: FooterSectionProps) {
             <h2 className="text-white font-display font-medium tracking-[-0.02em] text-[clamp(2.5rem,5vw,4.5rem)] leading-[1.1] mb-6">
               Ready to elevate your brand?
             </h2>
-            <p className="text-[#999999] text-base sm:text-lg mb-10 max-w-xl leading-relaxed">
+            <p className="text-white/80 text-base sm:text-lg mb-10 max-w-xl leading-relaxed">
               Mari diskusikan bagaimana kami bisa membantu mentransformasi identitas visual dan infrastruktur digital bisnis Anda ke level selanjutnya.
             </p>
             <button
               onClick={onOpenCollaboration}
-              className="px-8 py-4 min-h-[48px] bg-white text-black text-sm font-bold rounded-full hover:scale-[1.02] active:scale-[0.98] transition-transform duration-200 flex items-center gap-2 group"
+              className="px-8 py-4 min-h-[48px] bg-white text-black text-sm font-bold rounded-full hover:scale-[1.02] active:scale-[0.98] transition-transform duration-200 flex items-center gap-2 group shadow-lg"
             >
-              <span>Mulai Diskusi Proyek</span>
-              <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+              <span className="text-black font-bold">Mulai Diskusi Proyek</span>
+              <ArrowRight className="w-4 h-4 text-black transition-transform group-hover:translate-x-1" />
             </button>
           </div>
         </div>
@@ -165,14 +165,14 @@ export function FooterSection({ onOpenCollaboration }: FooterSectionProps) {
             <ul className="space-y-3 text-[#666666] dark:text-[#999999]">
               <li className="flex items-center gap-2">
                 <Mail className="w-4 h-4 text-black dark:text-white" />
-                <a href="mailto:hello@logia.id" className="hover:text-black dark:hover:text-white transition-colors">
-                  hello@logia.id
+                <a href="mailto:logiacreative.id@gmail.com" className="hover:text-black dark:hover:text-white transition-colors">
+                  logiacreative.id@gmail.com
                 </a>
               </li>
               <li className="flex items-center gap-2">
                 <Phone className="w-4 h-4 text-black dark:text-white" />
-                <a href="tel:+6281234567890" className="hover:text-black dark:hover:text-white transition-colors">
-                  +62 812-3456-7890
+                <a href="tel:+6289521375477" className="hover:text-black dark:hover:text-white transition-colors">
+                  +62 895-2137-5477
                 </a>
               </li>
               <li className="flex items-center gap-2">
@@ -186,15 +186,16 @@ export function FooterSection({ onOpenCollaboration }: FooterSectionProps) {
             </ul>
 
             <div className="flex items-center gap-2 pt-4">
-              <button
-                type="button"
-                disabled
-                aria-label="Instagram — segera hadir"
-                title="Instagram — segera hadir"
-                className="w-10 h-10 rounded-full bg-black/5 dark:bg-white/5 flex items-center justify-center text-black/40 dark:text-white/40 cursor-not-allowed"
+              <a
+                href="https://www.instagram.com/logiacreative.studio/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Instagram Logia Creative"
+                title="Instagram Logia Creative"
+                className="w-10 h-10 rounded-full bg-black/5 dark:bg-white/5 flex items-center justify-center text-black dark:text-white hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-all"
               >
                 <Instagram className="w-4 h-4" />
-              </button>
+              </a>
               <button
                 type="button"
                 disabled

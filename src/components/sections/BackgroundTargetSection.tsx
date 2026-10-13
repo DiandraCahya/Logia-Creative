@@ -40,19 +40,16 @@ const targetMarkets = [
         icon: Palette,
         title: "Brand Guidelines",
         description: "File master SVG/PDF resolusi tinggi lengkap dengan aturan warna.",
-        deliverableTag: "Vector Master",
       },
       {
         icon: PackageCheck,
         title: "Kemasan Retail",
         description: "Rancangan kemasan berstandar rak supermarket modern.",
-        deliverableTag: "Die-cut File",
       },
       {
         icon: LayoutGrid,
         title: "Katalog & Medsos",
         description: "Desain katalog PDF interaktif & template feed media sosial.",
-        deliverableTag: "Figma File",
       },
     ],
   },
@@ -142,13 +139,10 @@ export function BackgroundTargetSection({ onOpenCollaboration }: Props) {
   const ActiveIcon = currentMarket.icon;
 
   return (
-    <section id="target-pasar" className="py-24 md:py-32 relative bg-black/[0.02] dark:bg-white/[0.02] border-t border-black/5 dark:border-white/5">
+    <section id="target-pasar" className="py-24 md:py-32 relative bg-transparent border-t border-black/5 dark:border-white/5">
       <div className="max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-12 relative z-10" ref={ref}>
         {/* Header */}
         <div className={`text-center max-w-2xl mx-auto mb-16 transition-all duration-700 ${isInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
-          <p className="text-[var(--accent-bronze)] uppercase tracking-[0.2em] text-xs font-semibold mb-4">
-            Target Pasar
-          </p>
           <h2 className="font-display font-medium text-[clamp(2rem,4vw,3.5rem)] tracking-[-0.02em] text-black dark:text-white mb-4">
             Target Pasar
           </h2>
@@ -167,21 +161,23 @@ export function BackgroundTargetSection({ onOpenCollaboration }: Props) {
                 <button
                   key={market.id}
                   onClick={() => setActiveTab(market.id)}
-                  className={`relative px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-200 flex items-center gap-2 whitespace-nowrap z-10 ${
+                  aria-pressed={isActive}
+                  className={`relative isolate px-5 py-2.5 rounded-full text-sm font-semibold transition-colors duration-200 flex items-center gap-2 whitespace-nowrap ${
                     isActive
-                      ? "text-black dark:text-white"
+                      ? "text-white dark:text-black"
                       : "text-[#666666] dark:text-[#999999] hover:text-black dark:hover:text-white"
                   }`}
                 >
                   {isActive && (
                     <motion.div
                       layoutId="activeTargetBg"
-                      className="absolute inset-0 rounded-full bg-white dark:bg-[#1A1A1A] shadow-sm border border-black/5 dark:border-white/5 -z-10"
-                      transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                      aria-hidden="true"
+                      className="absolute inset-0 z-0 rounded-full bg-black dark:bg-white shadow-md pointer-events-none"
+                      transition={{ type: "spring", stiffness: 500, damping: 35 }}
                     />
                   )}
-                  <Icon className="w-4 h-4 shrink-0" />
-                  <span>{market.tabLabel}</span>
+                  <Icon className="relative z-10 w-4 h-4 shrink-0" />
+                  <span className="relative z-10">{market.tabLabel}</span>
                 </button>
               );
             })}
@@ -197,7 +193,7 @@ export function BackgroundTargetSection({ onOpenCollaboration }: Props) {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -15 }}
               transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-              className="bg-white dark:bg-[#111] border border-black/10 dark:border-white/10 rounded-[2rem] p-8 sm:p-12 shadow-sm"
+              className="glass-card rounded-[2rem] p-8 sm:p-12"
             >
               {/* Card Header */}
               <div className="flex flex-col md:flex-row md:items-start justify-between gap-6 mb-10 pb-8 border-b border-black/10 dark:border-white/10">
@@ -235,7 +231,7 @@ export function BackgroundTargetSection({ onOpenCollaboration }: Props) {
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     {currentMarket.stats.map((stat, i) => (
-                      <div key={i} className="p-4 bg-black/[0.02] dark:bg-white/[0.02] border border-black/5 dark:border-white/5 rounded-xl">
+                      <div key={i} className="p-4 glass-card rounded-xl">
                         <p className="text-2xl font-black text-black dark:text-white mb-1">{stat.value}</p>
                         <p className="text-xs font-semibold text-black dark:text-white">{stat.label}</p>
                         <p className="text-[10px] text-[#666666] dark:text-[#999999] mt-0.5">{stat.sublabel}</p>
@@ -253,16 +249,18 @@ export function BackgroundTargetSection({ onOpenCollaboration }: Props) {
                     {currentMarket.solutions.map((sol, i) => {
                       const SolIcon = sol.icon;
                       return (
-                        <div key={i} className="flex gap-4 p-4 border border-black/5 dark:border-white/5 rounded-xl hover:bg-black/[0.02] dark:hover:bg-white/[0.02] transition-colors">
+                        <div key={i} className="flex gap-4 p-4 glass-card rounded-xl transition-all hover:scale-[1.01]">
                           <div className="w-10 h-10 rounded-lg bg-black/[0.05] dark:bg-white/[0.05] flex items-center justify-center shrink-0">
                             <SolIcon className="w-5 h-5 text-black dark:text-white" />
                           </div>
                           <div>
                             <div className="flex items-center gap-2 mb-1">
                               <h5 className="font-bold text-sm text-black dark:text-white">{sol.title}</h5>
-                              <span className="text-[9px] font-bold px-2 py-0.5 rounded border border-black/10 dark:border-white/10 text-[#666666] dark:text-[#999999]">
-                                {sol.deliverableTag}
-                              </span>
+                              {"deliverableTag" in sol && sol.deliverableTag ? (
+                                <span className="text-[9px] font-bold px-2 py-0.5 rounded border border-black/10 dark:border-white/10 text-[#666666] dark:text-[#999999]">
+                                  {sol.deliverableTag}
+                                </span>
+                              ) : null}
                             </div>
                             <p className="text-xs text-[#666666] dark:text-[#999999] leading-relaxed">{sol.description}</p>
                           </div>
@@ -278,10 +276,10 @@ export function BackgroundTargetSection({ onOpenCollaboration }: Props) {
           <div className="mt-8 text-center">
             <button
               onClick={onOpenCollaboration}
-              className="px-6 py-3 bg-black dark:bg-white text-white dark:text-black text-sm font-semibold rounded-full hover:scale-[1.02] transition-transform duration-200 inline-flex items-center gap-2 group"
+              className="btn-solid px-6 py-3 min-h-[44px] bg-black dark:bg-white text-white dark:text-black text-sm font-semibold rounded-full hover:scale-[1.02] active:scale-[0.98] transition-transform duration-200 inline-flex items-center gap-2 group"
             >
               <span>Konsultasikan Bisnis Anda</span>
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              <ArrowRight className="w-4 h-4 text-white dark:text-black group-hover:translate-x-1 transition-transform" />
             </button>
           </div>
         </div>

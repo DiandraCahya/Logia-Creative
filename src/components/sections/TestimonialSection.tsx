@@ -45,16 +45,13 @@ const TESTIMONIALS = [
 
 export function TestimonialSection() {
   return (
-    <section id="testimoni" className="w-full py-24 md:py-32 bg-white dark:bg-[#0a0a0a] flex flex-col items-center justify-center relative z-10 border-t border-black/5 dark:border-white/5">
-      <div className="w-full max-w-4xl mx-auto px-6 flex flex-col items-center">
-        <p className="text-[var(--accent-bronze)] uppercase tracking-[0.2em] text-xs font-semibold mb-4">
-          Testimoni
-        </p>
+    <section id="testimoni" className="w-full py-24 md:py-32 bg-transparent flex flex-col items-center justify-center relative z-10 border-t border-black/5 dark:border-white/5">
+      <div className="w-full max-w-4xl mx-auto px-4 sm:px-6 flex flex-col items-center">
         <h2 className="font-display font-medium tracking-[-0.02em] text-[clamp(2rem,4vw,3.5rem)] text-black dark:text-white mb-3 text-center">
           Testimoni Klien
         </h2>
-        <p className="text-sm text-neutral-500 dark:text-neutral-400 mb-8 sm:mb-12 text-center max-w-md px-2">
-          Contoh testimoni — akan diganti dengan klien nyata.
+        <p className="text-sm text-[#666666] dark:text-[#999999] mb-8 sm:mb-12 text-center max-w-md px-2">
+          Kilas pengalaman kolaborasi bersama brand dan bisnis yang bertumbuh bersama Logia.
         </p>
         <TestimonialCarousel testimonials={TESTIMONIALS} />
       </div>

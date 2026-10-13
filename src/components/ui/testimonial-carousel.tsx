@@ -71,29 +71,29 @@ export function TestimonialCarousel({ testimonials }: { testimonials: Testimonia
           {testimonials.map((t, i) => (
             <div
               key={i}
-              className="min-w-full px-2"
+              className="min-w-full px-2 sm:px-4"
               role="group"
               aria-roledescription="slide"
               aria-label={`Slide ${i + 1} dari ${testimonials.length}`}
               aria-hidden={i !== index}
             >
-              <figure className="mx-auto max-w-2xl rounded-2xl sm:rounded-3xl border border-black/5 dark:border-white/10 bg-black/[0.02] dark:bg-white/[0.03] p-6 sm:p-10 text-center min-h-[240px] sm:min-h-0 flex flex-col justify-center">
+              <figure className="glass-card mx-auto max-w-2xl rounded-2xl sm:rounded-3xl p-6 sm:p-10 text-center min-h-[220px] sm:min-h-0 flex flex-col justify-center">
                 <Image
                   src={t.image}
                   alt={t.alt}
                   width={64}
                   height={64}
                   loading="lazy"
-                  className="mx-auto mb-4 h-10 w-10 sm:h-16 sm:w-16 rounded-full object-cover"
+                  className="mx-auto mb-4 h-12 w-12 sm:h-16 sm:w-16 rounded-full object-cover ring-2 ring-black/10 dark:ring-white/10"
                 />
-                <blockquote className="font-display text-[15px] sm:text-xl leading-relaxed text-black dark:text-white">
+                <blockquote className="font-display text-sm sm:text-lg sm:leading-relaxed text-black dark:text-white px-2">
                   &ldquo;{t.quote}&rdquo;
                 </blockquote>
-                <figcaption className="mt-4 text-[13px] sm:text-sm text-[#666666] dark:text-[#999999]">
+                <figcaption className="mt-4 text-xs sm:text-sm text-[#666666] dark:text-[#999999]">
                   {t.author ? (
                     <span className="font-semibold text-black dark:text-white">{t.author}</span>
                   ) : null}
-                  {t.author && t.role ? " — " : ""}
+                  {t.author && t.role ? ", " : ""}
                   {t.role}
                 </figcaption>
               </figure>

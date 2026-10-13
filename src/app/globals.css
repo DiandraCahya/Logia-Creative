@@ -4,7 +4,7 @@
 
 @layer base {
   :root {
-    --font-display: "Fraunces", Georgia, serif;
+    --font-display: var(--font-sans), "Inter", system-ui, sans-serif;
     --accent-bronze: #A08C6A;
     --ease-out-expo: cubic-bezier(0.22, 1, 0.36, 1);
     --bg-primary: #FAFAF8;    --bg-secondary: #f9fafb;
@@ -139,31 +139,33 @@ html[data-perf="low"] .dark .glass-container {
 /* LIGHT MODE - EXPLICIT OVERRIDE */
 html:not(.dark) .glass-container,
 .light .glass-container {
-  background: rgba(255, 255, 255, 0.7) !important;
-  backdrop-filter: blur(16px) saturate(180%) !important;
-  -webkit-backdrop-filter: blur(16px) saturate(180%) !important;
-  border: 1px solid rgba(0, 0, 0, 0.1) !important;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08) !important;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.82) 0%, rgba(255, 255, 255, 0.48) 100%) !important;
+  backdrop-filter: blur(28px) saturate(210%) brightness(103%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(210%) brightness(103%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.95) !important;
+  outline: 1px solid rgba(0, 0, 0, 0.04) !important;
+  box-shadow: 0 16px 40px -10px rgba(0, 0, 0, 0.08), 0 4px 12px -2px rgba(0, 0, 0, 0.03), inset 0 1.5px 2px 0 rgba(255, 255, 255, 1), inset 0 -1px 2px 0 rgba(0, 0, 0, 0.02) !important;
 }
 
 html[data-perf="medium"]:not(.dark) .glass-container,
 html[data-perf="medium"] .light .glass-container {
-  backdrop-filter: blur(8px) saturate(140%) !important;
-  -webkit-backdrop-filter: blur(8px) saturate(140%) !important;
+  backdrop-filter: blur(14px) saturate(170%) !important;
+  -webkit-backdrop-filter: blur(14px) saturate(170%) !important;
 }
 
 html[data-perf="low"]:not(.dark) .glass-container,
 html[data-perf="low"] .light .glass-container {
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
-  background: rgba(255, 255, 255, 0.9) !important;
+  background: rgba(255, 255, 255, 0.96) !important;
 }
 
 html:not(.dark) .glass-container:hover,
 .light .glass-container:hover {
-  background: rgba(255, 255, 255, 0.85) !important;
-  border-color: rgba(0, 0, 0, 0.15) !important;
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12) !important;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.92) 0%, rgba(255, 255, 255, 0.58) 100%) !important;
+  border-color: rgba(255, 255, 255, 1) !important;
+  outline: 1px solid rgba(0, 0, 0, 0.06) !important;
+  box-shadow: 0 24px 52px -12px rgba(0, 0, 0, 0.12), 0 6px 18px -3px rgba(0, 0, 0, 0.05), inset 0 2px 3px 0 rgba(255, 255, 255, 1) !important;
   transform: translateY(-2px);
   transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
 }
@@ -174,6 +176,79 @@ html:not(.dark) .glass-container:hover,
   border: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 }
+
+/* ============= GLASS CARD (for section cards/panels) ============= */
+.glass-card {
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+}
+html:not(.dark) .glass-card,
+.light .glass-card {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.82) 0%, rgba(255, 255, 255, 0.48) 100%) !important;
+  backdrop-filter: blur(28px) saturate(210%) brightness(103%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(210%) brightness(103%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.95) !important;
+  outline: 1px solid rgba(0, 0, 0, 0.04) !important;
+  box-shadow: 0 16px 40px -10px rgba(0, 0, 0, 0.08), 0 4px 12px -2px rgba(0, 0, 0, 0.03), inset 0 1.5px 2px 0 rgba(255, 255, 255, 1), inset 0 -1px 2px 0 rgba(0, 0, 0, 0.02) !important;
+}
+.dark .glass-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+@media (hover: hover) and (pointer: fine) {
+  .glass-card:hover {
+    border-color: rgba(255, 255, 255, 0.12);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  }
+  html:not(.dark) .glass-card:hover,
+  .light .glass-card:hover {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.92) 0%, rgba(255, 255, 255, 0.58) 100%) !important;
+    border-color: rgba(255, 255, 255, 1) !important;
+    outline: 1px solid rgba(0, 0, 0, 0.06) !important;
+    box-shadow: 0 24px 52px -12px rgba(0, 0, 0, 0.12), 0 6px 18px -3px rgba(0, 0, 0, 0.05), inset 0 2px 3px 0 rgba(255, 255, 255, 1) !important;
+  }
+}
+html[data-perf="low"] .glass-card {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  background: rgba(255, 255, 255, 0.95);
+}
+html[data-perf="low"].dark .glass-card,
+html[data-perf="low"] .dark .glass-card {
+  background: rgba(17, 17, 17, 0.95);
+}
+@supports not (backdrop-filter: blur(1px)) {
+  .glass-card { background: rgba(255, 255, 255, 0.95) !important; }
+  .dark .glass-card { background: rgba(17, 17, 17, 0.95) !important; }
+}
+
+/* Glass accordion item */
+.glass-accordion {
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(12px) saturate(160%);
+  -webkit-backdrop-filter: blur(12px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+html:not(.dark) .glass-accordion,
+.light .glass-accordion {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0.4) 100%) !important;
+  backdrop-filter: blur(16px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(180%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.85) !important;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.04), inset 0 1px 1px rgba(255, 255, 255, 0.95) !important;
+}
+.dark .glass-accordion {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+html[data-perf="low"] .glass-accordion { backdrop-filter: none; -webkit-backdrop-filter: none; background: rgba(255,255,255,0.92); }
+html[data-perf="low"].dark .glass-accordion { background: rgba(17,17,17,0.92); }
 
 /* ============= LIGHT MODE FIXES ============= */
 
@@ -306,17 +381,87 @@ html:not(.dark) a:hover:not(.grad-cta):not(.btn-collaborate):not([class*="bg-bla
   color: #555555 !important;
 }
 
-/* Icons: jangan timpa ikon di permukaan gelap (tombol solid, banner cta-dark) */
-html:not(.dark) :not(.cta-dark):not([class*="bg-black"]) > svg,
-html:not(.dark) svg:not([class*="text-white"]):not([class*="!text-white"]),
-.light svg:not([class*="text-white"]):not([class*="!text-white"]) {
-  color: #000000 !important;
+/* Icons: pastikan pewarnaan svg akurat dan tidak menimpa ikon di permukaan gelap */
+svg {
+  color: inherit;
 }
-html:not(.dark) .cta-dark svg,
-html:not(.dark) [class*="bg-black"] svg,
-html:not(.dark) .grad-cta svg,
-.light .grad-cta svg {
-  color: inherit !important;
+
+/* Di light mode: ikon dan teks di permukaan GELAP SOLID (tombol solid, bg-black,
+   hover gelap, cta-dark) HARUS putih.
+   ponytail: pakai [class~="..."] (token utuh), BUKAN [class*="..."] — substring
+   ikut menelan varian transparan (bg-black/5, bg-black/[0.03]) yang teksnya
+   gelap, sehingga teks jadi putih di atas permukaan terang (= hilang). */
+html:not(.dark) .cta-dark,
+html:not(.dark) .cta-dark *,
+html:not(.dark) .btn-solid,
+html:not(.dark) .btn-solid *,
+html:not(.dark) [class~="bg-black"],
+html:not(.dark) [class~="bg-black"] *,
+html:not(.dark) [class~="!bg-black"],
+html:not(.dark) [class~="!bg-black"] *,
+html:not(.dark) button[class~="bg-black"],
+html:not(.dark) button[class~="bg-black"] *,
+html:not(.dark) button[class~="!bg-black"],
+html:not(.dark) button[class~="!bg-black"] *,
+html:not(.dark) .group:hover .group-hover\:text-white,
+html:not(.dark) .group:hover [class~="group-hover:text-white"],
+html:not(.dark) .group:hover [class~="group-hover:bg-black"] svg,
+.light .cta-dark,
+.light .cta-dark *,
+.light .btn-solid,
+.light .btn-solid *,
+.light [class~="bg-black"],
+.light [class~="bg-black"] *,
+.light [class~="!bg-black"],
+.light [class~="!bg-black"] *,
+.light button[class~="bg-black"],
+.light button[class~="bg-black"] *,
+.light button[class~="!bg-black"],
+.light button[class~="!bg-black"] *,
+.light .group:hover .group-hover\:text-white,
+.light .group:hover [class~="group-hover:text-white"],
+.light .group:hover [class~="group-hover:bg-black"] svg {
+  color: #ffffff !important;
+  stroke: currentColor;
+}
+
+.dark .btn-solid,
+.dark .btn-solid * {
+  color: #000000 !important;
+  stroke: currentColor;
+}
+
+/* Tombol putih di atas permukaan gelap solid (kartu badge, cta-dark):
+   kecualikan dari pemaksa putih di atas — teks+ikon harus hitam.
+   Tanpa ini, "Pilih Growth" & "Mulai Diskusi" jadi putih-di-putih (= hilang). */
+html:not(.dark) [class~="bg-black"] a[class~="bg-white"],
+html:not(.dark) [class~="bg-black"] a[class~="bg-white"] *,
+html:not(.dark) [class~="bg-black"] button[class~="bg-white"],
+html:not(.dark) [class~="bg-black"] button[class~="bg-white"] *,
+html:not(.dark) [class~="bg-black"] div[class~="bg-white"],
+html:not(.dark) [class~="bg-black"] div[class~="bg-white"] *,
+html:not(.dark) .cta-dark a[class~="bg-white"],
+html:not(.dark) .cta-dark a[class~="bg-white"] *,
+html:not(.dark) .cta-dark button[class~="bg-white"],
+html:not(.dark) .cta-dark button[class~="bg-white"] *,
+.light [class~="bg-black"] a[class~="bg-white"],
+.light [class~="bg-black"] a[class~="bg-white"] *,
+.light [class~="bg-black"] button[class~="bg-white"],
+.light [class~="bg-black"] button[class~="bg-white"] *,
+.light [class~="bg-black"] div[class~="bg-white"],
+.light [class~="bg-black"] div[class~="bg-white"] *,
+.light .cta-dark a[class~="bg-white"],
+.light .cta-dark a[class~="bg-white"] *,
+.light .cta-dark button[class~="bg-white"],
+.light .cta-dark button[class~="bg-white"] * {
+  color: #000000 !important;
+  stroke: currentColor;
+}
+
+/* Heading di kartu gelap solid (badge Most Popular) tetap putih di lightmode */
+html:not(.dark) [class~="bg-black"] h3,
+.light [class~="bg-black"] h3 {
+  color: #ffffff !important;
 }
 
 /* Cards */

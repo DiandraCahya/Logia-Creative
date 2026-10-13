@@ -1,9 +1,9 @@
 "use client";
 
 import React, { useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useScrollReveal } from "@/lib/useScrollReveal";
-import { Check, Download, ChevronDown } from "lucide-react";
+import { Check, ChevronDown } from "lucide-react";
 import { PACKAGES, SINGLE_SERVICES, TERMS } from "@/lib/rate-card";
 
 const ease = [0.22, 1, 0.36, 1] as const; // --ease-out-expo, satu easing global
@@ -19,7 +19,7 @@ export function PricingSection() {
   return (
     <section
       id="pricing"
-      className="py-24 sm:py-32 relative bg-black/[0.02] dark:bg-white/[0.02] border-t border-black/5 dark:border-white/5"
+      className="py-24 sm:py-32 relative bg-transparent border-t border-black/5 dark:border-white/5"
     >
       <div className="max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-12" ref={ref}>
         <div className="text-center max-w-2xl mx-auto mb-10">
@@ -71,7 +71,7 @@ export function PricingSection() {
                 className={`relative flex flex-col p-8 rounded-3xl transition-all duration-300 hover:-translate-y-1 ${
                   pkg.badge
                     ? "bg-black dark:bg-white border-2 border-black dark:border-white text-white dark:text-black shadow-xl"
-                    : "bg-white dark:bg-[#111] border border-black/10 dark:border-white/10 shadow-sm"
+                    : "glass-card"
                 }`}
               >
                 {pkg.badge === "Most Popular" && (
@@ -117,28 +117,36 @@ export function PricingSection() {
                   >
                     {expanded === idx ? "Sembunyikan rincian" : "Lihat rincian paket"}
                   </button>
-                  {expanded === idx && (
-                    <ul className="mt-4 space-y-3">
-                      {pkg.features.map((feature, i) => (
-                        <li key={i} className="flex items-start gap-3">
-                          <Check
-                            className={`w-5 h-5 shrink-0 ${
-                              pkg.badge ? "text-white dark:text-black" : "text-black dark:text-white"
-                            }`}
-                          />
-                          <span
-                            className={`text-sm ${
-                              pkg.badge
-                                ? "text-white/90 dark:text-black/90"
-                                : "text-[#444444] dark:text-[#BBBBBB]"
-                            }`}
-                          >
-                            {feature}
-                          </span>
-                        </li>
-                      ))}
-                    </ul>
-                  )}
+                  <AnimatePresence>
+                    {expanded === idx && (
+                      <motion.ul
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: "auto" }}
+                        exit={{ opacity: 0, height: 0 }}
+                        transition={{ duration: 0.3, ease }}
+                        className="mt-4 space-y-3 overflow-hidden"
+                      >
+                        {pkg.features.map((feature, i) => (
+                          <li key={i} className="flex items-start gap-3">
+                            <Check
+                              className={`w-5 h-5 shrink-0 ${
+                                pkg.badge ? "text-white dark:text-black" : "text-black dark:text-white"
+                              }`}
+                            />
+                            <span
+                              className={`text-sm ${
+                                pkg.badge
+                                  ? "text-white/90 dark:text-black/90"
+                                  : "text-[#444444] dark:text-[#BBBBBB]"
+                              }`}
+                            >
+                              {feature}
+                            </span>
+                          </li>
+                        ))}
+                      </motion.ul>
+                    )}
+                  </AnimatePresence>
                 </div>
 
                 <a
@@ -159,7 +167,7 @@ export function PricingSection() {
             {SINGLE_SERVICES.map((group) => (
               <div
                 key={group.category}
-                className="rounded-3xl bg-white dark:bg-[#111] border border-black/10 dark:border-white/10 shadow-sm p-8"
+                className="glass-card rounded-3xl p-8"
               >
                 <h3 className="font-display text-xl font-medium text-black dark:text-white mb-6">
                   {group.category}
@@ -188,12 +196,12 @@ export function PricingSection() {
             {TERMS.map((term, i) => (
               <div
                 key={term.title}
-                className="rounded-2xl border border-black/10 dark:border-white/10 bg-white dark:bg-[#111] overflow-hidden"
+                className="glass-accordion rounded-2xl overflow-hidden"
               >
                 <button
                   onClick={() => setOpenTerm(openTerm === i ? null : i)}
                   aria-expanded={openTerm === i}
-                  className="w-full flex items-center justify-between gap-4 px-6 py-4 text-left"
+                  className="w-full flex items-center justify-between gap-4 px-6 py-4 text-left transition-colors hover:bg-black/[0.02] dark:hover:bg-white/[0.02]"
                 >
                   <span className="font-semibold text-black dark:text-white">{term.title}</span>
                   <ChevronDown
@@ -202,19 +210,29 @@ export function PricingSection() {
                     }`}
                   />
                 </button>
-                {openTerm === i && (
-                  <ul className="px-6 pb-5 space-y-2">
-                    {term.body.map((b, j) => (
-                      <li
-                        key={j}
-                        className="flex items-start gap-3 text-sm text-[#444444] dark:text-[#BBBBBB] leading-relaxed"
-                      >
-                        <Check className="w-4 h-4 shrink-0 text-black dark:text-white mt-0.5" />
-                        <span>{b}</span>
-                      </li>
-                    ))}
-                  </ul>
-                )}
+                <AnimatePresence>
+                  {openTerm === i && (
+                    <motion.div
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: "auto" }}
+                      exit={{ opacity: 0, height: 0 }}
+                      transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+                      className="overflow-hidden"
+                    >
+                      <ul className="px-6 pb-5 space-y-2.5">
+                        {term.body.map((b, j) => (
+                          <li
+                            key={j}
+                            className="flex items-start gap-3 text-sm text-[#444444] dark:text-[#BBBBBB] leading-relaxed"
+                          >
+                            <Check className="w-4 h-4 shrink-0 text-black dark:text-white mt-0.5" />
+                            <span>{b}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
             ))}
           </div>
@@ -230,17 +248,7 @@ export function PricingSection() {
             Butuh layanan satuan? Logo, konten, hingga automation tersedia
             terpisah.
           </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <button
-              type="button"
-              disabled
-              aria-disabled="true"
-              title="PDF segera hadir"
-              className="inline-flex items-center gap-2 px-8 py-3 border border-black/20 dark:border-white/20 rounded-full text-sm font-bold text-black/40 dark:text-white/40 cursor-not-allowed"
-            >
-              <Download className="w-4 h-4" />
-              Download Rate Card Lengkap (PDF) — segera hadir
-            </button>
+          <div className="flex items-center justify-center">
             <a
               href="#kontak"
               className="inline-flex items-center gap-2 px-8 py-3 bg-black dark:bg-white text-white dark:text-black rounded-full text-sm font-bold hover:scale-[1.02] active:scale-[0.98] transition-transform"

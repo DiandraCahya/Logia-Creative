@@ -189,7 +189,7 @@ function PortfolioCard({ project, gridVisible, idx }: { project: any, gridVisibl
         </div>
 
         {/* Content */}
-        <div className="p-6 flex flex-col flex-grow bg-white dark:bg-[#111] border-t border-black/5 dark:border-white/10" style={{ transform: "translateZ(40px)" }}>
+        <div className="p-6 flex flex-col flex-grow bg-white/75 dark:bg-[#111]/75 backdrop-blur-md border-t border-black/5 dark:border-white/10" style={{ transform: "translateZ(40px)" }}>
           <span className="inline-block text-[11px] font-bold text-[#666666] dark:text-[#999999] uppercase tracking-wider mb-2 transition-transform duration-300 group-hover:-translate-y-1">
             {project.category}
           </span>
@@ -257,18 +257,20 @@ export function PortfolioSection() {
     if (showAllProjects) {
       window.addEventListener('keydown', handleEsc);
     }
-    return () => window.removeEventListener('keydown', handleEsc);
+    return () => {
+      window.removeEventListener('keydown', handleEsc);
+      document.body.style.overflow = '';
+    };
   }, [showAllProjects]);
 
   return (
-    <section id="portfolio" className="py-24 sm:py-32 relative w-full overflow-hidden">
+    <section id="portfolio" className="py-24 sm:py-32 relative bg-transparent w-full overflow-hidden">
       <div className="w-full mx-auto">
 
         {/* Section Header */}
         <div
           className="text-center max-w-3xl mx-auto mb-16 px-4"
         >
-          <p className="text-[var(--accent-bronze)] uppercase tracking-[0.2em] text-xs font-semibold mb-4">Portfolio</p>
           <SplitWords as="h2" text="Selected Work" className="font-display font-medium tracking-[-0.02em] text-[clamp(2rem,4vw,3.5rem)] text-black dark:text-white mb-4" />
         </div>
 
@@ -315,33 +317,41 @@ export function PortfolioSection() {
 
       </div>
 
-      {/* Overlay Semua Project */}
+      {/* Overlay Semua Project — full-page glassmorphism */}
       <div
-        className={`fixed inset-0 z-[100] bg-white/95 dark:bg-[#0a0a0a]/95 backdrop-blur-xl transition-all duration-300 overflow-y-auto ${
-          showAllProjects ? 'opacity-100 visible' : 'opacity-0 invisible'
+        role="dialog"
+        aria-modal="true"
+        aria-label="Archive proyek"
+        className={`fixed inset-0 z-[100] h-[100dvh] w-screen overflow-y-auto overscroll-contain backdrop-blur-2xl backdrop-saturate-150 bg-gradient-to-b from-white/85 via-white/70 to-white/85 dark:from-[#0a0a0a]/85 dark:via-[#0a0a0a]/70 dark:to-[#0a0a0a]/85 transition-all duration-300 ${
+          showAllProjects ? 'opacity-100 visible pointer-events-auto' : 'opacity-0 invisible pointer-events-none'
         }`}
         onClick={(e) => {
           if (e.target === e.currentTarget) setShowAllProjects(false);
         }}
       >
-        <div className={`min-h-screen py-16 px-6 transition-transform duration-300 ${showAllProjects ? 'scale-100' : 'scale-95'}`}>
+        <div className={`min-h-full py-8 sm:py-16 px-4 sm:px-8 transition-transform duration-300 ${showAllProjects ? 'scale-100' : 'scale-95'}`}>
           <div className="max-w-7xl mx-auto">
             {/* Header Sticky */}
-            <div className="flex items-center justify-between mb-12 sticky top-0 z-10 py-4 bg-white/80 dark:bg-[#0a0a0a]/80 backdrop-blur-md rounded-2xl px-6 border border-black/10 dark:border-white/10">
-              <h2 className="font-display text-2xl sm:text-3xl font-medium text-black dark:text-white tracking-tighter">
-                Archive
-              </h2>
+            <div className="flex items-center justify-between mb-8 sm:mb-12 sticky top-4 z-20 py-4 px-6 rounded-2xl border border-black/10 dark:border-white/10 glass-card">
+              <div>
+                <h2 className="font-display text-2xl sm:text-3xl font-medium text-black dark:text-white tracking-tighter">
+                  Archive
+                </h2>
+                <p className="text-xs sm:text-sm text-[#666666] dark:text-[#999999] mt-0.5">
+                  Seluruh eksplorasi proyek desain, identitas visual, dan pengembangan digital.
+                </p>
+              </div>
               <button
                 onClick={() => setShowAllProjects(false)}
-                className="p-2 rounded-full min-h-[44px] min-w-[44px] flex items-center justify-center border border-black/10 dark:border-white/15 hover:bg-black/5 dark:hover:bg-white/10 transition-colors"
-                aria-label="Close"
+                className="p-2.5 rounded-full min-h-[44px] min-w-[44px] flex items-center justify-center border border-black/10 dark:border-white/15 hover:bg-black/5 dark:hover:bg-white/10 transition-colors"
+                aria-label="Tutup Archive"
               >
-                <X className="w-6 h-6 text-black dark:text-white" />
+                <X className="w-5 h-5 text-black dark:text-white" />
               </button>
             </div>
 
             {/* Filter Tabs overlay */}
-            <div className="flex flex-wrap gap-2 mb-12">
+            <div className="flex flex-wrap gap-2 mb-10">
               {categories.map((category) => (
                 <button
                   key={`overlay-${category}`}
@@ -357,7 +367,7 @@ export function PortfolioSection() {
               ))}
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 pb-16">
               {allProjects
                 .filter((p) => activeCategory === "Semua" || p.category === activeCategory)
                 .map((project, idx) => (

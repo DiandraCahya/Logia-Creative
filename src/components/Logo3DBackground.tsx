@@ -73,7 +73,7 @@ export function Logo3DBackground() {
       aria-hidden="true"
     >
       <div
-        className="relative w-[600px] h-[600px]"
+        className="relative w-[340px] h-[340px] sm:w-[620px] sm:h-[620px]"
         style={{
           transformStyle: "preserve-3d",
           willChange: "transform",
@@ -84,8 +84,8 @@ export function Logo3DBackground() {
           alt=""
           fill
           loading="lazy"
-          className="object-contain opacity-[0.04]"
-          sizes="(max-width: 768px) 0px, 600px"
+          className="object-contain opacity-[0.08] dark:opacity-[0.11] select-none"
+          sizes="(max-width: 768px) 340px, 620px"
           priority={false}
         />
       </div>

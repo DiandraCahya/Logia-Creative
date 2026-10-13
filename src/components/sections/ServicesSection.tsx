@@ -52,7 +52,7 @@ export function ServicesSection() {
   const { ref, isInView } = useScrollReveal();
 
   return (
-    <section id="layanan" className="py-24 sm:py-32 relative bg-white dark:bg-[#0a0a0a]">
+    <section id="layanan" className="py-24 sm:py-32 relative bg-transparent border-t border-black/5 dark:border-white/5">
       <div className="max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-12">
         {/* Header */}
         <div ref={ref} className="max-w-3xl mb-20">
@@ -76,7 +76,7 @@ export function ServicesSection() {
         </div>
 
         {/* Grid 2 Kolom - Responsive */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
           {services.map((srv, idx) => {
             const Icon = srv.icon;
             return (
@@ -93,16 +93,16 @@ export function ServicesSection() {
                 <motion.div
                   whileHover={{ rotateX: 2, rotateY: -2, y: -4 }}
                   transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                  className="flex gap-6 items-start"
+                  className="glass-card rounded-3xl p-6 sm:p-8 flex gap-5 sm:gap-6 items-start h-full"
                 >
-                  <div className="w-14 h-14 rounded-2xl bg-black/[0.03] dark:bg-white/[0.03] border border-black/[0.05] dark:border-white/[0.05] flex items-center justify-center shrink-0 group-hover:bg-black group-hover:dark:bg-white transition-colors duration-300">
-                    <Icon className="w-6 h-6 text-black dark:text-white group-hover:text-white group-hover:dark:text-black transition-colors duration-300" />
+                  <div className="w-14 h-14 rounded-2xl bg-black/5 dark:bg-white/10 border border-black/10 dark:border-white/15 flex items-center justify-center shrink-0 transition-colors duration-300 shadow-sm group-hover:bg-black group-hover:border-black dark:group-hover:bg-white dark:group-hover:border-white">
+                    <Icon className="w-6 h-6 text-black dark:text-white transition-colors duration-300 group-hover:text-white dark:group-hover:text-black" />
                   </div>
                   <div>
                     <h3 className="text-xl font-bold text-black dark:text-white mb-2 tracking-tight">
                       {srv.title}
                     </h3>
-                    <p className="text-sm text-[#666666] dark:text-[#999999] leading-relaxed">
+                    <p className="text-sm text-[#555555] dark:text-[#999999] leading-relaxed">
                       {srv.desc}
                     </p>
                   </div>

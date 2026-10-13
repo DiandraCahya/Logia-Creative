@@ -3,7 +3,7 @@ import { Resend } from "resend";
 import { PACKAGES } from "@/lib/rate-card";
 import { buildReceipt, formatIDR, wibTimestamp, RECEIPT_TERMS } from "@/lib/receipt";
 
-const TO = process.env.COLLABORATION_TO || "nextkokknock@gmail.com";
+const TO = process.env.COLLABORATION_TO || "logiacreative.id@gmail.com";
 const FROM = process.env.COLLABORATION_FROM || "onboarding@resend.dev";
 
 const WINDOW_MS = 10 * 60 * 1000;

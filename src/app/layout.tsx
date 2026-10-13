@@ -1,22 +1,18 @@
 import type { Metadata } from "next";
-import { Fraunces, Inter } from "next/font/google";
+import { Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { PerformanceInit } from "@/components/PerformanceInit";
 
-const fontDisplay = Fraunces({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  variable: "--font-display",
-  display: "swap",
-});
-
+// ponytail: single sans everywhere (Anthropic-style) — one family, no serif display.
 const fontSans = Inter({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
   variable: "--font-sans",
   display: "swap",
 });
+
+const fontDisplay = fontSans;
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://logia.id"),

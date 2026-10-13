@@ -20,6 +20,7 @@ const ChatWidget = dynamic(() => import("@/components/ChatWidget").then(mod => m
 
 export default function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [collabDraft, setCollabDraft] = useState<import("@/lib/receipt").CollabDraft | null>(null);
 
   return (
     <main className="relative min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)] overflow-x-hidden selection:bg-gray-300 dark:selection:bg-gray-700 selection:text-black dark:selection:text-white pb-[env(safe-area-inset-bottom)]">
@@ -77,10 +78,12 @@ export default function Home() {
       <CollaborationModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
+        initialDraft={collabDraft}
+        onDraftConsumed={() => setCollabDraft(null)}
       />
 
       {/* AI chatbox pelanggan — lazy setelah idle */}
-      <ChatWidget />
+      <ChatWidget onAutofill={(d) => { setCollabDraft(d); setIsModalOpen(true); }} />
     </main>
   );
 }
