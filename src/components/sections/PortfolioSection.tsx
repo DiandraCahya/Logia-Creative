@@ -292,7 +292,7 @@ export function PortfolioSection() {
         </div>
 
         {/* Portfolio List using HeroCarousel */}
-        <div ref={gridRef} className={`w-full h-[85vh] min-h-[85vh] overflow-hidden transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+        <div ref={gridRef} className={`w-full h-[68svh] min-h-[440px] sm:h-[85vh] sm:min-h-[85vh] overflow-hidden transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${
           (gridVisible && !isExiting) ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
         }`}>
           {carouselItems.length > 0 ? (

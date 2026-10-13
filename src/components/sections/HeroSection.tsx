@@ -29,6 +29,7 @@ function InteractiveShape() {
   const inViewRef = useRef(true);
   const gyroOnRef = useRef(false);
   const orientCount = useRef(0);
+  const orientLiveRef = useRef(false); // true hanya jika sensor kirim nilai nyata
   const platformRef = useRef<"desktop" | "android" | "ios">("desktop");
 
   useEffect(() => {
@@ -121,7 +122,7 @@ function InteractiveShape() {
     };
     const onMove = (e: PointerEvent) => {
       // Drag fallback hanya untuk mobile (iOS tanpa gyro / Android sensor mati)
-      if (!dragging || platformRef.current === "desktop" || gyroOnRef.current) return;
+      if (!dragging || platformRef.current === "desktop" || (gyroOnRef.current && orientLiveRef.current)) return;
       const dx = (e.clientX - lastX) / 120;
       const dy = (e.clientY - lastY) / 120;
       lastX = e.clientX;
@@ -142,6 +143,7 @@ function InteractiveShape() {
     let lastDbg = 0;
     const onOrientRaw = (e: DeviceOrientationEvent) => {
       orientCount.current += 1;
+      if (e.beta != null || e.gamma != null) orientLiveRef.current = true;
       const now = performance.now();
       if (debugRef.current && now - lastDbg > 500) {
         lastDbg = now;
@@ -173,6 +175,8 @@ function InteractiveShape() {
     window.addEventListener("pointerup", onUp, { passive: true });
     window.addEventListener("deviceorientation", onOrientRaw);
     window.addEventListener("deviceorientation", onOrient);
+    window.addEventListener("deviceorientationabsolute", onOrientRaw as EventListener);
+    window.addEventListener("deviceorientationabsolute", onOrient as EventListener);
 
     // Sensor mati = tidak ada event masuk dalam 3 detik setelah granted
     const noSensorTimer = window.setTimeout(() => {
@@ -191,11 +195,14 @@ function InteractiveShape() {
       window.removeEventListener("pointerup", onUp);
       window.removeEventListener("deviceorientation", onOrientRaw);
       window.removeEventListener("deviceorientation", onOrient);
+      window.removeEventListener("deviceorientationabsolute", onOrientRaw as EventListener);
+      window.removeEventListener("deviceorientationabsolute", onOrient as EventListener);
     };
   }, []);
 
   // Mobile: Android auto-on + tap fallback; iOS butuh requestPermission via gesture
   const enableGyro = useCallback(async () => {
+    if (!window.isSecureContext) { setGyroStatus("butuh https"); return; }
     try {
       const DOE = window.DeviceOrientationEvent as unknown as OrientEvent | undefined;
       if (typeof DOE?.requestPermission === "function") {
@@ -209,10 +216,10 @@ function InteractiveShape() {
   }, []);
 
   return (
-    <div className="flex flex-col items-center gap-3">
+    <div className="flex flex-col items-center gap-2">
       <div
         ref={containerRef}
-        className="w-32 h-32 sm:w-80 sm:h-80 lg:w-[420px] lg:h-[420px] relative cursor-pointer touch-pan-y"
+        className="w-36 h-36 sm:w-80 sm:h-80 lg:w-[420px] lg:h-[420px] relative cursor-pointer touch-pan-y"
         style={{ perspective: 1200 }}
       >
         <div
@@ -229,7 +236,7 @@ function InteractiveShape() {
               alt="Potret kreatif Logia Creative"
               fill
               className="object-cover"
-              sizes="(max-width: 640px) 256px, (max-width: 1024px) 320px, 420px"
+              sizes="(max-width: 640px) 144px, (max-width: 1024px) 320px, 420px"
               priority
               fetchPriority="high"
             />
@@ -275,15 +282,15 @@ export function HeroSection({ onOpenCollaboration }: HeroSectionProps) {
   return (
     <section
       id="top"
-      className="relative bg-transparent min-h-[92svh] flex items-center justify-center overflow-hidden pt-24 pb-16 sm:pt-32 sm:pb-28"
+      className="relative bg-transparent min-h-[100dvh] sm:min-h-[92svh] flex items-center justify-center overflow-hidden pt-20 pb-8 sm:pt-32 sm:pb-28"
     >
       <div className="relative z-10 max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-12 w-full">
-        <div className="flex flex-row items-center lg:grid lg:grid-cols-2 gap-4 lg:gap-8">
+        <div className="grid grid-cols-[1fr_auto] sm:grid-cols-2 lg:grid-cols-2 items-center gap-x-3 gap-y-5 sm:gap-4 lg:gap-8">
           {/* Left: Typography & CTA */}
-          <div className="flex-1 min-w-0 flex flex-col items-start space-y-4 lg:space-y-8">
+          <div className="col-start-1 row-start-1 min-w-0 flex flex-col items-start justify-center gap-6 sm:gap-4 lg:gap-8">
 
             {/* Headline — max 7 words */}
-            <h1 className="font-display font-medium text-[clamp(2.5rem,8vw,5rem)] leading-[1.05] tracking-[-0.02em] text-black dark:text-white">
+            <h1 className="w-full font-display font-medium text-[clamp(2.25rem,11vw,3.5rem)] sm:text-[clamp(2rem,6vw,5rem)] leading-[1.05] tracking-[-0.02em] text-black dark:text-white min-w-0">
               <span className="overflow-hidden block pb-1">
                 <motion.span
                   initial={{ y: "100%" }}
@@ -306,27 +313,16 @@ export function HeroSection({ onOpenCollaboration }: HeroSectionProps) {
               </span>
             </h1>
 
-            {/* Subheadline — 2 kalimat pendek */}
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, ease, delay: 0.35 }}
-              className="text-sm sm:text-lg text-[#1A1A1A] dark:text-[#999999] leading-relaxed max-w-lg font-normal line-clamp-2 sm:line-clamp-none"
-            >
-              Kami merancang identitas visual dan membangun website cepat
-              untuk bisnis yang ingin terlihat serius.
-            </motion.p>
-
             {/* CTA Buttons */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, ease, delay: 0.5 }}
-              className="flex flex-wrap items-center gap-3 sm:gap-4 pt-2"
+              className="flex flex-nowrap items-center gap-3 sm:gap-4 w-full sm:w-auto"
             >
               <button
                 onClick={onOpenCollaboration}
-                className="btn-solid px-5 sm:px-8 py-3 sm:py-4 min-h-[48px] bg-black dark:bg-white text-white dark:text-black text-sm font-semibold rounded-full flex items-center gap-2 group transition-transform hover:scale-[1.02] active:scale-[0.98]"
+                className="btn-solid flex-1 sm:flex-none justify-center whitespace-nowrap px-5 sm:px-8 py-3.5 sm:py-4 min-h-[52px] bg-black dark:bg-white text-white dark:text-black text-sm font-semibold rounded-full flex items-center gap-2 group transition-transform hover:scale-[1.02] active:scale-[0.98]"
               >
                 <span>Mulai Proyek</span>
                 <ArrowRight className="w-4 h-4 text-white dark:text-black transition-transform group-hover:translate-x-1" />
@@ -334,7 +330,7 @@ export function HeroSection({ onOpenCollaboration }: HeroSectionProps) {
 
               <a
                 href="#portfolio"
-                className="px-5 sm:px-8 py-3 sm:py-4 min-h-[48px] inline-flex items-center text-sm font-semibold text-black dark:text-white border border-black/15 dark:border-white/15 rounded-full hover:bg-black/5 dark:hover:bg-white/5 transition-colors duration-200"
+                className="flex-1 sm:flex-none justify-center whitespace-nowrap px-5 sm:px-8 py-3.5 sm:py-4 min-h-[52px] inline-flex items-center text-sm font-semibold text-black dark:text-white border border-black/15 dark:border-white/15 rounded-full hover:bg-black/5 dark:hover:bg-white/5 transition-colors duration-200"
               >
                 Lihat Portfolio
               </a>
@@ -346,7 +342,7 @@ export function HeroSection({ onOpenCollaboration }: HeroSectionProps) {
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1.2, ease, delay: 0.3 }}
-            className="shrink-0 flex items-center justify-center"
+            className="col-start-2 row-start-1 sm:col-auto sm:row-auto shrink-0 flex items-center justify-center"
           >
             <InteractiveShape />
           </motion.div>

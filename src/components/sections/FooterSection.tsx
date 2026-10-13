@@ -60,7 +60,7 @@ export function FooterSection({ onOpenCollaboration }: FooterSectionProps) {
           }`}
         >
           <div className="relative z-10 max-w-3xl mx-auto flex flex-col items-center">
-            <h2 className="text-white font-display font-medium tracking-[-0.02em] text-[clamp(2.5rem,5vw,4.5rem)] leading-[1.1] mb-6">
+            <h2 className="text-white font-display font-medium tracking-[-0.02em] text-[clamp(1.75rem,8vw,4.5rem)] leading-[1.1] mb-6">
               Ready to elevate your brand?
             </h2>
             <p className="text-white/80 text-base sm:text-lg mb-10 max-w-xl leading-relaxed">
@@ -68,7 +68,7 @@ export function FooterSection({ onOpenCollaboration }: FooterSectionProps) {
             </p>
             <button
               onClick={onOpenCollaboration}
-              className="px-8 py-4 min-h-[48px] bg-white text-black text-sm font-bold rounded-full hover:scale-[1.02] active:scale-[0.98] transition-transform duration-200 flex items-center gap-2 group shadow-lg"
+              className="w-full sm:w-auto justify-center px-6 sm:px-8 py-4 min-h-[48px] bg-white text-black text-sm font-bold rounded-full hover:scale-[1.02] active:scale-[0.98] transition-transform duration-200 flex items-center gap-2 group shadow-lg"
             >
               <span className="text-black font-bold">Mulai Diskusi Proyek</span>
               <ArrowRight className="w-4 h-4 text-black transition-transform group-hover:translate-x-1" />
@@ -165,7 +165,7 @@ export function FooterSection({ onOpenCollaboration }: FooterSectionProps) {
             <ul className="space-y-3 text-[#666666] dark:text-[#999999]">
               <li className="flex items-center gap-2">
                 <Mail className="w-4 h-4 text-black dark:text-white" />
-                <a href="mailto:logiacreative.id@gmail.com" className="hover:text-black dark:hover:text-white transition-colors">
+                <a href="mailto:logiacreative.id@gmail.com" className="hover:text-black dark:hover:text-white transition-colors break-all">
                   logiacreative.id@gmail.com
                 </a>
               </li>

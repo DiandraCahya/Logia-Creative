@@ -153,7 +153,7 @@ export function BackgroundTargetSection({ onOpenCollaboration }: Props) {
 
         {/* Minimalist Tabs */}
         <div className="flex justify-center mb-16">
-          <div className="flex p-1.5 bg-black/5 dark:bg-white/5 rounded-full border border-black/5 dark:border-white/5 overflow-x-auto hide-scrollbar max-w-full">
+          <div className="flex flex-wrap justify-center p-1.5 bg-black/5 dark:bg-white/5 rounded-[1.75rem] sm:rounded-full border border-black/5 dark:border-white/5 max-w-full">
             {targetMarkets.map((market) => {
               const Icon = market.icon;
               const isActive = activeTab === market.id;
@@ -162,7 +162,7 @@ export function BackgroundTargetSection({ onOpenCollaboration }: Props) {
                   key={market.id}
                   onClick={() => setActiveTab(market.id)}
                   aria-pressed={isActive}
-                  className={`relative isolate px-5 py-2.5 rounded-full text-sm font-semibold transition-colors duration-200 flex items-center gap-2 whitespace-nowrap ${
+                  className={`relative isolate px-5 py-2.5 min-h-[44px] rounded-full text-sm font-semibold transition-colors duration-200 flex items-center gap-2 whitespace-nowrap ${
                     isActive
                       ? "text-white dark:text-black"
                       : "text-[#666666] dark:text-[#999999] hover:text-black dark:hover:text-white"
@@ -193,7 +193,7 @@ export function BackgroundTargetSection({ onOpenCollaboration }: Props) {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -15 }}
               transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-              className="glass-card rounded-[2rem] p-8 sm:p-12"
+              className="glass-card rounded-[2rem] p-5 sm:p-12"
             >
               {/* Card Header */}
               <div className="flex flex-col md:flex-row md:items-start justify-between gap-6 mb-10 pb-8 border-b border-black/10 dark:border-white/10">
@@ -218,7 +218,7 @@ export function BackgroundTargetSection({ onOpenCollaboration }: Props) {
               </div>
 
               {/* Grid 2 Cols */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
                 {/* Left: Problem & Stats */}
                 <div className="space-y-8">
                   <div>
@@ -253,8 +253,8 @@ export function BackgroundTargetSection({ onOpenCollaboration }: Props) {
                           <div className="w-10 h-10 rounded-lg bg-black/[0.05] dark:bg-white/[0.05] flex items-center justify-center shrink-0">
                             <SolIcon className="w-5 h-5 text-black dark:text-white" />
                           </div>
-                          <div>
-                            <div className="flex items-center gap-2 mb-1">
+                          <div className="min-w-0">
+                            <div className="flex items-center gap-2 mb-1 flex-wrap">
                               <h5 className="font-bold text-sm text-black dark:text-white">{sol.title}</h5>
                               {"deliverableTag" in sol && sol.deliverableTag ? (
                                 <span className="text-[9px] font-bold px-2 py-0.5 rounded border border-black/10 dark:border-white/10 text-[#666666] dark:text-[#999999]">

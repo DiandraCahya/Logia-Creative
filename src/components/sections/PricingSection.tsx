@@ -61,14 +61,14 @@ export function PricingSection() {
         </div>
 
         {tab === "paket" ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-8">
             {PACKAGES.map((pkg, idx) => (
               <motion.div
                 key={pkg.name}
                 initial={{ opacity: 0, y: 30 }}
                 animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
                 transition={{ duration: 0.6, ease, delay: 0.2 + idx * 0.1 }}
-                className={`relative flex flex-col p-8 rounded-3xl transition-all duration-300 hover:-translate-y-1 ${
+                className={`relative flex flex-col p-6 sm:p-8 rounded-3xl transition-all duration-300 hover:-translate-y-1 ${
                   pkg.badge
                     ? "bg-black dark:bg-white border-2 border-black dark:border-white text-white dark:text-black shadow-xl"
                     : "glass-card"

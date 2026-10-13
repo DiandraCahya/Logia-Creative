@@ -209,9 +209,9 @@ export function CollaborationModal({ isOpen, onClose, initialDraft, onDraftConsu
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             transition={{ type: "spring", damping: 25, stiffness: 300 }}
-            className="relative w-full max-w-2xl z-10 my-4 sm:my-8 min-h-[100dvh] sm:min-h-0 max-h-[100dvh] sm:max-h-[92dvh] overflow-y-auto overscroll-contain flex flex-col"
+            className="relative w-full max-w-2xl z-10 my-4 sm:my-8 flex flex-col"
           >
-            <div className="glass-card rounded-[2rem] border border-black/10 dark:border-white/15 shadow-2xl p-6 sm:p-10 pb-32 sm:pb-10 flex-1 relative overflow-hidden">
+            <div className="glass-card rounded-[1.5rem] sm:rounded-[2rem] border border-black/10 dark:border-white/15 shadow-2xl p-5 sm:p-10 pb-[max(1.5rem,env(safe-area-inset-bottom))] sm:pb-10 flex-1 relative overflow-hidden">
               {/* Ambient accent top highlight */}
               <div className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-[var(--accent-bronze)] to-transparent opacity-80" />
 
@@ -440,7 +440,7 @@ export function CollaborationModal({ isOpen, onClose, initialDraft, onDraftConsu
                       </p>
                     )}
 
-                    <div className="pt-4 flex flex-col sm:flex-row items-center justify-between gap-6 border-t border-black/10 dark:border-white/10">
+                    <div className="sticky bottom-0 -mx-5 sm:-mx-10 px-5 sm:px-10 py-4 pb-[max(1rem,env(safe-area-inset-bottom))] flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-6 border-t border-black/10 dark:border-white/10 bg-white/90 dark:bg-[#0a0a0a]/90 backdrop-blur-md">
                       <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 text-xs text-[#666666] dark:text-[#999999]">
                         <span className="flex items-center gap-2">
                           <Mail className="w-4 h-4 text-[var(--accent-bronze)]" />

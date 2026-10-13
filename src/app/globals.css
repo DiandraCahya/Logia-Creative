@@ -530,15 +530,15 @@ html:not(.dark) footer a:hover,
   }
 
   /* Section vertikal py-8 */
-  section {
+  section:not(#top) {
     padding-top: 32px !important;
     padding-bottom: 32px !important;
   }
 
-  /* Hero mobile max 70vh, foto + teks jelas */
+  /* Hero mobile full 1 halaman */
   #top {
-    min-height: auto !important;
-    max-height: 70vh !important;
+    min-height: 100dvh !important;
+    max-height: none !important;
     overflow: hidden !important;
     padding-top: 88px !important;
     padding-bottom: 32px !important;
@@ -548,6 +548,11 @@ html:not(.dark) footer a:hover,
   h1, .text-display {
     font-size: 28px !important;
     line-height: 1.15 !important;
+  }
+  /* Hero exempt: clamp() fluid text tetap berlaku */
+  #top h1 {
+    font-size: clamp(2.25rem, 11vw, 3.5rem) !important;
+    line-height: 1.05 !important;
   }
 
   h2, .text-headline {
@@ -577,8 +582,8 @@ html:not(.dark) footer a:hover,
   /* Hide non-essential decoration on mobile */
   footer [aria-hidden="true"] { display: none !important; }
 
-  /* Grid to single column (kecuali carousel strip yang flex) */
-  main .grid, footer .grid {
+  /* Grid to single column (kecuali hero #top + carousel strip yang flex) */
+  main section:not(#top) .grid, footer .grid {
     grid-template-columns: 1fr !important;
     gap: 16px !important;
   }

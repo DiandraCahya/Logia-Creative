@@ -52,10 +52,10 @@ export function ServicesSection() {
   const { ref, isInView } = useScrollReveal();
 
   return (
-    <section id="layanan" className="py-24 sm:py-32 relative bg-transparent border-t border-black/5 dark:border-white/5">
+    <section id="layanan" className="py-16 sm:py-32 relative bg-transparent border-t border-black/5 dark:border-white/5">
       <div className="max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-12">
         {/* Header */}
-        <div ref={ref} className="max-w-3xl mb-20">
+        <div ref={ref} className="max-w-3xl mb-10 sm:mb-20">
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
@@ -76,7 +76,7 @@ export function ServicesSection() {
         </div>
 
         {/* Grid 2 Kolom - Responsive */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-8">
           {services.map((srv, idx) => {
             const Icon = srv.icon;
             return (
