@@ -1,15 +1,14 @@
-import { PACKAGES } from "./rate-card";
-
-/** Ambil angka Rupiah pertama dari string harga ("Rp 1.500.000 / Bulan" -> 1500000). */
-export function parsePrice(price: string): number | null {
-  const m = price.replace(/\s/g, "").match(/Rp([\d.]+)/i);
-  if (!m) return null;
-  const n = parseInt(m[1].replace(/\./g, ""), 10);
-  return Number.isFinite(n) ? n : null;
-}
+import {
+  ALL_PACKAGES,
+  CUSTOM_SERVICE_OPTION,
+  findPackage,
+  formatPrice,
+  priceLabel,
+  priceTypeLabel,
+} from "./rate-card";
 
 export function formatIDR(n: number): string {
-  return "Rp " + n.toLocaleString("id-ID");
+  return formatPrice(n);
 }
 
 export function makeReceiptId(d = new Date()): string {
@@ -30,7 +29,7 @@ export function wibTimestamp(d = new Date()): string {
     minute: "2-digit",
     timeZone: "Asia/Jakarta",
   });
-  return fmt.format(d).replace(",", ",") + " WIB";
+  return fmt.format(d) + " WIB";
 }
 
 export interface Receipt {
@@ -40,6 +39,7 @@ export interface Receipt {
   brand: string;
   contact: string;
   packageName: string;
+  solutionName: string;
   priceLabel: string;
   total: number | null;
   dp: number | null;
@@ -47,21 +47,23 @@ export interface Receipt {
   status: "Menunggu DP";
 }
 
-export function buildReceipt(pkgName: string, customer: string, brand: string, contact: string): Receipt | null {
-  const pkg = PACKAGES.find((p) => p.name === pkgName);
-  if (!pkg) return null;
-  const total = parsePrice(pkg.price);
+/** Terima id paket atau nama (chatbot). Null bila tak ketemu. */
+export function buildReceipt(ref: string, customer: string, brand: string, contact: string): Receipt | null {
+  const hit = findPackage(ref);
+  if (!hit) return null;
+  const total = hit.pkg.price;
   return {
     id: makeReceiptId(),
     timestamp: wibTimestamp(),
     customer,
     brand,
     contact,
-    packageName: pkg.name,
-    priceLabel: pkg.price,
+    packageName: hit.pkg.name,
+    solutionName: hit.solution.name,
+    priceLabel: `${priceLabel(hit.pkg)} (${priceTypeLabel(hit.pkg.unit)})`,
     total,
-    dp: total != null ? Math.round(total / 2) : null,
-    sisa: total != null ? total - Math.round(total / 2) : null,
+    dp: Math.round(total / 2),
+    sisa: total - Math.round(total / 2),
     status: "Menunggu DP",
   };
 }
@@ -76,7 +78,10 @@ export interface CollabDraft {
   notes: string;
 }
 
-/** Parse blok ```collab {...}``` dari balasan bot; null bila tak valid. Nama layanan difuzzy-match ke PACKAGES agar struk selalu terbit. */
+/**
+ * Parse blok ```collab {...}``` dari balasan bot; null bila tak valid.
+ * Nama dari chatbot di-map ke id paket agar form & struk konsisten.
+ */
 export function parseCollabBlock(text: string): CollabDraft | null {
   const m = text.match(/```collab\s*([\s\S]*?)```/i);
   if (!m) return null;
@@ -92,11 +97,9 @@ export function parseCollabBlock(text: string): CollabDraft | null {
   const list = Array.isArray(raw.services) ? raw.services.map(String) : [];
   const services = list
     .map((s) => {
-      const hit = PACKAGES.find(
-        (p) => p.name.toLowerCase() === s.trim().toLowerCase() || s.toLowerCase().includes(p.name.split(" ")[0].toLowerCase())
-      );
-      if (hit) return hit.name;
-      return /satuan|custom/i.test(s) ? "Layanan Satuan / Custom" : null;
+      const hit = findPackage(s);
+      if (hit) return hit.pkg.id;
+      return /custom|konsultasi|satuan/i.test(s) ? CUSTOM_SERVICE_OPTION : null;
     })
     .filter((s): s is string => s !== null)
     .slice(0, 8);
@@ -117,3 +120,9 @@ export const RECEIPT_TERMS = [
   "Maks. 2x revisi minor per paket.",
   "Harga belum termasuk domain & hosting premium.",
 ];
+
+/** Nama paket dari id pilihan form; id tak dikenal diteruskan apa adanya. */
+export function serviceLabel(service: string): string {
+  const hit = ALL_PACKAGES.find((e) => e.pkg.id === service);
+  return hit ? `${hit.pkg.name} · ${hit.solution.name}` : service;
+}

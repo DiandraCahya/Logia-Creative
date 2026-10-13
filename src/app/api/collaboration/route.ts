@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Resend } from "resend";
-import { PACKAGES } from "@/lib/rate-card";
-import { buildReceipt, formatIDR, wibTimestamp, RECEIPT_TERMS } from "@/lib/receipt";
+import { findPackage } from "@/lib/rate-card";
+import { buildReceipt, formatIDR, serviceLabel, wibTimestamp, RECEIPT_TERMS } from "@/lib/receipt";
 
 const TO = process.env.COLLABORATION_TO || "logiacreative.id@gmail.com";
 const FROM = process.env.COLLABORATION_FROM || "onboarding@resend.dev";
@@ -59,11 +59,11 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Layanan email belum dikonfigurasi." }, { status: 500 });
   }
 
-  // Paket dari SATU sumber (rate-card); fallback: baris layanan pertama
-  const pkgName = PACKAGES.find((p) => services.includes(p.name))?.name
-    ?? PACKAGES.find((p) => services.some((s) => s.includes(p.name.split(" ")[0])))?.name
-    ?? null;
-  const receipt = pkgName ? buildReceipt(pkgName, name, brandName, contact) : null;
+  // Paket dari SATU sumber (rate-card), dicocokkan via id unik.
+  const pkgRef = services.map((s) => findPackage(s)?.pkg.id).find((x): x is string => !!x) ?? null;
+  const receipt = pkgRef ? buildReceipt(pkgRef, name, brandName, contact) : null;
+  // Label ramah-baca untuk email admin (id -> "NAMA · Solusi").
+  const serviceLabels = services.map(serviceLabel);
 
   const resend = new Resend(apiKey);
   const stamp = wibTimestamp();
@@ -75,7 +75,8 @@ export async function POST(req: NextRequest) {
         Waktu: ${esc(receipt.timestamp)}<br>
         Pelanggan: ${esc(receipt.customer)}${receipt.brand ? ` (${esc(receipt.brand)})` : ""}<br>
         Kontak: ${esc(receipt.contact)}<br>
-        Paket: ${esc(receipt.packageName)} — ${esc(receipt.priceLabel)}<br>
+        Paket: ${esc(receipt.packageName)} · ${esc(receipt.solutionName)}<br>
+        Harga: ${esc(receipt.priceLabel)}<br>
         ${receipt.total != null ? `Total: ${formatIDR(receipt.total)}<br>DP 50%: ${formatIDR(receipt.dp!)}<br>Sisa: ${formatIDR(receipt.sisa!)}<br>` : ""}
         Status: <b>Menunggu DP</b>
         <br><br><span style="font-size:12px;color:#555;">${RECEIPT_TERMS.map(esc).join("<br>")}</span>
@@ -90,7 +91,7 @@ export async function POST(req: NextRequest) {
         <p><b>Brand:</b> ${esc(brandName) || "-"}</p>
         <p><b>Kontak:</b> ${esc(contact)}</p>
         <p><b>Budget:</b> ${esc(budget) || "-"}</p>
-        <p><b>Layanan:</b> ${services.map(esc).join(", ") || "-"}</p>
+        <p><b>Layanan:</b> ${serviceLabels.map(esc).join(", ") || "-"}</p>
         <p><b>Catatan:</b></p>
         <p>${esc(notes).replace(/\n/g, "<br>") || "-"}</p>
         <p style="font-size:12px;color:#555;">Diterima: ${esc(stamp)}</p>

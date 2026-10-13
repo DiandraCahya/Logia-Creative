@@ -25,7 +25,7 @@ export const ReceiptView = forwardRef<HTMLDivElement, { receipt: Receipt }>(
         </div>
         <dl className="py-4 space-y-2 tabular-nums">
           <div className="flex justify-between gap-4"><dt className="text-slate-500">Pelanggan</dt><dd className="font-medium text-right">{receipt.customer}{receipt.brand ? ` (${receipt.brand})` : ""}</dd></div>
-          <div className="flex justify-between gap-4"><dt className="text-slate-500">Paket</dt><dd className="font-medium text-right">{receipt.packageName}</dd></div>
+          <div className="flex justify-between gap-4"><dt className="text-slate-500">Paket</dt><dd className="font-medium text-right">{receipt.packageName}{receipt.solutionName ? ` · ${receipt.solutionName}` : ""}</dd></div>
           <div className="flex justify-between gap-4"><dt className="text-slate-500">Harga</dt><dd className="font-medium text-right">{receipt.priceLabel}</dd></div>
           {receipt.total != null && (
             <>

@@ -3,7 +3,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Send, Sparkles, CheckCircle2, Phone, Mail, AlertCircle, Loader2, ImageDown, FileDown, MessageCircle } from "lucide-react";
-import { PACKAGES } from "@/lib/rate-card";
+import { ALL_PACKAGES, CUSTOM_SERVICE_OPTION, packageOptionLabel } from "@/lib/rate-card";
 import type { CollabDraft, Receipt } from "@/lib/receipt";
 import { ReceiptView } from "./Receipt";
 
@@ -14,10 +14,10 @@ interface CollaborationModalProps {
   onDraftConsumed?: () => void;
 }
 
-// Opsi layanan = nama paket dari rate-card (SATU sumber) + opsi umum
+// Opsi layanan = paket dari rate-card (SATU sumber). Value = id unik; label = nama · solusi.
 const serviceOptions = [
-  ...PACKAGES.map((p) => p.name),
-  "Layanan Satuan / Custom",
+  ...ALL_PACKAGES.map((e) => ({ value: e.pkg.id, label: packageOptionLabel(e.pkg, e.solution) })),
+  { value: CUSTOM_SERVICE_OPTION, label: CUSTOM_SERVICE_OPTION },
 ];
 
 const budgetRanges = [
@@ -27,13 +27,13 @@ const budgetRanges = [
   "> Rp 35 Juta",
 ];
 
-const CUSTOM_BUDGET = "Lainnya — ketik sendiri";
+const CUSTOM_BUDGET = "Lainnya, ketik sendiri";
 
 type Status = "idle" | "loading" | "success" | "error";
 
 export function CollaborationModal({ isOpen, onClose, initialDraft, onDraftConsumed }: CollaborationModalProps) {
   const [selectedServices, setSelectedServices] = useState<string[]>([
-    PACKAGES[2]?.name ?? "GROWTH PACKAGE",
+    ALL_PACKAGES[0]?.pkg.id ?? CUSTOM_SERVICE_OPTION,
   ]);
   const [selectedBudget, setSelectedBudget] = useState("Rp 5 - 15 Juta");
   const [customBudget, setCustomBudget] = useState("");
@@ -178,10 +178,10 @@ export function CollaborationModal({ isOpen, onClose, initialDraft, onDraftConsu
     onClose();
   };
 
-  // ponytail: nomor CP hardcode — pindah ke env/config bila multi-admin.
+  // ponytail: nomor CP hardcode, pindah ke env/config bila multi-admin.
   const waLink = receipt
     ? `https://wa.me/6289521375477?text=${encodeURIComponent(
-        `Halo Logia Creative! Saya ${receipt.customer}${receipt.brand ? ` (${receipt.brand})` : ""} baru saja mengisi form kolaborasi.\n\nID: ${receipt.id}\nPaket: ${receipt.packageName} — ${receipt.priceLabel}\n\nSaya ingin langsung mengurus paket ini. Terima kasih!`
+        `Halo Logia Creative! Saya ${receipt.customer}${receipt.brand ? ` (${receipt.brand})` : ""} baru saja mengisi form kolaborasi.\n\nID: ${receipt.id}\nPaket: ${receipt.packageName} · ${receipt.solutionName}\nHarga: ${receipt.priceLabel}\n\nSaya ingin langsung mengurus paket ini. Terima kasih!`
       )}`
     : "https://wa.me/6289521375477";
 
@@ -300,12 +300,12 @@ export function CollaborationModal({ isOpen, onClose, initialDraft, onDraftConsu
                       </span>
                       <div className="flex flex-wrap gap-2" role="group" aria-labelledby="svc-label">
                         {serviceOptions.map((srv) => {
-                          const active = selectedServices.includes(srv);
+                          const active = selectedServices.includes(srv.value);
                           return (
                             <button
                               type="button"
-                              key={srv}
-                              onClick={() => toggleService(srv)}
+                              key={srv.value}
+                              onClick={() => toggleService(srv.value)}
                               aria-pressed={active}
                               className={`text-xs px-4 py-2.5 min-h-[44px] rounded-full border transition-all duration-200 active:scale-95 flex items-center gap-2 ${
                                 active
@@ -314,7 +314,7 @@ export function CollaborationModal({ isOpen, onClose, initialDraft, onDraftConsu
                               }`}
                             >
                               <span className={`w-1.5 h-1.5 rounded-full ${active ? "bg-[var(--accent-bronze)]" : "bg-neutral-400 dark:bg-neutral-600"}`} />
-                              {srv}
+                              {srv.label}
                             </button>
                           );
                         })}
