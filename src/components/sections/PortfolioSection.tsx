@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
-import { motion, useMotionValue, useSpring } from "framer-motion";
+import React, { useState, useEffect, useRef, useCallback } from "react";
+import { createPortal } from "react-dom";
+import { motion, AnimatePresence, useMotionValue, useSpring, useReducedMotion } from "framer-motion";
 import { useScrollReveal } from "@/lib/useScrollReveal";
 import Image from "next/image";
 import { ArrowRight, X } from "lucide-react";
@@ -95,6 +96,7 @@ const categories = ["Semua", "Branding", "Web Development", "UI/UX", "Marketing"
 function PortfolioCard({ project, gridVisible, idx }: { project: any, gridVisible: boolean, idx: number }) {
   const cardRef = useRef<HTMLDivElement>(null);
   const [isHovered, setIsHovered] = useState(false);
+  const [tiltEnabled, setTiltEnabled] = useState(false);
 
   const x = useMotionValue(0);
   const y = useMotionValue(0);
@@ -105,48 +107,66 @@ function PortfolioCard({ project, gridVisible, idx }: { project: any, gridVisibl
   const [px, setPx] = useState(50);
   const [py, setPy] = useState(50);
 
+  // Tilt 3D hanya di perangkat berpointer presisi. Di layar sentuh efek ini
+  // tak terpakai — jadi jangan pasang listener sama sekali.
   useEffect(() => {
-    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce), (hover: none)");
-    if (mediaQuery.matches) return;
+    const canHover = window.matchMedia("(hover: hover) and (pointer: fine)");
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const sync = () => setTiltEnabled(canHover.matches && !reducedMotion.matches);
+    sync();
+    canHover.addEventListener("change", sync);
+    reducedMotion.addEventListener("change", sync);
+    return () => {
+      canHover.removeEventListener("change", sync);
+      reducedMotion.removeEventListener("change", sync);
+    };
+  }, []);
 
-    const handleMouseMove = (e: MouseEvent) => {
-      if (!cardRef.current) return;
-      const rect = cardRef.current.getBoundingClientRect();
-      const xPct = (e.clientX - rect.left) / rect.width - 0.5;
-      const yPct = (e.clientY - rect.top) / rect.height - 0.5;
+  // Pointer dipegang di elemen kartu, bukan di window: satu handler per kartu
+  // dan hanya aktif saat kursor benar-benar di atasnya. rAF-throttle menjaga
+  // hitungan maksimal sekali per frame walau pointer bergerak lebih cepat.
+  const frameRef = useRef(0);
+  const rectRef = useRef<DOMRect | null>(null);
 
+  const handlePointerEnter = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!tiltEnabled) return;
+    rectRef.current = e.currentTarget.getBoundingClientRect(); // baca layout sekali
+    setIsHovered(true);
+  };
+
+  const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!tiltEnabled || !stillAnimating()) return;
+    if (frameRef.current) return; // sudah ada frame terjadwal
+    const { clientX, clientY } = e;
+    frameRef.current = requestAnimationFrame(() => {
+      frameRef.current = 0;
+      const rect = rectRef.current ?? cardRef.current?.getBoundingClientRect();
+      if (!rect || !rect.width || !rect.height) return;
+      const xPct = (clientX - rect.left) / rect.width - 0.5;
+      const yPct = (clientY - rect.top) / rect.height - 0.5;
       x.set(xPct * 16); // max rotate 8deg
       y.set(yPct * -16); // max rotate -8deg
+      setPx(((clientX - rect.left) / rect.width) * 100);
+      setPy(((clientY - rect.top) / rect.height) * 100);
+    });
+  };
 
-      setPx(((e.clientX - rect.left) / rect.width) * 100);
-      setPy(((e.clientY - rect.top) / rect.height) * 100);
-    };
-
-    const handleMouseLeave = () => {
-      x.set(0);
-      y.set(0);
-      setPx(50);
-      setPy(50);
-      setIsHovered(false);
-    };
-
-    const handleMouseEnter = () => setIsHovered(true);
-
-    const el = cardRef.current;
-    if (el) {
-      window.addEventListener('mousemove', handleMouseMove, { passive: true });
-      el.addEventListener('mouseleave', handleMouseLeave);
-      el.addEventListener('mouseenter', handleMouseEnter);
+  const handlePointerLeave = () => {
+    if (frameRef.current) {
+      cancelAnimationFrame(frameRef.current);
+      frameRef.current = 0;
     }
+    rectRef.current = null;
+    x.set(0);
+    y.set(0);
+    setPx(50);
+    setPy(50);
+    setIsHovered(false);
+  };
 
-    return () => {
-      if (el) {
-        window.removeEventListener('mousemove', handleMouseMove);
-        el.removeEventListener('mouseleave', handleMouseLeave);
-        el.removeEventListener('mouseenter', handleMouseEnter);
-      }
-    };
-  }, [x, y]);
+  useEffect(() => () => {
+    if (frameRef.current) cancelAnimationFrame(frameRef.current);
+  }, []);
 
   return (
     <motion.div
@@ -159,6 +179,9 @@ function PortfolioCard({ project, gridVisible, idx }: { project: any, gridVisibl
     >
       <motion.div
         className="glass-container overflow-hidden group cursor-pointer flex flex-col h-full border border-slate-200 dark:border-white/10 relative"
+        onPointerEnter={handlePointerEnter}
+        onPointerMove={handlePointerMove}
+        onPointerLeave={handlePointerLeave}
         style={{
           rotateX: mouseYSpring,
           rotateY: mouseXSpring,
@@ -183,13 +206,13 @@ function PortfolioCard({ project, gridVisible, idx }: { project: any, gridVisibl
             fill
             loading="lazy"
             sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
-            className="object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700 ease-out"
+            className="object-cover transition-all duration-700 ease-out [@media(hover:hover)]:grayscale [@media(hover:hover)]:group-hover:grayscale-0 group-hover:scale-105"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
         </div>
 
         {/* Content */}
-        <div className="p-6 flex flex-col flex-grow bg-white/75 dark:bg-[#111]/75 backdrop-blur-md border-t border-black/5 dark:border-white/10" style={{ transform: "translateZ(40px)" }}>
+        <div className="p-6 flex flex-col flex-grow bg-white/95 dark:bg-[#111]/95 border-t border-black/5 dark:border-white/10" style={{ transform: "translateZ(40px)" }}>
           <span className="inline-block text-[11px] font-bold text-[#666666] dark:text-[#999999] uppercase tracking-wider mb-2 transition-transform duration-300 group-hover:-translate-y-1">
             {project.category}
           </span>
@@ -212,12 +235,31 @@ function PortfolioCard({ project, gridVisible, idx }: { project: any, gridVisibl
   );
 }
 
+// Perendam gerak saat overlay Archive terbuka: hero & 3D sudah memeriksa ini,
+// tapi parrallax/gyroscope lain belum. Satu hakim terpusat = hemat CPU saat overlay.
+const stillAnimating = () => !document.documentElement.dataset.overlay;
+
 export function PortfolioSection() {
   const [activeCategory, setActiveCategory] = useState("Semua");
   const [displayedCategory, setDisplayedCategory] = useState("Semua");
   const [isExiting, setIsExiting] = useState(false);
   const [showAllProjects, setShowAllProjects] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const { ref: gridRef, isInView: gridVisible } = useScrollReveal();
+  const reduced = useReducedMotion();
+
+  // Overlay harus keluar dari pohon DOM bab ini: nenek moyangnya
+  // <section data-cv> memakai `content-visibility:auto` yang meng-IMPLY
+  // `contain:paint`, dan itu menjadikannya containing block untuk
+  // `position:fixed` → overlay akan tampil di tengah dokumen, bukan di
+  // viewport. Portal ke <body> = fixed benar-benar mengacu ke viewport.
+  useEffect(() => setMounted(true), []);
+
+  // Archive overlay: refs untuk focus restore + focus trap
+  const overlayRef = useRef<HTMLDivElement>(null);
+  const closeBtnRef = useRef<HTMLButtonElement>(null);
+  const seeAllBtnRef = useRef<HTMLButtonElement>(null);
+  const scrollYRef = useRef(0);
 
   useEffect(() => {
     if (activeCategory !== displayedCategory) {
@@ -243,25 +285,69 @@ export function PortfolioSection() {
     accent: p.accent
   }));
 
+  const openArchive = useCallback(() => {
+    scrollYRef.current = window.scrollY;
+    setShowAllProjects(true);
+  }, []);
+
+  const closeArchive = useCallback(() => setShowAllProjects(false), []);
+
+  // MODUL 3: overlay fullscreen. Kunci scroll body (posisi dipertahankan via
+  // position:fixed + top:-Y), pause hero/3D lewat data-overlay, Esc = tombol X
+  // yang sama, focus trap + focus kembali ke tombol See all saat ditutup.
   useEffect(() => {
-    if (showAllProjects) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
+    if (!showAllProjects) return;
+    const bodyPrev = document.body.style.cssText;
+    document.body.style.position = "fixed";
+    document.body.style.top = `-${scrollYRef.current}px`;
+    document.body.style.left = "0";
+    document.body.style.right = "0";
+    document.body.style.width = "100%";
+    document.body.style.overflow = "hidden";
+    document.documentElement.dataset.overlay = "1"; // pause render 3D & hero
 
-    const handleEsc = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setShowAllProjects(false);
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        e.preventDefault();
+        closeArchive();
+        return;
+      }
+      if (e.key !== "Tab") return;
+      const root = overlayRef.current;
+      if (!root) return;
+      const focusables = Array.from(
+        root.querySelectorAll<HTMLElement>(
+          'a[href],button:not([disabled]),input:not([disabled]),select,textarea,[tabindex]:not([tabindex="-1"])'
+        )
+      ).filter((el) => el.offsetParent !== null);
+      if (!focusables.length) return;
+      const first = focusables[0];
+      const lastEl = focusables[focusables.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        lastEl.focus();
+      } else if (!e.shiftKey && document.activeElement === lastEl) {
+        e.preventDefault();
+        first.focus();
+      }
     };
 
-    if (showAllProjects) {
-      window.addEventListener('keydown', handleEsc);
-    }
+    window.addEventListener("keydown", onKey);
+    closeBtnRef.current?.focus();
+    const seeAllNode = seeAllBtnRef.current; // node stabil; disimpan untuk cleanup
+
     return () => {
-      window.removeEventListener('keydown', handleEsc);
-      document.body.style.overflow = '';
+      window.removeEventListener("keydown", onKey);
+      document.body.style.cssText = bodyPrev;
+      delete document.documentElement.dataset.overlay;
+      // `behavior:"instant"` menimpa html{scroll-behavior:smooth} supaya posisi
+      // pulih seketika (bukan beranimasi dari atas).
+      window.scrollTo({ top: scrollYRef.current, left: 0, behavior: "instant" as ScrollBehavior });
+      // preventScroll WAJIB: tanpa itu focus() menggulir tombol ke tengah layar
+      // dan menimpa posisi scroll yang baru dipulihkan di atas.
+      requestAnimationFrame(() => seeAllNode?.focus({ preventScroll: true }));
     };
-  }, [showAllProjects]);
+  }, [showAllProjects, closeArchive]);
 
   return (
     <section id="portfolio" className="py-24 sm:py-32 relative bg-transparent w-full overflow-hidden">
@@ -274,7 +360,7 @@ export function PortfolioSection() {
           <SplitWords as="h2" text="Selected Work" className="font-display font-medium tracking-[-0.02em] text-[clamp(2rem,4vw,3.5rem)] text-black dark:text-white mb-4" />
         </div>
 
-        {/* Filter Tabs */}
+        {/* Filter Tabs (section) — scroll horizontal di mobile tanpa memotong teks */}
         <div className="flex flex-wrap justify-center gap-2 mb-12 px-4">
           {categories.map((category) => (
             <button
@@ -307,7 +393,8 @@ export function PortfolioSection() {
         {/* View All CTA */}
         <div className="text-center mt-16 px-4">
           <button
-            onClick={() => setShowAllProjects(true)}
+            ref={seeAllBtnRef}
+            onClick={openArchive}
             className="w-16 h-16 rounded-full bg-black text-white dark:bg-white dark:text-black font-semibold text-sm hover:scale-[1.04] active:scale-[0.97] transition-transform shadow-md flex items-center justify-center mx-auto group"
             aria-label="View All Projects"
           >
@@ -317,66 +404,85 @@ export function PortfolioSection() {
 
       </div>
 
-      {/* Overlay Semua Project — full-page glassmorphism */}
-      <div
-        role="dialog"
-        aria-modal="true"
-        aria-label="Archive proyek"
-        className={`fixed inset-0 z-[100] h-[100dvh] w-screen overflow-y-auto overscroll-contain backdrop-blur-2xl backdrop-saturate-150 bg-gradient-to-b from-white/85 via-white/70 to-white/85 dark:from-[#0a0a0a]/85 dark:via-[#0a0a0a]/70 dark:to-[#0a0a0a]/85 transition-all duration-300 ${
-          showAllProjects ? 'opacity-100 visible pointer-events-auto' : 'opacity-0 invisible pointer-events-none'
-        }`}
-        onClick={(e) => {
-          if (e.target === e.currentTarget) setShowAllProjects(false);
-        }}
-      >
-        <div className={`min-h-full py-8 sm:py-16 px-4 sm:px-8 transition-transform duration-300 ${showAllProjects ? 'scale-100' : 'scale-95'}`}>
-          <div className="max-w-7xl mx-auto">
-            {/* Header Sticky */}
-            <div className="flex items-center justify-between mb-8 sm:mb-12 sticky top-4 z-20 py-4 px-6 rounded-2xl border border-black/10 dark:border-white/10 glass-card">
-              <div>
-                <h2 className="font-display text-2xl sm:text-3xl font-medium text-black dark:text-white tracking-tighter">
-                  Archive
-                </h2>
-                <p className="text-xs sm:text-sm text-[#666666] dark:text-[#999999] mt-0.5">
-                  Seluruh eksplorasi proyek desain, identitas visual, dan pengembangan digital.
-                </p>
+      {/* Overlay Archive — di-portal ke <body> agar `fixed` mengacu ke viewport
+          (bukan ke <section data-cv> yang memakai content-visibility:auto).
+          Fullscreen `fixed inset-0`, 100dvh + safe-area, scroll sendiri.
+          Tutup HANYA lewat tombol X (sticky, safe-area); Esc memicu X yang sama.
+          Tidak ada tutup via klik backdrop / swipe. */}
+      {mounted && createPortal(
+        <AnimatePresence>
+          {showAllProjects && (
+            <motion.div
+              ref={overlayRef}
+              role="dialog"
+              aria-modal="true"
+              aria-label="Archive proyek"
+              initial={reduced ? { opacity: 0 } : { opacity: 0, scale: 0.985, y: 12 }}
+              animate={reduced ? { opacity: 1 } : { opacity: 1, scale: 1, y: 0 }}
+              exit={reduced ? { opacity: 0 } : { opacity: 0, scale: 0.985, y: 12 }}
+              transition={{ duration: reduced ? 0 : 0.25, ease: [0.22, 1, 0.36, 1] }}
+              style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0 }}
+              className="z-[60] h-[100dvh] w-full overflow-y-auto overscroll-contain bg-[#fafafa] dark:bg-[#0a0a0a]"
+            >
+              <div className="min-h-full pt-[max(0.75rem,env(safe-area-inset-top))] pb-[max(1.5rem,env(safe-area-inset-bottom))] px-4 sm:px-8">
+                <div className="max-w-7xl mx-auto">
+                  {/* Header sticky + tombol X satu-satunya penutup */}
+                  <div className="flex items-start justify-between gap-3 mb-5 sm:mb-10 sticky top-[max(0.5rem,env(safe-area-inset-top))] z-20 py-2.5 px-3 sm:px-6 rounded-[var(--radius-md)] border border-[color-mix(in_srgb,var(--text-primary)_12%,transparent)] glass-card">
+                    <div className="min-w-0">
+                      <h2 className="font-display text-lg sm:text-3xl font-medium text-[var(--text-primary)] tracking-[-0.02em] leading-tight">
+                        Archive
+                      </h2>
+                      <p className="text-[11px] sm:text-sm text-[var(--text-muted)] mt-0.5 leading-snug">
+                        Seluruh eksplorasi proyek desain, identitas visual, dan pengembangan digital.
+                      </p>
+                    </div>
+                    <button
+                      ref={closeBtnRef}
+                      onClick={closeArchive}
+                      className="shrink-0 min-h-[48px] min-w-[48px] flex items-center justify-center rounded-full border border-[color-mix(in_srgb,var(--text-primary)_14%,transparent)] text-[var(--text-primary)] hover:bg-black/5 dark:hover:bg-white/10 transition-colors active:scale-95"
+                      aria-label="Tutup Archive"
+                    >
+                      <X className="w-5 h-5" />
+                    </button>
+                  </div>
+
+                  {/* Filter Tabs overlay — scroll horizontal di mobile, tidak memotong teks */}
+                  <div className="flex flex-wrap gap-2 mb-6 sm:mb-8 pb-1">
+                    {categories.map((category) => (
+                      <button
+                        key={`overlay-${category}`}
+                        onClick={() => setActiveCategory(category)}
+                        className={`shrink-0 min-h-[44px] px-4 sm:px-5 py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-colors duration-300 active:scale-95 ${
+                          activeCategory === category
+                            ? "bg-black text-white dark:bg-white dark:text-black border border-transparent"
+                            : "bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 text-[var(--text-muted)] hover:text-[var(--text-primary)]"
+                        }`}
+                      >
+                        {category}
+                      </button>
+                    ))}
+                  </div>
+
+                  {/* Mobile 1 kolom (kartu lebih pendek), tablet 2, desktop 3 */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
+                    {allProjects
+                      .filter((p) => activeCategory === "Semua" || p.category === activeCategory)
+                      .map((project, idx) => (
+                        <PortfolioCard
+                          key={`overlay-${project.title}`}
+                          project={project}
+                          gridVisible={showAllProjects}
+                          idx={Math.min(idx, 6)}
+                        />
+                      ))}
+                  </div>
+                </div>
               </div>
-              <button
-                onClick={() => setShowAllProjects(false)}
-                className="p-2.5 rounded-full min-h-[44px] min-w-[44px] flex items-center justify-center border border-black/10 dark:border-white/15 hover:bg-black/5 dark:hover:bg-white/10 transition-colors"
-                aria-label="Tutup Archive"
-              >
-                <X className="w-5 h-5 text-black dark:text-white" />
-              </button>
-            </div>
-
-            {/* Filter Tabs overlay */}
-            <div className="flex flex-wrap gap-2 mb-10">
-              {categories.map((category) => (
-                <button
-                  key={`overlay-${category}`}
-                  onClick={() => setActiveCategory(category)}
-                  className={`px-5 py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all duration-300 ${
-                    activeCategory === category
-                      ? "bg-black text-white dark:bg-white dark:text-black shadow-md"
-                      : "bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 text-[#666666] dark:text-[#999999] hover:text-black dark:hover:text-white"
-                  }`}
-                >
-                  {category}
-                </button>
-              ))}
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 pb-16">
-              {allProjects
-                .filter((p) => activeCategory === "Semua" || p.category === activeCategory)
-                .map((project, idx) => (
-                <PortfolioCard key={`overlay-${project.title}`} project={project} gridVisible={showAllProjects} idx={idx} />
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
+            </motion.div>
+          )}
+        </AnimatePresence>,
+        document.body
+      )}
     </section>
   );
 }

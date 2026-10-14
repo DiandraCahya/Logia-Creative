@@ -46,9 +46,9 @@ export function CompanyProfileSection() {
   ];
 
   return (
-    <section id="about" className="py-16 md:py-32 relative bg-transparent border-t border-black/[0.05] dark:border-white/[0.05]">
+    <section id="about" className="py-12 md:py-20 relative bg-transparent border-t border-black/[0.05] dark:border-white/[0.05]">
       <div className="max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-12" ref={ref}>
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-16 items-start">
           {/* Left Column: Heading & Tabs */}
           <div
             className={`lg:col-span-4 lg:sticky lg:top-32 transition-all duration-700 ${
@@ -84,7 +84,7 @@ export function CompanyProfileSection() {
 
           {/* Right Column: Content Panel */}
           <div className="lg:col-span-8">
-            <div className="min-h-[300px]">
+            <div>
               <AnimatePresence mode="wait">
                 {activeTab === "visi" && (
                   <motion.div
@@ -96,7 +96,7 @@ export function CompanyProfileSection() {
                     className="p-5 sm:p-12 glass-card rounded-3xl"
                   >
                     <h3 className="text-xl sm:text-2xl font-bold leading-[1.5] text-black dark:text-white mb-8">
-                      "Menjadi mitra kreatif dan teknologi terdepan yang memberdayakan bisnis di Indonesia melalui integrasi identitas visual yang berkarakter dan solusi digital yang berdampak nyata."
+                      &ldquo;Menjadi mitra kreatif dan teknologi terdepan yang memberdayakan bisnis di Indonesia melalui integrasi identitas visual yang berkarakter dan solusi digital yang berdampak nyata.&rdquo;
                     </h3>
                     <div className="flex items-center gap-4">
                       <div className="w-12 h-px bg-black/20 dark:bg-white/20" />
@@ -114,7 +114,7 @@ export function CompanyProfileSection() {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
                     transition={{ duration: 0.3 }}
-                    className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6"
+                    className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-6"
                   >
                     {missions.map((m, idx) => (
                       <div
@@ -146,7 +146,7 @@ export function CompanyProfileSection() {
                     transition={{ duration: 0.3 }}
                     className="space-y-6"
                   >
-                    <div className="p-6 sm:p-10 glass-card rounded-3xl flex flex-col sm:flex-row items-center justify-center gap-5 sm:gap-8">
+                    <div className="p-5 sm:p-10 glass-card rounded-2xl sm:rounded-3xl flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8">
                       <div className="relative w-32 h-16">
                         <Image
                           src="/LOGO.png"
@@ -168,11 +168,11 @@ export function CompanyProfileSection() {
                       </div>
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
                       {brandPillars.map((bp, idx) => (
                         <div
                           key={idx}
-                          className="p-6 glass-card rounded-2xl flex flex-col gap-3"
+                          className="p-5 glass-card rounded-2xl flex flex-col gap-2.5"
                         >
                           <div className="w-2 h-2 rounded-full bg-black dark:bg-white" />
                           <div>

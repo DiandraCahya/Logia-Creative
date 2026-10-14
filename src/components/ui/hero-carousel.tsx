@@ -129,8 +129,13 @@ export function HeroCarousel({
     return () => ro.disconnect()
   }, [])
 
-  const fullH = clamp(box.h * CARD_H, 96, 360)
-  const halfH = fullH / 2
+  // Panggung sempit (mobile) butuh kartu proporsional lebih tinggi, kalau tidak
+  // strip-nya kecil dan menyisakan rongga kosong besar di bawah headline.
+  const compact = box.w > 0 && box.w < 640
+  const fullH = clamp(box.h * (compact ? 0.36 : CARD_H), compact ? 132 : 96, 360)
+  // Tetangga sengaja tidak dipotong separuh: 0.78 menjaga hierarki filmstrip
+  // tanpa mengubah rasio kartu sampai terlihat "terpotong".
+  const neighborH = Math.round(fullH * 0.78)
   const cardW = fullH * CARD_AR
   const gap = Math.max(4, Math.round(cardW * GAP))
   const step = cardW + gap
@@ -247,17 +252,29 @@ export function HeroCarousel({
           exit={{ opacity: 0 }}
           transition={swing}
         >
-          <motion.img
-            src={active.image}
-            alt=""
-            aria-hidden
-            draggable={false}
-            loading={index === 0 ? "eager" : "lazy"}
-            className="absolute inset-0 h-full w-full object-cover"
+          {/* The backdrop is heavily scaled and colour-graded, so its detail is
+              largely destroyed anyway - run it through next/image so the browser
+              fetches a viewport-sized variant instead of the full-resolution
+              original. The scale lives on the wrapper; `fill` keeps the photo
+              edge-to-edge inside it. */}
+          <motion.div
+            className="absolute inset-0"
             initial={{ scale: reduced ? 1.28 : 1.42 }}
             animate={{ scale: 1.28 }}
             transition={reduced ? { duration: 0 } : { duration: 6, ease: "linear" }}
-          />
+          >
+            <Image
+              src={active.image}
+              alt=""
+              aria-hidden
+              draggable={false}
+              fill
+              sizes="100vw"
+              quality={70}
+              priority={index === 0}
+              className="object-cover"
+            />
+          </motion.div>
           {/* Keep the photo's luminance, take the accent's hue. */}
           <div
             className="absolute inset-0"
@@ -420,7 +437,7 @@ export function HeroCarousel({
               onClick={() => go(i)}
               className="relative shrink-0 overflow-hidden rounded-none bg-white/5"
               style={{ width: cardW }}
-              animate={{ height: i === index ? fullH : halfH }}
+              animate={{ height: i === index ? fullH : neighborH }}
               transition={spring}
             >
               <Image
@@ -428,6 +445,8 @@ export function HeroCarousel({
                 alt=""
                 draggable={false}
                 fill
+                sizes={`${Math.round(cardW)}px`}
+                quality={70}
                 className="h-full w-full object-cover"
                 style={{ objectPosition: "50% 26%" }}
               />

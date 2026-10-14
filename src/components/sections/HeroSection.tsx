@@ -70,8 +70,9 @@ function InteractiveShape() {
     const clamp = (v: number, m: number) => Math.max(-m, Math.min(m, v));
 
     const render = () => {
-      raf = requestAnimationFrame(render);
-      if (!inViewRef.current || document.hidden) return;
+          raf = requestAnimationFrame(render);
+          // Pause total saat overlay Archive terbuka (hemat GPU) atau tab tak terlihat.
+          if (!inViewRef.current || document.hidden || document.documentElement.dataset.overlay) return;
       const c = current.current;
       const t = target.current;
       // low-pass smoothing: smoothed = smoothed * 0.9 + raw * 0.1

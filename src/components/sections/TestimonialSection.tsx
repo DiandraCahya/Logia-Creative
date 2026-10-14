@@ -45,9 +45,9 @@ const TESTIMONIALS = [
 
 export function TestimonialSection() {
   return (
-    <section id="testimoni" className="w-full py-24 md:py-32 bg-transparent flex flex-col items-center justify-center relative z-10 border-t border-black/5 dark:border-white/5">
+    <section id="testimoni" className="w-full py-12 md:py-20 bg-transparent flex flex-col items-center justify-center relative z-10 border-t border-black/5 dark:border-white/5">
       <div className="w-full max-w-4xl mx-auto px-4 sm:px-6 flex flex-col items-center">
-        <h2 className="font-display font-medium tracking-[-0.02em] text-[clamp(2rem,4vw,3.5rem)] text-black dark:text-white mb-3 text-center">
+        <h2 className="font-display font-medium tracking-[-0.02em] text-[clamp(1.65rem,4vw,3.25rem)] text-black dark:text-white mb-2.5 text-center">
           Testimoni Klien
         </h2>
         <p className="text-sm text-[#666666] dark:text-[#999999] mb-8 sm:mb-12 text-center max-w-md px-2">

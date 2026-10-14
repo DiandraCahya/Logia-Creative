@@ -9,6 +9,14 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      // Satu sumber font: utility `font-sans`/`font-mono` me-refer ke token CSS di
+      // globals.css. Tanpa ini, preflight Tailwind memakai stack default-nya
+      // sendiri sehingga var(--font-sans) dari next/font tidak pernah terpakai.
+      fontFamily: {
+        sans: ["var(--font-sans)"],
+        mono: ["var(--font-mono)"],
+        display: ["var(--font-sans)"],
+      },
       colors: {
         "accent-bronze": "#A08C6A",
         brand: {

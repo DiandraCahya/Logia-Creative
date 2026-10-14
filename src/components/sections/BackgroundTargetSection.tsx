@@ -139,7 +139,7 @@ export function BackgroundTargetSection({ onOpenCollaboration }: Props) {
   const ActiveIcon = currentMarket.icon;
 
   return (
-    <section id="target-pasar" className="py-24 md:py-32 relative bg-transparent border-t border-black/5 dark:border-white/5">
+    <section id="target-pasar" className="py-12 md:py-20 relative bg-transparent border-t border-black/5 dark:border-white/5">
       <div className="max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-12 relative z-10" ref={ref}>
         {/* Header */}
         <div className={`text-center max-w-2xl mx-auto mb-16 transition-all duration-700 ${isInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
@@ -185,7 +185,7 @@ export function BackgroundTargetSection({ onOpenCollaboration }: Props) {
         </div>
 
         {/* Content Panel */}
-        <div className="max-w-5xl mx-auto min-h-[400px]">
+        <div className="max-w-5xl mx-auto">
           <AnimatePresence mode="wait">
             <motion.div
               key={currentMarket.id}
@@ -196,9 +196,9 @@ export function BackgroundTargetSection({ onOpenCollaboration }: Props) {
               className="glass-card rounded-[2rem] p-5 sm:p-12"
             >
               {/* Card Header */}
-              <div className="flex flex-col md:flex-row md:items-start justify-between gap-6 mb-10 pb-8 border-b border-black/10 dark:border-white/10">
+              <div className="flex flex-col md:flex-row md:items-start justify-between gap-5 mb-6 sm:mb-10 pb-6 sm:pb-8 border-b border-black/10 dark:border-white/10">
                 <div className="flex items-center gap-4">
-                  <div className="w-16 h-16 rounded-2xl bg-black/[0.03] dark:bg-white/[0.03] border border-black/5 dark:border-white/5 flex items-center justify-center shrink-0">
+                  <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-2xl bg-black/[0.03] dark:bg-white/[0.03] border border-black/5 dark:border-white/5 flex items-center justify-center shrink-0">
                     <ActiveIcon className="w-8 h-8 text-black dark:text-white" />
                   </div>
                   <div>
@@ -218,7 +218,7 @@ export function BackgroundTargetSection({ onOpenCollaboration }: Props) {
               </div>
 
               {/* Grid 2 Cols */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-12">
                 {/* Left: Problem & Stats */}
                 <div className="space-y-8">
                   <div>
@@ -226,10 +226,10 @@ export function BackgroundTargetSection({ onOpenCollaboration }: Props) {
                       {currentMarket.problemTitle}
                     </h4>
                     <p className="text-sm text-[#666666] dark:text-[#999999] leading-relaxed border-l-2 border-black/20 dark:border-white/20 pl-4">
-                      "{currentMarket.problemText}"
+                      &ldquo;{currentMarket.problemText}&rdquo;
                     </p>
                   </div>
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-2 gap-3 sm:gap-4">
                     {currentMarket.stats.map((stat, i) => (
                       <div key={i} className="p-4 glass-card rounded-xl">
                         <p className="text-2xl font-black text-black dark:text-white mb-1">{stat.value}</p>

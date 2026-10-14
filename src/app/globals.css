@@ -4,13 +4,49 @@
 
 @layer base {
   :root {
-    --font-display: var(--font-sans), "Inter", system-ui, sans-serif;
+    /* ── FONT: satu sumber. PENTING: setiap var() WAJIB punya fallback.
+           `var(--font-anthropic)` tanpa fallback = invalid-at-computed-value →
+           SELURUH --font-sans batal dan teks jatuh ke font default browser. */
+        --font-sans: var(--font-anthropic, "Anthropic Sans"), var(--font-inter, ui-sans-serif), ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+        --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+    --font-display: var(--font-sans);
+
+    /* ── DESIGN TOKENS (dipakai ulang Modul 4 & 5) ── */
+    /* Tipografi: fluid, bisa dipakai tanpa media query */
+    --fs-display: clamp(2rem, 6vw, 4rem);
+    --fs-h2: clamp(1.5rem, 4.2vw, 3.25rem);
+    --fs-h3: clamp(1.15rem, 2.4vw, 1.75rem);
+    --fs-body: clamp(0.875rem, 1.05vw, 1rem);
+    --fs-small: 0.8125rem;
+    --lh-tight: 1.08;
+    --lh-snug: 1.3;
+    --lh-body: 1.6;
+    --ls-display: -0.025em;
+
+    /* Spacing vertikal section (mobile lebih rapat, desktop lega) */
+    --space-section: clamp(2.5rem, 7vw, 8rem);
+    --space-block: clamp(1.5rem, 3vw, 2.5rem);
+    --space-gap: clamp(0.75rem, 1.5vw, 1.5rem);
+
+    /* Radius + garis hairline */
+    --radius-xs: 6px;
+    --radius-sm: 10px;
+    --radius-md: 14px;
+    --hairline: 1px;
+    --border-hairline: var(--hairline) solid color-mix(in srgb, var(--text-primary) 12%, transparent);
+
+    /* Warna teks berlapis + focus ring */
+    --text-primary: #000000;
+    --text-secondary: #333333;
+    --text-muted: #666666;
+    --text-tertiary: #555555;
+    --focus-ring: 2px solid var(--text-primary);
+    --focus-ring-offset: 2px;
+    --text-on-solid: #ffffff;
+
     --accent-bronze: #A08C6A;
     --ease-out-expo: cubic-bezier(0.22, 1, 0.36, 1);
     --bg-primary: #FAFAF8;    --bg-secondary: #f9fafb;
-    --text-primary: #000000;
-    --text-secondary: #333333;
-    --text-tertiary: #555555;
     --accent-primary: #000000;
     --accent-secondary: #222222;
     --bg: #ffffff;
@@ -23,7 +59,9 @@
     --bg-secondary: #111111;
     --text-primary: #ffffff;
     --text-secondary: #a3a3a3;
+    --text-muted: #999999;
     --text-tertiary: #525252;
+    --text-on-solid: #000000;
     --accent-primary: #ffffff;
     --accent-secondary: #e5e5e5;
     --bg: #0a0a0a;
@@ -45,11 +83,32 @@ html {
 body {
   background-color: var(--bg-primary);
   color: var(--text-primary);
+  font-family: var(--font-sans);
   /* ponytail: hanya background yang ditransisikan; transisi color bikin
      teks tombol terlihat "hilang" sesaat saat toggle tema */
   transition: background-color 0.4s cubic-bezier(0.22, 1, 0.36, 1);
   overflow-x: hidden;
   font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  text-rendering: optimizeLegibility;
+}
+
+/* Satu font untuk seluruh situs — heading, form, struk, chat, canvas/3D.
+   Utility .font-mono tetap memakai token mono (peran kode/angka), bukan familia lain. */
+h1, h2, h3, h4, h5, h6,
+button, input, select, textarea, optgroup {
+  font-family: inherit;
+}
+
+/* Heading besar: rapikan tracking + leading supaya tidak longgar/rapat */
+h1, .text-display { line-height: var(--lh-tight); letter-spacing: var(--ls-display); }
+h2, .text-headline { line-height: var(--lh-tight); letter-spacing: var(--ls-display); }
+h3, .text-subheadline { line-height: var(--lh-snug); letter-spacing: -0.015em; }
+
+/* Focus ring seragam, terlihat di kedua tema (dipakai Modul 4 & 5) */
+:where(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  border-radius: var(--radius-xs);
 }
 }
 
@@ -325,6 +384,17 @@ html:not(.dark) .cta-dark button svg,
 /* Display font utility */
 .font-display { font-family: var(--font-display); }
 
+/* Sembunyikan scrollbar horizontal (tabs) tanpa memotong teks */
+.hide-scrollbar { scrollbar-width: none; -ms-overflow-style: none; }
+.hide-scrollbar::-webkit-scrollbar { display: none; }
+
+/* MODUL 3: saat overlay Archive terbuka, beku-kan semua animasi CSS di layer bawah */
+html[data-overlay="1"] { overflow: hidden; }
+html[data-overlay="1"] .scroll-progress-bar { opacity: 0; }
+html[data-overlay="1"] .glass-container,
+html[data-overlay="1"] .glass-card,
+html[data-overlay="1"] .glass-accordion { animation-play-state: paused !important; }
+
 /* Theme toggle: matikan transisi+animasi sesaat agar color tidak nyangkut */
 .theme-toggling, .theme-toggling *, .theme-toggling *::before, .theme-toggling *::after {
   transition: none !important;
@@ -472,24 +542,27 @@ html:not(.dark) .card,
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
 }
 
-/* Input fields */
-html:not(.dark) input,
+/* Input fields — gaya hairline minimalis (dipakai form kolaborasi + chat) */
+html:not(.dark) input:not([type="checkbox"]):not([type="radio"]),
 html:not(.dark) textarea,
 html:not(.dark) select,
-.light input,
+.light input:not([type="checkbox"]):not([type="radio"]),
 .light textarea,
 .light select {
-  background: #ffffff !important;
-  border: 1px solid #cbd5e1 !important; /* slate-300 */
-  color: #0f172a !important;
+  background: transparent !important;
+  border: var(--hairline) solid color-mix(in srgb, #000 18%, transparent) !important;
+  border-radius: var(--radius-sm) !important;
+  color: var(--text-primary) !important;
 }
 
 html:not(.dark) input:focus,
 html:not(.dark) textarea:focus,
+html:not(.dark) select:focus,
 .light input:focus,
-.light textarea:focus {
-  border-color: #000 !important;
-  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1) !important;
+.light textarea:focus,
+.light select:focus {
+  border-color: var(--text-primary) !important;
+  box-shadow: none !important;
 }
 
 /* Footer - TRANSPARENT */
@@ -519,23 +592,24 @@ html:not(.dark) footer a:hover,
 
 /* ============= MOBILE RESPONSIVE ============= */
 
-/* Base mobile — mobile-first: base ini untuk layar kecil dulu */
+/* Base mobile — mobile-first: base ini untuk layar kecil dulu.
+   Tujuan Modul 2: halaman lebih padat & rapi, TANPA mengubah tata letak Hero/Navbar. */
 @media (max-width: 767px) {
+  html, body { overflow-x: hidden; }
   body { font-size: 15px; }
   p, li, a, span { max-width: 100%; }
-  /* Container padding max 16px */
   .container {
     padding-left: 16px !important;
     padding-right: 16px !important;
   }
 
-  /* Section vertikal py-8 */
+  /* Section di bawah Hero: padding vertikal lebih rapat (Hero dikecualikan) */
   section:not(#top) {
-    padding-top: 32px !important;
-    padding-bottom: 32px !important;
+    padding-top: clamp(1.75rem, 6vw, 3rem) !important;
+    padding-bottom: clamp(1.75rem, 6vw, 3rem) !important;
   }
 
-  /* Hero mobile full 1 halaman */
+  /* Hero mobile full 1 halaman — TATA LETAK TIDAK DIUBAH */
   #top {
     min-height: 100dvh !important;
     max-height: none !important;
@@ -544,10 +618,10 @@ html:not(.dark) footer a:hover,
     padding-bottom: 32px !important;
   }
 
-  /* Font mobile: body 14-15px, heading max 24-28px, tidak ada > 32px */
+  /* Font mobile: heading lebih rapat, tidak ada > 30px kecuali Hero */
   h1, .text-display {
-    font-size: 28px !important;
-    line-height: 1.15 !important;
+    font-size: 27px !important;
+    line-height: 1.12 !important;
   }
   /* Hero exempt: clamp() fluid text tetap berlaku */
   #top h1 {
@@ -556,13 +630,13 @@ html:not(.dark) footer a:hover,
   }
 
   h2, .text-headline {
-    font-size: 24px !important;
-    line-height: 1.2 !important;
+    font-size: clamp(1.4rem, 6.2vw, 1.75rem) !important;
+    line-height: 1.18 !important;
   }
 
   h3, .text-subheadline {
-    font-size: 18px !important;
-    line-height: 1.3 !important;
+    font-size: clamp(1.05rem, 4.6vw, 1.2rem) !important;
+    line-height: 1.28 !important;
   }
 
   /* Zero horizontal scroll + px max 16px */
@@ -575,43 +649,84 @@ html:not(.dark) footer a:hover,
     padding-right: 16px !important;
   }
 
+  /* Rapikan jarak header section (judul → deskripsi → konten) */
+  section:not(#top) > div > div:first-child { margin-bottom: 1.25rem !important; }
+  section:not(#top) h2 { margin-bottom: 0.5rem !important; }
+
   /* Footer compaction */
-  footer .space-y-20 { row-gap: 2.5rem !important; }
-  footer .cta-dark { padding: 1.75rem 1.25rem !important; border-radius: 1.25rem !important; }
+  footer .space-y-20 { row-gap: 2rem !important; }
+  footer .cta-dark { padding: 1.5rem 1.125rem !important; border-radius: 1.25rem !important; }
 
-  /* Hide non-essential decoration on mobile */
-  footer [aria-hidden="true"] { display: none !important; }
-
-  /* Grid to single column (kecuali hero #top + carousel strip yang flex) */
-  main section:not(#top) .grid, footer .grid {
-    grid-template-columns: 1fr !important;
-    gap: 16px !important;
+  /* Footer mobile: brand full-width, tiga kolom tautan jadi 2 kolom rapi
+       (sebelumnya dipaksa 1 kolom → daftar jadi sangat panjang ke bawah). */
+  footer [data-footer-grid] {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 1.5rem 1rem !important;
   }
+  footer [data-footer-brand] {
+    grid-column: 1 / -1 !important;
+    padding-bottom: 0.25rem;
+    border-bottom: 1px solid color-mix(in srgb, currentColor 8%, transparent);
+  }
+  /* Tombol "Kembali ke Atas" melebar penuh agar seimbang dengan kolom di atasnya */
+  footer > div > div:last-child button { width: 100% !important; justify-content: center !important; }
+
+  /* Grid: 1 kolom default, KECUALI konten pendek yang aman 2 kolom.
+       `:where()` dipakai supaya rantai :not() DI ATAS IKUT MENYUMBANG 0 spesifisitas.
+       Tanpa itu selector ini cocok lewat <section data-cv> pembungkus (bukan
+       #layanan itu sendiri), sehingga bobot 3-ID-nya mengalahkan `#layanan .grid`
+       dan 2 kolom tak pernah terpakai. */
+    main :where(section:not(#top):not(#layanan):not(#target-pasar)) .grid {
+      grid-template-columns: 1fr !important;
+      gap: 12px !important;
+    }
+    /* Layanan & Target Pasar: kartu pendek → 2 kolom di mobile */
+    #layanan .grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 10px !important; }
+    #target-pasar .grid.grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+
+    /* Overlay/dialog fullscreen: overflow-x:hidden pada [class*="max-w-"]
+       menjadikan elemen itu scroll container → header sticky di dalamnya
+       kehilangan ruang tempel. Kembalikan ke visible di dalam dialog. */
+    [role="dialog"] [class*="max-w-"] {
+      overflow-x: visible !important;
+    }
+
+  /* Layanan: kartu jadi stacked & compact agar 2 kolom muat rapi */
+  #layanan .glass-card { flex-direction: column !important; gap: 12px !important; padding: 16px 14px !important; border-radius: 18px !important; }
+  #layanan .glass-card > div:first-child { width: 40px !important; height: 40px !important; border-radius: 12px !important; }
+  #layanan h3 { font-size: 14px !important; margin-bottom: 4px !important; }
+  #layanan p { font-size: 12px !important; line-height: 1.45 !important; }
 
   /* Mobile pass: hierarki section */
   section > div[class*="max-w-"] h2,
   footer h2 {
     letter-spacing: -0.01em !important;
-    margin-bottom: 12px !important;
   }
   section > div[class*="max-w-"] > div:first-child p,
   section .text-center p {
-    font-size: 14px !important;
-    line-height: 1.6 !important;
+    font-size: 13.5px !important;
+    line-height: 1.55 !important;
   }
 
-  /* Pricing cards: padding lega, harga menonjol */
-  #pricing .rounded-3xl { padding: 24px 20px !important; }
-  #pricing .text-3xl { font-size: 26px !important; }
+  /* Pricing cards: compact */
+  #pricing .rounded-3xl { padding: 20px 16px !important; }
+  #pricing .text-3xl { font-size: 24px !important; }
+  #pricing .text-2xl { font-size: 19px !important; }
+  #pricing .mt-20 { margin-top: 2.5rem !important; }
 
-  /* Target-market panel: padding lega */
-  #target-pasar .rounded-\[2rem\] { padding: 24px 20px !important; }
+  /* Target-market panel: compact */
+  #target-pasar .rounded-\[2rem\] { padding: 18px 14px !important; border-radius: 1.25rem !important; }
+  #target-pasar .min-h-\[400px\] { min-height: 0 !important; }
 
   /* Portfolio carousel: tinggi proporsional mobile */
-  #portfolio .h-\[85vh\] { height: 70svh !important; min-height: 70svh !important; }
+  #portfolio .h-\[85vh\] { height: 68svh !important; min-height: 68svh !important; }
 
-  /* Testimoni: padding lega */
+  /* Testimoni: compact */
   #testimoni { padding-left: 8px !important; padding-right: 8px !important; }
+  #testimoni .min-h-\[220px\] { min-height: 0 !important; }
+
+  /* About / profile: hapus min-height yang bikin celah kosong */
+  #about .min-h-\[300px\] { min-height: 0 !important; }
 
   /* Form mobile: full-height sheet, tidak tertutup keyboard */
   [role="dialog"] > div {
@@ -623,13 +738,16 @@ html:not(.dark) footer a:hover,
   }
   form { gap: 12px !important; }
 
+  /* Touch target minimum 44px (Modul 2) untuk kontrol utama */
+  button, a[href] { min-height: 44px; }
+
   /* Glass containers mobile */
   .glass-container {
     padding: 20px !important;
     border-radius: 12px !important;
   }
 
-  /* Navbar mobile */
+  /* Navbar mobile — posisi/ukuran tidak diubah, hanya rapikan padding */
   nav {
     padding: 12px 16px !important;
   }
@@ -648,6 +766,20 @@ html:not(.dark) footer a:hover,
   }
   .will-change-transform { will-change: auto !important; }
 
+  /* Animasi berat dimatikan di mobile: parallax/rotate/tilt & entrance bertransform */
+  [class*="rotateX"], [class*="rotateY"] { transform: none !important; }
+}
+
+/* Mobile ekstra-sempit (360px) */
+@media (max-width: 380px) {
+  #layanan .grid { grid-template-columns: 1fr !important; }
+  #layanan .glass-card { flex-direction: row !important; }
+}
+
+/* Hormati prefers-reduced-motion: hilangkan entrance transform */
+@media (prefers-reduced-motion: reduce) {
+  [style*="translateY"], [style*="translateX"] { transform: none !important; }
+  .glass-card, .glass-container, .glass-accordion { transition: none !important; }
 }
 
 /* Tablet */
@@ -655,6 +787,7 @@ html:not(.dark) footer a:hover,
   .grid {
     grid-template-columns: repeat(2, 1fr) !important;
   }
+  section:not(#top) { padding-top: 4rem !important; padding-bottom: 4rem !important; }
 }
 
 /* Touch device optimizations */

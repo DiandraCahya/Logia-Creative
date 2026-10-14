@@ -20,7 +20,13 @@ const ChatWidget = dynamic(() => import("@/components/ChatWidget").then(mod => m
 
 export default function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [collabDraft, setCollabDraft] = useState<import("@/lib/receipt").CollabDraft | null>(null);
+    const [collabDraft, setCollabDraft] = useState<import("@/lib/receipt").CollabDraft | null>(null);
+
+    // "Pilih {PAKET}" di Rate Card → buka form dengan paket sudah ter-prefill.
+    const selectPackage = (packageId: string) => {
+      setCollabDraft({ name: "", brandName: "", contact: "", budget: "", services: [packageId], notes: "" });
+      setIsModalOpen(true);
+    };
 
   return (
     <main className="relative min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)] overflow-x-hidden selection:bg-gray-300 dark:selection:bg-gray-700 selection:text-black dark:selection:text-white pb-[env(safe-area-inset-bottom)]">
@@ -61,8 +67,8 @@ export default function Home() {
 
       {/* Pricing Catalog */}
       <section data-cv="true">
-        <PricingSection />
-      </section>
+              <PricingSection onSelectPackage={selectPackage} />
+            </section>
 
       {/* Client Testimonials */}
       <section data-cv="true">

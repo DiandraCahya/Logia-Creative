@@ -2,8 +2,8 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Send, Sparkles, CheckCircle2, Phone, Mail, AlertCircle, Loader2, ImageDown, FileDown, MessageCircle } from "lucide-react";
-import { ALL_PACKAGES, CUSTOM_SERVICE_OPTION, packageOptionLabel } from "@/lib/rate-card";
+import { X, Send, CheckCircle2, Phone, Mail, AlertCircle, Loader2, ImageDown, FileDown, MessageCircle } from "lucide-react";
+import { SOLUTIONS, CUSTOM_SERVICE_OPTION, packageOptionLabel } from "@/lib/rate-card";
 import type { CollabDraft, Receipt } from "@/lib/receipt";
 import { ReceiptView } from "./Receipt";
 
@@ -13,12 +13,6 @@ interface CollaborationModalProps {
   initialDraft?: CollabDraft | null;
   onDraftConsumed?: () => void;
 }
-
-// Opsi layanan = paket dari rate-card (SATU sumber). Value = id unik; label = nama · solusi.
-const serviceOptions = [
-  ...ALL_PACKAGES.map((e) => ({ value: e.pkg.id, label: packageOptionLabel(e.pkg, e.solution) })),
-  { value: CUSTOM_SERVICE_OPTION, label: CUSTOM_SERVICE_OPTION },
-];
 
 const budgetRanges = [
   "< Rp 5 Juta",
@@ -31,30 +25,34 @@ const CUSTOM_BUDGET = "Lainnya, ketik sendiri";
 
 type Status = "idle" | "loading" | "success" | "error";
 
+// ── Kelas bersama (dipakai juga oleh ChatWidget, Modul 5):
+//    garis hairline, radius kecil, tanpa bayangan — minimalist luxury.
+const FIELD =
+  "w-full bg-transparent text-sm text-[var(--text-primary)] placeholder:text-[var(--text-muted)]/70 " +
+  "border-b border-[color-mix(in_srgb,var(--text-primary)_22%,transparent)] rounded-none " +
+  "px-0 py-3 min-h-[46px] transition-colors focus:outline-none focus:border-[var(--text-primary)]";
+
+const LABEL =
+  "block text-[11px] font-semibold uppercase tracking-[0.09em] text-[var(--text-muted)] mb-1.5";
+
+// Label pengelompokan paket. Tanpa opacity: /80 menurunkan kontras 11px di bawah AA.
+const GROUP_LABEL =
+  "text-[11px] font-semibold uppercase tracking-[0.09em] text-[var(--text-muted)] mb-2";
+
+const ERR = "mt-1.5 text-xs font-medium text-red-600 dark:text-red-400";
+
+const BTN_PRIMARY =
+  "inline-flex items-center justify-center gap-2 min-h-[48px] px-7 rounded-full " +
+  "bg-black text-white dark:bg-white dark:text-black text-sm font-semibold " +
+  "hover:opacity-90 active:scale-[0.98] transition-[transform,opacity] disabled:opacity-60 disabled:cursor-wait";
+
 export function CollaborationModal({ isOpen, onClose, initialDraft, onDraftConsumed }: CollaborationModalProps) {
   const [selectedServices, setSelectedServices] = useState<string[]>([
-    ALL_PACKAGES[0]?.pkg.id ?? CUSTOM_SERVICE_OPTION,
+    SOLUTIONS[0]?.packages[0]?.id ?? CUSTOM_SERVICE_OPTION,
   ]);
   const [selectedBudget, setSelectedBudget] = useState("Rp 5 - 15 Juta");
   const [customBudget, setCustomBudget] = useState("");
 
-  // Prefill dari chatbot: draft dikonsumsi sekali saat modal dibuka
-  useEffect(() => {
-    if (isOpen && initialDraft) {
-      setFormData({ name: initialDraft.name, brandName: initialDraft.brandName, contact: initialDraft.contact, notes: initialDraft.notes });
-      setSelectedServices(initialDraft.services);
-      if (initialDraft.budget && !budgetRanges.includes(initialDraft.budget)) {
-        setSelectedBudget(CUSTOM_BUDGET);
-        setCustomBudget(initialDraft.budget);
-      } else if (initialDraft.budget) {
-        setSelectedBudget(initialDraft.budget);
-      }
-      setStatus("idle");
-      setFieldErrors({});
-      onDraftConsumed?.();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isOpen, initialDraft]);
   const [formData, setFormData] = useState({
     name: "",
     brandName: "",
@@ -68,10 +66,60 @@ export function CollaborationModal({ isOpen, onClose, initialDraft, onDraftConsu
   const [exporting, setExporting] = useState<"png" | "pdf" | null>(null);
   const receiptRef = useRef<HTMLDivElement>(null);
 
+  // Prefill: draft dari chatbot ATAU pilihan paket dari Rate Card ("Pilih {PAKET}").
+  // Dikonsumsi sekali tiap kali modal dibuka / draft diganti.
+  useEffect(() => {
+    if (isOpen && initialDraft) {
+      setFormData({
+        name: initialDraft.name,
+        brandName: initialDraft.brandName,
+        contact: initialDraft.contact,
+        notes: initialDraft.notes,
+      });
+      if (initialDraft.services.length) setSelectedServices(initialDraft.services);
+      if (initialDraft.budget && !budgetRanges.includes(initialDraft.budget)) {
+        setSelectedBudget(CUSTOM_BUDGET);
+        setCustomBudget(initialDraft.budget);
+      } else if (initialDraft.budget) {
+        setSelectedBudget(initialDraft.budget);
+      }
+      setStatus("idle");
+      setFieldErrors({});
+      onDraftConsumed?.();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen, initialDraft]);
+
+  // Esc menutup (aksesibilitas) + kunci scroll body selama modal terbuka.
+  useEffect(() => {
+    if (!isOpen) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && status !== "loading") onClose();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = prev;
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [isOpen, onClose, status]);
+
+  // WAJIB sebelum html2canvas: tanpa ini font web jatuh ke default saat export,
+  // sehingga PNG/PDF tidak identik dengan tampilan struk di layar.
+  const ensureFonts = async () => {
+    try {
+      await document.fonts.ready;
+    } catch {
+      /* browser tanpa Font Loading API: lanjut saja */
+    }
+  };
+
   const exportPNG = async () => {
     if (!receiptRef.current || exporting) return;
     setExporting("png");
     try {
+      await ensureFonts();
       const { default: html2canvas } = await import("html2canvas");
       const canvas = await html2canvas(receiptRef.current, { scale: 2, backgroundColor: "#ffffff", logging: false, useCORS: true });
       const a = document.createElement("a");
@@ -87,16 +135,17 @@ export function CollaborationModal({ isOpen, onClose, initialDraft, onDraftConsu
     if (!receiptRef.current || exporting) return;
     setExporting("pdf");
     try {
+      await ensureFonts();
       const [{ default: html2canvas }, { jsPDF }] = await Promise.all([
         import("html2canvas"),
         import("jspdf"),
       ]);
       const canvas = await html2canvas(receiptRef.current, { scale: 2, backgroundColor: "#ffffff", logging: false, useCORS: true });
-      const imgW = 72; // 80mm kurang margin
-      const imgH = (canvas.height * imgW) / canvas.width;
-      const pageH = Math.max(imgH + 16, 120);
-      const pdf = new jsPDF({ unit: "mm", format: [80, pageH] });
-      pdf.addImage(canvas.toDataURL("image/png"), "PNG", 4, 8, imgW, imgH);
+      // Satu halaman berproporsi persis struk → hasil identik tampilan, tanpa potongan.
+      const pageW = 210; // A4 lebar (mm)
+      const pageH = (canvas.height * pageW) / canvas.width;
+      const pdf = new jsPDF({ unit: "mm", format: [pageW, pageH], orientation: "portrait" });
+      pdf.addImage(canvas.toDataURL("image/png"), "PNG", 0, 0, pageW, pageH);
       pdf.save(`${receipt?.id ?? "struk"}.pdf`);
     } finally {
       setExporting(null);
@@ -181,16 +230,12 @@ export function CollaborationModal({ isOpen, onClose, initialDraft, onDraftConsu
   // ponytail: nomor CP hardcode, pindah ke env/config bila multi-admin.
   const waLink = receipt
     ? `https://wa.me/6289521375477?text=${encodeURIComponent(
-        `Halo Logia Creative! Saya ${receipt.customer}${receipt.brand ? ` (${receipt.brand})` : ""} baru saja mengisi form kolaborasi.\n\nID: ${receipt.id}\nPaket: ${receipt.packageName} · ${receipt.solutionName}\nHarga: ${receipt.priceLabel}\n\nSaya ingin langsung mengurus paket ini. Terima kasih!`
-      )}`
+      `Halo Logia Creative! Saya ${receipt.customer}${receipt.brand ? ` (${receipt.brand})` : ""} baru saja mengisi form kolaborasi.\n\nID: ${receipt.id}\nPaket: ${receipt.packageName} · ${receipt.solutionName}\nHarga: ${receipt.priceLabel}\n\nSaya ingin langsung mengurus paket ini. Terima kasih!`
+    )}`
     : "https://wa.me/6289521375477";
 
   const inputCls = (hasError: boolean) =>
-    `w-full px-4 py-3.5 rounded-xl bg-white/80 dark:bg-white/[0.04] backdrop-blur-md border text-sm text-black dark:text-white placeholder:text-neutral-400 dark:placeholder:text-neutral-500 focus:outline-none transition-all min-h-[48px] shadow-sm ${
-      hasError
-        ? "border-red-500 dark:border-red-400 focus:ring-2 focus:ring-red-500/20"
-        : "border-black/15 dark:border-white/15 focus:border-[var(--accent-bronze)] dark:focus:border-[var(--accent-bronze)] focus:ring-2 focus:ring-[var(--accent-bronze)]/20"
-    }`;
+    `${FIELD} ${hasError ? "!border-red-500 dark:!border-red-400" : ""}`;
 
   return (
     <AnimatePresence>
@@ -201,53 +246,53 @@ export function CollaborationModal({ isOpen, onClose, initialDraft, onDraftConsu
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
+            aria-hidden="true"
             className="fixed inset-0 bg-black/60 backdrop-blur-sm"
           />
 
           <motion.div
-            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+            initial={{ opacity: 0, scale: 0.98, y: 16 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            transition={{ type: "spring", damping: 25, stiffness: 300 }}
+            exit={{ opacity: 0, scale: 0.98, y: 16 }}
+            transition={{ type: "spring", damping: 26, stiffness: 300 }}
             className="relative w-full max-w-2xl z-10 my-4 sm:my-8 flex flex-col"
           >
-            <div className="glass-card rounded-[1.5rem] sm:rounded-[2rem] border border-black/10 dark:border-white/15 shadow-2xl p-5 sm:p-10 pb-[max(1.5rem,env(safe-area-inset-bottom))] sm:pb-10 flex-1 relative overflow-hidden">
-              {/* Ambient accent top highlight */}
-              <div className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-[var(--accent-bronze)] to-transparent opacity-80" />
+            <div className="glass-card rounded-[1.25rem] sm:rounded-[1.75rem] border border-[color-mix(in_srgb,var(--text-primary)_12%,transparent)] p-5 sm:p-9 pb-[max(1.5rem,env(safe-area-inset-bottom))] sm:pb-9 flex-1 relative overflow-hidden">
+              <div className="absolute top-0 inset-x-0 h-px bg-[var(--text-primary)]/25" aria-hidden="true" />
 
               <button
                 onClick={onClose}
                 aria-label="Tutup formulir"
-                className="absolute top-5 right-5 p-2.5 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-full bg-black/5 dark:bg-white/5 text-black dark:text-white hover:bg-black/10 dark:hover:bg-white/10 transition-colors active:scale-95 z-20"
+                className="absolute top-4 right-4 p-2.5 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-full bg-black/5 dark:bg-white/5 text-[var(--text-primary)] hover:bg-black/10 dark:hover:bg-white/10 transition-colors active:scale-95 z-20"
               >
                 <X className="w-5 h-5" />
               </button>
 
               {status === "success" ? (
-                <div className="py-6 space-y-5">
+                <div className="py-4 space-y-6">
                   <div className="text-center space-y-3">
-                    <div className="w-16 h-16 mx-auto rounded-full bg-accent-bronze/10 text-accent-bronze flex items-center justify-center">
-                      <CheckCircle2 className="w-10 h-10" />
+                    <div className="w-14 h-14 mx-auto rounded-full border border-[color-mix(in_srgb,var(--text-primary)_14%,transparent)] flex items-center justify-center">
+                      <CheckCircle2 className="w-7 h-7 text-[var(--text-primary)]" />
                     </div>
-                    <h3 className="text-2xl font-semibold text-slate-900 dark:text-white">
-                      Terima Kasih, {formData.name || "Mitra Hebat"}!
+                    <h3 className="text-xl sm:text-2xl font-medium tracking-[-0.01em] text-[var(--text-primary)]">
+                      Terima kasih, {formData.name || "Mitra Hebat"}.
                     </h3>
-                    <p className="text-sm text-slate-600 dark:text-slate-300 max-w-md mx-auto leading-relaxed">
+                    <p className="text-sm text-[var(--text-muted)] max-w-md mx-auto leading-relaxed">
                       Pesan Anda sudah terkirim. Kami akan menghubungi Anda melalui kontak yang dicantumkan dalam 1x24 jam kerja.
                     </p>
                   </div>
                   {receipt ? (
                     <ReceiptView ref={receiptRef} receipt={receipt} />
                   ) : (
-                    <p className="text-xs text-slate-500 dark:text-slate-400 text-center">Struk email ikut terkirim ke tim kami.</p>
+                    <p className="text-xs text-[var(--text-muted)] text-center">Struk email ikut terkirim ke tim kami.</p>
                   )}
-                  <div className="flex flex-col gap-3 pt-2">
+                  <div className="flex flex-col gap-3 pt-1">
                     {/* btn-collaborate: dikecualikan dari override link lightmode (globals.css) agar teks tetap putih */}
                     <a
                       href={waLink}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="btn-collaborate w-full px-8 py-3 min-h-[48px] rounded-full bg-[#25D366] text-white font-semibold text-sm active:scale-95 flex items-center justify-center gap-2 hover:brightness-95"
+                      className="btn-collaborate w-full px-8 min-h-[48px] rounded-full bg-[#25D366] text-white font-semibold text-sm active:scale-95 flex items-center justify-center gap-2 hover:brightness-95"
                     >
                       <MessageCircle className="w-4 h-4" />
                       Hubungi via WhatsApp
@@ -256,7 +301,7 @@ export function CollaborationModal({ isOpen, onClose, initialDraft, onDraftConsu
                       <button
                         onClick={exportPNG}
                         disabled={!receipt || exporting !== null}
-                        className="w-full px-6 py-3 min-h-[48px] rounded-full border border-black/15 dark:border-white/15 text-black dark:text-white text-sm font-semibold flex items-center justify-center gap-2 active:scale-95 disabled:opacity-50"
+                        className="w-full px-6 min-h-[48px] rounded-full border border-[color-mix(in_srgb,var(--text-primary)_18%,transparent)] text-[var(--text-primary)] text-sm font-semibold flex items-center justify-center gap-2 active:scale-95 disabled:opacity-50"
                       >
                         <ImageDown className="w-4 h-4" />
                         {exporting === "png" ? "Menyimpan..." : "Download PNG"}
@@ -264,71 +309,84 @@ export function CollaborationModal({ isOpen, onClose, initialDraft, onDraftConsu
                       <button
                         onClick={exportPDF}
                         disabled={!receipt || exporting !== null}
-                        className="w-full px-6 py-3 min-h-[48px] rounded-full border border-black/15 dark:border-white/15 text-black dark:text-white text-sm font-semibold flex items-center justify-center gap-2 active:scale-95 disabled:opacity-50"
+                        className="w-full px-6 min-h-[48px] rounded-full border border-[color-mix(in_srgb,var(--text-primary)_18%,transparent)] text-[var(--text-primary)] text-sm font-semibold flex items-center justify-center gap-2 active:scale-95 disabled:opacity-50"
                       >
                         <FileDown className="w-4 h-4" />
                         {exporting === "pdf" ? "Menyimpan..." : "Download PDF"}
                       </button>
-                      <button
-                        onClick={handleReset}
-                        className="w-full px-6 py-3 min-h-[48px] rounded-full bg-black text-white dark:bg-white dark:text-black font-semibold text-sm active:scale-95"
-                      >
-                        Selesai & Tutup
+                      <button onClick={handleReset} className={BTN_PRIMARY + " w-full"}>
+                        Selesai &amp; Tutup
                       </button>
                     </div>
                   </div>
                 </div>
               ) : (
                 <div>
-                  <div className="mb-6 sm:mb-8">
-                    <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[var(--accent-bronze)]/10 text-[var(--accent-bronze)] text-xs font-semibold uppercase tracking-wider mb-3 border border-[var(--accent-bronze)]/20">
-                      <Sparkles className="w-3.5 h-3.5" />
-                      Kemitraan Strategis
-                    </div>
-                    <h2 className="text-2xl sm:text-3xl font-display font-medium tracking-tight text-black dark:text-white mb-2">
-                      Mulai Kolaborasi Bersama Logia
-                    </h2>
-                    <p className="text-sm text-[#666666] dark:text-[#999999] leading-relaxed">
-                      Diskusikan ide besar bisnis Anda. Kami bantu formulasi strategi kreatif dan implementasi teknologinya.
-                    </p>
-                  </div>
+                  <h2 className="text-[1.4rem] sm:text-3xl font-medium tracking-[-0.02em] text-[var(--text-primary)] mb-6 sm:mb-8">
+                    Mulai Kolaborasi
+                  </h2>
 
-                  <form onSubmit={handleSubmit} noValidate className="space-y-4 sm:space-y-6">
-                    <div>
-                      <span id="svc-label" className="block text-xs font-semibold uppercase tracking-wider text-black dark:text-white mb-3">
+                  <form onSubmit={handleSubmit} noValidate className="space-y-6 sm:space-y-8">
+                    {/* Paket dari rate-card, dikelompokkan per kategori solusi */}
+                    <fieldset>
+                      <legend id="svc-label" className={LABEL + " mb-3"}>
                         Pilih Kebutuhan Layanan
-                      </span>
-                      <div className="flex flex-wrap gap-2" role="group" aria-labelledby="svc-label">
-                        {serviceOptions.map((srv) => {
-                          const active = selectedServices.includes(srv.value);
-                          return (
-                            <button
-                              type="button"
-                              key={srv.value}
-                              onClick={() => toggleService(srv.value)}
-                              aria-pressed={active}
-                              className={`text-xs px-4 py-2.5 min-h-[44px] rounded-full border transition-all duration-200 active:scale-95 flex items-center gap-2 ${
-                                active
-                                  ? "bg-black text-white dark:bg-white dark:text-black border-black dark:border-white shadow-md font-semibold"
-                                  : "bg-black/[0.03] dark:bg-white/[0.04] text-[#444444] dark:text-[#CCCCCC] border-black/10 dark:border-white/10 hover:border-black/30 dark:hover:border-white/30 hover:bg-black/[0.06] dark:hover:bg-white/[0.08]"
-                              }`}
-                            >
-                              <span className={`w-1.5 h-1.5 rounded-full ${active ? "bg-[var(--accent-bronze)]" : "bg-neutral-400 dark:bg-neutral-600"}`} />
-                              {srv.label}
-                            </button>
-                          );
-                        })}
+                      </legend>
+                      <div className="space-y-3.5" role="group" aria-labelledby="svc-label">
+                        {SOLUTIONS.map((sol) => (
+                          <div key={sol.id}>
+                            <p className={GROUP_LABEL}>
+                              {sol.name}
+                            </p>
+                            <div className="flex flex-wrap gap-2">
+                              {sol.packages.map((pkg) => {
+                                const active = selectedServices.includes(pkg.id);
+                                return (
+                                  <button
+                                    type="button"
+                                    key={pkg.id}
+                                    onClick={() => toggleService(pkg.id)}
+                                    aria-pressed={active}
+                                    aria-label={packageOptionLabel(pkg, sol)}
+                                    className={`text-xs px-3.5 py-2.5 min-h-[44px] rounded-full border transition-colors duration-200 active:scale-95 ${
+                                      active
+                                        ? "bg-black text-white dark:bg-white dark:text-black border-transparent font-semibold"
+                                        : "bg-transparent text-[var(--text-primary)] border-[color-mix(in_srgb,var(--text-primary)_16%,transparent)] hover:border-[var(--text-primary)]/40"
+                                    }`}
+                                  >
+                                    {pkg.name}
+                                  </button>
+                                );
+                              })}
+                            </div>
+                          </div>
+                        ))}
+                        <div>
+                          <p className={GROUP_LABEL}>
+                            Lainnya
+                          </p>
+                          <button
+                            type="button"
+                            onClick={() => toggleService(CUSTOM_SERVICE_OPTION)}
+                            aria-pressed={selectedServices.includes(CUSTOM_SERVICE_OPTION)}
+                            className={`text-xs px-3.5 py-2.5 min-h-[44px] rounded-full border transition-colors duration-200 active:scale-95 ${
+                              selectedServices.includes(CUSTOM_SERVICE_OPTION)
+                                ? "bg-black text-white dark:bg-white dark:text-black border-transparent font-semibold"
+                                : "bg-transparent text-[var(--text-primary)] border-[color-mix(in_srgb,var(--text-primary)_16%,transparent)] hover:border-[var(--text-primary)]/40"
+                            }`}
+                          >
+                            {CUSTOM_SERVICE_OPTION}
+                          </button>
+                        </div>
                       </div>
                       {fieldErrors.services && (
-                        <p role="alert" className="mt-2 text-xs font-medium text-red-600 dark:text-red-400">{fieldErrors.services}</p>
+                        <p role="alert" className={ERR}>{fieldErrors.services}</p>
                       )}
-                    </div>
+                    </fieldset>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-6">
                       <div>
-                        <label htmlFor="collab-name" className="block text-xs font-semibold text-black dark:text-white mb-2">
-                          Nama Lengkap *
-                        </label>
+                        <label htmlFor="collab-name" className={LABEL}>Nama Lengkap *</label>
                         <input
                           id="collab-name"
                           type="text"
@@ -341,13 +399,11 @@ export function CollaborationModal({ isOpen, onClose, initialDraft, onDraftConsu
                           className={inputCls(!!fieldErrors.name)}
                         />
                         {fieldErrors.name && (
-                          <p id="collab-name-err" role="alert" className="mt-1.5 text-xs font-medium text-red-600 dark:text-red-400">{fieldErrors.name}</p>
+                          <p id="collab-name-err" role="alert" className={ERR}>{fieldErrors.name}</p>
                         )}
                       </div>
                       <div>
-                        <label htmlFor="collab-brand" className="block text-xs font-semibold text-black dark:text-white mb-2">
-                          Nama Brand / Usaha
-                        </label>
+                        <label htmlFor="collab-brand" className={LABEL}>Nama Brand / Usaha</label>
                         <input
                           id="collab-brand"
                           type="text"
@@ -360,11 +416,9 @@ export function CollaborationModal({ isOpen, onClose, initialDraft, onDraftConsu
                       </div>
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-6">
                       <div>
-                        <label htmlFor="collab-contact" className="block text-xs font-semibold text-black dark:text-white mb-2">
-                          WhatsApp / Email *
-                        </label>
+                        <label htmlFor="collab-contact" className={LABEL}>WhatsApp / Email *</label>
                         <input
                           id="collab-contact"
                           type="text"
@@ -378,13 +432,11 @@ export function CollaborationModal({ isOpen, onClose, initialDraft, onDraftConsu
                           className={inputCls(!!fieldErrors.contact)}
                         />
                         {fieldErrors.contact && (
-                          <p id="collab-contact-err" role="alert" className="mt-1.5 text-xs font-medium text-red-600 dark:text-red-400">{fieldErrors.contact}</p>
+                          <p id="collab-contact-err" role="alert" className={ERR}>{fieldErrors.contact}</p>
                         )}
                       </div>
                       <div>
-                        <label htmlFor="collab-budget" className="block text-xs font-semibold text-black dark:text-white mb-2">
-                          Estimasi Budget
-                        </label>
+                        <label htmlFor="collab-budget" className={LABEL}>Estimasi Budget</label>
                         <select
                           id="collab-budget"
                           value={selectedBudget}
@@ -410,62 +462,56 @@ export function CollaborationModal({ isOpen, onClose, initialDraft, onDraftConsu
                             onChange={(e) => setCustomBudget(e.target.value)}
                             aria-label="Budget custom"
                             aria-invalid={!!fieldErrors.budget}
-                            className={`${inputCls(!!fieldErrors.budget)} mt-2`}
+                            className={`${inputCls(!!fieldErrors.budget)} mt-3`}
                           />
                         )}
                         {fieldErrors.budget && (
-                          <p role="alert" className="mt-1.5 text-xs font-medium text-red-600 dark:text-red-400">{fieldErrors.budget}</p>
+                          <p role="alert" className={ERR}>{fieldErrors.budget}</p>
                         )}
                       </div>
                     </div>
 
                     <div>
-                      <label htmlFor="collab-notes" className="block text-xs font-semibold text-black dark:text-white mb-2">
-                        Catatan Singkat / Ringkasan Ide Proyek
-                      </label>
+                      <label htmlFor="collab-notes" className={LABEL}>Catatan / Ringkasan Ide Proyek</label>
                       <textarea
                         id="collab-notes"
                         rows={3}
                         placeholder="Jelaskan kebutuhan utama, timeline target, atau tantangan bisnis saat ini..."
                         value={formData.notes}
                         onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
-                        className={`${inputCls(false)} resize-none`}
+                        className={`${FIELD} resize-none`}
                       />
                     </div>
 
                     {status === "error" && (
-                      <p role="alert" className="flex items-start gap-2 text-sm font-medium text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-800 rounded-xl px-4 py-3">
+                      <p role="alert" className="flex items-start gap-2 text-sm font-medium text-red-600 dark:text-red-400 border-l-2 border-red-500 pl-3 py-1">
                         <AlertCircle className="w-4 h-4 mt-0.5 shrink-0" />
                         {errorMsg}
                       </p>
                     )}
 
-                    <div className="sticky bottom-0 -mx-5 sm:-mx-10 px-5 sm:px-10 py-4 pb-[max(1rem,env(safe-area-inset-bottom))] flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-6 border-t border-black/10 dark:border-white/10 bg-white/90 dark:bg-[#0a0a0a]/90 backdrop-blur-md">
-                      <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 text-xs text-[#666666] dark:text-[#999999]">
+                    <div className="sticky bottom-0 -mx-5 sm:-mx-9 px-5 sm:px-9 pt-4 pb-[max(1rem,env(safe-area-inset-bottom))] flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-6 border-t border-[color-mix(in_srgb,var(--text-primary)_10%,transparent)] bg-[var(--bg-primary)]/92 backdrop-blur-md">
+                      <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-xs text-[var(--text-muted)]">
                         <span className="flex items-center gap-2">
-                          <Mail className="w-4 h-4 text-[var(--accent-bronze)]" />
+                          <Mail className="w-3.5 h-3.5" />
                           logiacreative.id@gmail.com
                         </span>
-                        <span className="hidden sm:inline">•</span>
+                        <span className="hidden sm:inline text-[var(--text-muted)]/40" aria-hidden="true">|</span>
                         <span className="flex items-center gap-2">
-                          <Phone className="w-4 h-4 text-[var(--accent-bronze)]" />
+                          <Phone className="w-3.5 h-3.5" />
                           +62 895-2137-5477
                         </span>
                       </div>
 
-                      <button
-                        type="submit"
-                        disabled={status === "loading"}
-                        className="w-full sm:w-auto px-8 h-12 min-h-[48px] rounded-full bg-black text-white dark:bg-white dark:text-black text-sm font-semibold hover:scale-[1.02] active:scale-95 transition-transform flex items-center justify-center gap-2 shadow-lg disabled:opacity-60 disabled:cursor-wait"
-                      >
+                      <button type="submit" disabled={status === "loading"} className={BTN_PRIMARY + " w-full sm:w-auto"}>
                         {status === "loading" ? (
                           <>
-                            <Loader2 className="w-4 h-4 animate-spin text-white dark:text-black" />
+                            <Loader2 className="w-4 h-4 animate-spin" />
                             <span>Mengirim...</span>
                           </>
                         ) : (
                           <>
-                            <Send className="w-4 h-4 text-white dark:text-black" />
+                            <Send className="w-4 h-4" />
                             <span>Kirim Pesan</span>
                           </>
                         )}

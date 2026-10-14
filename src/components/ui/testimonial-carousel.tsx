@@ -117,10 +117,10 @@ export function TestimonialCarousel({ testimonials }: { testimonials: Testimonia
               onClick={() => setIndex(i)}
               aria-label={`Go to slide ${i + 1}`}
               aria-current={i === index ? "true" : undefined}
-              className={`h-2 rounded-full transition-all duration-300 ${
+              className={`h-1.5 rounded-full transition-all duration-300 ${
                 i === index
-                  ? "w-8 bg-[var(--accent-bronze)]"
-                  : "w-2 bg-black/15 dark:bg-white/20 hover:bg-black/30 dark:hover:bg-white/40"
+                  ? "w-5 bg-[var(--accent-bronze)]"
+                  : "w-1.5 bg-black/15 dark:bg-white/20 hover:bg-black/30 dark:hover:bg-white/40"
               }`}
             />
           ))}

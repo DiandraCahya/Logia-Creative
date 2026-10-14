@@ -4,15 +4,25 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { PerformanceInit } from "@/components/PerformanceInit";
 
-// ponytail: single sans everywhere (Anthropic-style) — one family, no serif display.
-const fontSans = Inter({
+// ─────────────────────────────────────────────────────────────────────────────
+// FONT: satu sumber saja, `--font-sans`.
+// Inter dimuat sebagai VARIABLE font (tanpa `weight`) → satu file, display swap,
+// tidak ada CLS. Nama "Inter" tidak pernah ditulis di komponen; semuanya lewat
+// `--font-sans` di globals.css, jadi ganti font = ganti satu blok di sini.
+// ─────────────────────────────────────────────────────────────────────────────
+const fontSubstitute = Inter({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  variable: "--font-sans",
+  variable: "--font-inter",
   display: "swap",
+  adjustFontFallback: true,
 });
 
-const fontDisplay = fontSans;
+// SLOT "Anthropic Sans" (font proprietary Anthropic, tidak boleh dipakai publik).
+// Kalau Anda PUNYA file .woff2 yang sah, lihat public/fonts/anthropic-sans/README.md
+// (build TIDAK error tanpa ini — stack jatuh ke Inter sebagai substitusi terdekat):
+//   import localFont from "next/font/local";
+//   const anthropic = localFont({ src: [...], variable: "--font-anthropic", display: "swap" });
+//   → gabungkan di <html>: `${fontSubstitute.variable} ${anthropic.variable}`
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://logia.id"),
@@ -62,8 +72,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="id" suppressHydrationWarning className="scroll-smooth">
-      <body className={`${fontDisplay.variable} ${fontSans.variable} font-sans antialiased selection:bg-brand-primary selection:text-white`}>
+    <html
+      lang="id"
+      suppressHydrationWarning
+      className={`scroll-smooth ${fontSubstitute.variable}`}
+    >
+      <body className="font-sans antialiased selection:bg-black selection:text-white dark:selection:bg-white dark:selection:text-black">
         <PerformanceInit />
         <ThemeProvider
           attribute="class"

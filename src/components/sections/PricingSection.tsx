@@ -15,7 +15,7 @@ import {
 
 const ease = [0.22, 1, 0.36, 1] as const; // --ease-out-expo, satu easing global
 
-export function PricingSection() {
+export function PricingSection({ onSelectPackage }: { onSelectPackage?: (packageId: string) => void }) {
   const { ref, isInView } = useScrollReveal();
   const [tab, setTab] = useState(SOLUTIONS[0].id);
   const [expanded, setExpanded] = useState<string | null>(null);
@@ -23,10 +23,17 @@ export function PricingSection() {
 
   const active = SOLUTIONS.find((s) => s.id === tab) ?? SOLUTIONS[0];
 
+  // "Pilih {PAKET}" → buka form kolaborasi dengan paket sudah ter-prefill.
+  // Tanpa handler (mis. render tanpa modal) jatuh ke anchor #kontak seperti sebelumnya.
+  const pick = (packageId: string) => {
+    if (onSelectPackage) onSelectPackage(packageId);
+    else document.getElementById("kontak")?.scrollIntoView({ behavior: "smooth" });
+  };
+
   return (
     <section
       id="pricing"
-      className="py-24 sm:py-32 relative bg-transparent border-t border-black/5 dark:border-white/5"
+      className="py-12 sm:py-20 relative bg-transparent border-t border-black/5 dark:border-white/5"
     >
       <div className="max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-12" ref={ref}>
         <div className="text-center max-w-2xl mx-auto mb-10">
@@ -34,7 +41,7 @@ export function PricingSection() {
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
             transition={{ duration: 0.6, ease }}
-            className="font-display font-medium tracking-[-0.02em] text-[clamp(2rem,4vw,3.5rem)] text-black dark:text-white mb-4"
+            className="font-display font-medium tracking-[-0.02em] text-[clamp(1.65rem,4vw,3.25rem)] text-black dark:text-white mb-2.5 sm:mb-4"
           >
             Rate Card
           </motion.h2>
@@ -48,8 +55,8 @@ export function PricingSection() {
           </motion.p>
         </div>
 
-        {/* Tabs: wrap di mobile, tanpa overflow horizontal */}
-        <div className="flex flex-wrap justify-center gap-2 mb-12" role="tablist" aria-label="Jenis solusi">
+        {/* Tabs: strip mengecil ke lebar isi lalu di tengah; flex-wrap + max-w-full jaga mobile tanpa overflow */}
+        <div className="flex flex-wrap justify-center w-fit max-w-full mx-auto gap-1 mb-8 sm:mb-12 p-1 rounded-full border border-[color-mix(in_srgb,var(--text-primary)_12%,transparent)]" role="tablist" aria-label="Jenis solusi">
           {SOLUTIONS.map((s) => (
             <button
               key={s.id}
@@ -59,7 +66,7 @@ export function PricingSection() {
                 setTab(s.id);
                 setExpanded(null);
               }}
-              className={`inline-flex items-center justify-center min-h-[44px] px-5 sm:px-6 py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all duration-300 ${
+              className={`flex-none inline-flex items-center justify-center min-h-[44px] px-3 sm:px-6 py-2.5 rounded-full text-[11px] sm:text-sm font-semibold text-center leading-tight transition-colors duration-300 ${
                 tab === s.id
                   ? "bg-black text-white dark:bg-white dark:text-black shadow-md"
                   : "bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 text-[#666666] dark:text-[#999999] hover:text-black dark:hover:text-white"
@@ -70,14 +77,14 @@ export function PricingSection() {
           ))}
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-8">
           {active.packages.map((pkg, idx) => (
             <motion.div
               key={pkg.id}
               initial={{ opacity: 0, y: 30 }}
               animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
               transition={{ duration: 0.6, ease, delay: 0.15 + idx * 0.08 }}
-              className={`relative flex flex-col p-6 sm:p-8 rounded-3xl transition-all duration-300 hover:-translate-y-1 ${
+              className={`relative flex flex-col p-5 sm:p-8 rounded-2xl sm:rounded-3xl transition-[transform,border-color,background-color] duration-300 hover:-translate-y-1 ${
                 pkg.popular
                   ? "bg-black dark:bg-white border-2 border-black dark:border-white text-white dark:text-black shadow-xl"
                   : "glass-card"
@@ -89,7 +96,7 @@ export function PricingSection() {
                 </div>
               )}
 
-              <div className="mb-6">
+              <div className="mb-4 sm:mb-6">
                 <p
                   className={`text-xs font-semibold uppercase tracking-wider mb-2 ${
                     pkg.popular
@@ -99,7 +106,7 @@ export function PricingSection() {
                 >
                   {priceTypeLabel(pkg.unit)}
                 </p>
-                <h3 className="text-2xl font-display font-medium mb-2">{pkg.name}</h3>
+                <h3 className="text-xl sm:text-2xl font-display font-medium mb-1.5 sm:mb-2">{pkg.name}</h3>
                 <p
                   className={`text-sm font-semibold ${
                     pkg.popular
@@ -119,7 +126,7 @@ export function PricingSection() {
                   >
                     {START_FROM_LABEL}
                   </p>
-                  <p className="text-3xl font-extrabold tracking-tight">
+                  <p className="text-2xl sm:text-3xl font-extrabold tracking-tight">
                     {formatPrice(pkg.price)}
                     <span
                       className={`text-sm font-semibold ml-1.5 ${
@@ -134,7 +141,7 @@ export function PricingSection() {
                 </div>
               </div>
 
-              <div className="flex-grow mb-6">
+              <div className="flex-grow mb-4 sm:mb-6">
                 <button
                   onClick={() => setExpanded(expanded === pkg.id ? null : pkg.id)}
                   aria-expanded={expanded === pkg.id}
@@ -217,16 +224,17 @@ export function PricingSection() {
                 </AnimatePresence>
               </div>
 
-              <a
-                href="#kontak"
-                className={`w-full py-4 rounded-full text-sm font-bold text-center transition-transform hover:scale-[1.02] active:scale-[0.98] ${
+              <button
+                type="button"
+                onClick={() => pick(pkg.id)}
+                className={`w-full min-h-[44px] py-4 rounded-full text-sm font-bold text-center transition-transform hover:scale-[1.02] active:scale-[0.98] ${
                   pkg.popular
                     ? "bg-white dark:bg-black text-black dark:text-white border border-black/20 dark:border-white/20"
                     : "bg-black dark:bg-white text-white dark:text-black"
                 }`}
               >
                 Pilih {pkg.name}
-              </a>
+              </button>
             </motion.div>
           ))}
         </div>
@@ -242,7 +250,7 @@ export function PricingSection() {
                 <button
                   onClick={() => setOpenTerm(openTerm === i ? null : i)}
                   aria-expanded={openTerm === i}
-                  className="w-full flex items-center justify-between gap-4 px-6 py-4 text-left transition-colors hover:bg-black/[0.02] dark:hover:bg-white/[0.02]"
+                  className="w-full flex items-center justify-between gap-4 px-5 sm:px-6 py-4 min-h-[48px] text-left transition-colors hover:bg-black/[0.02] dark:hover:bg-white/[0.02]"
                 >
                   <span className="font-semibold text-black dark:text-white">{term.title}</span>
                   <ChevronDown

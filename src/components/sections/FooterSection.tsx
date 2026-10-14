@@ -49,21 +49,23 @@ export function FooterSection({ onOpenCollaboration }: FooterSectionProps) {
   };
 
   return (
-    <footer id="kontak" className="relative pt-6 sm:pt-20 pb-6 sm:pb-12 overflow-hidden max-w-[100vw] border-t border-black/5 dark:border-white/5 bg-transparent">
+    <footer id="kontak" className="relative pt-6 sm:pt-14 pb-6 sm:pb-10 overflow-hidden max-w-[100vw] border-t border-black/5 dark:border-white/5 bg-transparent">
       <div className="max-w-[1400px] mx-auto px-4 sm:px-8 lg:px-12 space-y-6 sm:space-y-20">
 
-        {/* Closing Impact CTA Banner - Glassmorphism */}
+        {/* Closing Impact CTA Banner - Glassmorphism (dark-tinted glass: permukaan tembus pandang + blur, kontrak teks putih dari .cta-dark) */}
         <div
           ref={ctaRef}
-          className={`cta-dark p-6 sm:p-16 lg:p-24 rounded-[1.25rem] sm:rounded-[2rem] bg-black dark:bg-[#0a0a0a] text-white border border-black/10 dark:border-white/15 relative overflow-hidden shadow-2xl text-center space-y-4 sm:space-y-8 transition-all duration-700 ${
+          className={`cta-dark p-6 sm:p-12 lg:p-20 rounded-[1.25rem] sm:rounded-[2rem] bg-black/80 dark:bg-black/70 supports-[backdrop-filter:blur(0px)]:bg-black/60 backdrop-blur-2xl text-white border border-white/10 dark:border-white/15 relative overflow-hidden shadow-2xl text-center space-y-4 sm:space-y-8 transition-all duration-700 ${
             ctaVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'
           }`}
         >
+          {/* Pantulan cahaya di tepi atas kaca (1px), bahasa visual sama dengan modal */}
+          <div className="absolute top-0 inset-x-0 h-px bg-white/25" aria-hidden="true" />
           <div className="relative z-10 max-w-3xl mx-auto flex flex-col items-center">
-            <h2 className="text-white font-display font-medium tracking-[-0.02em] text-[clamp(1.75rem,8vw,4.5rem)] leading-[1.1] mb-6">
+            <h2 className="text-white font-display font-medium tracking-[-0.02em] text-[clamp(1.6rem,7vw,4rem)] leading-[1.12] mb-4 sm:mb-6">
               Ready to elevate your brand?
             </h2>
-            <p className="text-white/80 text-base sm:text-lg mb-10 max-w-xl leading-relaxed">
+            <p className="text-white/90 text-sm sm:text-base mb-7 sm:mb-10 max-w-xl leading-[1.55] sm:leading-relaxed">
               Mari diskusikan bagaimana kami bisa membantu mentransformasi identitas visual dan infrastruktur digital bisnis Anda ke level selanjutnya.
             </p>
             <button
@@ -77,9 +79,9 @@ export function FooterSection({ onOpenCollaboration }: FooterSectionProps) {
         </div>
 
         {/* Multi-Column Links & Info */}
-        <div ref={contactRef} className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 sm:gap-10 pt-4 sm:pt-8 text-[12px] sm:text-sm transition-all duration-700 ${contactVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+        <div ref={contactRef} data-footer-grid className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 sm:gap-10 pt-4 sm:pt-8 text-[12px] sm:text-sm transition-all duration-700 ${contactVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
           {/* Col 1: Brand Info */}
-          <div className="lg:col-span-2 space-y-4">
+          <div data-footer-brand className="lg:col-span-2 space-y-4">
             <div className="relative w-24 h-7">
               <Image
                 src="/Group 3.png"

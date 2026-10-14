@@ -69,7 +69,7 @@ export async function POST(req: NextRequest) {
   const stamp = wibTimestamp();
   const receiptBlock = receipt ? `
     <table cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-top:16px;border:1px solid #e5e5e5;border-radius:8px;">
-      <tr><td style="padding:16px;font-family:Arial,sans-serif;font-size:14px;line-height:22px;color:#111;">
+      <tr><td style="padding:16px;font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:22px;color:#111;">
         <b>STRUK LOGIA CREATIVE</b><br>
         ID: ${esc(receipt.id)}<br>
         Waktu: ${esc(receipt.timestamp)}<br>
@@ -84,8 +84,8 @@ export async function POST(req: NextRequest) {
     </table>` : "";
   const subject = `Inquiry kolaborasi: ${name}${brandName ? ` (${brandName})` : ""}${receipt ? ` [${receipt.id}]` : ""}`;
   const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"></head><body style="margin:0;padding:16px;background:#fafafa;">
-    <table cellpadding="0" cellspacing="0" border="0" width="100%" style="max-width:600px;margin:0 auto;background:#ffffff;border:1px solid #e5e5e5;border-radius:8px;">
-      <tr><td style="padding:20px;font-family:Arial,sans-serif;font-size:14px;line-height:22px;color:#111;">
+    <table cellpadding="0" cellspacing="0" border="0" width="100%" style="max-width:600px;margin:0 auto;background:#ffffff;border:1px solid #e5e5e5;border-radius:8px;font-family:Arial,Helvetica,sans-serif;">
+      <tr><td style="padding:20px;font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:22px;color:#111;">
         <h2 style="margin:0 0 12px;font-size:18px;">Inquiry baru dari website Logia Creative</h2>
         <p><b>Nama:</b> ${esc(name)}</p>
         <p><b>Brand:</b> ${esc(brandName) || "-"}</p>

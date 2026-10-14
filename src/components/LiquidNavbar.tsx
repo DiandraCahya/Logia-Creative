@@ -209,7 +209,7 @@ export function LiquidNavbar({ onOpenCollaboration }: LiquidNavbarProps) {
               exit={{ y: 24, opacity: 0 }}
               transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
               onClick={(e) => e.stopPropagation()}
-              className="absolute inset-x-3 top-2 max-h-[70dvh] overflow-y-auto rounded-2xl bg-white dark:bg-[#111] border border-black/10 dark:border-white/10 shadow-xl pt-[max(3.5rem,env(safe-area-inset-top))] pb-[max(1rem,env(safe-area-inset-bottom))] px-4"
+              className="absolute inset-x-3 top-2 max-h-[70dvh] overflow-y-auto rounded-2xl bg-white/95 dark:bg-[#111]/95 backdrop-blur-2xl backdrop-saturate-150 border border-white/40 dark:border-white/10 shadow-xl pt-[max(3.5rem,env(safe-area-inset-top))] pb-[max(1rem,env(safe-area-inset-bottom))] px-4 supports-[backdrop-filter]:bg-white/55 supports-[backdrop-filter]:dark:bg-[#111]/55"
             >
               <div className="flex flex-col gap-1">
                 {navLinks.map((link) => (

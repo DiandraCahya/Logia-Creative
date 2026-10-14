@@ -40,7 +40,8 @@ export function Logo3DBackground() {
 
     const animate = () => {
       rafId = requestAnimationFrame(animate);
-      if (!inView || !pageVisible) return;
+      // Pause saat overlay Archive terbuka (ui beku, tidak perlu repaint).
+      if (!inView || !pageVisible || document.documentElement.dataset.overlay) return;
 
       currentX += (targetX - currentX) * 0.1;
       currentY += (targetY - currentY) * 0.1;
@@ -73,7 +74,7 @@ export function Logo3DBackground() {
       aria-hidden="true"
     >
       <div
-        className="relative w-[340px] h-[340px] sm:w-[620px] sm:h-[620px]"
+        className="relative w-[min(340px,84vw)] h-[min(340px,84vw)] sm:w-[620px] sm:h-[620px]"
         style={{
           transformStyle: "preserve-3d",
           willChange: "transform",
