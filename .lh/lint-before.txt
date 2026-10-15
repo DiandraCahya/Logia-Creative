@@ -1,0 +1,93 @@
+TASTESKILL · LINT   32 file(s)
+
+FAIL
+  [mono] Monospace type. Only literal code may be monospace.  (6×)
+      src/app/globals.css:11  font-mono
+      src/app/globals.css:96  font-mono
+      src/components/sections/FooterSection.tsx:99  font-mono
+      src/components/ui/hero-carousel.tsx:379  font-mono
+      src/components/ui/hero-carousel.tsx:397  font-mono
+      src/components/ui/hero-carousel.tsx:473  font-mono
+  [shadow] Shadow. Elements at rest carry none; only real overlays (menu, dialog, sticky bar) may.  (31×)
+      src/app/globals.css:163  box-shadow:
+      src/app/globals.css:192  box-shadow:
+      src/app/globals.css:206  box-shadow:
+      src/app/globals.css:227  box-shadow:
+      src/app/globals.css:236  box-shadow:
+      src/app/globals.css:245  box-shadow:
+      … 25 more
+  [gradient] Gradient fill. Use a flat colour or a real image (a neutral scrim over a photo is the one exception).  (9×)
+      src/app/globals.css:201  linear-gradient(
+      src/app/globals.css:224  linear-gradient(
+      src/app/globals.css:250  linear-gradient(
+      src/app/globals.css:269  linear-gradient(
+      src/app/globals.css:299  linear-gradient(
+      src/components/sections/HeroSection.tsx:44  radial-gradient(
+      … 3 more
+  [hairline] Thin rule / divider line. Separate with space, tone or scale; lines belong to real tables and form fields.  (21×)
+      src/app/globals.css:318  border-bottom: 1px
+      src/app/globals.css:669  border-bottom: 1px
+      src/components/ChatWidget.tsx:182  border-b
+      src/components/ChatWidget.tsx:252  border-t
+      src/components/CollaborationModal.tsx:32  border-b
+      src/components/CollaborationModal.tsx:261  h-px
+      … 15 more
+  [gradient-text] Gradient / clipped text. Use solid colour.  (3×)
+      src/app/globals.css:418  background-clip: text
+      src/app/globals.css:419  text-transparent
+      src/app/globals.css:420  text-transparent
+  [numbering] Decorative index numbering (01 / 02 / 03).  (3×)
+      src/components/sections/BackgroundTargetSection.tsx:25  "01"
+      src/components/sections/BackgroundTargetSection.tsx:58  "02"
+      src/components/sections/BackgroundTargetSection.tsx:94  "03"
+  [micro-label] Tiny uppercase letter-spaced label.  (6×)
+      src/components/sections/FooterSection.tsx:107  font-bold text-black dark:text-white uppercase tracking-wider text-xs 
+      src/components/sections/FooterSection.tsx:136  font-bold text-black dark:text-white uppercase tracking-wider text-xs 
+      src/components/sections/FooterSection.tsx:165  font-bold text-black dark:text-white uppercase tracking-wider text-xs 
+      src/components/sections/PricingSection.tsx:94  absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 bg-white dark:bg-b
+      src/components/sections/PricingSection.tsx:101  text-xs font-semibold uppercase tracking-wider mb-2 ${
+      src/components/sections/PricingSection.tsx:121  text-xs font-semibold uppercase tracking-wider ${
+
+WARN
+  [outlined-box] A 1px outlined box. Prefer a filled surface or no box.  (16×)
+      src/app/api/collaboration/route.ts:71  border:1px solid
+      src/app/api/collaboration/route.ts:87  border:1px solid
+      src/app/globals.css:161  border: 1px solid
+      src/app/globals.css:204  border: 1px solid
+      src/app/globals.css:235  border: 1px solid
+      src/app/globals.css:244  border: 1px solid
+      … 10 more
+  [transition-all] transition: all. Name the properties (transform, opacity).  (19×)
+      src/app/globals.css:134  transition-all
+      src/app/globals.css:194  transition: all
+      src/app/globals.css:229  transition: all
+      src/app/globals.css:338  transition: all
+      src/components/LiquidNavbar.tsx:116  transition-all
+      src/components/LiquidNavbar.tsx:141  transition-all
+      … 13 more
+  [glass] Backdrop blur. One sticky bar at most; glass cards are a tell.  (33×)
+      src/app/globals.css:159  backdrop-filter:
+      src/app/globals.css:160  backdrop-filter:
+      src/app/globals.css:168  backdrop-filter:
+      src/app/globals.css:169  backdrop-filter:
+      src/app/globals.css:174  backdrop-filter:
+      src/app/globals.css:175  backdrop-filter:
+      … 27 more
+  [default-font] A default typeface. Use the faces named by the drawn direction.  (1×)
+      src/app/layout.tsx:13  Inter({
+  [bounce] Looping attention animation (bounce / ping / pulse dot).  (2×)
+      src/components/ChatWidget.tsx:234  animate-pulse
+      src/components/sections/FooterSection.tsx:100  animate-pulse
+  [copy] Stock marketing phrase. Say the specific thing the product does.  (2×)
+      src/components/sections/FooterSection.tsx:66  elevate
+      src/lib/rate-card.ts:150  all-in-one
+  [numbering] Zero-padding in script. Fine for a clock, a date or a price; if it builds 01 / 02 / 03 labels, remove it.  (4×)
+      src/components/ui/hero-carousel.tsx:476  padStart(2, "0")
+      src/components/ui/hero-carousel.tsx:477  padStart(2, "0")
+      src/lib/receipt.ts:16  padStart(2, "0")
+      src/lib/receipt.ts:17  padStart(2, "0")
+  [em-dash] Em-dash habit. Use a full stop or a comma; keep at most one or two on a page.  (1×)
+      (all files):0  7 em dashes
+
+RESULT: 79 FAIL, 78 WARN — fix the FAILs before rendering.
+Interface fragments marked data-ui keep their own borders and shadows. Any other line that must keep a flagged pattern for a real reason can carry the comment taste-skill-ignore.

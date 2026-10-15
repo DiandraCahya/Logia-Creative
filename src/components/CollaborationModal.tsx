@@ -255,7 +255,7 @@ export function CollaborationModal({ isOpen, onClose, initialDraft, onDraftConsu
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.98, y: 16 }}
             transition={{ type: "spring", damping: 26, stiffness: 300 }}
-            className="relative w-full max-w-2xl z-10 my-4 sm:my-8 flex flex-col"
+            className="relative w-full max-w-2xl z-10 my-4 sm:my-8 flex flex-col form-sheet"
           >
             <div className="glass-card rounded-[1.25rem] sm:rounded-[1.75rem] border border-[color-mix(in_srgb,var(--text-primary)_12%,transparent)] p-5 sm:p-9 pb-[max(1.5rem,env(safe-area-inset-bottom))] sm:pb-9 flex-1 relative overflow-hidden">
               <div className="absolute top-0 inset-x-0 h-px bg-[var(--text-primary)]/25" aria-hidden="true" />

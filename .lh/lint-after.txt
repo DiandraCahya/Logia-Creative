@@ -1,0 +1,36 @@
+TASTESKILL · LINT   26 file(s)
+
+FAIL
+  [mono] Monospace type. Only literal code may be monospace.  (1×)
+      src/app/globals.css:38  font-mono
+  [hairline] Thin rule / divider line. Separate with space, tone or scale; lines belong to real tables and form fields.  (4×)
+      src/app/globals.css:185  border-bottom: 1px
+      src/components/CollaborationModal.tsx:411  border-t
+      src/components/sections/PricingSection.tsx:122  border-b
+      src/components/SiteNav.tsx:136  border-b
+  [shadow] Shadow. Elements at rest carry none; only real overlays (menu, dialog, sticky bar) may.  (3×)
+      src/components/ChatWidget.tsx:147  shadow-lg
+      src/components/ChatWidget.tsx:157  shadow-2xl
+      src/components/CollaborationModal.tsx:213  shadow-2xl
+
+WARN
+  [outlined-box] A 1px outlined box. Prefer a filled surface or no box.  (3×)
+      src/app/api/collaboration/route.ts:71  border:1px solid
+      src/app/api/collaboration/route.ts:87  border:1px solid
+      src/app/globals.css:170  border: 1px solid
+  [default-font] A default typeface. Use the faces named by the drawn direction.  (2×)
+      src/app/layout.tsx:11  Inter({
+      src/app/layout.tsx:18  Instrument_Serif({
+  [glass] Backdrop blur. One sticky bar at most; glass cards are a tell.  (2×)
+      src/components/sections/PortfolioSection.tsx:191  backdrop-blur
+      src/components/SiteNav.tsx:76  backdrop-blur
+  [transition-all] transition: all. Name the properties (transform, opacity).  (1×)
+      src/components/ui/TestimonialCarousel.tsx:101  transition-all
+  [copy] Stock marketing phrase. Say the specific thing the product does.  (1×)
+      src/lib/rate-card.ts:150  all-in-one
+  [numbering] Zero-padding in script. Fine for a clock, a date or a price; if it builds 01 / 02 / 03 labels, remove it.  (2×)
+      src/lib/receipt.ts:16  padStart(2, "0")
+      src/lib/receipt.ts:17  padStart(2, "0")
+
+RESULT: 8 FAIL, 11 WARN — fix the FAILs before rendering.
+Interface fragments marked data-ui keep their own borders and shadows. Any other line that must keep a flagged pattern for a real reason can carry the comment taste-skill-ignore.
