@@ -35,7 +35,7 @@ function renderContent(content: string) {
 const PANEL =
   "fixed z-40 flex flex-col overflow-hidden rounded-[var(--radius-md)] " +
   "border border-[color-mix(in_srgb,var(--text-primary)_14%,transparent)] " +
-  "bg-[var(--bg-primary)]/95 backdrop-blur-xl";
+  "bg-[color-mix(in_srgb,var(--bg-primary)_95%,transparent)] backdrop-blur-xl";
 
 export function ChatWidget({ onAutofill }: { onAutofill?: (d: CollabDraft) => void }) {
   const [open, setOpen] = useState(false);
@@ -56,31 +56,6 @@ export function ChatWidget({ onAutofill }: { onAutofill?: (d: CollabDraft) => vo
     const id = t(() => setReady(true));
     return () => ("cancelIdleCallback" in window ? cancelIdleCallback(id as number) : clearTimeout(id as number));
   }, []);
-
-  // Mobile: tinggi panel mengikuti visual viewport → input tidak tertutup keyboard.
-  // `small` juga dipakai untuk MEMATIKAN tinggi inline di desktop: kalau tidak,
-  // `height: var(--vvh, 100dvh)` (viewport penuh) mengalahkan kelas
-  // `sm:h-[min(660px,80dvh)]` dan panel jadi setinggi layar.
-  const [compact, setCompact] = useState(false);
-  useEffect(() => {
-    const mq = window.matchMedia("(max-width: 639px)");
-    const vv = window.visualViewport;
-    const el = panelRef.current;
-    const apply = () => {
-      setCompact(mq.matches);
-      if (!mq.matches || !vv || !el) return;
-      el.style.setProperty("--vvh", `${vv.height}px`);
-    };
-    apply();
-    mq.addEventListener("change", apply);
-    vv?.addEventListener("resize", apply);
-    vv?.addEventListener("scroll", apply);
-    return () => {
-      mq.removeEventListener("change", apply);
-      vv?.removeEventListener("resize", apply);
-      vv?.removeEventListener("scroll", apply);
-    };
-  }, [open]);
 
   // Esc menutup panel.
   useEffect(() => {
@@ -165,16 +140,12 @@ export function ChatWidget({ onAutofill }: { onAutofill?: (d: CollabDraft) => vo
           ref={panelRef}
           role="dialog"
           aria-label="Chat Logia"
-          className={`${PANEL} max-sm:inset-x-0 max-sm:bottom-0 max-sm:rounded-none max-sm:border-x-0 ${
+          className={`${PANEL} right-4 bottom-20 w-[calc(100vw-2rem)] max-w-[340px] h-[min(480px,calc(100dvh-6rem))] ${
             expanded
-              ? "sm:right-4 sm:bottom-20 sm:w-[440px] sm:h-[min(660px,80dvh)]"
-              : "sm:right-4 sm:bottom-20 sm:w-[340px] sm:h-[480px]"
+              ? "max-sm:w-[calc(100vw-2rem)] max-sm:max-w-[440px] max-sm:h-[min(660px,85dvh)]"
+              : ""
           }`}
           style={{
-            // Mobile: sheet penuh yang sadar keyboard (visual viewport) + safe-area.
-            // Desktop: `compact` false → kelas sm:h-* yang berlaku.
-            ...(compact ? { height: "var(--vvh, 100dvh)" } : null),
-            maxHeight: "100dvh",
             paddingBottom: "env(safe-area-inset-bottom)",
           }}
         >

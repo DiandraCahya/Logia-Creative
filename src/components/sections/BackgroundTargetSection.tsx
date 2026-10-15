@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   Store,
   Rocket,
-  CalendarCheck,
+  CalendarCheck, 
   Palette,
   PackageCheck,
   LayoutGrid,

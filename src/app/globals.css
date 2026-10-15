@@ -728,8 +728,10 @@ html:not(.dark) footer a:hover,
   /* About / profile: hapus min-height yang bikin celah kosong */
   #about .min-h-\[300px\] { min-height: 0 !important; }
 
-  /* Form mobile: full-height sheet, tidak tertutup keyboard */
-  [role="dialog"] > div {
+  /* Form mobile: full-height sheet, tidak tertutup keyboard.
+     Hanya form yang pakai kelas `form-sheet` — chat pakai `--vvh` sendiri,
+     jadi jangan paksa min-height pada seluruh anak dialog. */
+  [role="dialog"] > div.form-sheet {
     min-height: 100dvh !important;
   }
   form input, form select, form textarea {
