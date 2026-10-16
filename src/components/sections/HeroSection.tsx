@@ -102,7 +102,7 @@ function InteractiveShape() {
             style={{ transform: "translateZ(50px)" }}
           >
             <Image
-              src="/hanni.jpg"
+              src="/LUOGIA.jpeg"
               alt="Potret kreator Logia Creative"
               fill
               className="object-cover"
