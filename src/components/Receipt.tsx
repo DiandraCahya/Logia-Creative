@@ -107,10 +107,10 @@ export const ReceiptView = forwardRef<HTMLDivElement, { receipt: Receipt }>(
           )}
         </div>
 
-        {receipt.total != null && (
-          <>
-            <div style={{ margin: "18px 0" }}><Hairline /></div>
-            <div style={{ display: "grid", gap: 8 }}>
+        <div style={{ margin: "18px 0" }}><Hairline /></div>
+        <div style={{ display: "grid", gap: 8 }}>
+          {receipt.total != null && (
+            <>
               <Row label="Total" value={formatIDR(receipt.total)} strong />
               <p style={{ margin: 0, fontSize: 10.5, lineHeight: 1.5, color: MUTED }}>
                 Total sesuai paket yang dipilih (belum dikurangi DP).
@@ -120,26 +120,26 @@ export const ReceiptView = forwardRef<HTMLDivElement, { receipt: Receipt }>(
                 Silakan lakukan pembayaran DP sebesar {formatIDR(receipt.dp!)} untuk memulai pekerjaan. Sisa pelunasan dibahas privat via WA admin.
               </p>
               <Row label="Sisa Pelunasan" value={formatIDR(receipt.sisa!)} />
-              <div style={{ display: "flex", justifyContent: "space-between", gap: 16, alignItems: "baseline", marginTop: 4 }}>
-                <span style={{ color: MUTED, fontSize: 12 }}>Status</span>
-                <span
-                  style={{
-                    fontSize: 11,
-                    fontWeight: 600,
-                    letterSpacing: "0.06em",
-                    textTransform: "uppercase",
-                    color: INK,
-                    border: `1px solid ${LINE}`,
-                    borderRadius: 999,
-                    padding: "3px 10px",
-                  }}
-                >
-                  {receipt.status}
-                </span>
-              </div>
-            </div>
-          </>
-        )}
+            </>
+          )}
+          <div style={{ display: "flex", justifyContent: "space-between", gap: 16, alignItems: "baseline", marginTop: 4 }}>
+            <span style={{ color: MUTED, fontSize: 12 }}>Status</span>
+            <span
+              style={{
+                fontSize: 11,
+                fontWeight: 600,
+                letterSpacing: "0.06em",
+                textTransform: "uppercase",
+                color: INK,
+                border: `1px solid ${LINE}`,
+                borderRadius: 999,
+                padding: "3px 10px",
+              }}
+            >
+              {receipt.status}
+            </span>
+          </div>
+        </div>
 
         <div style={{ margin: "18px 0" }}><Hairline /></div>
 

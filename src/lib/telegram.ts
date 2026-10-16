@@ -24,7 +24,7 @@ export function receiptTelegramHtml(r: Receipt, notes: string, budget: string): 
       ? `DP 50% — silakan lakukan pembayaran DP sebesar <b>${escHtml(formatIDR(r.dp))}</b> untuk memulai pekerjaan.`
       : null,
     r.sisa != null ? `Sisa pelunasan: ${escHtml(formatIDR(r.sisa))} (dibahas privat via WA admin).` : null,
-    `Status: <b>Menunggu DP</b>`,
+    `Status: <b>${escHtml(r.status)}</b>`,
     notes ? `\nCatatan: ${escHtml(notes.length > 500 ? notes.slice(0, 500) + "…" : notes)}` : null,
   ].filter((l): l is string => l !== null);
   return lines.join("\n");

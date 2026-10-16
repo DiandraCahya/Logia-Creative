@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Resend } from "resend";
 import { findPackage } from "@/lib/rate-card";
-import { buildReceipt, formatIDR, serviceLabel, wibTimestamp, RECEIPT_TERMS } from "@/lib/receipt";
+import { buildReceipt, buildConsultationReceipt, formatIDR, serviceLabel, wibTimestamp, RECEIPT_TERMS } from "@/lib/receipt";
 import { receiptTelegramHtml, inquiryTelegramHtml, sendReceiptTelegram } from "@/lib/telegram";
 
 const TO = process.env.COLLABORATION_TO || "logiacreative.id@gmail.com";
@@ -62,9 +62,14 @@ export async function POST(req: NextRequest) {
 
   // Paket dari SATU sumber (rate-card): SEMUA id valid dijumlahkan di struk.
   const pkgRefs = services.filter((s) => findPackage(s));
-  const receipt = pkgRefs.length ? buildReceipt(pkgRefs, name, brandName, contact, notes) : null;
-  // Label ramah-baca untuk email admin (id -> "NAMA · Solusi").
+  // Label ramah-baca untuk email admin & struk (id -> "NAMA · Solusi").
   const serviceLabels = services.map(serviceLabel);
+  // Struk SELALU dibangun: ada paket -> struk berharga; tanpa paket
+  // (mis. hanya "Custom / Konsultasi") -> struk konsultasi tanpa harga,
+  // supaya user tetap melihat struk di layar.
+  const receipt =
+    (pkgRefs.length ? buildReceipt(pkgRefs, name, brandName, contact, notes) : null) ??
+    buildConsultationReceipt(name, brandName, contact, notes, services);
 
   const resend = new Resend(apiKey);
   const stamp = wibTimestamp();
@@ -82,7 +87,7 @@ export async function POST(req: NextRequest) {
         ${receipt.notes ? `Catatan: ${esc(receipt.notes).replace(/\n/g, "<br>")}<br>` : ""}
         ${itemsRows}
         ${receipt.total != null ? `Total (${receipt.items.length} paket, belum dikurangi DP): ${formatIDR(receipt.total)}<br>DP 50% — silakan lakukan pembayaran DP sebesar ${formatIDR(receipt.dp!)} untuk memulai pekerjaan.<br>Sisa pelunasan: ${formatIDR(receipt.sisa!)} (dibahas privat via WA admin).<br>` : ""}
-        Status: <b>Menunggu DP</b>
+        Status: <b>${esc(receipt.status)}</b>
         <br><br><span style="font-size:12px;color:#555;">${RECEIPT_TERMS.map(esc).join("<br>")}</span>
       </td></tr>
     </table>` : "";
@@ -113,10 +118,10 @@ export async function POST(req: NextRequest) {
     // supaya admin tetap dapat notifikasi.
     const tgHtml =
       botToken && chatId
-        ? receipt
+        ? receipt.total != null
           ? receiptTelegramHtml(receipt, notes, budget)
           : inquiryTelegramHtml({
-              timestamp: stamp,
+            timestamp: receipt.timestamp,
               name,
               brand: brandName,
               contact,

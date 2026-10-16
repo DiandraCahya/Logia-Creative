@@ -54,7 +54,7 @@ export interface Receipt {
   total: number | null;
   dp: number | null;
   sisa: number | null;
-  status: "Menunggu DP";
+  status: "Menunggu DP" | "Menunggu Konfirmasi";
 }
 
 /** Struk dari BANYAK paket: menjumlahkan semua harga. Null bila tak ada yang cocok. */
@@ -88,6 +88,37 @@ export function buildReceipt(refs: string[], customer: string, brand: string, co
     dp: Math.round(total / 2),
     sisa: total - Math.round(total / 2),
     status: "Menunggu DP",
+  };
+}
+
+/**
+ * Struk untuk permintaan TANPA paket (mis. hanya "Custom / Konsultasi"):
+ * tanpa harga/DP, status "Menunggu Konfirmasi". Dipakai agar user tetap
+ * melihat struk di layar, bukan sekadar teks fallback.
+ */
+export function buildConsultationReceipt(
+  customer: string,
+  brand: string,
+  contact: string,
+  notes: string,
+  services: string[],
+): Receipt {
+  const labels = services.map(serviceLabel);
+  return {
+    id: makeReceiptId(),
+    timestamp: wibTimestamp(),
+    customer,
+    brand,
+    contact,
+    notes,
+    items: [],
+    packageName: labels.join(" · ") || CUSTOM_SERVICE_OPTION,
+    solutionName: "Konsultasi / Custom",
+    priceLabel: "Dibahas privat via WA admin",
+    total: null,
+    dp: null,
+    sisa: null,
+    status: "Menunggu Konfirmasi",
   };
 }
 
