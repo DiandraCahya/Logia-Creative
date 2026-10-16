@@ -2,7 +2,6 @@
 
 import React, { useState } from "react";
 import { useScrollReveal } from "@/lib/useScrollReveal";
-import { motion, AnimatePresence } from "framer-motion";
 import {
   Store,
   Rocket,
@@ -169,11 +168,9 @@ export function BackgroundTargetSection({ onOpenCollaboration }: Props) {
                   }`}
                 >
                   {isActive && (
-                    <motion.div
-                      layoutId="activeTargetBg"
+                    <span
                       aria-hidden="true"
                       className="absolute inset-0 z-0 rounded-full bg-black dark:bg-white shadow-md pointer-events-none"
-                      transition={{ type: "spring", stiffness: 500, damping: 35 }}
                     />
                   )}
                   <Icon className="relative z-10 w-4 h-4 shrink-0" />
@@ -186,15 +183,10 @@ export function BackgroundTargetSection({ onOpenCollaboration }: Props) {
 
         {/* Content Panel */}
         <div className="max-w-5xl mx-auto">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={currentMarket.id}
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -15 }}
-              transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-              className="glass-card rounded-[2rem] p-5 sm:p-12"
-            >
+          <div
+            key={currentMarket.id}
+            className="glass-card rounded-[2rem] p-5 sm:p-12 animate-fade-up"
+          >
               {/* Card Header */}
               <div className="flex flex-col md:flex-row md:items-start justify-between gap-5 mb-6 sm:mb-10 pb-6 sm:pb-8 border-b border-black/10 dark:border-white/10">
                 <div className="flex items-center gap-4">
@@ -270,8 +262,7 @@ export function BackgroundTargetSection({ onOpenCollaboration }: Props) {
                   </div>
                 </div>
               </div>
-            </motion.div>
-          </AnimatePresence>
+            </div>
 
           <div className="mt-8 text-center">
             <button

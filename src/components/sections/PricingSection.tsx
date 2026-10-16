@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import { useScrollReveal } from "@/lib/useScrollReveal";
 import { Check, ChevronDown } from "lucide-react";
 import {
@@ -37,22 +36,20 @@ export function PricingSection({ onSelectPackage }: { onSelectPackage?: (package
     >
       <div className="max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-12" ref={ref}>
         <div className="text-center max-w-2xl mx-auto mb-10">
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-            transition={{ duration: 0.6, ease }}
-            className="font-display font-medium tracking-[-0.02em] text-[clamp(1.65rem,4vw,3.25rem)] text-black dark:text-white mb-2.5 sm:mb-4"
+          <h2
+            className={`font-display font-medium tracking-[-0.02em] text-[clamp(1.65rem,4vw,3.25rem)] text-black dark:text-white mb-2.5 sm:mb-4 transition-all duration-700 ${
+              isInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"
+            }`}
           >
             Rate Card
-          </motion.h2>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-            transition={{ duration: 0.6, ease, delay: 0.1 }}
-            className="text-base text-[#666666] dark:text-[#999999]"
+          </h2>
+          <p
+            className={`text-base text-[#666666] dark:text-[#999999] transition-all duration-700 delay-150 ${
+              isInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"
+            }`}
           >
             Pilih paket layanan yang sesuai dengan tahap pertumbuhan bisnis Anda.
-          </motion.p>
+          </p>
         </div>
 
         {/* Tabs: strip mengecil ke lebar isi lalu di tengah; flex-wrap + max-w-full jaga mobile tanpa overflow */}
@@ -79,16 +76,18 @@ export function PricingSection({ onSelectPackage }: { onSelectPackage?: (package
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-8">
           {active.packages.map((pkg, idx) => (
-            <motion.div
+            <div
               key={pkg.id}
-              initial={{ opacity: 0, y: 30 }}
-              animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
-              transition={{ duration: 0.6, ease, delay: 0.15 + idx * 0.08 }}
-              className={`relative flex flex-col p-5 sm:p-8 rounded-2xl sm:rounded-3xl transition-[transform,border-color,background-color] duration-300 hover:-translate-y-1 ${
+              className={`relative flex flex-col p-5 sm:p-8 rounded-2xl sm:rounded-3xl transition-all duration-500 hover:-translate-y-1 ${
                 pkg.popular
                   ? "bg-black dark:bg-white border-2 border-black dark:border-white text-white dark:text-black shadow-xl"
                   : "glass-card"
               }`}
+              style={{
+                transitionDelay: `${isInView ? 150 + idx * 80 : 0}ms`,
+                opacity: isInView ? 1 : 0,
+                transform: isInView ? "translateY(0)" : "translateY(30px)",
+              }}
             >
               {pkg.popular && (
                 <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 bg-white dark:bg-black text-black dark:text-white text-xs font-bold uppercase tracking-wider rounded-full border border-black/10 dark:border-white/10 shadow-sm">
@@ -153,24 +152,17 @@ export function PricingSection({ onSelectPackage }: { onSelectPackage?: (package
                 >
                   {expanded === pkg.id ? "Sembunyikan rincian" : "Lihat rincian paket"}
                 </button>
-                <AnimatePresence initial={false}>
-                  {expanded === pkg.id && (
-                    <motion.div
-                      initial={{ opacity: 0, height: 0 }}
-                      animate={{ opacity: 1, height: "auto" }}
-                      exit={{ opacity: 0, height: 0 }}
-                      transition={{ duration: 0.3, ease }}
-                      className="overflow-hidden"
-                    >
-                      {pkg.intro && (
-                        <p
-                          className={`mt-4 text-sm font-semibold ${
-                            pkg.popular ? "text-white/90 dark:text-black/90" : "text-black dark:text-white"
-                          }`}
-                        >
-                          {pkg.intro}
-                        </p>
-                      )}
+                {expanded === pkg.id && (
+                  <div className="animate-fade-up">
+                    {pkg.intro && (
+                      <p
+                        className={`mt-4 text-sm font-semibold ${
+                          pkg.popular ? "text-white/90 dark:text-black/90" : "text-black dark:text-white"
+                        }`}
+                      >
+                        {pkg.intro}
+                      </p>
+                    )}
                       <ol className="mt-4 space-y-3">
                         {pkg.items.map((item, i) => (
                           <li key={i} className="flex items-start gap-3">
@@ -219,9 +211,8 @@ export function PricingSection({ onSelectPackage }: { onSelectPackage?: (package
                           ))}
                         </div>
                       )}
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+                  </div>
+                )}
               </div>
 
               <button
@@ -235,7 +226,7 @@ export function PricingSection({ onSelectPackage }: { onSelectPackage?: (package
               >
                 Pilih {pkg.name}
               </button>
-            </motion.div>
+            </div>
           ))}
         </div>
 
@@ -259,39 +250,30 @@ export function PricingSection({ onSelectPackage }: { onSelectPackage?: (package
                     }`}
                   />
                 </button>
-                <AnimatePresence initial={false}>
-                  {openTerm === i && (
-                    <motion.div
-                      initial={{ opacity: 0, height: 0 }}
-                      animate={{ opacity: 1, height: "auto" }}
-                      exit={{ opacity: 0, height: 0 }}
-                      transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-                      className="overflow-hidden"
-                    >
-                      <ul className="px-6 pb-5 space-y-2.5">
-                        {term.body.map((b, j) => (
-                          <li
-                            key={j}
-                            className="flex items-start gap-3 text-sm text-[#444444] dark:text-[#BBBBBB] leading-relaxed"
-                          >
-                            <Check className="w-4 h-4 shrink-0 text-black dark:text-white mt-0.5" />
-                            <span>{b}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+                {openTerm === i && (
+                  <div className="animate-fade-up">
+                    <ul className="px-6 pb-5 space-y-2.5">
+                      {term.body.map((b, j) => (
+                        <li
+                          key={j}
+                          className="flex items-start gap-3 text-sm text-[#444444] dark:text-[#BBBBBB] leading-relaxed"
+                        >
+                          <Check className="w-4 h-4 shrink-0 text-black dark:text-white mt-0.5" />
+                          <span>{b}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
               </div>
             ))}
           </div>
         </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-          transition={{ duration: 0.6, ease, delay: 0.4 }}
-          className="mt-16 text-center space-y-6"
+        <div
+          className={`mt-16 text-center space-y-6 transition-all duration-700 delay-300 ${
+            isInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"
+          }`}
         >
           <p className="text-sm text-[#666666] dark:text-[#999999]">
             Butuh solusi di luar paket? Diskusikan kebutuhanmu bersama kami.
@@ -304,7 +286,7 @@ export function PricingSection({ onSelectPackage }: { onSelectPackage?: (package
               Diskusikan Kebutuhan Anda
             </a>
           </div>
-        </motion.div>
+        </div>
       </div>
     </section>
   );

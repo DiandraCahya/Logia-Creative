@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { Resend } from "resend";
 import { findPackage } from "@/lib/rate-card";
 import { buildReceipt, formatIDR, serviceLabel, wibTimestamp, RECEIPT_TERMS } from "@/lib/receipt";
+import { receiptTelegramHtml, sendReceiptTelegram } from "@/lib/telegram";
 
 const TO = process.env.COLLABORATION_TO || "logiacreative.id@gmail.com";
 const FROM = process.env.COLLABORATION_FROM || "onboarding@resend.dev";
@@ -59,14 +60,17 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Layanan email belum dikonfigurasi." }, { status: 500 });
   }
 
-  // Paket dari SATU sumber (rate-card), dicocokkan via id unik.
-  const pkgRef = services.map((s) => findPackage(s)?.pkg.id).find((x): x is string => !!x) ?? null;
-  const receipt = pkgRef ? buildReceipt(pkgRef, name, brandName, contact) : null;
+  // Paket dari SATU sumber (rate-card): SEMUA id valid dijumlahkan di struk.
+  const pkgRefs = services.filter((s) => findPackage(s));
+  const receipt = pkgRefs.length ? buildReceipt(pkgRefs, name, brandName, contact, notes) : null;
   // Label ramah-baca untuk email admin (id -> "NAMA · Solusi").
   const serviceLabels = services.map(serviceLabel);
 
   const resend = new Resend(apiKey);
   const stamp = wibTimestamp();
+  const itemsRows = receipt && receipt.items.length
+    ? receipt.items.map((it) => `${esc(it.packageName)} · ${esc(it.solutionName)} — ${esc(it.priceLabel)}`).join("<br>")
+    : `Paket: ${esc(receipt?.packageName ?? "-")} · ${esc(receipt?.solutionName ?? "-")}<br>\n        Harga: ${esc(receipt?.priceLabel ?? "-")}<br>`;
   const receiptBlock = receipt ? `
     <table cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-top:16px;border:1px solid #e5e5e5;border-radius:8px;">
       <tr><td style="padding:16px;font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:22px;color:#111;">
@@ -75,9 +79,9 @@ export async function POST(req: NextRequest) {
         Waktu: ${esc(receipt.timestamp)}<br>
         Pelanggan: ${esc(receipt.customer)}${receipt.brand ? ` (${esc(receipt.brand)})` : ""}<br>
         Kontak: ${esc(receipt.contact)}<br>
-        Paket: ${esc(receipt.packageName)} · ${esc(receipt.solutionName)}<br>
-        Harga: ${esc(receipt.priceLabel)}<br>
-        ${receipt.total != null ? `Total: ${formatIDR(receipt.total)}<br>DP 50%: ${formatIDR(receipt.dp!)}<br>Sisa: ${formatIDR(receipt.sisa!)}<br>` : ""}
+        ${receipt.notes ? `Catatan: ${esc(receipt.notes).replace(/\n/g, "<br>")}<br>` : ""}
+        ${itemsRows}
+        ${receipt.total != null ? `Total (${receipt.items.length} paket, belum dikurangi DP): ${formatIDR(receipt.total)}<br>DP 50% — silakan lakukan pembayaran DP sebesar ${formatIDR(receipt.dp!)} untuk memulai pekerjaan.<br>Sisa pelunasan: ${formatIDR(receipt.sisa!)} (dibahas privat via WA admin).<br>` : ""}
         Status: <b>Menunggu DP</b>
         <br><br><span style="font-size:12px;color:#555;">${RECEIPT_TERMS.map(esc).join("<br>")}</span>
       </td></tr>
@@ -100,9 +104,36 @@ export async function POST(req: NextRequest) {
   </body></html>`;
 
   try {
-    const { error } = await resend.emails.send({ from: FROM, to: TO, subject, html });
-    if (error) return NextResponse.json({ error: "Gagal mengirim email." }, { status: 502 });
-    return NextResponse.json({ ok: true, receipt });
+    // Email + Telegram jalan paralel dan independen: salah satu gagal
+    // tidak menggagalkan yang lain. Struk tetap kembali ke user.
+    const botToken = process.env.TELEGRAM_BOT_TOKEN;
+    const chatId = process.env.TELEGRAM_CHAT_ID;
+    const [emailResult, tgResult] = await Promise.allSettled([
+      resend.emails.send({ from: FROM, to: TO, subject, html }),
+      receipt && botToken && chatId
+        ? sendReceiptTelegram(botToken, chatId, receiptTelegramHtml(receipt, notes, budget))
+        : Promise.resolve({ ok: false, error: "skipped" }),
+    ]);
+    const emailOk =
+      emailResult.status === "fulfilled" && !(emailResult.value as { error?: unknown }).error;
+    let telegram: "sent" | "skipped" | "failed" = "skipped";
+    if (receipt && botToken && chatId) {
+      telegram =
+        tgResult.status === "fulfilled" && (tgResult.value as { ok: boolean }).ok ? "sent" : "failed";
+      if (telegram === "failed") {
+        const err =
+          tgResult.status === "fulfilled" ? (tgResult.value as { error?: string }).error : tgResult.reason;
+        console.error("[telegram] gagal kirim struk:", err);
+      }
+    }
+    if (!emailOk) {
+      const err =
+        emailResult.status === "fulfilled"
+          ? (emailResult.value as { error?: unknown }).error
+          : emailResult.reason;
+      console.error("[email] gagal kirim inquiry:", err);
+    }
+    return NextResponse.json({ ok: true, receipt, telegram, email: emailOk ? "sent" : "failed" });
   } catch {
     return NextResponse.json({ error: "Gagal mengirim email." }, { status: 502 });
   }

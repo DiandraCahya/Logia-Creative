@@ -2,7 +2,6 @@
 
 import React, { useRef, useEffect } from "react";
 import Image from "next/image";
-import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 
 interface HeroSectionProps {
@@ -21,6 +20,9 @@ function InteractiveShape() {
 
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    // ponytail: interaksi tilt hanya berguna dengan mouse; di layar sempit
+    // (mobile) rAF + repaint berjalan sia-sia → skip loop total.
+    if (typeof window !== "undefined" && window.innerWidth < 768) return;
     const el = containerRef.current;
     if (!el) return;
 
@@ -100,11 +102,12 @@ function InteractiveShape() {
             style={{ transform: "translateZ(50px)" }}
           >
             <Image
-              src="/chaewon.jpg"
-              alt="Potret kreatif Logia Creative"
+              src="/hanni.jpg"
+              alt="Potret kreator Logia Creative"
               fill
               className="object-cover"
               sizes="(max-width: 640px) 144px, (max-width: 1024px) 320px, 420px"
+              quality={85}
               priority
               fetchPriority="high"
             />
@@ -120,8 +123,7 @@ function InteractiveShape() {
   );
 }
 
-/* ── Easing ── */
-const ease = [0.16, 1, 0.3, 1] as const;
+/* ── Hero reveal via keyframe CSS (globals.css), bukan framer ── */
 
 export function HeroSection({ onOpenCollaboration }: HeroSectionProps) {
   return (
@@ -134,37 +136,22 @@ export function HeroSection({ onOpenCollaboration }: HeroSectionProps) {
           {/* Left: Typography & CTA */}
           <div className="col-start-1 row-start-1 min-w-0 flex flex-col items-start justify-center gap-6 sm:gap-4 lg:gap-8">
 
-            {/* Headline — max 7 words */}
+            {/* Headline — max 7 words, reveal via CSS keyframe */}
             <h1 className="w-full font-display font-medium text-[clamp(2.25rem,11vw,3.5rem)] sm:text-[clamp(2rem,6vw,5rem)] leading-[1.05] tracking-[-0.02em] text-black dark:text-white min-w-0">
               <span className="overflow-hidden block pb-1">
-                <motion.span
-                  initial={{ y: "100%" }}
-                  animate={{ y: 0 }}
-                  transition={{ duration: 0.8, ease, delay: 0.1 }}
-                  className="block"
-                >
+                <span className="block animate-[hero-line_0.8s_0.1s_both]">
                   Craft Your
-                </motion.span>
+                </span>
               </span>
               <span className="overflow-hidden block pb-1">
-                <motion.span
-                  initial={{ y: "100%" }}
-                  animate={{ y: 0 }}
-                  transition={{ duration: 0.8, ease, delay: 0.2 }}
-                  className="block text-black dark:text-white"
-                >
+                <span className="block text-black dark:text-white animate-[hero-line_0.8s_0.2s_both]">
                   Brand Identity.
-                </motion.span>
+                </span>
               </span>
             </h1>
 
             {/* CTA Buttons */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, ease, delay: 0.5 }}
-              className="flex flex-nowrap items-center gap-3 sm:gap-4 w-full sm:w-auto"
-            >
+            <div className="flex flex-nowrap items-center gap-3 sm:gap-4 w-full sm:w-auto animate-[hero-fade_0.8s_0.5s_both]">
               <button
                 onClick={onOpenCollaboration}
                 className="btn-solid flex-1 sm:flex-none justify-center whitespace-nowrap px-5 sm:px-8 py-3.5 sm:py-4 min-h-[52px] bg-black dark:bg-white text-white dark:text-black text-sm font-semibold rounded-full flex items-center gap-2 group transition-transform hover:scale-[1.02] active:scale-[0.98]"
@@ -179,18 +166,13 @@ export function HeroSection({ onOpenCollaboration }: HeroSectionProps) {
               >
                 Lihat Portfolio
               </a>
-            </motion.div>
+            </div>
           </div>
 
           {/* Right: 3D Interactive Element */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1.2, ease, delay: 0.3 }}
-            className="col-start-2 row-start-1 sm:col-auto sm:row-auto shrink-0 flex items-center justify-center"
-          >
+          <div className="col-start-2 row-start-1 sm:col-auto sm:row-auto shrink-0 flex items-center justify-center animate-[hero-fade_1.2s_0.3s_both]">
             <InteractiveShape />
-          </motion.div>
+          </div>
         </div>
       </div>
     </section>

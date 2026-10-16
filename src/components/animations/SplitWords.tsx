@@ -34,7 +34,7 @@ export default function SplitWords({ text, className = "", delay = 0, as = "h2" 
       {text.split(" ").map((word, i) => (
         <span key={i} className="inline-block overflow-hidden pb-[0.12em] mr-[0.28em] align-bottom">
           <span
-            className="inline-block will-change-transform"
+            className="inline-block"
             style={{
               transform: visible ? "translateY(0%)" : "translateY(110%)",
               opacity: visible ? 1 : 0,

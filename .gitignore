@@ -5,6 +5,7 @@ build/
 .env*.local
 *.log
 .DS_Store
+UpdateLogia.md
 
 .next/
 node_modules/

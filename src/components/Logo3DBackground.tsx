@@ -1,15 +1,26 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { usePerformanceTier } from "@/lib/usePerformanceTier";
 
 export function Logo3DBackground() {
   const containerRef = useRef<HTMLDivElement>(null);
   const tier = usePerformanceTier();
+  const [compact, setCompact] = useState(false);
+
+  // ponytail: logo 3D hanya bermakna dengan mouse; di layar sempit (mobile)
+  // render + loop rAF sia-sia → matikan. Cek width saat mount.
+  useEffect(() => {
+    setCompact(window.innerWidth < 768);
+    const mq = window.matchMedia("(max-width: 767px)");
+    const sync = () => setCompact(mq.matches);
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, []);
 
   useEffect(() => {
-    if (tier === "low") return;
+    if (tier === "low" || compact) return;
 
     const el = containerRef.current;
     if (!el) return;
@@ -64,7 +75,7 @@ export function Logo3DBackground() {
     };
   }, [tier]);
 
-  if (tier === "low") return null;
+  if (compact || tier === "low") return null;
 
   return (
     <div

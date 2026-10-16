@@ -1,15 +1,17 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { ArrowRight } from "lucide-react";
 
 interface SplashScreenProps {
   onComplete?: () => void;
 }
 
+// ponytail: framer-motion dihapus — splash cuma butuh fade + progress bar;
+// CSS transition sama hasilnya, tanpa memuat runtime animasi di first-load.
 export function SplashScreen({ onComplete }: SplashScreenProps) {
   const [isVisible, setIsVisible] = useState(true);
+  const [fading, setFading] = useState(false);
   const doneRef = useRef(onComplete);
   doneRef.current = onComplete;
 
@@ -34,36 +36,33 @@ export function SplashScreen({ onComplete }: SplashScreenProps) {
     return () => clearInterval(t);
   }, []);
 
-  const handleExit = React.useCallback(() => {
-    setIsVisible(false);
+  const handleExit = useCallback(() => {
+    setFading(true);
     setTimeout(() => {
+      setIsVisible(false);
       doneRef.current?.();
-    }, 400);
+    }, 350);
   }, []);
 
   useEffect(() => {
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const timeout = setTimeout(handleExit, reduced ? 100 : 1600);
+    const timeout = setTimeout(handleExit, reduced ? 100 : 1400);
     return () => clearTimeout(timeout);
   }, [handleExit]);
 
   return (
-    <AnimatePresence>
+    <>
       {isVisible && (
-        <motion.div
-          key="splash-overlay"
-          initial={{ opacity: 1 }}
-          exit={{
-            opacity: 0,
-            transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] },
-          }}
-          className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[var(--bg-primary)] text-[var(--text-primary)] dark:bg-[#0A0A0A] dark:text-white"
+        <div
+          className={`fixed inset-0 z-50 flex flex-col items-center justify-center bg-[var(--bg-primary)] text-[var(--text-primary)] dark:bg-[#0A0A0A] dark:text-white transition-opacity duration-300 ${
+            fading ? "opacity-0" : "opacity-100"
+          }`}
         >
           <div className="relative z-10 flex flex-col items-center gap-6 px-6 text-center">
             <p aria-label={TEXT} className="font-display text-4xl md:text-6xl font-medium tracking-[-0.02em] select-none">
               {TEXT.slice(0, n)}
               {n < TEXT.length && (
-                <motion.span aria-hidden="true" animate={{ opacity: [1, 0] }} transition={{ duration: 0.5, repeat: Infinity }} className="text-[var(--accent-bronze)]">|</motion.span>
+                <span aria-hidden="true" className="animate-pulse text-[var(--accent-bronze)]">|</span>
               )}
             </p>
             {/* thin progress indicator */}
@@ -72,11 +71,12 @@ export function SplashScreen({ onComplete }: SplashScreenProps) {
               role="progressbar"
               aria-label="Loading progress"
             >
-              <motion.div
+              <div
                 className="h-full w-full origin-left bg-[var(--accent-bronze)]"
-                initial={{ scaleX: 0 }}
-                animate={{ scaleX: 1 }}
-                transition={{ duration: 1.6, ease: [0.22, 1, 0.36, 1] }}
+                style={{
+                  transform: "scaleX(1)",
+                  transition: "transform 1.4s cubic-bezier(0.22, 1, 0.36, 1)",
+                }}
               />
             </div>
           </div>
@@ -91,8 +91,8 @@ export function SplashScreen({ onComplete }: SplashScreenProps) {
             Skip Intro
             <ArrowRight className="w-3.5 h-3.5" />
           </button>
-        </motion.div>
+        </div>
       )}
-    </AnimatePresence>
+    </>
   );
 }

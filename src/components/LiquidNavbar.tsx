@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
-import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, ArrowUpRight, Sparkles } from "lucide-react";
 import { ThemeToggle } from "./ThemeToggle";
 
@@ -44,15 +43,29 @@ export function LiquidNavbar({ onOpenCollaboration }: LiquidNavbarProps) {
   }, [activeSection]);
   useEffect(() => {
     if (!mobileMenuOpen) return;
-    const prev = document.body.style.overflow;
+    // Scroll-lock yang benar-benar memblokir di mobile: overflow:hidden saja
+    // tidak menghentikan scroll sentuh iOS/Android → pakai position:fixed.
+    const scrollY = window.scrollY;
+    const prevBody = { position: document.body.style.position, top: document.body.style.top, overflow: document.body.style.overflow, height: document.body.style.height };
+    document.body.style.position = "fixed";
+    document.body.style.top = `-${scrollY}px`;
+    document.body.style.left = "0";
+    document.body.style.right = "0";
     document.body.style.overflow = "hidden";
+    document.body.style.height = "100%";
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") setMobileMenuOpen(false);
     };
     window.addEventListener("keydown", onKey);
     return () => {
-      document.body.style.overflow = prev;
+      document.body.style.position = prevBody.position;
+      document.body.style.top = prevBody.top;
+      document.body.style.left = "";
+      document.body.style.right = "";
+      document.body.style.overflow = prevBody.overflow;
+      document.body.style.height = prevBody.height;
       window.removeEventListener("keydown", onKey);
+      window.scrollTo({ top: scrollY });
     };
   }, [mobileMenuOpen]);
   useEffect(() => {
@@ -106,10 +119,7 @@ export function LiquidNavbar({ onOpenCollaboration }: LiquidNavbarProps) {
 
   return (
     <>
-      <motion.header
-        initial={{ y: -80, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+      <header
         className="fixed top-0 left-0 right-0 z-40 flex justify-center px-3 pt-[max(0.5rem,env(safe-area-inset-top))] pointer-events-none"
       >
         <div
@@ -190,34 +200,26 @@ export function LiquidNavbar({ onOpenCollaboration }: LiquidNavbarProps) {
             </button>
           </div>
         </div>
-      </motion.header>
+      </header>
 
-      {/* Mobile Menu — full-screen sheet */}
-      <AnimatePresence>
-        {mobileMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            className="fixed inset-0 z-30 lg:hidden bg-black/40"
-            onClick={() => setMobileMenuOpen(false)}
-          >
-            <motion.div
-              initial={{ y: 24, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              exit={{ y: 24, opacity: 0 }}
-              transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+      {/* Mobile menu — pusat layar, tanpa framer (CSS-only) */}
+      {mobileMenuOpen && (
+        <div
+          className="fixed inset-0 z-30 lg:hidden bg-black/40 touch-none overscroll-contain"
+          onClick={() => setMobileMenuOpen(false)}
+        >
+          <div className="absolute inset-0 flex items-center justify-center p-4 overflow-y-auto">
+            <div
               onClick={(e) => e.stopPropagation()}
-              className="absolute inset-x-3 top-2 max-h-[70dvh] overflow-y-auto rounded-2xl bg-white/95 dark:bg-[#111]/95 backdrop-blur-2xl backdrop-saturate-150 border border-white/40 dark:border-white/10 shadow-xl pt-[max(3.5rem,env(safe-area-inset-top))] pb-[max(1rem,env(safe-area-inset-bottom))] px-4 supports-[backdrop-filter]:bg-white/55 supports-[backdrop-filter]:dark:bg-[#111]/55"
+              className="relative w-[min(340px,calc(100vw-2rem))] max-h-[calc(100dvh-5rem)] overflow-y-auto overscroll-contain m-auto rounded-2xl bg-white/95 dark:bg-[#111]/95 border border-white/40 dark:border-white/10 shadow-xl py-4 px-4 supports-[backdrop-filter]:bg-white/55 supports-[backdrop-filter]:dark:bg-[#111]/55"
             >
-              <div className="flex flex-col gap-1">
+              <div className="flex flex-col">
                 {navLinks.map((link) => (
                   <a
                     key={link.name}
                     href={link.href}
                     onClick={(e) => handleNavClick(e, link.href)}
-                    className={`px-4 py-3 min-h-[48px] flex items-center rounded-xl text-base font-medium transition-colors ${
+                    className={`px-4 py-2 min-h-[40px] flex items-center rounded-xl text-sm font-medium transition-colors ${
                       activeSection === link.href
                         ? "text-black dark:text-white bg-black/5 dark:bg-white/10"
                         : "text-neutral-600 dark:text-neutral-300 active:bg-black/5 dark:active:bg-white/5"
@@ -227,7 +229,7 @@ export function LiquidNavbar({ onOpenCollaboration }: LiquidNavbarProps) {
                   </a>
                 ))}
               </div>
-              <div className="flex items-center gap-3 mt-4">
+              <div className="flex items-center gap-3 mt-3">
                 <div className="flex-1">
                   <ThemeToggle />
                 </div>
@@ -238,15 +240,15 @@ export function LiquidNavbar({ onOpenCollaboration }: LiquidNavbarProps) {
                   setMobileMenuOpen(false);
                   if (onOpenCollaboration) onOpenCollaboration();
                 }}
-                className="mt-4 w-full py-3.5 min-h-[52px] rounded-2xl text-center text-sm font-semibold active:scale-[0.98] flex items-center justify-center gap-2 grad-cta"
+                className="mt-3 w-full py-3 min-h-[44px] rounded-xl text-center text-sm font-semibold active:scale-[0.98] flex items-center justify-center gap-2 grad-cta"
               >
                 <Sparkles className="w-4 h-4" />
                 Mulai Kolaborasi
               </button>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }

@@ -2,7 +2,6 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
-import { motion, AnimatePresence } from "framer-motion";
 import { useScrollReveal } from "@/lib/useScrollReveal";
 
 const tabs = [
@@ -85,110 +84,87 @@ export function CompanyProfileSection() {
           {/* Right Column: Content Panel */}
           <div className="lg:col-span-8">
             <div>
-              <AnimatePresence mode="wait">
-                {activeTab === "visi" && (
-                  <motion.div
-                    key="visi"
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    transition={{ duration: 0.3 }}
-                    className="p-5 sm:p-12 glass-card rounded-3xl"
-                  >
-                    <h3 className="text-xl sm:text-2xl font-bold leading-[1.5] text-black dark:text-white mb-8">
-                      &ldquo;Menjadi mitra kreatif dan teknologi terdepan yang memberdayakan bisnis di Indonesia melalui integrasi identitas visual yang berkarakter dan solusi digital yang berdampak nyata.&rdquo;
-                    </h3>
-                    <div className="flex items-center gap-4">
-                      <div className="w-12 h-px bg-black/20 dark:bg-white/20" />
-                      <p className="text-sm font-bold uppercase tracking-[0.1em] text-[#666666] dark:text-[#999999]">
-                        Logia Creative
+              {activeTab === "visi" && (
+                <div className="p-5 sm:p-12 glass-card rounded-3xl animate-fade-up">
+                  <h3 className="text-xl sm:text-2xl font-bold leading-[1.5] text-black dark:text-white mb-8">
+                    &ldquo;Menjadi mitra kreatif dan teknologi terdepan yang memberdayakan bisnis di Indonesia melalui integrasi identitas visual yang berkarakter dan solusi digital yang berdampak nyata.&rdquo;
+                  </h3>
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-px bg-black/20 dark:bg-white/20" />
+                    <p className="text-sm font-bold uppercase tracking-[0.1em] text-[#666666] dark:text-[#999999]">
+                      Logia Creative
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              {activeTab === "misi" && (
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-6 animate-fade-up">
+                  {missions.map((m, idx) => (
+                    <div
+                      key={idx}
+                      className={`p-5 sm:p-8 glass-card rounded-3xl ${
+                        idx === 2 ? "sm:col-span-2" : ""
+                      }`}
+                    >
+                      <span className="text-black/10 dark:text-white/10 font-black text-4xl block mb-4">
+                        0{idx + 1}
+                      </span>
+                      <h4 className="text-lg font-bold mb-2 text-black dark:text-white">
+                        {m.title}
+                      </h4>
+                      <p className="text-sm text-[#666666] dark:text-[#999999] leading-relaxed">
+                        {m.desc}
                       </p>
                     </div>
-                  </motion.div>
-                )}
+                  ))}
+                </div>
+              )}
 
-                {activeTab === "misi" && (
-                  <motion.div
-                    key="misi"
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    transition={{ duration: 0.3 }}
-                    className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-6"
-                  >
-                    {missions.map((m, idx) => (
+              {activeTab === "filosofi" && (
+                <div className="space-y-6 animate-fade-up">
+                  <div className="p-5 sm:p-10 glass-card rounded-2xl sm:rounded-3xl flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8">
+                    <div className="relative w-32 h-16">
+                      <Image
+                        src="/LOGO.png"
+                        alt="Logo Logia"
+                        fill
+                        loading="lazy"
+                        sizes="128px"
+                        className="object-contain"
+                      />
+                    </div>
+                    <div className="hidden sm:block w-px h-12 bg-black/10 dark:bg-white/10" />
+                    <div className="relative w-24 h-6">
+                      <Image
+                        src="/Group 1.png"
+                        alt="Creative Wordmark"
+                        fill
+                        className="object-contain dark:invert-0 invert"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+                    {brandPillars.map((bp, idx) => (
                       <div
                         key={idx}
-                        className={`p-5 sm:p-8 glass-card rounded-3xl ${
-                          idx === 2 ? "sm:col-span-2" : ""
-                        }`}
+                        className="p-5 glass-card rounded-2xl flex flex-col gap-2.5"
                       >
-                        <span className="text-black/10 dark:text-white/10 font-black text-4xl block mb-4">
-                          0{idx + 1}
-                        </span>
-                        <h4 className="text-lg font-bold mb-2 text-black dark:text-white">
-                          {m.title}
-                        </h4>
-                        <p className="text-sm text-[#666666] dark:text-[#999999] leading-relaxed">
-                          {m.desc}
-                        </p>
+                        <div className="w-2 h-2 rounded-full bg-black dark:bg-white" />
+                        <div>
+                          <h4 className="font-bold text-sm text-black dark:text-white mb-2">
+                            {bp.title}
+                          </h4>
+                          <p className="text-xs text-[#666666] dark:text-[#999999] leading-relaxed">
+                            {bp.desc}
+                          </p>
+                        </div>
                       </div>
                     ))}
-                  </motion.div>
-                )}
-
-                {activeTab === "filosofi" && (
-                  <motion.div
-                    key="filosofi"
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    transition={{ duration: 0.3 }}
-                    className="space-y-6"
-                  >
-                    <div className="p-5 sm:p-10 glass-card rounded-2xl sm:rounded-3xl flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8">
-                      <div className="relative w-32 h-16">
-                        <Image
-                          src="/LOGO.png"
-                          alt="Logo Logia"
-                          fill
-                          loading="lazy"
-                          sizes="128px"
-                          className="object-contain"
-                        />
-                      </div>
-                      <div className="hidden sm:block w-px h-12 bg-black/10 dark:bg-white/10" />
-                      <div className="relative w-24 h-6">
-                        <Image
-                          src="/Group 1.png"
-                          alt="Creative Wordmark"
-                          fill
-                          className="object-contain dark:invert-0 invert"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
-                      {brandPillars.map((bp, idx) => (
-                        <div
-                          key={idx}
-                          className="p-5 glass-card rounded-2xl flex flex-col gap-2.5"
-                        >
-                          <div className="w-2 h-2 rounded-full bg-black dark:bg-white" />
-                          <div>
-                            <h4 className="font-bold text-sm text-black dark:text-white mb-2">
-                              {bp.title}
-                            </h4>
-                            <p className="text-xs text-[#666666] dark:text-[#999999] leading-relaxed">
-                              {bp.desc}
-                            </p>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>

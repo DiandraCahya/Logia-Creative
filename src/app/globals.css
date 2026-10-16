@@ -112,6 +112,34 @@ h3, .text-subheadline { line-height: var(--lh-snug); letter-spacing: -0.015em; }
 }
 }
 
+/* SELECTION satu sumber (gantikan utility selection:* yang konflik di
+   layout + page): light = blok hitam/teks putih; dark = highlight putih
+   TRANSLUSEN + teks tetap terang — tanpa blok putih solid. Unlayered
+   supaya menang atas utilities Tailwind. */
+::selection { background-color: #000; color: #fff; }
+::-moz-selection { background-color: #000; color: #fff; }
+.dark ::selection { background-color: rgb(255 255 255 / 0.32); color: #fff; }
+.dark ::-moz-selection { background-color: rgb(255 255 255 / 0.32); color: #fff; }
+
+/* Navbar: kunci compositing (translateZ) agar fixed tidak ikut kegeser
+   saat momentum scroll; di mobile pakai bg solid — backdrop-filter di
+   dalam fixed adalah bug klasik iOS/Chrome (navbar jump saat scroll). */
+header {
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+}
+@media (max-width: 1023.5px) {
+  header .glass-container {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background: rgba(255, 255, 255, 0.97) !important;
+  }
+  .dark header .glass-container,
+  html.dark header .glass-container {
+    background: rgba(10, 10, 10, 0.97) !important;
+  }
+}
+
 /* ============= PERFORMANCE TIERING ============= */
 
 /* CONTENT VISIBILITY */
@@ -152,6 +180,26 @@ section[data-cv] {
 }
 
 /* ============= LIQUID GLASS SYSTEM ============= */
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-up {
+  animation: fade-up 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-up { animation: none; }
+}
+
+@keyframes hero-line {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+@keyframes hero-fade {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
 
 /* Base class untuk SEMUA container */
 .glass-container {
@@ -236,6 +284,11 @@ html:not(.dark) .glass-container:hover,
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 }
 
+/* Liquid glass KHUSUS panel form kolaborasi: resep = panel chatbot
+   (bg token + blur) supaya opasitas/blur konsisten. Class ini di-attach
+   bersama .glass-card sehingga menang atas override .glass-card light.
+   Footer sticky di modal memakai bg+blur yang sama (kelas Tailwind). */
+
 /* ============= GLASS CARD (for section cards/panels) ============= */
 .glass-card {
   background: rgba(255, 255, 255, 0.04);
@@ -284,6 +337,24 @@ html[data-perf="low"] .dark .glass-card {
 @supports not (backdrop-filter: blur(1px)) {
   .glass-card { background: rgba(255, 255, 255, 0.95) !important; }
   .dark .glass-card { background: rgba(17, 17, 17, 0.95) !important; }
+}
+
+/* Mobile (screen < 768px): backdrop-filter blur 20-28px di kartu scrollable
+   = beban GPU besar. Matikan blur, pakai solid bg saja. Tampilan tetap
+   "glass-like" karena bg masih translucent + border ada. */
+@media (max-width: 767px) {
+  .glass-card {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background: rgba(255, 255, 255, 0.92) !important;
+  }
+  .dark .glass-card {
+    background: rgba(17, 17, 17, 0.92) !important;
+  }
+  .glass-container {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
 }
 
 /* Glass accordion item */
@@ -728,8 +799,10 @@ html:not(.dark) footer a:hover,
   /* About / profile: hapus min-height yang bikin celah kosong */
   #about .min-h-\[300px\] { min-height: 0 !important; }
 
-  /* Form mobile: full-height sheet, tidak tertutup keyboard */
-  [role="dialog"] > div {
+  /* Form mobile: full-height sheet, tidak tertutup keyboard.
+     Scope ke .collab-dialog saja — selector [role="dialog"] ikut kena
+     panel ChatWidget (header/pesan/composer jadi 100dvh per anak). */
+  .collab-dialog > div {
     min-height: 100dvh !important;
   }
   form input, form select, form textarea {

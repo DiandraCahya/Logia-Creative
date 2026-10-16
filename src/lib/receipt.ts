@@ -32,12 +32,22 @@ export function wibTimestamp(d = new Date()): string {
   return fmt.format(d) + " WIB";
 }
 
+export interface ReceiptItem {
+  packageName: string;
+  solutionName: string;
+  priceLabel: string;
+  price: number;
+}
+
 export interface Receipt {
   id: string;
   timestamp: string;
   customer: string;
   brand: string;
   contact: string;
+  notes: string;
+  items: ReceiptItem[];
+  /** Kompat: paket pertama (dipakai link WA lama). */
   packageName: string;
   solutionName: string;
   priceLabel: string;
@@ -47,20 +57,33 @@ export interface Receipt {
   status: "Menunggu DP";
 }
 
-/** Terima id paket atau nama (chatbot). Null bila tak ketemu. */
-export function buildReceipt(ref: string, customer: string, brand: string, contact: string): Receipt | null {
-  const hit = findPackage(ref);
-  if (!hit) return null;
-  const total = hit.pkg.price;
+/** Struk dari BANYAK paket: menjumlahkan semua harga. Null bila tak ada yang cocok. */
+export function buildReceipt(refs: string[], customer: string, brand: string, contact: string, notes = ""): Receipt | null {
+  const hits = refs
+    .map((ref) => findPackage(ref))
+    .filter((h): h is NonNullable<typeof h> => h !== null);
+  // Dedup per id paket (1-per-solusi sudah dinormalisasi di form; jaga-jaga input API).
+  const uniq = [...new Map(hits.map((h) => [h.pkg.id, h])).values()];
+  if (!uniq.length) return null;
+  const items: ReceiptItem[] = uniq.map((h) => ({
+    packageName: h.pkg.name,
+    solutionName: h.solution.name,
+    priceLabel: `${priceLabel(h.pkg)} (${priceTypeLabel(h.pkg.unit)})`,
+    price: h.pkg.price,
+  }));
+  const total = items.reduce((s, i) => s + i.price, 0);
+  const first = uniq[0];
   return {
     id: makeReceiptId(),
     timestamp: wibTimestamp(),
     customer,
     brand,
     contact,
-    packageName: hit.pkg.name,
-    solutionName: hit.solution.name,
-    priceLabel: `${priceLabel(hit.pkg)} (${priceTypeLabel(hit.pkg.unit)})`,
+    notes,
+    items,
+    packageName: first.pkg.name,
+    solutionName: first.solution.name,
+    priceLabel: `${priceLabel(first.pkg)} (${priceTypeLabel(first.pkg.unit)})`,
     total,
     dp: Math.round(total / 2),
     sisa: total - Math.round(total / 2),

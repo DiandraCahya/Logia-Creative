@@ -150,10 +150,10 @@ export function HeroCarousel({
   const x = useMotionValue(0)
   const target = xFor(index)
 
-  const swing = reduced
+  const swing = reduced || compact
     ? { duration: 0 }
     : { type: "spring" as const, stiffness: 80, damping: 20, mass: 0.8 }
-  const spring = reduced
+  const spring = reduced || compact
     ? { duration: 0 }
     : { type: "spring" as const, stiffness: 260, damping: 34, mass: 0.9 }
 
@@ -259,9 +259,9 @@ export function HeroCarousel({
               edge-to-edge inside it. */}
           <motion.div
             className="absolute inset-0"
-            initial={{ scale: reduced ? 1.28 : 1.42 }}
+            initial={{ scale: reduced ? 1.28 : compact ? 1.28 : 1.42 }}
             animate={{ scale: 1.28 }}
-            transition={reduced ? { duration: 0 } : { duration: 6, ease: "linear" }}
+            transition={reduced || compact ? { duration: 0 } : { duration: 6, ease: "linear" }}
           >
             <Image
               src={active.image}
@@ -447,6 +447,7 @@ export function HeroCarousel({
                 fill
                 sizes={`${Math.round(cardW)}px`}
                 quality={70}
+                loading="lazy"
                 className="h-full w-full object-cover"
                 style={{ objectPosition: "50% 26%" }}
               />

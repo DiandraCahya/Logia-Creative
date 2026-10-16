@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { createPortal } from "react-dom";
-import { motion, AnimatePresence, useMotionValue, useSpring, useReducedMotion } from "framer-motion";
 import { useScrollReveal } from "@/lib/useScrollReveal";
 import Image from "next/image";
 import { ArrowRight, X } from "lucide-react";
@@ -10,7 +9,7 @@ import SplitWords from "@/components/animations/SplitWords";
 import { HeroCarousel, type HeroCarouselItem } from "@/components/ui/hero-carousel";
 
 const ART = (id: string) =>
-  `https://images.unsplash.com/photo-${id}?q=80&w=2070&auto=format&fit=crop`
+  `https://images.unsplash.com/photo-${id}?q=70&w=1400&auto=format&fit=crop`
 
 const projects = [
   {
@@ -97,12 +96,7 @@ function PortfolioCard({ project, gridVisible, idx }: { project: any, gridVisibl
   const cardRef = useRef<HTMLDivElement>(null);
   const [isHovered, setIsHovered] = useState(false);
   const [tiltEnabled, setTiltEnabled] = useState(false);
-
-  const x = useMotionValue(0);
-  const y = useMotionValue(0);
-
-  const mouseXSpring = useSpring(x, { stiffness: 150, damping: 20 });
-  const mouseYSpring = useSpring(y, { stiffness: 150, damping: 20 });
+  const [tilt, setTilt] = useState({ rx: 0, ry: 0 });
 
   const [px, setPx] = useState(50);
   const [py, setPy] = useState(50);
@@ -144,8 +138,7 @@ function PortfolioCard({ project, gridVisible, idx }: { project: any, gridVisibl
       if (!rect || !rect.width || !rect.height) return;
       const xPct = (clientX - rect.left) / rect.width - 0.5;
       const yPct = (clientY - rect.top) / rect.height - 0.5;
-      x.set(xPct * 16); // max rotate 8deg
-      y.set(yPct * -16); // max rotate -8deg
+      setTilt({ rx: yPct * -8, ry: xPct * 8 }); // max ±8deg, CSS transition meratakan
       setPx(((clientX - rect.left) / rect.width) * 100);
       setPy(((clientY - rect.top) / rect.height) * 100);
     });
@@ -157,8 +150,7 @@ function PortfolioCard({ project, gridVisible, idx }: { project: any, gridVisibl
       frameRef.current = 0;
     }
     rectRef.current = null;
-    x.set(0);
-    y.set(0);
+    setTilt({ rx: 0, ry: 0 });
     setPx(50);
     setPy(50);
     setIsHovered(false);
@@ -169,30 +161,24 @@ function PortfolioCard({ project, gridVisible, idx }: { project: any, gridVisibl
   }, []);
 
   return (
-    <motion.div
+    <div
       ref={cardRef}
       style={{ perspective: 1000 }}
-      initial={{ opacity: 0, y: 30, scale: 0.98 }}
-      animate={gridVisible ? { opacity: 1, y: 0, scale: 1 } : { opacity: 0, y: 30, scale: 0.98 }}
-      transition={{ type: "spring", stiffness: 100, damping: 20, delay: idx * 0.05 }}
-      className="h-full"
+      className={`h-full transition-all duration-500 ${gridVisible ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-8 scale-[0.98]"}`}
     >
-      <motion.div
-        className="glass-container overflow-hidden group cursor-pointer flex flex-col h-full border border-slate-200 dark:border-white/10 relative"
+      <div
+        className="glass-container overflow-hidden group cursor-pointer flex flex-col h-full border border-slate-200 dark:border-white/10 relative transition-transform duration-200 ease-out"
         onPointerEnter={handlePointerEnter}
         onPointerMove={handlePointerMove}
         onPointerLeave={handlePointerLeave}
         style={{
-          rotateX: mouseYSpring,
-          rotateY: mouseXSpring,
+          transform: `rotateX(${tilt.rx}deg) rotateY(${tilt.ry}deg)`,
           transformStyle: "preserve-3d",
         }}
       >
         {/* Specular Glare */}
-        <motion.div
-          className="absolute inset-0 pointer-events-none z-20 mix-blend-overlay"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: isHovered ? 1 : 0 }}
+        <div
+          className={`absolute inset-0 pointer-events-none z-20 mix-blend-overlay transition-opacity duration-300 ${isHovered ? "opacity-100" : "opacity-0"}`}
           style={{
             background: `radial-gradient(circle 300px at ${px}% ${py}%, rgba(255,255,255,0.4), transparent)`,
           }}
@@ -230,8 +216,8 @@ function PortfolioCard({ project, gridVisible, idx }: { project: any, gridVisibl
             ))}
           </div>
         </div>
-      </motion.div>
-    </motion.div>
+      </div>
+    </div>
   );
 }
 
@@ -246,7 +232,6 @@ export function PortfolioSection() {
   const [showAllProjects, setShowAllProjects] = useState(false);
   const [mounted, setMounted] = useState(false);
   const { ref: gridRef, isInView: gridVisible } = useScrollReveal();
-  const reduced = useReducedMotion();
 
   // Overlay harus keluar dari pohon DOM bab ini: nenek moyangnya
   // <section data-cv> memakai `content-visibility:auto` yang meng-IMPLY
@@ -410,20 +395,16 @@ export function PortfolioSection() {
           Tutup HANYA lewat tombol X (sticky, safe-area); Esc memicu X yang sama.
           Tidak ada tutup via klik backdrop / swipe. */}
       {mounted && createPortal(
-        <AnimatePresence>
-          {showAllProjects && (
-            <motion.div
-              ref={overlayRef}
-              role="dialog"
-              aria-modal="true"
-              aria-label="Archive proyek"
-              initial={reduced ? { opacity: 0 } : { opacity: 0, scale: 0.985, y: 12 }}
-              animate={reduced ? { opacity: 1 } : { opacity: 1, scale: 1, y: 0 }}
-              exit={reduced ? { opacity: 0 } : { opacity: 0, scale: 0.985, y: 12 }}
-              transition={{ duration: reduced ? 0 : 0.25, ease: [0.22, 1, 0.36, 1] }}
-              style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0 }}
-              className="z-[60] h-[100dvh] w-full overflow-y-auto overscroll-contain bg-[#fafafa] dark:bg-[#0a0a0a]"
-            >
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label="Archive proyek"
+          ref={showAllProjects ? overlayRef : undefined}
+          style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0 }}
+          className={`z-[60] h-[100dvh] w-full overflow-y-auto overscroll-contain bg-[#fafafa] dark:bg-[#0a0a0a] transition-opacity duration-300 ${
+            showAllProjects ? "opacity-100" : "opacity-0 pointer-events-none"
+          }`}
+        >
               <div className="min-h-full pt-[max(0.75rem,env(safe-area-inset-top))] pb-[max(1.5rem,env(safe-area-inset-bottom))] px-4 sm:px-8">
                 <div className="max-w-7xl mx-auto">
                   {/* Header sticky + tombol X satu-satunya penutup */}
@@ -478,9 +459,7 @@ export function PortfolioSection() {
                   </div>
                 </div>
               </div>
-            </motion.div>
-          )}
-        </AnimatePresence>,
+        </div>,
         document.body
       )}
     </section>

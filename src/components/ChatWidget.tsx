@@ -151,11 +151,11 @@ export function ChatWidget({ onAutofill }: { onAutofill?: (d: CollabDraft) => vo
 
   return (
     <>
-      {/* Launcher */}
+      {/* Launcher — disembunyikan di mobile saat panel terbuka (menutupi composer) */}
       <button
         onClick={() => setOpen((v) => !v)}
         aria-label={open ? "Tutup chat" : "Buka chat Logia"}
-        className="fixed bottom-[max(1rem,env(safe-area-inset-bottom))] right-4 z-40 min-h-[52px] min-w-[52px] rounded-full bg-black text-white dark:bg-white dark:text-black shadow-xl flex items-center justify-center active:scale-95 hover:opacity-90 transition-transform"
+        className={`fixed bottom-[max(1rem,env(safe-area-inset-bottom))] right-4 z-40 min-h-[52px] min-w-[52px] rounded-full bg-black text-white dark:bg-white dark:text-black shadow-xl flex items-center justify-center active:scale-95 hover:opacity-90 transition-transform ${open ? "max-sm:hidden" : ""}`}
       >
         {open ? <X className="w-5 h-5" /> : <MessageCircle className="w-5 h-5" />}
       </button>
@@ -165,7 +165,7 @@ export function ChatWidget({ onAutofill }: { onAutofill?: (d: CollabDraft) => vo
           ref={panelRef}
           role="dialog"
           aria-label="Chat Logia"
-          className={`${PANEL} max-sm:inset-x-0 max-sm:bottom-0 max-sm:rounded-none max-sm:border-x-0 ${
+          className={`${PANEL} max-sm:inset-x-0 max-sm:bottom-0 max-sm:rounded-none max-sm:border-x-0 max-sm:h-[calc(100dvh-4rem)] ${
             expanded
               ? "sm:right-4 sm:bottom-20 sm:w-[440px] sm:h-[min(660px,80dvh)]"
               : "sm:right-4 sm:bottom-20 sm:w-[340px] sm:h-[480px]"
@@ -202,8 +202,8 @@ export function ChatWidget({ onAutofill }: { onAutofill?: (d: CollabDraft) => vo
             </div>
           </div>
 
-          {/* Pesan — tone abu, dibedakan lewat alignment bukan warna mencolok */}
-          <div ref={boxRef} className="flex-1 overflow-y-auto px-4 py-4 space-y-3 text-sm overscroll-contain">
+          {/* Pesan — solid kontras penuh dua mode: bot putih, user hitam (sama light/dark) */}
+          <div ref={boxRef} className="flex-1 min-h-0 overflow-y-auto px-4 py-4 space-y-3 text-sm overscroll-contain">
             {msgs.map((m, i) => {
               const body = stripCollabBlock(m.content);
               const isLast = i === msgs.length - 1;
@@ -214,8 +214,8 @@ export function ChatWidget({ onAutofill }: { onAutofill?: (d: CollabDraft) => vo
                   key={i}
                   className={`max-w-[85%] px-3.5 py-2.5 text-[14px] leading-[1.6] ${
                     m.role === "user"
-                      ? "ml-auto rounded-2xl rounded-br-[var(--radius-xs)] bg-[var(--text-primary)] text-[var(--bg-primary)]"
-                      : "mr-auto rounded-2xl rounded-bl-[var(--radius-xs)] bg-black/[0.05] dark:bg-white/[0.08] text-[var(--text-primary)]"
+                      ? "ml-auto rounded-2xl rounded-br-[var(--radius-xs)] bg-black text-white dark:bg-white dark:text-black font-medium shadow-sm"
+                      : "mr-auto rounded-2xl rounded-bl-[var(--radius-xs)] bg-white text-black dark:bg-[#1c1c1c] dark:text-white font-medium border border-black/10 dark:border-white/15 shadow-sm"
                   }`}
                 >
                   {renderContent(body)}
@@ -226,7 +226,7 @@ export function ChatWidget({ onAutofill }: { onAutofill?: (d: CollabDraft) => vo
               <div
                 aria-live="polite"
                 aria-label="Asisten sedang menulis"
-                className="mr-auto inline-flex items-center gap-1 rounded-2xl rounded-bl-[var(--radius-xs)] bg-black/[0.05] dark:bg-white/[0.08] px-3.5 py-3"
+                className="mr-auto inline-flex items-center gap-1 rounded-2xl rounded-bl-[var(--radius-xs)] bg-white dark:bg-[#1c1c1c] border border-black/10 dark:border-white/15 px-3.5 py-3"
               >
                 {[0, 1, 2].map((d) => (
                   <span

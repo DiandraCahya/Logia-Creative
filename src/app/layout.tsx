@@ -77,7 +77,7 @@ export default function RootLayout({
       suppressHydrationWarning
       className={`scroll-smooth ${fontSubstitute.variable}`}
     >
-      <body className="font-sans antialiased selection:bg-black selection:text-white dark:selection:bg-white dark:selection:text-black">
+      <body className="font-sans antialiased">
         <PerformanceInit />
         <ThemeProvider
           attribute="class"

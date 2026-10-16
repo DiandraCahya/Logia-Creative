@@ -76,15 +76,35 @@ export const ReceiptView = forwardRef<HTMLDivElement, { receipt: Receipt }>(
           <Row label="Pelanggan" value={receipt.customer} />
           {receipt.brand ? <Row label="Brand / Usaha" value={receipt.brand} /> : null}
           <Row label="Kontak" value={receipt.contact} />
+          {receipt.notes ? (
+            <div style={{ display: "grid", gap: 4, background: "#f8fafc", border: `1px solid ${LINE}`, borderRadius: 8, padding: "10px 12px" }}>
+              <span style={{ color: MUTED, fontSize: 12, letterSpacing: "0.02em" }}>Catatan user</span>
+              <span style={{ color: INK, fontSize: 13, fontWeight: 500, lineHeight: 1.55, whiteSpace: "pre-wrap", wordBreak: "break-word" }}>
+                {receipt.notes}
+              </span>
+            </div>
+          ) : null}
         </div>
 
         <div style={{ margin: "18px 0" }}><Hairline /></div>
 
-        {/* Blok paket */}
+        {/* Blok paket — semua paket terpilih, satu baris per paket */}
         <div style={{ display: "grid", gap: 8 }}>
-          <Row label="Paket" value={receipt.packageName} strong />
-          {receipt.solutionName ? <Row label="Solusi" value={receipt.solutionName} /> : null}
-          <Row label="Harga" value={receipt.priceLabel} />
+          {receipt.items && receipt.items.length > 0 ? (
+            receipt.items.map((it) => (
+              <div key={`${it.packageName}-${it.solutionName}`} style={{ display: "grid", gap: 8 }}>
+                <Row label="Paket" value={it.packageName} strong />
+                {it.solutionName ? <Row label="Solusi" value={it.solutionName} /> : null}
+                <Row label="Harga" value={it.priceLabel} />
+              </div>
+            ))
+          ) : (
+            <>
+              <Row label="Paket" value={receipt.packageName} strong />
+              {receipt.solutionName ? <Row label="Solusi" value={receipt.solutionName} /> : null}
+              <Row label="Harga" value={receipt.priceLabel} />
+            </>
+          )}
         </div>
 
         {receipt.total != null && (
@@ -92,7 +112,13 @@ export const ReceiptView = forwardRef<HTMLDivElement, { receipt: Receipt }>(
             <div style={{ margin: "18px 0" }}><Hairline /></div>
             <div style={{ display: "grid", gap: 8 }}>
               <Row label="Total" value={formatIDR(receipt.total)} strong />
+              <p style={{ margin: 0, fontSize: 10.5, lineHeight: 1.5, color: MUTED }}>
+                Total sesuai paket yang dipilih (belum dikurangi DP).
+              </p>
               <Row label="DP 50%" value={formatIDR(receipt.dp!)} />
+              <p style={{ margin: 0, fontSize: 10.5, lineHeight: 1.5, color: MUTED }}>
+                Silakan lakukan pembayaran DP sebesar {formatIDR(receipt.dp!)} untuk memulai pekerjaan. Sisa pelunasan dibahas privat via WA admin.
+              </p>
               <Row label="Sisa Pelunasan" value={formatIDR(receipt.sisa!)} />
               <div style={{ display: "flex", justifyContent: "space-between", gap: 16, alignItems: "baseline", marginTop: 4 }}>
                 <span style={{ color: MUTED, fontSize: 12 }}>Status</span>
