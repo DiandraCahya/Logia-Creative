@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { Resend } from "resend";
 import { findPackage } from "@/lib/rate-card";
 import { buildReceipt, formatIDR, serviceLabel, wibTimestamp, RECEIPT_TERMS } from "@/lib/receipt";
-import { receiptTelegramHtml, sendReceiptTelegram } from "@/lib/telegram";
+import { receiptTelegramHtml, inquiryTelegramHtml, sendReceiptTelegram } from "@/lib/telegram";
 
 const TO = process.env.COLLABORATION_TO || "logiacreative.id@gmail.com";
 const FROM = process.env.COLLABORATION_FROM || "onboarding@resend.dev";
@@ -108,22 +108,39 @@ export async function POST(req: NextRequest) {
     // tidak menggagalkan yang lain. Struk tetap kembali ke user.
     const botToken = process.env.TELEGRAM_BOT_TOKEN;
     const chatId = process.env.TELEGRAM_CHAT_ID;
+    // Telegram SELALU dikirim bila bot terkonfigurasi — termasuk inquiry TANPA
+    // paket (mis. hanya "Custom / Konsultasi") yang tidak menghasilkan struk,
+    // supaya admin tetap dapat notifikasi.
+    const tgHtml =
+      botToken && chatId
+        ? receipt
+          ? receiptTelegramHtml(receipt, notes, budget)
+          : inquiryTelegramHtml({
+              timestamp: stamp,
+              name,
+              brand: brandName,
+              contact,
+              budget,
+              services: serviceLabels,
+              notes,
+            })
+        : null;
     const [emailResult, tgResult] = await Promise.allSettled([
       resend.emails.send({ from: FROM, to: TO, subject, html }),
-      receipt && botToken && chatId
-        ? sendReceiptTelegram(botToken, chatId, receiptTelegramHtml(receipt, notes, budget))
+      tgHtml && botToken && chatId
+        ? sendReceiptTelegram(botToken, chatId, tgHtml)
         : Promise.resolve({ ok: false, error: "skipped" }),
     ]);
     const emailOk =
       emailResult.status === "fulfilled" && !(emailResult.value as { error?: unknown }).error;
     let telegram: "sent" | "skipped" | "failed" = "skipped";
-    if (receipt && botToken && chatId) {
+    if (tgHtml && botToken && chatId) {
       telegram =
         tgResult.status === "fulfilled" && (tgResult.value as { ok: boolean }).ok ? "sent" : "failed";
       if (telegram === "failed") {
         const err =
           tgResult.status === "fulfilled" ? (tgResult.value as { error?: string }).error : tgResult.reason;
-        console.error("[telegram] gagal kirim struk:", err);
+        console.error("[telegram] gagal kirim notifikasi:", err);
       }
     }
     if (!emailOk) {
