@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { Resend } from "resend";
 import { findPackage } from "@/lib/rate-card";
 import { buildReceipt, buildConsultationReceipt, formatIDR, serviceLabel, wibTimestamp, RECEIPT_TERMS } from "@/lib/receipt";
-import { receiptTelegramHtml, inquiryTelegramHtml, sendReceiptTelegram } from "@/lib/telegram";
+import { receiptTelegramHtml, sendReceiptTelegram } from "@/lib/telegram";
 
 const TO = process.env.COLLABORATION_TO || "logiacreative.id@gmail.com";
 const FROM = process.env.COLLABORATION_FROM || "onboarding@resend.dev";
@@ -113,23 +113,9 @@ export async function POST(req: NextRequest) {
     // tidak menggagalkan yang lain. Struk tetap kembali ke user.
     const botToken = process.env.TELEGRAM_BOT_TOKEN;
     const chatId = process.env.TELEGRAM_CHAT_ID;
-    // Telegram SELALU dikirim bila bot terkonfigurasi — termasuk inquiry TANPA
-    // paket (mis. hanya "Custom / Konsultasi") yang tidak menghasilkan struk,
-    // supaya admin tetap dapat notifikasi.
-    const tgHtml =
-      botToken && chatId
-        ? receipt.total != null
-          ? receiptTelegramHtml(receipt, notes, budget)
-          : inquiryTelegramHtml({
-            timestamp: receipt.timestamp,
-              name,
-              brand: brandName,
-              contact,
-              budget,
-              services: serviceLabels,
-              notes,
-            })
-        : null;
+    // Telegram SELALU dikirim bila bot terkonfigurasi — formatnya SAMA dengan
+    // struk, termasuk untuk pesanan tanpa paket (mis. "Custom / Konsultasi").
+    const tgHtml = botToken && chatId ? receiptTelegramHtml(receipt, notes, budget) : null;
     const [emailResult, tgResult] = await Promise.allSettled([
       resend.emails.send({ from: FROM, to: TO, subject, html }),
       tgHtml && botToken && chatId

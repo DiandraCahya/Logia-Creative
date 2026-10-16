@@ -15,9 +15,11 @@ export function receiptTelegramHtml(r: Receipt, notes: string, budget: string): 
     `Kontak: ${escHtml(r.contact)}`,
     budget ? `Budget: ${escHtml(budget)}` : null,
     ``,
-    ...r.items.map(
-      (it) => `• <b>${escHtml(it.packageName)}</b> · ${escHtml(it.solutionName)} — ${escHtml(it.priceLabel)}`,
-    ),
+    ...(r.items.length
+      ? r.items.map(
+          (it) => `• <b>${escHtml(it.packageName)}</b> · ${escHtml(it.solutionName)} — ${escHtml(it.priceLabel)}`,
+        )
+      : [`• <b>${escHtml(r.packageName)}</b> · ${escHtml(r.solutionName)} — ${escHtml(r.priceLabel)}`]),
     ``,
     r.total != null ? `<b>Total (${r.items.length} paket, belum dikurangi DP): ${escHtml(formatIDR(r.total))}</b>` : null,
     r.dp != null
@@ -54,35 +56,4 @@ export async function sendReceiptTelegram(
   } catch (e) {
     return { ok: false, error: e instanceof Error ? e.message : "network error" };
   }
-}
-
-/** Info inquiry TANPA paket (mis. "Custom / Konsultasi") untuk notifikasi Telegram. */
-export interface InquiryTelegramInfo {
-  timestamp: string;
-  name: string;
-  brand: string;
-  contact: string;
-  budget: string;
-  services: string[];
-  notes: string;
-}
-
-/**
- * Teks notifikasi Telegram untuk inquiry yang TIDAK menghasilkan struk
- * (mis. hanya memilih "Custom / Konsultasi"). Dipakai agar admin tetap dapat
- * ping meski tidak ada paket/harga — bukan struk, jadi tanpa baris Total/DP.
- */
-export function inquiryTelegramHtml(i: InquiryTelegramInfo): string {
-  const lines = [
-    `<b>INQUIRY BARU — LOGIA CREATIVE</b>`,
-    `Waktu: ${escHtml(i.timestamp)}`,
-    `Pelanggan: ${escHtml(i.name)}${i.brand ? ` (${escHtml(i.brand)})` : ""}`,
-    `Kontak: ${escHtml(i.contact)}`,
-    i.budget ? `Budget: ${escHtml(i.budget)}` : null,
-    ``,
-    `Layanan: ${escHtml(i.services.join(", ") || "-")}`,
-    `<b>Jenis: Konsultasi / Custom — harga dibahas privat via WA</b>`,
-    i.notes ? `\nCatatan: ${escHtml(i.notes.length > 500 ? i.notes.slice(0, 500) + "…" : i.notes)}` : null,
-  ].filter((l): l is string => l !== null);
-  return lines.join("\n");
 }
