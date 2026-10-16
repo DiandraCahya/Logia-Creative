@@ -249,7 +249,7 @@ export function CollaborationModal({ isOpen, onClose, initialDraft, onDraftConsu
           />
 
           <div
-            className="relative w-full max-w-2xl z-10 my-4 sm:my-8 flex flex-col"
+            className="relative w-full max-w-2xl z-10 my-4 sm:my-8 flex flex-col form-sheet"
           >
             <div className="animate-fade-up rounded-[1.25rem] sm:rounded-[1.75rem] border-2 border-neutral-300 dark:border-neutral-700 bg-white dark:bg-black p-5 sm:p-9 pb-[max(1.5rem,env(safe-area-inset-bottom))] sm:pb-9 flex-1 relative overflow-hidden shadow-2xl">
               <div className="absolute top-0 inset-x-0 h-px bg-[var(--text-primary)]/25" aria-hidden="true" />

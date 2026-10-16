@@ -5,7 +5,7 @@ import { useScrollReveal } from "@/lib/useScrollReveal";
 import {
   Store,
   Rocket,
-  CalendarCheck,
+  CalendarCheck, 
   Palette,
   PackageCheck,
   LayoutGrid,

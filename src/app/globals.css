@@ -802,7 +802,7 @@ html:not(.dark) footer a:hover,
   /* Form mobile: full-height sheet, tidak tertutup keyboard.
      Scope ke .collab-dialog saja — selector [role="dialog"] ikut kena
      panel ChatWidget (header/pesan/composer jadi 100dvh per anak). */
-  .collab-dialog > div {
+  .collab-dialog > div.form-sheet {
     min-height: 100dvh !important;
   }
   form input, form select, form textarea {
