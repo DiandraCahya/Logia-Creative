@@ -4,14 +4,27 @@ import React, { useState, useEffect, useRef, useCallback } from "react";
 import { createPortal } from "react-dom";
 import { useScrollReveal } from "@/lib/useScrollReveal";
 import Image from "next/image";
-import { ArrowRight, X } from "lucide-react";
+import { ArrowRight, ArrowUpRight, X } from "lucide-react";
 import SplitWords from "@/components/animations/SplitWords";
 import { HeroCarousel, type HeroCarouselItem } from "@/components/ui/hero-carousel";
 
 const ART = (id: string) =>
   `https://images.unsplash.com/photo-${id}?q=70&w=1400&auto=format&fit=crop`
 
-const projects = [
+type Project = {
+  title: string;
+  category: string;
+  image: string;
+  description: string;
+  tags: string[];
+  accent?: string;
+  /** URL proyek live; opsional — hanya karya yang punya tautan yang menampilkannya. */
+  link?: string;
+  /** True bila gambarnya cut-out transparan (bukan foto) — panggung menampilkannya sebagai figur utuh. */
+  figure?: boolean;
+};
+
+const projects: Project[] = [
   {
     title: "Revitalisasi\nIdentitas\nNusantara",
     category: "Branding",
@@ -37,12 +50,13 @@ const projects = [
     accent: "#7b61ff",
   },
   {
-    title: "Kampanye\nMusim\nSemi",
-    category: "Marketing",
-    image: ART("1518770660439-4636190af475"),
-    description: "Materi kampanye digital menyeluruh untuk peluncuran produk kosmetik dengan tingkat konversi tinggi.",
-    tags: ["Meta Ads", "Social Media", "Creative"],
-    accent: "#ff2f9c",
+    title: "KWN\nKelompok\n2",
+    category: "Web Development",
+    image: "/justicia.png",
+    description: "Website profil kelompok KWN — mengangkat isu kebebasan berekspresi dan regulasi ruang digital. Dibangun dengan Next.js dan siap tayang.",
+    tags: ["Next.js", "Web Design", "Responsive"],
+    link: "https://kwn-kelompok-2.vercel.app/",
+    figure: true,
   },
   {
     title: "E-Commerce\nArtisan",
@@ -62,7 +76,7 @@ const projects = [
   },
 ];
 
-const allProjects = [
+const allProjects: Project[] = [
   ...projects,
   {
     title: "Aplikasi\nFinance\nTrack",
@@ -205,6 +219,22 @@ function PortfolioCard({ project, gridVisible, idx }: { project: any, gridVisibl
           <h3 className="font-display text-xl font-medium text-black dark:text-white mb-6 flex-grow transition-colors whitespace-pre-line">
             {project.title}
           </h3>
+          {/* Sama seperti di carousel: hanya karya yang punya `link` yang
+              menampilkan tombol ini, supaya tidak ada tautan karangan.
+              Ditaruh SEBELUM baris tag: tag tetap jadi elemen paling bawah
+              yang rata dengan kartu tetangganya. */}
+          {project.link ? (
+            <a
+              href={project.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mb-5 inline-flex items-center gap-1.5 self-start rounded-full bg-black px-4 py-2 text-[11px] font-semibold text-white transition-transform hover:scale-[1.03] active:scale-[0.97] dark:bg-white dark:text-black"
+            >
+              <span>Kunjungi Website</span>
+              <ArrowUpRight className="h-3.5 w-3.5" />
+            </a>
+          ) : null}
+
           <div className="flex flex-wrap gap-2 mt-auto transition-transform duration-300 group-hover:-translate-y-1">
             {project.tags.map((tag: string) => (
               <span
@@ -265,9 +295,11 @@ export function PortfolioSection() {
     id: i,
     title: p.title,
     image: p.image,
-    credit: `BY LOGIA CREATIVE / ${p.category.toUpperCase()}`,
+    description: p.description,
+    category: p.category,
     meta: p.tags,
-    accent: p.accent
+    href: p.link,
+    figure: p.figure,
   }));
 
   const openArchive = useCallback(() => {
@@ -336,17 +368,15 @@ export function PortfolioSection() {
 
   return (
     <section id="portfolio" className="py-24 sm:py-32 relative bg-transparent w-full overflow-hidden">
-      <div className="w-full mx-auto">
+      <div className="max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-12">
 
         {/* Section Header */}
-        <div
-          className="text-center max-w-3xl mx-auto mb-16 px-4"
-        >
-          <SplitWords as="h2" text="Selected Work" className="font-display font-medium tracking-[-0.02em] text-[clamp(2rem,4vw,3.5rem)] text-black dark:text-white mb-4" />
+        <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-12">
+          <SplitWords as="h2" text="Selected Work" className="font-display font-medium tracking-[-0.02em] text-[clamp(2rem,4vw,3.5rem)] text-black dark:text-white" />
         </div>
 
         {/* Filter Tabs (section) — scroll horizontal di mobile tanpa memotong teks */}
-        <div className="flex flex-wrap justify-center gap-2 mb-12 px-4">
+        <div className="flex flex-wrap justify-center gap-2 mb-8 sm:mb-10">
           {categories.map((category) => (
             <button
               key={category}
@@ -370,20 +400,19 @@ export function PortfolioSection() {
             <HeroCarousel
               items={carouselItems}
               defaultIndex={Math.floor(carouselItems.length / 2)}
-              brand="PORTFOLIO"
             />
           ) : null}
         </div>
 
         {/* View All CTA */}
-        <div className="text-center mt-16 px-4">
+        <div className="text-center mt-10 sm:mt-12">
           <button
             ref={seeAllBtnRef}
             onClick={openArchive}
-            className="w-16 h-16 rounded-full bg-black text-white dark:bg-white dark:text-black font-semibold text-sm hover:scale-[1.04] active:scale-[0.97] transition-transform shadow-md flex items-center justify-center mx-auto group"
-            aria-label="View All Projects"
+            className="inline-flex items-center justify-center gap-2 px-7 py-3.5 min-h-[52px] rounded-full bg-black text-white dark:bg-white dark:text-black font-semibold text-sm hover:scale-[1.02] active:scale-[0.98] transition-transform group"
           >
-            <ArrowRight className="w-6 h-6 transition-transform group-hover:translate-x-1" />
+            <span>Lihat Semua Proyek</span>
+            <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
           </button>
         </div>
 

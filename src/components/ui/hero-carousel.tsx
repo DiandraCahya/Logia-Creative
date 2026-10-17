@@ -1,15 +1,20 @@
 "use client"
 
-// A full-bleed editorial hero driven by a filmstrip.
+// Sebuah galeri karya yang digerakkan oleh satu "filmstrip".
 //
-// Every card shares one top edge. The focused card unfurls to full height while
-// its neighbours stay clipped to half, so the strip reads as a row of cropped
-// heads with one complete portrait standing in the middle of it. Changing the
-// focus re-grades the whole background to that image.
+// Setiap kartu berbagi satu sisi atas yang sama. Kartu terfokus memanjang penuh
+// sementara tetangganya tetap terpotong sedikit lebih pendek, sehingga strip
+// terbaca sebagai deretan thumbnail terpangkas dengan satu karya utuh berdiri di
+// tengahnya. Memindahkan fokus menukar seluruh panggung ke karya itu.
 //
-// Geometry is measured, never hard-coded: one ResizeObserver reads the stage and
-// every size below is a ratio of it, so the same component is pixel-identical in
-// a 600px preview box and on a 4K display.
+// Geometri diukur, tidak pernah di-hardcode: satu ResizeObserver membaca panggung
+// dan setiap ukuran di bawah adalah rasio darinya, sehingga komponen yang sama
+// identik piksel demi piksel baik di kotak preview 600px maupun di layar 4K.
+//
+// Bahasa visualnya mengikuti sistem monokrom "minimalist-luxury" situs: satu kartu
+// terfokus berwarna penuh, tetangganya diredupkan ke abu-abu, dan satu aksen
+// bronze pada indikator aktif. Panggungnya theme-aware — panel gelap di dark mode,
+// panel terang hangat di light mode — supaya menyatu dengan halaman di kedua tema.
 import * as React from "react"
 import {
   AnimatePresence,
@@ -18,7 +23,7 @@ import {
   useMotionValue,
   useReducedMotion,
 } from "framer-motion"
-import { ArrowLeft, Menu } from "lucide-react"
+import { ArrowUpRight, ChevronLeft, ChevronRight } from "lucide-react"
 import Image from "next/image"
 
 import { cn } from "@/lib/utils"
@@ -28,18 +33,29 @@ export interface HeroCarouselItem {
   id?: string | number
   /** Headline for the active slide. Newlines become separate reveal lines. */
   title: string
-  /** Image URL, used both in the card and as the graded background. */
+  /** Image URL, used both in the card and as the background. */
   image: string
-  /** Byline printed beside the headline, e.g. "BY AURELIA STUDIO." @default undefined */
-  credit?: string
-  /** Right-aligned facts, e.g. ["SAT NOV 15", "5-10 PM", "MIAMI"]. @default undefined */
+  /** One-line description shown under the headline. @default undefined */
+  description?: string
+  /** Small label shown above the headline, e.g. "Branding". @default undefined */
+  category?: string
+  /** Facts shown as pills, e.g. ["Meta Ads", "Social Media"]. @default undefined */
   meta?: string[]
+  /** Live project URL; renders a "Kunjungi Proyek" link on the active slide. @default undefined */
+  href?: string
   /**
-   * CSS colour the background is graded to. The photo keeps its luminance and
-   * takes this hue, which is what makes the backdrop swing on every change.
-   * @default "#8a8a8a"
+   * Set when the image is a cut-out on transparency (not a photo). The stage
+   * then keeps its solid plate and shows the artwork as a contained, sharp
+   * figure on the right instead of washing it across the whole backdrop —
+   * a transparent PNG used as a full-bleed wash leaves ~70% of the panel empty
+   * and the plate collapses into the page colour.
+   * @default false
    */
+  figure?: boolean
+  /** @deprecated kept for API compatibility; no longer used for colour grading. */
   accent?: string
+  /** @deprecated no longer rendered. */
+  credit?: string
 }
 
 export interface HeroCarouselProps {
@@ -51,11 +67,11 @@ export interface HeroCarouselProps {
   defaultIndex?: number
   /** Fires on every focus change, from any input. @default undefined */
   onIndexChange?: (index: number) => void
-  /** Wordmark in the middle of the top bar. @default undefined */
+  /** @deprecated no longer rendered. */
   brand?: React.ReactNode
-  /** Renders the "Back" control when provided. @default undefined */
+  /** @deprecated no longer rendered. */
   onBack?: () => void
-  /** Renders the "Menu" control when provided. @default undefined */
+  /** @deprecated no longer rendered. */
   onMenu?: () => void
   /** Advance on a timer. Pauses on hover, drag and focus. @default false */
   autoplay?: boolean
@@ -66,22 +82,16 @@ export interface HeroCarouselProps {
 }
 
 /* Ratios lifted from the reference layout, all relative to the stage box. */
-const CARD_H = 0.264 // active card height ÷ stage height
+const CARD_H = 0.30 // active card height ÷ stage height
 const CARD_AR = 0.75 // active card is 3:4
 const GAP = 0.038 // gap ÷ card width
-const STRIP_TOP = 0.5 // strip's shared top edge, down the stage
+const STRIP_TOP = 0.54 // strip's shared top edge, down the stage
 const TITLE = 0.067 // headline cap size ÷ stage height
-const LABEL = 0.0103 // small mono label ÷ stage height
 const PAD = 0.017 // page gutter ÷ stage width
-const RAIL = 0.2 // progress rail width ÷ stage width
 
 /** Wheel distance that commits to a step, and the lockout after one. */
 const WHEEL_THRESHOLD = 60
 const WHEEL_COOLDOWN = 420
-
-/* Film grain, as a self-contained SVG so the component carries no assets. */
-const GRAIN =
-  "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")"
 
 const clamp = (n: number, min: number, max: number) =>
   Math.min(max, Math.max(min, n))
@@ -91,9 +101,6 @@ export function HeroCarousel({
   index: controlled,
   defaultIndex = 0,
   onIndexChange,
-  brand,
-  onBack,
-  onMenu,
   autoplay = false,
   autoplayDelay = 4000,
   className,
@@ -140,7 +147,6 @@ export function HeroCarousel({
   const gap = Math.max(4, Math.round(cardW * GAP))
   const step = cardW + gap
   const pad = Math.max(16, Math.round(box.w * PAD))
-  const label = Math.max(9, Math.round(box.h * LABEL))
 
   // Centre the focused card: the track slides, the card never moves itself.
   const xFor = React.useCallback(
@@ -197,7 +203,7 @@ export function HeroCarousel({
 
     stage.addEventListener("wheel", onWheel, { passive: false })
     return () => stage.removeEventListener("wheel", onWheel)
-  }, [go, index])
+  }, [go, index, last])
 
   React.useEffect(() => {
     if (!autoplay || paused || dragging || items.length < 2) return
@@ -212,7 +218,6 @@ export function HeroCarousel({
   if (!active) return null
 
   const lines = active.title.split("\n")
-  const accent = active.accent ?? "#8a8a8a"
 
   return (
     <div
@@ -220,7 +225,7 @@ export function HeroCarousel({
       tabIndex={0}
       role="group"
       aria-roledescription="carousel"
-      aria-label="Featured looks"
+      aria-label="Karya pilihan"
       onKeyDown={(e) => {
         const keys: Record<string, number> = {
           ArrowLeft: index - 1,
@@ -237,12 +242,18 @@ export function HeroCarousel({
       onFocus={() => setPaused(true)}
       onBlur={() => setPaused(false)}
       className={cn(
-        "relative h-full min-h-[24rem] w-full overflow-hidden bg-black text-white select-none",
-        "outline-none focus-visible:ring-1 focus-visible:ring-white/40 focus-visible:ring-inset",
+        "relative h-full min-h-[24rem] w-full overflow-hidden rounded-[1.5rem] sm:rounded-[2rem] select-none",
+        // Satu langkah tone di atas --bg-primary (#FAFAF8) supaya tepi panel terbaca
+        // tanpa bergantung pada border. Panel gelap dark mode memakai #0a0a0a.
+        "bg-[#e8e3d9] text-black border border-black/10",
+        "dark:bg-[#0a0a0a] dark:text-white dark:border-white/10",
+        "outline-none focus-visible:ring-2 focus-visible:ring-black/40 dark:focus-visible:ring-white/50 focus-visible:ring-inset",
         className
       )}
     >
-      {/* ── Background: the focused photo, blown up and re-hued to its accent ── */}
+      {/* ── Backdrop: karya terfokus. Di light mode ia jadi tekstur samar; di dark
+          mode ia digelapkan agar panggung tetap netral. Karya berupa cut-out
+          transparan tidak di-wash — lihat cabang `active.figure`. ── */}
       <AnimatePresence initial={false}>
         <motion.div
           key={index}
@@ -252,99 +263,89 @@ export function HeroCarousel({
           exit={{ opacity: 0 }}
           transition={swing}
         >
-          {/* The backdrop is heavily scaled and colour-graded, so its detail is
-              largely destroyed anyway - run it through next/image so the browser
-              fetches a viewport-sized variant instead of the full-resolution
-              original. The scale lives on the wrapper; `fill` keeps the photo
-              edge-to-edge inside it. */}
-          <motion.div
-            className="absolute inset-0"
-            initial={{ scale: reduced ? 1.28 : compact ? 1.28 : 1.42 }}
-            animate={{ scale: 1.28 }}
-            transition={reduced || compact ? { duration: 0 } : { duration: 6, ease: "linear" }}
-          >
-            <Image
-              src={active.image}
-              alt=""
-              aria-hidden
-              draggable={false}
-              fill
-              sizes="100vw"
-              quality={70}
-              priority={index === 0}
-              className="object-cover"
-            />
-          </motion.div>
-          {/* Keep the photo's luminance, take the accent's hue. */}
-          <div
-            className="absolute inset-0"
-            style={{ backgroundColor: accent, mixBlendMode: "color" }}
-          />
-          <div
-            className="absolute inset-0 opacity-55"
-            style={{ backgroundColor: accent, mixBlendMode: "multiply" }}
-          />
+          {active.figure ? (
+            /* Cut-out: `bg-black` di belakang gambar mengisi 72% area transparan,
+               jadi panggung tetap punya isi seperti slide foto lain (bukan plate
+               kosong) dan patungnya terbaca sebagai marble di atas hitam.
+               Untuk foto biasa class ini tak berpengaruh — gambarnya opaque. */
+            <motion.div
+              className="absolute inset-0 bg-black"
+              initial={{ scale: reduced || compact ? 1.1 : 1.2 }}
+              animate={{ scale: 1.1 }}
+              transition={reduced || compact ? { duration: 0 } : { duration: 8, ease: "linear" }}
+            >
+              <Image
+                src={active.image}
+                alt=""
+                aria-hidden
+                draggable={false}
+                fill
+                sizes="100vw"
+                quality={90}
+                priority={index === 0}
+                className="object-cover grayscale opacity-100"
+              />
+            </motion.div>
+          ) : (
+            /* The backdrop is heavily scaled and darkened, so its detail is
+                largely destroyed anyway - run it through next/image so the browser
+                fetches a viewport-sized variant instead of the full-resolution
+                original. The scale lives on the wrapper; `fill` keeps the photo
+                edge-to-edge inside it. */
+            <motion.div
+              className="absolute inset-0"
+              initial={{ scale: reduced || compact ? 1.1 : 1.2 }}
+              animate={{ scale: 1.1 }}
+              transition={reduced || compact ? { duration: 0 } : { duration: 8, ease: "linear" }}
+            >
+              <Image
+                src={active.image}
+                alt=""
+                aria-hidden
+                draggable={false}
+                fill
+                sizes="100vw"
+                quality={60}
+                priority={index === 0}
+                className="object-cover grayscale opacity-100"
+              />
+            </motion.div>
+          )}
+          {/* Scrim netral per tema: menahan luminansi tanpa mewarnai panggung. */}
+          <div className="absolute inset-0 bg-[#faf8f3]/70 dark:bg-black/70" />
+          {/* Veil kedua: rongga atas dibiarkan paling tipis supaya tekstur karya
+              terbaca (peran yang sama dengan black/30 di dark mode), lalu dipadatkan
+              ke bawah supaya headline + deskripsi duduk di bidang bersih. */}
+          <div className="absolute inset-0 bg-gradient-to-b from-[#faf8f3]/0 via-[#faf8f3]/40 to-[#faf8f3]/55 dark:from-black/30 dark:via-transparent dark:to-black/80" />{/* taste-skill-ignore: neutral scrim over the photo, the skill's allowed exception */}
         </motion.div>
       </AnimatePresence>
 
-      {/* Legibility wash + grain, above the swap so they never flicker. */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/45" />
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 opacity-[0.22] mix-blend-overlay"
-        style={{ backgroundImage: GRAIN, backgroundSize: "180px 180px" }}
-      />
-
-      {/* ── Top bar: a centred cluster, not edge-to-edge ── */}
-      <div
-        className="absolute inset-x-0 flex items-center justify-center"
-        style={{ top: Math.max(16, box.h * 0.029), gap: `${Math.max(20, box.w * 0.06)}px` }}
-      >
-        {onBack ? (
-          <button
-            type="button"
-            onClick={onBack}
-            className="opacity-90 transition-opacity hover:opacity-100 flex items-center justify-center"
-            style={{ padding: '0.5rem' }}
-          >
-            <ArrowLeft className="w-5 h-5" />
-          </button>
-        ) : null}
-        {brand ? (
-          <div
-            className="font-semibold tracking-[0.06em]"
-            style={{ fontSize: label * 1.35 }}
-          >
-            {brand}
-          </div>
-        ) : null}
-        {onMenu ? (
-          <button
-            type="button"
-            onClick={onMenu}
-            className="opacity-90 transition-opacity hover:opacity-100 flex items-center justify-center"
-            style={{ padding: '0.5rem' }}
-          >
-            <Menu className="w-5 h-5" />
-          </button>
-        ) : null}
-      </div>
-
-      {/* ── Headline block, sitting just above the strip's top edge ── */}
+      {/* ── Blok headline, duduk tepat di atas sisi atas strip ── */}
       <div
         className="absolute inset-x-0 top-0 flex flex-col justify-end"
         style={{
           height: `${STRIP_TOP * 100}%`,
           paddingLeft: pad,
           paddingRight: pad,
-          paddingBottom: Math.round(box.h * 0.028),
+          paddingBottom: Math.round(box.h * 0.055),
         }}
       >
-        <div className="flex w-full flex-wrap items-end gap-x-[6vw] gap-y-2">
+        <div className="min-w-0 max-w-[46rem]">
+          {active.category ? (
+            <motion.span
+              key={`cat-${index}`}
+              className="mb-3 inline-block rounded-full border border-black/15 bg-black/5 px-3 py-1 text-xs font-semibold uppercase tracking-[0.08em] text-black/70 dark:border-white/25 dark:bg-white/15 dark:text-white/90"
+              initial={{ opacity: 0, y: 6 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={reduced ? { duration: 0 } : { type: "spring", stiffness: 100, damping: 20 }}
+            >
+              {active.category}
+            </motion.span>
+          ) : null}
           <AnimatePresence mode="popLayout" initial={false}>
-            <motion.h2
+            <motion.h3
               key={index}
-              className="font-semibold leading-[0.88] tracking-[-0.03em]"
+              className="font-display font-medium leading-[0.95] tracking-[-0.03em]"
               style={{ fontSize: Math.max(24, Math.round(box.h * TITLE)) }}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -367,47 +368,57 @@ export function HeroCarousel({
                   </motion.span>
                 </span>
               ))}
-            </motion.h2>
+            </motion.h3>
           </AnimatePresence>
 
-          {active.credit ? (
+          {active.description ? (
             <motion.p
-              key={`credit-${index}`}
-              className="font-mono uppercase tracking-[0.14em] opacity-80"
-              style={{ fontSize: label }}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 0.8 }}
-              transition={{ type: "spring", stiffness: 100, damping: 20, delay: 0.1 }}
+              key={`desc-${index}`}
+              className="mt-3 max-w-[40rem] text-sm leading-relaxed text-black/70 dark:text-white/70"
+              initial={{ opacity: 0, y: 6 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={reduced ? { duration: 0 } : { type: "spring", stiffness: 100, damping: 20, delay: 0.08 }}
             >
-              {active.credit}
+              {active.description}
             </motion.p>
           ) : null}
 
-          {active.meta?.length ? (
-            <div
-              className="ml-auto flex items-end"
-              style={{ gap: `${Math.max(16, box.w * 0.055)}px` }}
-            >
-              {active.meta.map((fact, i) => (
-                <motion.span
-                  key={`${index}-${fact}`}
-                  className="font-mono whitespace-nowrap uppercase tracking-[0.14em] opacity-80"
-                  style={{ fontSize: label }}
-                  initial={{ opacity: 0, y: 6 }}
-                  animate={{ opacity: 0.8, y: 0 }}
-                  transition={
-                    reduced ? { duration: 0 } : { type: "spring", stiffness: 100, damping: 20, delay: 0.1 + i * 0.05 }
-                  }
-                >
-                  {fact}
-                </motion.span>
-              ))}
-            </div>
-          ) : null}
+          <div className="mt-4 flex flex-wrap items-center gap-2">
+            {active.meta?.map((tag, i) => (
+              <motion.span
+                key={`${index}-${tag}`}
+                className="rounded-full border border-black/10 bg-black/5 px-3 py-1 text-xs font-medium text-black/70 dark:border-white/15 dark:bg-white/5 dark:text-white/85"
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={
+                  reduced ? { duration: 0 } : { type: "spring", stiffness: 100, damping: 20, delay: 0.1 + i * 0.05 }
+                }
+              >
+                {tag}
+              </motion.span>
+            ))}
+            {active.href ? (
+              <motion.a
+                key={`link-${index}`}
+                href={active.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 rounded-full bg-black px-4 py-1.5 text-xs font-semibold text-white transition-transform hover:scale-[1.03] active:scale-[0.97] dark:bg-white dark:text-black"
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={
+                  reduced ? { duration: 0 } : { type: "spring", stiffness: 100, damping: 20, delay: 0.1 + (active.meta?.length ?? 0) * 0.05 }
+                }
+              >
+                <span>Kunjungi Proyek</span>
+                <ArrowUpRight className="h-3.5 w-3.5" />
+              </motion.a>
+            ) : null}
+          </div>
         </div>
       </div>
 
-      {/* ── The strip: one shared top edge, the focused card twice as tall ── */}
+      {/* ── Strip: satu sisi atas bersama, kartu terfokus lebih tinggi ── */}
       <div
         className="absolute inset-x-0"
         style={{ top: `${STRIP_TOP * 100}%`, height: fullH }}
@@ -435,9 +446,12 @@ export function HeroCarousel({
               aria-label={item.title.replace(/\n/g, " ")}
               aria-current={i === index}
               onClick={() => go(i)}
-              className="relative shrink-0 overflow-hidden rounded-none bg-white/5"
+              className={cn(
+                "relative shrink-0 overflow-hidden rounded-lg sm:rounded-xl bg-black/5 ring-1 transition-[box-shadow] duration-300 dark:bg-white/5",
+                i === index ? "ring-black/30 dark:ring-white/40" : "ring-black/10 dark:ring-white/10"
+              )}
               style={{ width: cardW }}
-              animate={{ height: i === index ? fullH : neighborH }}
+              animate={{ height: i === index ? fullH : neighborH, opacity: i === index ? 1 : 0.55 }}
               transition={spring}
             >
               <Image
@@ -446,41 +460,64 @@ export function HeroCarousel({
                 draggable={false}
                 fill
                 sizes={`${Math.round(cardW)}px`}
-                quality={70}
+                quality={60}
                 loading="lazy"
-                className="h-full w-full object-cover"
-                style={{ objectPosition: "50% 26%" }}
-              />
-              <motion.span
-                aria-hidden
-                className="absolute inset-0 bg-black"
-                animate={{ opacity: i === index ? 0 : 0.12 }}
-                transition={spring}
+                className={cn(
+                  "h-full w-full object-cover transition-[filter] duration-500",
+                  i === index ? "grayscale-0" : "grayscale"
+                )}
+                style={{ objectPosition: item.figure ? "50% 100%" : "50% 26%" }}
               />
             </motion.button>
           ))}
         </motion.div>
       </div>
 
-      {/* ── Position rail ── */}
+      {/* ── Kontrol: titik indikator + tombol sebelumnya/berikutnya ── */}
       <div
-        className="absolute"
-        style={{ left: pad, bottom: Math.max(14, box.h * 0.022), width: box.w * RAIL }}
+        className="absolute flex items-center justify-between gap-4"
+        style={{ left: pad, right: pad, bottom: Math.max(16, Math.round(box.h * 0.03)) }}
       >
-        <div
-          className="flex justify-between font-mono tabular-nums opacity-80"
-          style={{ fontSize: label }}
-        >
-          <span>{String(index + 1).padStart(2, "0")}</span>
-          <span>{String(items.length).padStart(2, "0")}</span>
+        <div className="flex items-center gap-1.5" role="group" aria-label="Pilih karya">
+          {items.map((_, i) => (
+            <button
+              key={i}
+              type="button"
+              onClick={() => go(i)}
+              aria-label={`Ke karya ${i + 1}`}
+              aria-current={i === index ? "true" : undefined}
+              className="flex h-8 items-center justify-center"
+            >
+              <span
+                className={cn(
+                  "block rounded-full transition-[width,background-color] duration-300",
+                  i === index
+                    ? "h-2 w-6 bg-[var(--accent-bronze)]"
+                    : "h-2 w-2 bg-black/20 hover:bg-black/40 dark:bg-white/40 dark:hover:bg-white/75"
+                )}
+              />
+            </button>
+          ))}
         </div>
-        <div className="relative mt-2 h-px w-full bg-white/25">
-          <motion.div
-            className="absolute inset-y-0 bg-white"
-            style={{ width: `${100 / items.length}%` }}
-            animate={{ left: `${(index / items.length) * 100}%` }}
-            transition={spring}
-          />
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => go(index - 1)}
+            aria-label="Karya sebelumnya"
+            disabled={index === 0}
+            className="flex h-11 w-11 items-center justify-center rounded-full border border-black/15 text-black transition-colors hover:bg-black/5 disabled:opacity-30 disabled:hover:bg-transparent dark:border-white/20 dark:text-white dark:hover:bg-white/10"
+          >
+            <ChevronLeft className="h-5 w-5" />
+          </button>
+          <button
+            type="button"
+            onClick={() => go(index + 1)}
+            aria-label="Karya berikutnya"
+            disabled={index === last}
+            className="flex h-11 w-11 items-center justify-center rounded-full border border-black/15 text-black transition-colors hover:bg-black/5 disabled:opacity-30 disabled:hover:bg-transparent dark:border-white/20 dark:text-white dark:hover:bg-white/10"
+          >
+            <ChevronRight className="h-5 w-5" />
+          </button>
         </div>
       </div>
     </div>
