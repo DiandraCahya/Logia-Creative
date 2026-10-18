@@ -328,7 +328,7 @@ export function ChatWidget({ onAutofill }: { onAutofill?: (d: CollabDraft) => vo
 
   return (
     <>
-      {/* Launcher — hanya saat tertutup. Panel duduk persis di posisinya, jadi
+      {/* Launcher: hanya saat tertutup. Panel duduk persis di posisinya, jadi
           tidak ada dua tombol tutup (X di launcher + X di header) yang bentrok. */}
       {!open && (
         <button
@@ -351,7 +351,7 @@ export function ChatWidget({ onAutofill }: { onAutofill?: (d: CollabDraft) => vo
           {/* Header minimalis: logo + nama + aksi */}
           <div className="flex items-center justify-between gap-3 px-4 py-3 border-b border-[color-mix(in_srgb,var(--text-primary)_12%,transparent)]">
             <div className="flex items-center gap-2.5 min-w-0">
-              <Image src="/LOGO.png" alt="Logia" width={22} height={22} className="rounded-full object-cover shrink-0" />
+              <Image src="/LOGO.png" alt="Logia" width={22} height={22} loading="lazy" decoding="async" className="rounded-full object-cover shrink-0" />
               <span className="text-sm font-semibold tracking-[-0.01em] text-[var(--text-primary)] truncate">Logia</span>
             </div>
             <div className="flex items-center gap-1 shrink-0">
@@ -372,7 +372,7 @@ export function ChatWidget({ onAutofill }: { onAutofill?: (d: CollabDraft) => vo
             </div>
           </div>
 
-          {/* Pesan — solid kontras penuh dua mode: bot putih, user hitam (sama light/dark) */}
+          {/* Pesan: solid kontras penuh dua mode: bot putih, user hitam (sama light/dark) */}
           <div ref={boxRef} className="flex-1 min-h-0 overflow-y-auto px-4 py-4 space-y-3 text-sm overscroll-contain">
             {msgs.map((m, i) => {
               const isUser = m.role === "user";
@@ -488,7 +488,7 @@ export function ChatWidget({ onAutofill }: { onAutofill?: (d: CollabDraft) => vo
             )}
           </div>
 
-          {/* Composer — input garis hairline, tombol kirim sama gaya dengan form */}
+          {/* Composer: input garis hairline, tombol kirim sama gaya dengan form */}
           <div className="p-3 border-t border-[color-mix(in_srgb,var(--text-primary)_12%,transparent)] flex gap-2 items-center">
             <input
               value={input}

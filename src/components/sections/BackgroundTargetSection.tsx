@@ -150,35 +150,27 @@ export function BackgroundTargetSection({ onOpenCollaboration }: Props) {
           </p>
         </div>
 
-        {/* Minimalist Tabs */}
-        <div className="flex justify-center mb-16">
-          <div className="flex flex-wrap justify-center p-1.5 bg-black/5 dark:bg-white/5 rounded-[1.75rem] sm:rounded-full border border-black/5 dark:border-white/5 max-w-full">
-            {targetMarkets.map((market) => {
-              const Icon = market.icon;
-              const isActive = activeTab === market.id;
-              return (
-                <button
-                  key={market.id}
-                  onClick={() => setActiveTab(market.id)}
-                  aria-pressed={isActive}
-                  className={`relative isolate px-5 py-2.5 min-h-[44px] rounded-full text-sm font-semibold transition-colors duration-200 flex items-center gap-2 whitespace-nowrap ${
-                    isActive
-                      ? "text-white dark:text-black"
-                      : "text-[#666666] dark:text-[#999999] hover:text-black dark:hover:text-white"
-                  }`}
-                >
-                  {isActive && (
-                    <span
-                      aria-hidden="true"
-                      className="absolute inset-0 z-0 rounded-full bg-black dark:bg-white shadow-md pointer-events-none"
-                    />
-                  )}
-                  <Icon className="relative z-10 w-4 h-4 shrink-0" />
-                  <span className="relative z-10">{market.tabLabel}</span>
-                </button>
-              );
-            })}
-          </div>
+        {/* Individual Tab Buttons tanpa card pembungkus */}
+        <div className="flex flex-wrap justify-center gap-2 sm:gap-3 mb-12 sm:mb-16">
+          {targetMarkets.map((market) => {
+            const Icon = market.icon;
+            const isActive = activeTab === market.id;
+            return (
+              <button
+                key={market.id}
+                onClick={() => setActiveTab(market.id)}
+                aria-pressed={isActive}
+                className={`px-5 py-2.5 min-h-[44px] rounded-full text-xs sm:text-sm font-semibold transition-all duration-300 flex items-center gap-2 whitespace-nowrap border ${
+                  isActive
+                    ? "bg-black text-white dark:bg-white dark:text-black border-black dark:border-white shadow-sm"
+                    : "bg-transparent text-[#666666] dark:text-[#999999] border-black/10 dark:border-white/10 hover:border-black/30 dark:hover:border-white/30 hover:text-black dark:hover:text-white"
+                }`}
+              >
+                <Icon className="w-4 h-4 shrink-0" />
+                <span>{market.tabLabel}</span>
+              </button>
+            );
+          })}
         </div>
 
         {/* Content Panel */}

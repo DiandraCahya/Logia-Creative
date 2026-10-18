@@ -7,7 +7,7 @@ import { formatIDR, RECEIPT_TERMS, type Receipt } from "@/lib/receipt";
 // gelap) TERLEPAS dari tema situs, supaya hasil cetak/PNG/PDF selalu sama.
 // Font memakai token situs agar hasil export html2canvas identik dengan layar
 // (lihat ensureFonts() di CollaborationModal sebelum export).
-// ponytail: warna hardcoded (bukan var()) — struk tidak boleh ikut dark mode.
+// ponytail: warna hardcoded (bukan var()) - struk tidak boleh ikut dark mode.
 const INK = "#111111";
 const MUTED = "#6b7280";
 const LINE = "#e5e7eb";
@@ -54,6 +54,8 @@ export const ReceiptView = forwardRef<HTMLDivElement, { receipt: Receipt }>(
               src="/Group 3.png"
               alt="Logia Creative"
               fill
+              loading="lazy"
+              decoding="async"
               sizes="76px"
               style={{ objectFit: "contain", objectPosition: "left center" }}
             />
@@ -88,7 +90,7 @@ export const ReceiptView = forwardRef<HTMLDivElement, { receipt: Receipt }>(
 
         <div style={{ margin: "18px 0" }}><Hairline /></div>
 
-        {/* Blok paket — semua paket terpilih, satu baris per paket */}
+        {/* Blok paket - semua paket terpilih, satu baris per paket */}
         <div style={{ display: "grid", gap: 8 }}>
           {receipt.items && receipt.items.length > 0 ? (
             receipt.items.map((it) => (

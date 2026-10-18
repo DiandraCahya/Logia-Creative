@@ -78,15 +78,22 @@ export function FooterSection({ onOpenCollaboration }: FooterSectionProps) {
         </div>
 
         {/* Multi-Column Links & Info */}
-        <div ref={contactRef} data-footer-grid className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 sm:gap-10 pt-4 sm:pt-8 text-[12px] sm:text-sm transition-all duration-700 ${contactVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-          {/* Col 1: Brand Info */}
-          <div data-footer-brand className="lg:col-span-2 space-y-4">
-            <div className="relative w-24 h-7">
+        <div
+          ref={contactRef}
+          className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 lg:gap-10 pt-6 sm:pt-10 text-[13px] sm:text-sm transition-all duration-700 ${
+            contactVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+          }`}
+        >
+          {/* Col 1: Brand Info (5 cols on desktop) */}
+          <div className="lg:col-span-5 space-y-4">
+            <div className="relative w-28 h-8">
               <Image
                 src="/Group 3.webp"
                 alt="Logia Creative Logo"
                 fill
-                sizes="96px"
+                loading="lazy"
+                decoding="async"
+                sizes="112px"
                 className="object-contain"
               />
             </div>
@@ -95,99 +102,118 @@ export function FooterSection({ onOpenCollaboration }: FooterSectionProps) {
             </p>
 
             {/* Live WIB Clock */}
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-black/[0.03] dark:bg-white/[0.03] border border-black/5 dark:border-white/5 text-xs font-mono text-black dark:text-white">
-              <Clock className="w-3.5 h-3.5 animate-pulse" />
+            <div className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-black/[0.03] dark:bg-white/[0.04] border border-black/5 dark:border-white/10 text-xs font-mono text-black dark:text-white">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shrink-0" />
+              <Clock className="w-3.5 h-3.5 shrink-0 text-[#666666] dark:text-[#999999]" />
               <span>Studio Time: {wibTime || "--:--:--"} WIB</span>
             </div>
           </div>
 
-          {/* Col 2: Navigation Links */}
-          <div className="space-y-4 text-sm">
-            <h4 className="font-bold text-black dark:text-white uppercase tracking-wider text-xs mb-6">
-              Eksplorasi
-            </h4>
-            <ul className="space-y-3 text-[#666666] dark:text-[#999999]">
-              <li>
-                <a href="#about" className="hover:text-black dark:hover:text-white transition-colors">
-                  Tentang Logia
-                </a>
-              </li>
-              <li>
-                <a href="#target-pasar" className="hover:text-black dark:hover:text-white transition-colors">
-                  Target Pasar
-                </a>
-              </li>
-              <li>
-                <a href="#portfolio" className="hover:text-black dark:hover:text-white transition-colors">
-                  Selected Work
-                </a>
-              </li>
-              <li>
-                <a href="#pricing" className="hover:text-black dark:hover:text-white transition-colors">
-                  Katalog Harga
-                </a>
-              </li>
-            </ul>
+          {/* Quick Links Section: 2 cols side-by-side on mobile, individual on desktop */}
+          <div className="lg:col-span-4 grid grid-cols-2 gap-6 sm:gap-8">
+            {/* Eksplorasi */}
+            <div className="space-y-4">
+              <h4 className="font-bold text-black dark:text-white uppercase tracking-wider text-xs">
+                Eksplorasi
+              </h4>
+              <ul className="space-y-2.5 text-[#666666] dark:text-[#999999]">
+                <li>
+                  <a href="#about" className="hover:text-black dark:hover:text-white transition-colors block py-0.5">
+                    Tentang Logia
+                  </a>
+                </li>
+                <li>
+                  <a href="#target-pasar" className="hover:text-black dark:hover:text-white transition-colors block py-0.5">
+                    Target Pasar
+                  </a>
+                </li>
+                <li>
+                  <a href="#portfolio" className="hover:text-black dark:hover:text-white transition-colors block py-0.5">
+                    Selected Work
+                  </a>
+                </li>
+                <li>
+                  <a href="#pricing" className="hover:text-black dark:hover:text-white transition-colors block py-0.5">
+                    Katalog Harga
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            {/* Layanan Utama */}
+            <div className="space-y-4">
+              <h4 className="font-bold text-black dark:text-white uppercase tracking-wider text-xs">
+                Layanan
+              </h4>
+              <ul className="space-y-2.5 text-[#666666] dark:text-[#999999]">
+                <li>
+                  <a href="#layanan" className="hover:text-black dark:hover:text-white transition-colors block py-0.5">
+                    Brand Identity
+                  </a>
+                </li>
+                <li>
+                  <a href="#layanan" className="hover:text-black dark:hover:text-white transition-colors block py-0.5">
+                    UI/UX Design
+                  </a>
+                </li>
+                <li>
+                  <a href="#layanan" className="hover:text-black dark:hover:text-white transition-colors block py-0.5">
+                    Web Development
+                  </a>
+                </li>
+                <li>
+                  <a href="#layanan" className="hover:text-black dark:hover:text-white transition-colors block py-0.5">
+                    Automation
+                  </a>
+                </li>
+              </ul>
+            </div>
           </div>
 
-          {/* Col 3: Services Index */}
-          <div className="space-y-4 text-sm">
-            <h4 className="font-bold text-black dark:text-white uppercase tracking-wider text-xs mb-6">
-              Layanan Utama
+          {/* Col 3: Contact & Social (3 cols on desktop) */}
+          <div className="lg:col-span-3 space-y-4">
+            <h4 className="font-bold text-black dark:text-white uppercase tracking-wider text-xs">
+              Kontak &amp; Info
             </h4>
-            <ul className="space-y-3 text-[#666666] dark:text-[#999999]">
+            <ul className="space-y-2.5 text-[#666666] dark:text-[#999999]">
               <li>
-                <a href="#layanan" className="hover:text-black dark:hover:text-white transition-colors">
-                  Brand Identity & Visual Design
-                </a>
-              </li>
-              <li>
-                <a href="#layanan" className="hover:text-black dark:hover:text-white transition-colors">
-                  UI/UX & Web Development
-                </a>
-              </li>
-              <li>
-                <a href="#layanan" className="hover:text-black dark:hover:text-white transition-colors">
-                  Social Media Management
+                <a
+                  href="mailto:logiacreative.id@gmail.com"
+                  className="inline-flex items-center gap-2.5 py-1 text-xs sm:text-sm hover:text-black dark:hover:text-white transition-colors"
+                >
+                  <Mail className="w-4 h-4 text-black dark:text-white shrink-0" />
+                  <span className="break-all">logiacreative.id@gmail.com</span>
                 </a>
               </li>
               <li>
-                <a href="#layanan" className="hover:text-black dark:hover:text-white transition-colors">
-                  Workflow Automation
+                <a
+                  href="https://wa.me/6289521375477"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2.5 py-1 text-xs sm:text-sm hover:text-black dark:hover:text-white transition-colors"
+                >
+                  <Phone className="w-4 h-4 text-black dark:text-white shrink-0" />
+                  <span>+62 895-2137-5477</span>
                 </a>
               </li>
-            </ul>
-          </div>
-
-          {/* Col 4: Contact & Social */}
-          <div className="space-y-4 text-sm">
-            <h4 className="font-bold text-black dark:text-white uppercase tracking-wider text-xs mb-6">
-              Kontak
-            </h4>
-            <ul className="space-y-3 text-[#666666] dark:text-[#999999]">
-              <li className="flex items-center gap-2">
-                <Mail className="w-4 h-4 text-black dark:text-white" />
-                <a href="mailto:logiacreative.id@gmail.com" className="hover:text-black dark:hover:text-white transition-colors break-all">
-                  logiacreative.id@gmail.com
+              <li>
+                <a
+                  href="https://logia-creative.vercel.app/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2.5 py-1 text-xs sm:text-sm hover:text-black dark:hover:text-white transition-colors"
+                >
+                  <Globe className="w-4 h-4 text-black dark:text-white shrink-0" />
+                  <span className="break-all">https://logia-creative.vercel.app/</span>
                 </a>
               </li>
-              <li className="flex items-center gap-2">
-                <Phone className="w-4 h-4 text-black dark:text-white" />
-                <a href="tel:+6289521375477" className="hover:text-black dark:hover:text-white transition-colors">
-                  +62 895-2137-5477
-                </a>
-              </li>
-              <li className="flex items-center gap-2">
-                <Globe className="w-4 h-4 text-black dark:text-white" />
-                <span>www.logia.id</span>
-              </li>
-              <li className="flex items-center gap-2">
-                <MapPin className="w-4 h-4 text-black dark:text-white" />
-                <span>Indonesia</span>
+              <li className="flex items-center gap-2.5 py-1 text-xs sm:text-sm">
+                <MapPin className="w-4 h-4 text-black dark:text-white shrink-0" />
+                <span>Surabaya</span>
               </li>
             </ul>
 
-            <div className="flex items-center gap-2 pt-4">
+            <div className="flex items-center gap-2.5 pt-3">
               <a
                 href="https://www.instagram.com/logiacreative.studio/"
                 target="_blank"
@@ -201,8 +227,8 @@ export function FooterSection({ onOpenCollaboration }: FooterSectionProps) {
               <button
                 type="button"
                 disabled
-                aria-label="LinkedIn — segera hadir"
-                title="LinkedIn — segera hadir"
+                aria-label="LinkedIn (segera hadir)"
+                title="LinkedIn (segera hadir)"
                 className="w-10 h-10 rounded-full bg-black/5 dark:bg-white/5 flex items-center justify-center text-black/40 dark:text-white/40 cursor-not-allowed"
               >
                 <Linkedin className="w-4 h-4" />

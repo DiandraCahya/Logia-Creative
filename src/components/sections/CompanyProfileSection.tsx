@@ -56,7 +56,7 @@ export function CompanyProfileSection() {
           >
             <div className="mb-10">
               <h2 className="font-display font-medium text-[clamp(2rem,4vw,3.5rem)] leading-[1.05] tracking-[-0.02em] text-black dark:text-white mb-4">
-                Tentang Logia.
+                Logia Creative Agency
               </h2>
               <p className="text-[#666666] dark:text-[#999999] text-base leading-relaxed">
                 Kami membangun keseimbangan antara kreativitas visual dan ketangguhan teknologi.
@@ -89,9 +89,8 @@ export function CompanyProfileSection() {
                   <h3 className="text-xl sm:text-2xl font-bold leading-[1.5] text-black dark:text-white mb-8">
                     &ldquo;Menjadi mitra kreatif dan teknologi terdepan yang memberdayakan bisnis di Indonesia melalui integrasi identitas visual yang berkarakter dan solusi digital yang berdampak nyata.&rdquo;
                   </h3>
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-px bg-black/20 dark:bg-white/20" />
-                    <p className="text-sm font-bold uppercase tracking-[0.1em] text-[#666666] dark:text-[#999999]">
+                  <div className="flex justify-center items-center pt-2">
+                    <p className="text-sm font-bold uppercase tracking-[0.15em] text-[#666666] dark:text-[#999999] text-center">
                       Logia Creative
                     </p>
                   </div>
@@ -130,6 +129,7 @@ export function CompanyProfileSection() {
                         alt="Logo Logia"
                         fill
                         loading="lazy"
+                        decoding="async"
                         sizes="128px"
                         className="object-contain"
                       />
@@ -140,6 +140,8 @@ export function CompanyProfileSection() {
                         src="/Group 1.webp"
                         alt="Creative Wordmark"
                         fill
+                        loading="lazy"
+                        decoding="async"
                         sizes="96px"
                         className="object-contain dark:invert-0 invert"
                       />
@@ -150,9 +152,8 @@ export function CompanyProfileSection() {
                     {brandPillars.map((bp, idx) => (
                       <div
                         key={idx}
-                        className="p-5 glass-card rounded-2xl flex flex-col gap-2.5"
+                        className="p-5 glass-card rounded-2xl flex flex-col gap-2"
                       >
-                        <div className="w-2 h-2 rounded-full bg-black dark:bg-white" />
                         <div>
                           <h4 className="font-bold text-sm text-black dark:text-white mb-2">
                             {bp.title}

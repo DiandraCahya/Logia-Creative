@@ -7,17 +7,47 @@ import { LiquidNavbar } from "@/components/LiquidNavbar";
 import { ScrollProgress } from "@/components/ScrollProgress";
 import { HeroSection } from "@/components/sections/HeroSection";
 
-import { BackgroundTargetSection } from "@/components/sections/BackgroundTargetSection";
-import { CompanyProfileSection } from "@/components/sections/CompanyProfileSection";
-import { ServicesSection } from "@/components/sections/ServicesSection";
-import { PortfolioSection } from "@/components/sections/PortfolioSection";
-import { PricingSection } from "@/components/sections/PricingSection";
-import { TestimonialSection } from "@/components/sections/TestimonialSection";
-import { FooterSection } from "@/components/sections/FooterSection";
+const BackgroundTargetSection = dynamic(
+  () => import("@/components/sections/BackgroundTargetSection").then((mod) => mod.BackgroundTargetSection),
+  { ssr: true }
+);
+const CompanyProfileSection = dynamic(
+  () => import("@/components/sections/CompanyProfileSection").then((mod) => mod.CompanyProfileSection),
+  { ssr: true }
+);
+const ServicesSection = dynamic(
+  () => import("@/components/sections/ServicesSection").then((mod) => mod.ServicesSection),
+  { ssr: true }
+);
+const PortfolioSection = dynamic(
+  () => import("@/components/sections/PortfolioSection").then((mod) => mod.PortfolioSection),
+  { ssr: true }
+);
+const PricingSection = dynamic(
+  () => import("@/components/sections/PricingSection").then((mod) => mod.PricingSection),
+  { ssr: true }
+);
+const TestimonialSection = dynamic(
+  () => import("@/components/sections/TestimonialSection").then((mod) => mod.TestimonialSection),
+  { ssr: true }
+);
+const FooterSection = dynamic(
+  () => import("@/components/sections/FooterSection").then((mod) => mod.FooterSection),
+  { ssr: true }
+);
 
-const Logo3DBackground = dynamic(() => import("@/components/Logo3DBackground").then(mod => mod.Logo3DBackground), { loading: () => null });
-const CollaborationModal = dynamic(() => import("@/components/CollaborationModal").then(mod => mod.CollaborationModal), { loading: () => null });
-const ChatWidget = dynamic(() => import("@/components/ChatWidget").then(mod => mod.ChatWidget), { loading: () => null });
+const Logo3DBackground = dynamic(
+  () => import("@/components/Logo3DBackground").then((mod) => mod.Logo3DBackground),
+  { ssr: false, loading: () => null }
+);
+const CollaborationModal = dynamic(
+  () => import("@/components/CollaborationModal").then((mod) => mod.CollaborationModal),
+  { ssr: false, loading: () => null }
+);
+const ChatWidget = dynamic(
+  () => import("@/components/ChatWidget").then((mod) => mod.ChatWidget),
+  { ssr: false, loading: () => null }
+);
 
 export default function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -50,7 +80,7 @@ export default function Home() {
       {/* Scroll progress indicator */}
       <ScrollProgress />
 
-      {/* 3D Logo Background — follows cursor on desktop */}
+      {/* 3D Logo Background - follows cursor on desktop */}
       <React.Suspense fallback={null}>
         <Logo3DBackground />
       </React.Suspense>
@@ -97,16 +127,18 @@ export default function Home() {
       </section>
 
       {/* Interactive Collaboration Modal with Confetti Celebration */}
-      <React.Suspense fallback={null}>
-        <CollaborationModal
-          isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
-          initialDraft={collabDraft}
-          onDraftConsumed={() => setCollabDraft(null)}
-        />
-      </React.Suspense>
+      {isModalOpen && (
+        <React.Suspense fallback={null}>
+          <CollaborationModal
+            isOpen={isModalOpen}
+            onClose={() => setIsModalOpen(false)}
+            initialDraft={collabDraft}
+            onDraftConsumed={() => setCollabDraft(null)}
+          />
+        </React.Suspense>
+      )}
 
-      {/* AI chatbox pelanggan — lazy setelah idle */}
+      {/* AI chatbox pelanggan - lazy setelah idle */}
       <React.Suspense fallback={null}>
         {loadChat && <ChatWidget onAutofill={(d) => { setCollabDraft(d); setIsModalOpen(true); }} />}
       </React.Suspense>

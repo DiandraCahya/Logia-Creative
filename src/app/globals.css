@@ -92,7 +92,7 @@ body {
   text-rendering: optimizeLegibility;
 }
 
-/* Satu font untuk seluruh situs — heading, form, struk, chat, canvas/3D.
+/* Satu font untuk seluruh situs - heading, form, struk, chat, canvas/3D.
    Utility .font-mono tetap memakai token mono (peran kode/angka), bukan familia lain. */
 h1, h2, h3, h4, h5, h6,
 button, input, select, textarea, optgroup {
@@ -114,7 +114,7 @@ h3, .text-subheadline { line-height: var(--lh-snug); letter-spacing: -0.015em; }
 
 /* SELECTION satu sumber (gantikan utility selection:* yang konflik di
    layout + page): light = blok hitam/teks putih; dark = highlight putih
-   TRANSLUSEN + teks tetap terang — tanpa blok putih solid. Unlayered
+   TRANSLUSEN + teks tetap terang - tanpa blok putih solid. Unlayered
    supaya menang atas utilities Tailwind. */
 ::selection { background-color: #000; color: #fff; }
 ::-moz-selection { background-color: #000; color: #fff; }
@@ -122,7 +122,7 @@ h3, .text-subheadline { line-height: var(--lh-snug); letter-spacing: -0.015em; }
 .dark ::-moz-selection { background-color: rgb(255 255 255 / 0.32); color: #fff; }
 
 /* Navbar: kunci compositing (translateZ) agar fixed tidak ikut kegeser
-   saat momentum scroll; di mobile pakai bg solid — backdrop-filter di
+   saat momentum scroll; di mobile pakai bg solid - backdrop-filter di
    dalam fixed adalah bug klasik iOS/Chrome (navbar jump saat scroll). */
 header {
   transform: translateZ(0);
@@ -146,6 +146,24 @@ header {
 section[data-cv] {
   content-visibility: auto;
   contain-intrinsic-size: auto 900px;
+}
+
+/* NATIVE SCROLL-DRIVEN ANIMATION (GPU COMPOSITOR, ZERO JS) */
+@supports (animation-timeline: scroll()) {
+  .scroll-progress-bar {
+    animation: scroll-progress-timeline linear;
+    animation-timeline: scroll();
+    transform-origin: left;
+  }
+}
+
+@keyframes scroll-progress-timeline {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
 }
 
 /* REDUCED MOTION GLOBALS */
@@ -526,7 +544,7 @@ html:not(.dark) h6,
 }
 
 
-/* Links — exclude buttons whose class sets its own light-on-dark color */
+/* Links - exclude buttons whose class sets its own light-on-dark color */
 html:not(.dark) a:not(.grad-cta):not(.btn-collaborate):not([class*="bg-black"]):not([class*="bg-white"]),
 .light a:not(.grad-cta):not(.btn-collaborate):not([class*="bg-black"]):not([class*="bg-white"]) {
   color: #000000 !important;
@@ -544,7 +562,7 @@ svg {
 
 /* Di light mode: ikon dan teks di permukaan GELAP SOLID (tombol solid, bg-black,
    hover gelap, cta-dark) HARUS putih.
-   ponytail: pakai [class~="..."] (token utuh), BUKAN [class*="..."] — substring
+   ponytail: pakai [class~="..."] (token utuh), BUKAN [class*="..."] - substring
    ikut menelan varian transparan (bg-black/5, bg-black/[0.03]) yang teksnya
    gelap, sehingga teks jadi putih di atas permukaan terang (= hilang). */
 html:not(.dark) .cta-dark,
@@ -588,7 +606,7 @@ html:not(.dark) .group:hover [class~="group-hover:bg-black"] svg,
 }
 
 /* Tombol putih di atas permukaan gelap solid (kartu badge, cta-dark):
-   kecualikan dari pemaksa putih di atas — teks+ikon harus hitam.
+   kecualikan dari pemaksa putih di atas - teks+ikon harus hitam.
    Tanpa ini, "Pilih Growth" & "Mulai Diskusi" jadi putih-di-putih (= hilang). */
 html:not(.dark) [class~="bg-black"] a[class~="bg-white"],
 html:not(.dark) [class~="bg-black"] a[class~="bg-white"] *,
@@ -628,7 +646,7 @@ html:not(.dark) .card,
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
 }
 
-/* Input fields — gaya hairline minimalis (dipakai form kolaborasi + chat) */
+/* Input fields - gaya hairline minimalis (dipakai form kolaborasi + chat) */
 html:not(.dark) input:not([type="checkbox"]):not([type="radio"]),
 html:not(.dark) textarea,
 html:not(.dark) select,
@@ -651,7 +669,7 @@ html:not(.dark) select:focus,
   box-shadow: none !important;
 }
 
-/* Footer — transparan, menyatu dengan halaman (theme-aware). */
+/* Footer - transparan, menyatu dengan halaman (theme-aware). */
 footer {
   background: transparent;
   backdrop-filter: none;
@@ -660,7 +678,7 @@ footer {
 
 /* ============= MOBILE RESPONSIVE ============= */
 
-/* Base mobile — mobile-first: base ini untuk layar kecil dulu.
+/* Base mobile - mobile-first: base ini untuk layar kecil dulu.
    Tujuan Modul 2: halaman lebih padat & rapi, TANPA mengubah tata letak Hero/Navbar. */
 @media (max-width: 767px) {
   html, body { overflow-x: hidden; }
@@ -677,7 +695,7 @@ footer {
     padding-bottom: clamp(1.75rem, 6vw, 3rem) !important;
   }
 
-  /* Hero mobile full 1 halaman — TATA LETAK TIDAK DIUBAH */
+  /* Hero mobile full 1 halaman - TATA LETAK TIDAK DIUBAH */
   #top {
     min-height: 100dvh !important;
     max-height: none !important;
@@ -736,6 +754,10 @@ footer {
     padding-bottom: 0.25rem;
     border-bottom: 1px solid color-mix(in srgb, currentColor 8%, transparent);
   }
+  footer [data-footer-contact] {
+    grid-column: 1 / -1 !important;
+    padding-top: 0.5rem;
+  }
   /* Tombol "Kembali ke Atas" melebar penuh agar seimbang dengan kolom di atasnya */
   footer > div > div:last-child button { width: 100% !important; justify-content: center !important; }
 
@@ -749,7 +771,7 @@ footer {
       gap: 12px !important;
     }
     /* Layanan kini punya komposisi mobile sendiri (1 kolom, ikon kiri) lewat
-       utility di ServicesSection.tsx — jangan dipaksa 2 kolom lagi.
+       utility di ServicesSection.tsx - jangan dipaksa 2 kolom lagi.
        Target Pasar tetap 2 kolom karena kartunya memang pendek. */
     #target-pasar .grid.grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
 
@@ -794,7 +816,7 @@ footer {
   #about .min-h-\[300px\] { min-height: 0 !important; }
 
   /* Form mobile: full-height sheet, tidak tertutup keyboard.
-     Scope ke .collab-dialog saja — selector [role="dialog"] ikut kena
+     Scope ke .collab-dialog saja - selector [role="dialog"] ikut kena
      panel ChatWidget (header/pesan/composer jadi 100dvh per anak). */
   .collab-dialog > div.form-sheet {
     min-height: 100dvh !important;
@@ -814,7 +836,7 @@ footer {
     border-radius: 12px !important;
   }
 
-  /* Navbar mobile — posisi/ukuran tidak diubah, hanya rapikan padding */
+  /* Navbar mobile - posisi/ukuran tidak diubah, hanya rapikan padding */
   nav {
     padding: 12px 16px !important;
   }
@@ -866,10 +888,10 @@ footer {
     background: rgba(255, 255, 255, 0.7) !important;
   }
 
-  /* Larger touch targets */
-  button, a {
-    min-height: 44px !important;
-    min-width: 44px !important;
+  /* Target sentuh minimum untuk elemen aksi utama tanpa merusak titik navigasi carousel/tab */
+  button:not([role="tab"]):not([aria-label*="karya"]):not([aria-label*="testimoni"]):not([aria-label*="slide"]):not([data-dot]),
+  a:not([class*="break-all"]):not(.inline-link) {
+    min-height: 44px;
   }
 }
 

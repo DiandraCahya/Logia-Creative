@@ -129,6 +129,7 @@ export function TestimonialCarousel({ testimonials }: { testimonials: Testimonia
                       width={40}
                       height={40}
                       loading="lazy"
+                      decoding="async"
                       className="h-10 w-10 shrink-0 rounded-full object-cover ring-2 ring-[var(--accent-bronze)]"
                     />
                     <div className="min-w-0">
@@ -138,8 +139,8 @@ export function TestimonialCarousel({ testimonials }: { testimonials: Testimonia
                     </div>
                   </div>
 
-                  {/* Kutipan besar, display font */}
-                  <blockquote className="font-display font-bold text-[clamp(20px,6vw,26px)] leading-[1.2] tracking-[-0.02em] text-black dark:text-white">
+                  {/* Kutipan besar, display font: fluid clamp dengan proteksi break-words */}
+                  <blockquote className="font-display font-bold text-[clamp(1.15rem,5.2vw,1.5rem)] leading-[1.25] tracking-[-0.02em] text-black dark:text-white break-words">
                     &ldquo;{t.quote}&rdquo;
                   </blockquote>
                 </figure>
@@ -148,9 +149,9 @@ export function TestimonialCarousel({ testimonials }: { testimonials: Testimonia
           </div>
         </div>
 
-        {/* Kontrol: titik + panah, dalam jangkauan jempol */}
-        <div className="mt-2 flex items-center justify-between pr-1 max-[400px]:pr-2 max-[340px]:pr-3">
-          <div className="flex items-center gap-1" role="group" aria-label="Pilih testimoni">
+        {/* Kontrol: titik + panah, terukur pas untuk layar ponsel sempit (360px+) */}
+        <div className="mt-4 flex items-center justify-between gap-2 px-1 w-full max-w-full">
+          <div className="flex items-center gap-1.5" role="group" aria-label="Pilih testimoni">
             {testimonials.map((_, i) => (
               <button
                 key={i}
@@ -158,7 +159,7 @@ export function TestimonialCarousel({ testimonials }: { testimonials: Testimonia
                 onClick={() => setIndex(i)}
                 aria-label={`Ke testimoni ${i + 1}`}
                 aria-current={i === index ? "true" : undefined}
-                className="flex h-10 min-w-5 items-center justify-center"
+                className="flex h-9 w-6 items-center justify-center p-0 shrink-0"
               >
                 <span
                   className={`block rounded-full transition-[width,background-color] duration-300 ${
@@ -168,13 +169,13 @@ export function TestimonialCarousel({ testimonials }: { testimonials: Testimonia
               </button>
             ))}
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 shrink-0">
             <button
               type="button"
               onClick={prev}
               disabled={index === 0}
               aria-label="Testimoni sebelumnya"
-              className="flex h-10 w-10 items-center justify-center rounded-full border border-black/15 text-black transition-colors active:scale-95 disabled:opacity-30 dark:border-white/20 dark:text-white"
+              className="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-full border border-black/15 text-black transition-colors active:scale-95 disabled:opacity-30 dark:border-white/20 dark:text-white shrink-0"
             >
               <ChevronLeft className="h-4 w-4" />
             </button>
@@ -183,7 +184,7 @@ export function TestimonialCarousel({ testimonials }: { testimonials: Testimonia
               onClick={next}
               disabled={index === testimonials.length - 1}
               aria-label="Testimoni berikutnya"
-              className="flex h-10 w-10 items-center justify-center rounded-full border border-black/15 text-black transition-colors active:scale-95 disabled:opacity-30 dark:border-white/20 dark:text-white"
+              className="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-full border border-black/15 text-black transition-colors active:scale-95 disabled:opacity-30 dark:border-white/20 dark:text-white shrink-0"
             >
               <ChevronRight className="h-4 w-4" />
             </button>
@@ -239,6 +240,7 @@ export function TestimonialCarousel({ testimonials }: { testimonials: Testimonia
                   width={64}
                   height={64}
                   loading="lazy"
+                  decoding="async"
                   className="shrink-0 h-14 w-14 sm:h-16 sm:w-16 rounded-full object-cover ring-2 ring-[var(--accent-bronze)]"
                 />
                 <div className="min-w-0 flex-1">

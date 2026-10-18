@@ -19,7 +19,7 @@ const fontSubstitute = Inter({
 
 // SLOT "Anthropic Sans" (font proprietary Anthropic, tidak boleh dipakai publik).
 // Kalau Anda PUNYA file .woff2 yang sah, lihat public/fonts/anthropic-sans/README.md
-// (build TIDAK error tanpa ini — stack jatuh ke Inter sebagai substitusi terdekat):
+// (build TIDAK error tanpa ini - stack jatuh ke Inter sebagai substitusi terdekat):
 //   import localFont from "next/font/local";
 //   const anthropic = localFont({ src: [...], variable: "--font-anthropic", display: "swap" });
 //   → gabungkan di <html>: `${fontSubstitute.variable} ${anthropic.variable}`
@@ -80,7 +80,8 @@ export default function RootLayout({
       <head>
         {/* Preload hero image directly */}
         <link rel="preload" href="/LUOGIA2.webp" as="image" type="image/webp" fetchPriority="high" />
-        {/* DNS prefetch untuk Unsplash (portfolio images) */}
+        {/* Preconnect & DNS prefetch untuk Unsplash (portfolio images) */}
+        <link rel="preconnect" href="https://images.unsplash.com" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://images.unsplash.com" />
       </head>
       <body className="font-sans antialiased">

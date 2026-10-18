@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { useScrollReveal } from "@/lib/useScrollReveal";
-import { Check, ChevronDown } from "lucide-react";
+import { Check, ChevronDown, Code2, Palette, Layers } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
   SOLUTIONS,
@@ -12,6 +12,12 @@ import {
   priceTypeLabel,
   priceUnitLabel,
 } from "@/lib/rate-card";
+
+const solutionIcons: Record<string, React.ElementType> = {
+  tech: Code2,
+  creative: Palette,
+  integrated: Layers,
+};
 
 const ease = [0.22, 1, 0.36, 1] as const; // --ease-out-expo, satu easing global
 
@@ -53,33 +59,35 @@ export function PricingSection({ onSelectPackage }: { onSelectPackage?: (package
           </p>
         </div>
 
-        {/* Tabs: mobile = scroll horizontal; ≥640 = satu baris di tengah (w-fit, tanpa scroll) */}
+        {/* Individual Tab Buttons tanpa card pembungkus, serasi dengan Target Pasar */}
         <div
-          className={cn(
-            "hide-scrollbar flex w-full max-w-full overflow-x-auto p-1 gap-1 mb-8 rounded-full border border-[color-mix(in_srgb,var(--text-primary)_12%,transparent)]",
-            "sm:mx-auto sm:w-fit sm:overflow-visible sm:justify-center sm:mb-12"
-          )}
+          className="flex flex-wrap justify-center gap-2 sm:gap-3 mb-8 sm:mb-12"
           role="tablist"
           aria-label="Jenis solusi"
         >
-          {SOLUTIONS.map((s) => (
-            <button
-              key={s.id}
-              role="tab"
-              aria-selected={tab === s.id}
-              onClick={() => {
-                setTab(s.id);
-                setExpanded(null);
-              }}
-              className={`flex-none inline-flex items-center justify-center min-h-[44px] px-3 sm:px-6 py-2.5 rounded-full text-[11px] sm:text-sm font-semibold text-center leading-tight transition-colors duration-300 ${
-                tab === s.id
-                  ? "bg-black text-white dark:bg-white dark:text-black shadow-md"
-                  : "bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 text-[#666666] dark:text-[#999999] hover:text-black dark:hover:text-white"
-              }`}
-            >
-              {s.name}
-            </button>
-          ))}
+          {SOLUTIONS.map((s) => {
+            const Icon = solutionIcons[s.id] || Layers;
+            const isActive = tab === s.id;
+            return (
+              <button
+                key={s.id}
+                role="tab"
+                aria-selected={isActive}
+                onClick={() => {
+                  setTab(s.id);
+                  setExpanded(null);
+                }}
+                className={`px-5 py-2.5 min-h-[44px] rounded-full text-xs sm:text-sm font-semibold transition-all duration-300 flex items-center gap-2 whitespace-nowrap border ${
+                  isActive
+                    ? "bg-black text-white dark:bg-white dark:text-black border-black dark:border-white shadow-sm"
+                    : "bg-transparent text-[#666666] dark:text-[#999999] border-black/10 dark:border-white/10 hover:border-black/30 dark:hover:border-white/30 hover:text-black dark:hover:text-white"
+                }`}
+              >
+                <Icon className="w-4 h-4 shrink-0" />
+                <span>{s.name}</span>
+              </button>
+            );
+          })}
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-8">
@@ -258,9 +266,13 @@ export function PricingSection({ onSelectPackage }: { onSelectPackage?: (package
                     }`}
                   />
                 </button>
-                {openTerm === i && (
-                  <div className="animate-fade-up">
-                    <ul className="px-6 pb-5 space-y-2.5">
+                <div
+                  className={`grid transition-[grid-template-rows,opacity] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+                    openTerm === i ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
+                  }`}
+                >
+                  <div className="overflow-hidden">
+                    <ul className="px-5 sm:px-6 pb-5 pt-1 space-y-2.5">
                       {term.body.map((b, j) => (
                         <li
                           key={j}
@@ -272,7 +284,7 @@ export function PricingSection({ onSelectPackage }: { onSelectPackage?: (package
                       ))}
                     </ul>
                   </div>
-                )}
+                </div>
               </div>
             ))}
           </div>

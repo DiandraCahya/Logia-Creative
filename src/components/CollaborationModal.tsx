@@ -2,10 +2,16 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { X, Send, CheckCircle2, Phone, Mail, AlertCircle, Loader2, ImageDown, FileDown, MessageCircle } from "lucide-react";
-import { SOLUTIONS, CUSTOM_SERVICE_OPTION, packageOptionLabel, onePerSolution } from "@/lib/rate-card";
+import { X, Send, CheckCircle2, Phone, Mail, AlertCircle, Loader2, ImageDown, FileDown, MessageCircle, Check, Code2, Palette, Layers, Sparkles } from "lucide-react";
+import { SOLUTIONS, CUSTOM_SERVICE_OPTION, packageOptionLabel, onePerSolution, formatPrice } from "@/lib/rate-card";
 import type { CollabDraft, Receipt } from "@/lib/receipt";
 import { ReceiptView } from "./Receipt";
+
+const solIcons: Record<string, React.ElementType> = {
+  tech: Code2,
+  creative: Palette,
+  integrated: Layers,
+};
 
 interface CollaborationModalProps {
   isOpen: boolean;
@@ -26,7 +32,7 @@ const CUSTOM_BUDGET = "Lainnya, ketik sendiri";
 type Status = "idle" | "loading" | "success" | "error";
 
 // ── Kelas bersama (dipakai juga oleh ChatWidget, Modul 5):
-//    garis hairline, radius kecil, tanpa bayangan — minimalist luxury.
+//    garis hairline, radius kecil, tanpa bayangan - minimalist luxury.
 const FIELD =
   "w-full bg-transparent text-base font-semibold text-black dark:text-white placeholder:text-neutral-500 dark:placeholder:text-neutral-400 placeholder:font-normal " +
   "border-b-2 border-neutral-400 dark:border-neutral-600 rounded-none " +
@@ -77,7 +83,7 @@ export function CollaborationModal({ isOpen, onClose, initialDraft, onDraftConsu
         contact: initialDraft.contact,
         notes: initialDraft.notes,
       });
-      if (initialDraft.services.length) setSelectedServices(onePerSolution(initialDraft.services));
+      if (initialDraft.services.length) setSelectedServices(initialDraft.services.slice(0, 1));
       if (initialDraft.budget && !budgetRanges.includes(initialDraft.budget)) {
         setSelectedBudget(CUSTOM_BUDGET);
         setCustomBudget(initialDraft.budget);
@@ -153,11 +159,11 @@ export function CollaborationModal({ isOpen, onClose, initialDraft, onDraftConsu
     }
   };
 
-  // M3: radio per grup solusi — 1 paket per solusi (toggle ulang = lepas).
+  // Pilihan tunggal: hanya 1 paket total yang bisa dipilih (klik ulang = lepas pilihan).
   const toggleService = (service: string) => {
     setSelectedServices((prev) => {
-      if (prev.includes(service)) return prev.filter((s) => s !== service);
-      return onePerSolution([...prev, service]);
+      if (prev.includes(service)) return [];
+      return [service];
     });
   };
 
@@ -317,62 +323,115 @@ export function CollaborationModal({ isOpen, onClose, initialDraft, onDraftConsu
               ) : (
                 <div>
                   <div className="flex items-center gap-3 mb-6 sm:mb-8">
-                    <Image src="/LOGO.png" alt="Logo Logia Creative" width={40} height={40} className="rounded-full object-cover shrink-0" />
+                    <Image src="/LOGO.png" alt="Logo Logia Creative" width={40} height={40} loading="lazy" decoding="async" className="rounded-full object-cover shrink-0" />
                     <h2 className="text-[1.4rem] sm:text-3xl font-extrabold tracking-[-0.02em] text-black dark:text-white">
                       Mulai Kolaborasi
                     </h2>
                   </div>
 
                   <form onSubmit={handleSubmit} noValidate className="space-y-6 sm:space-y-8">
-                    {/* Paket dari rate-card, dikelompokkan per kategori solusi */}
+                    {/* Paket dari rate-card, dikelompokkan secara visual rapi per solusi */}
                     <fieldset>
-                      <legend id="svc-label" className={LABEL + " mb-3"}>
-                        Pilih Kebutuhan Layanan (maks 1 per solusi)
-                      </legend>
-                      <div className="space-y-3.5" role="group" aria-labelledby="svc-label">
-                        {SOLUTIONS.map((sol) => (
-                          <div key={sol.id}>
-                            <p className={GROUP_LABEL}>
-                              {sol.name}
-                            </p>
-                            <div className="flex flex-wrap gap-2">
-                              {sol.packages.map((pkg) => {
-                                const active = selectedServices.includes(pkg.id);
-                                return (
-                                  <button
-                                    type="button"
-                                    key={pkg.id}
-                                    onClick={() => toggleService(pkg.id)}
-                                    aria-pressed={active}
-                                    aria-label={packageOptionLabel(pkg, sol)}
-                                    className={`text-xs font-semibold px-3.5 py-2.5 min-h-[44px] rounded-full border-2 transition-colors duration-200 active:scale-95 ${
-                                      active
-                                        ? "bg-black text-white dark:bg-white dark:text-black border-black dark:border-white"
-                                        : "bg-transparent text-black dark:text-white border-neutral-400 dark:border-neutral-600 hover:border-black dark:hover:border-white"
-                                    }`}
-                                  >
-                                    {pkg.name}
-                                  </button>
-                                );
-                              })}
+                      <div className="flex items-center justify-between mb-3">
+                        <legend id="svc-label" className={LABEL + " mb-0"}>
+                          Pilih Paket Layanan (Hanya 1 Paket)
+                        </legend>
+                        <span className="text-[11px] font-medium text-[#666666] dark:text-[#999999]">
+                          Pilih salah satu
+                        </span>
+                      </div>
+                      <div className="space-y-3" role="group" aria-labelledby="svc-label">
+                        {SOLUTIONS.map((sol) => {
+                          const Icon = solIcons[sol.id] || Layers;
+                          return (
+                            <div
+                              key={sol.id}
+                              className="p-3 sm:p-4 rounded-2xl bg-black/[0.02] dark:bg-white/[0.02] border border-black/10 dark:border-white/10"
+                            >
+                              <div className="flex items-center gap-2 mb-2.5">
+                                <Icon className="w-3.5 h-3.5 text-black dark:text-white shrink-0" />
+                                <p className="text-xs font-bold uppercase tracking-wider text-black dark:text-white">
+                                  {sol.name}
+                                </p>
+                              </div>
+                              <div className="grid grid-cols-1 min-[420px]:grid-cols-2 sm:grid-cols-3 gap-2">
+                                {sol.packages.map((pkg) => {
+                                  const active = selectedServices.includes(pkg.id);
+                                  return (
+                                    <button
+                                      type="button"
+                                      key={pkg.id}
+                                      onClick={() => toggleService(pkg.id)}
+                                      aria-pressed={active}
+                                      aria-label={packageOptionLabel(pkg, sol)}
+                                      className={`p-3 rounded-xl border text-left transition-all duration-200 flex flex-col justify-between min-h-[64px] active:scale-[0.98] ${
+                                        active
+                                          ? "bg-black text-white dark:bg-white dark:text-black border-black dark:border-white shadow-sm"
+                                          : "bg-white/80 dark:bg-white/[0.04] text-black dark:text-white border-black/10 dark:border-white/10 hover:border-black/30 dark:hover:border-white/30"
+                                      }`}
+                                    >
+                                      <div className="flex items-start justify-between gap-1.5 w-full">
+                                        <span className="text-xs font-bold leading-tight">
+                                          {pkg.name}
+                                        </span>
+                                        <span
+                                          className={`w-3.5 h-3.5 rounded-full border flex items-center justify-center shrink-0 mt-0.5 ${
+                                            active
+                                              ? "bg-white dark:bg-black border-transparent text-black dark:text-white"
+                                              : "border-black/25 dark:border-white/25"
+                                          }`}
+                                        >
+                                          {active && <Check className="w-2.5 h-2.5 stroke-[3]" />}
+                                        </span>
+                                      </div>
+                                      <span
+                                        className={`text-[11px] font-medium mt-2 ${
+                                          active
+                                            ? "text-white/80 dark:text-black/80"
+                                            : "text-[#666666] dark:text-[#999999]"
+                                        }`}
+                                      >
+                                        Mulai {formatPrice(pkg.price)}
+                                      </span>
+                                    </button>
+                                  );
+                                })}
+                              </div>
                             </div>
+                          );
+                        })}
+
+                        {/* Opsi Custom / Konsultasi */}
+                        <div className="p-3 sm:p-4 rounded-2xl bg-black/[0.02] dark:bg-white/[0.02] border border-black/10 dark:border-white/10 flex flex-col min-[480px]:flex-row min-[480px]:items-center justify-between gap-3">
+                          <div className="space-y-0.5">
+                            <div className="flex items-center gap-2">
+                              <Sparkles className="w-3.5 h-3.5 text-black dark:text-white shrink-0" />
+                              <p className="text-xs font-bold uppercase tracking-wider text-black dark:text-white">
+                                Kebutuhan Khusus
+                              </p>
+                            </div>
+                            <p className="text-[11px] text-[#666666] dark:text-[#999999]">
+                              Konsultasikan lingkup proyek kustom di luar paket standar.
+                            </p>
                           </div>
-                        ))}
-                        <div>
-                          <p className={GROUP_LABEL}>
-                            Lainnya
-                          </p>
                           <button
                             type="button"
                             onClick={() => toggleService(CUSTOM_SERVICE_OPTION)}
                             aria-pressed={selectedServices.includes(CUSTOM_SERVICE_OPTION)}
-                            className={`text-xs font-semibold px-3.5 py-2.5 min-h-[44px] rounded-full border-2 transition-colors duration-200 active:scale-95 ${
+                            className={`px-4 py-2.5 min-h-[40px] rounded-xl text-xs font-bold border transition-all duration-200 shrink-0 flex items-center justify-center gap-1.5 active:scale-95 ${
                               selectedServices.includes(CUSTOM_SERVICE_OPTION)
-                                ? "bg-black text-white dark:bg-white dark:text-black border-black dark:border-white"
-                                : "bg-transparent text-black dark:text-white border-neutral-400 dark:border-neutral-600 hover:border-black dark:hover:border-white"
+                                ? "bg-black text-white dark:bg-white dark:text-black border-black dark:border-white shadow-sm"
+                                : "bg-white/80 dark:bg-white/[0.04] text-black dark:text-white border-black/10 dark:border-white/10 hover:border-black/30 dark:hover:border-white/30"
                             }`}
                           >
-                            {CUSTOM_SERVICE_OPTION}
+                            {selectedServices.includes(CUSTOM_SERVICE_OPTION) ? (
+                              <>
+                                <Check className="w-3.5 h-3.5 stroke-[3]" />
+                                <span>{CUSTOM_SERVICE_OPTION}</span>
+                              </>
+                            ) : (
+                              <span>Pilih {CUSTOM_SERVICE_OPTION}</span>
+                            )}
                           </button>
                         </div>
                       </div>

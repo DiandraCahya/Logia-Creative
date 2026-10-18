@@ -13,10 +13,10 @@
 //
 // Bahasa visualnya mengikuti sistem monokrom "minimalist-luxury" situs: satu kartu
 // terfokus berwarna penuh, tetangganya diredupkan ke abu-abu, dan satu aksen
-// bronze pada indikator aktif. Panggungnya theme-aware — panel gelap di dark mode,
-// panel terang hangat di light mode — supaya menyatu dengan halaman di kedua tema.
+// bronze pada indikator aktif. Panggungnya theme-aware: panel gelap di dark mode,
+// panel terang hangat di light mode: supaya menyatu dengan halaman di kedua tema.
 //
-// ponytail: framer-motion dihapus — semua animasi jadi CSS transition, spring
+// ponytail: framer-motion dihapus: semua animasi jadi CSS transition, spring
 // di-kilakan oleh easing yang cocok, crossfade cukup dengan unmount + mount
 // (opacity tidak bisa di-transition pada elemen baru), drag pakai Pointer
 // Events native. Hemat ~1.2 MB runtime. Ceiling: kalau butuh physics spring
@@ -46,7 +46,7 @@ export interface HeroCarouselItem {
   /**
    * Set when the image is a cut-out on transparency (not a photo). The stage
    * then keeps its solid plate and shows the artwork as a contained, sharp
-   * figure on the right instead of washing it across the whole backdrop —
+   * figure on the right instead of washing it across the whole backdrop:
    * a transparent PNG used as a full-bleed wash leaves ~70% of the panel empty
    * and the plate collapses into the page colour.
    * @default false
@@ -235,7 +235,7 @@ export function HeroCarousel({
      Panel desktop (teks di atas + filmstrip + kontrol melayang) dipaksa muat
      di 343px sehingga terasa sesak. Di ponsel kartunya disusun ulang: satu
      visual besar 4:5, teks mengalir di bawahnya, kontrol menempel di kartu.
-     Desktop tidak tersentuh — cabang ini hanya jalan saat lebar < 640. */
+     Desktop tidak tersentuh - cabang ini hanya jalan saat lebar < 640. */
   if (compact) {
     const titleFlat = active.title.replace(/\n/g, " ")
     // Drag sederhana: track pointer, geser, commit di lepas.
@@ -305,7 +305,8 @@ export function HeroCarousel({
                 fill
                 sizes="100vw"
                 quality={85}
-                priority={index === 0}
+                loading="lazy"
+                decoding="async"
                 draggable={false}
                 className={active.figure ? "object-contain object-bottom" : "object-cover"}
               />
@@ -476,7 +477,7 @@ export function HeroCarousel({
     >
       {/* ── Backdrop: karya terfokus. Di light mode ia jadi tekstur samar; di dark
           mode ia digelapkan agar panggung tetap netral. Karya berupa cut-out
-          transparan tidak di-wash — lihat cabang `active.figure`. ── */}
+          transparan tidak di-wash - lihat cabang `active.figure`. ── */}
       <div key={`bd-${index}`} className="absolute inset-0" style={reduced ? undefined : {
           animation: "heroFadeIn 0.45s cubic-bezier(0.22, 1, 0.36, 1) both",
         }}>
@@ -484,7 +485,7 @@ export function HeroCarousel({
           /* Cut-out: `bg-black` di belakang gambar mengisi 72% area transparan,
              jadi panggung tetap punya isi seperti slide foto lain (bukan plate
              kosong) dan patungnya terbaca sebagai marble di atas hitam.
-             Untuk foto biasa class ini tak berpengaruh — gambarnya opaque. */
+             Untuk foto biasa class ini tak berpengaruh - gambarnya opaque. */
           <div
             className="absolute inset-0 bg-black"
             style={{
@@ -500,7 +501,8 @@ export function HeroCarousel({
               fill
               sizes="100vw"
               quality={90}
-              priority={index === 0}
+              loading="lazy"
+              decoding="async"
               className="object-cover grayscale opacity-100"
             />
           </div>
@@ -525,7 +527,8 @@ export function HeroCarousel({
               fill
               sizes="100vw"
               quality={60}
-              priority={index === 0}
+              loading="lazy"
+              decoding="async"
               className="object-cover grayscale opacity-100"
             />
           </div>
@@ -677,6 +680,7 @@ export function HeroCarousel({
                 sizes={`${Math.round(cardW)}px`}
                 quality={60}
                 loading="lazy"
+                decoding="async"
                 className={cn(
                   "h-full w-full object-cover transition-[filter] duration-500",
                   i === index ? "grayscale-0" : "grayscale"
@@ -690,10 +694,10 @@ export function HeroCarousel({
 
       {/* ── Kontrol: titik indikator + tombol sebelumnya/berikutnya ── */}
       <div
-        className="absolute flex items-center justify-between gap-4"
+        className="absolute flex items-center justify-between gap-2 sm:gap-4"
         style={{ left: pad, right: pad, bottom: Math.max(16, Math.round(box.h * 0.03)) }}
       >
-        <div className="flex items-center gap-1.5 max-lg:gap-1" role="group" aria-label="Pilih karya">
+        <div className="flex items-center gap-1 sm:gap-1.5 shrink-0" role="group" aria-label="Pilih karya">
           {items.map((_, i) => (
             <button
               key={i}
@@ -701,39 +705,37 @@ export function HeroCarousel({
               onClick={() => go(i)}
               aria-label={`Ke karya ${i + 1}`}
               aria-current={i === index ? "true" : undefined}
-              /* Di layar sentuh titik 8px terlalu kecil untuk dipijit: beri lebar
-                 minimum + tinggi 40px. Desktop (lg ke atas) tetap 8x32 persis. */
-              className="flex h-8 items-center justify-center max-lg:h-10 max-lg:min-w-5"
+              className="flex h-8 w-5 sm:w-6 items-center justify-center p-0 shrink-0"
             >
               <span
                 className={cn(
                   "block rounded-full transition-[width,background-color] duration-300",
                   i === index
-                    ? "h-2 w-6 bg-[var(--accent-bronze)]"
+                    ? "h-2 w-5 sm:w-6 bg-[var(--accent-bronze)]"
                     : "h-2 w-2 bg-black/20 hover:bg-black/40 dark:bg-white/40 dark:hover:bg-white/75"
                 )}
               />
             </button>
           ))}
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 shrink-0">
           <button
             type="button"
             onClick={() => go(index - 1)}
             aria-label="Karya sebelumnya"
             disabled={index === 0}
-            className="flex h-11 w-11 items-center justify-center rounded-full border border-black/15 text-black transition-colors hover:bg-black/5 disabled:opacity-30 disabled:hover:bg-transparent dark:border-white/20 dark:text-white dark:hover:bg-white/10"
+            className="flex h-9 w-9 sm:h-11 sm:w-11 items-center justify-center rounded-full border border-black/15 text-black transition-colors hover:bg-black/5 disabled:opacity-30 disabled:hover:bg-transparent dark:border-white/20 dark:text-white dark:hover:bg-white/10 shrink-0"
           >
-            <ChevronLeft className="h-5 w-5" />
+            <ChevronLeft className="h-4 w-4 sm:h-5 sm:w-5" />
           </button>
           <button
             type="button"
             onClick={() => go(index + 1)}
             aria-label="Karya berikutnya"
             disabled={index === last}
-            className="flex h-11 w-11 items-center justify-center rounded-full border border-black/15 text-black transition-colors hover:bg-black/5 disabled:opacity-30 disabled:hover:bg-transparent dark:border-white/20 dark:text-white dark:hover:bg-white/10"
+            className="flex h-9 w-9 sm:h-11 sm:w-11 items-center justify-center rounded-full border border-black/15 text-black transition-colors hover:bg-black/5 disabled:opacity-30 disabled:hover:bg-transparent dark:border-white/20 dark:text-white dark:hover:bg-white/10 shrink-0"
           >
-            <ChevronRight className="h-5 w-5" />
+            <ChevronRight className="h-4 w-4 sm:h-5 sm:w-5" />
           </button>
         </div>
       </div>

@@ -17,13 +17,13 @@ export function receiptTelegramHtml(r: Receipt, notes: string, budget: string): 
     ``,
     ...(r.items.length
       ? r.items.map(
-          (it) => `• <b>${escHtml(it.packageName)}</b> · ${escHtml(it.solutionName)} — ${escHtml(it.priceLabel)}`,
+          (it) => `• <b>${escHtml(it.packageName)}</b> · ${escHtml(it.solutionName)} (${escHtml(it.priceLabel)})`,
         )
-      : [`• <b>${escHtml(r.packageName)}</b> · ${escHtml(r.solutionName)} — ${escHtml(r.priceLabel)}`]),
+      : [`• <b>${escHtml(r.packageName)}</b> · ${escHtml(r.solutionName)} (${escHtml(r.priceLabel)})`]),
     ``,
     r.total != null ? `<b>Total (${r.items.length} paket, belum dikurangi DP): ${escHtml(formatIDR(r.total))}</b>` : null,
     r.dp != null
-      ? `DP 50% — silakan lakukan pembayaran DP sebesar <b>${escHtml(formatIDR(r.dp))}</b> untuk memulai pekerjaan.`
+      ? `DP 50%: silakan lakukan pembayaran DP sebesar <b>${escHtml(formatIDR(r.dp))}</b> untuk memulai pekerjaan.`
       : null,
     r.sisa != null ? `Sisa pelunasan: ${escHtml(formatIDR(r.sisa))} (dibahas privat via WA admin).` : null,
     `Status: <b>${escHtml(r.status)}</b>`,

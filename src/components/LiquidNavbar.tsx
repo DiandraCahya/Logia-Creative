@@ -57,35 +57,50 @@ export function LiquidNavbar({ onOpenCollaboration }: LiquidNavbarProps) {
 
   useEffect(() => {
     let raf = 0;
-    const NAVBAR_OFFSET = 80;
-
     const handleScroll = () => {
       if (raf) return;
       raf = requestAnimationFrame(() => {
         raf = 0;
-        setScrolled(window.scrollY > 20);
-
-        let currentSection = "";
-        for (let i = sectionIds.length - 1; i >= 0; i--) {
-          const el = document.getElementById(sectionIds[i]);
-          if (el) {
-            const rect = el.getBoundingClientRect();
-            if (rect.top <= NAVBAR_OFFSET + 2) {
-              currentSection = `#${sectionIds[i]}`;
-              break;
-            }
-          }
-        }
-
-        setActiveSection((prev) => (prev !== currentSection ? currentSection : prev));
+        const isScrolled = window.scrollY > 20;
+        setScrolled((prev) => (prev !== isScrolled ? isScrolled : prev));
       });
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
-    if (window.scrollY > 20) {
-      handleScroll();
-    }
-    return () => { window.removeEventListener("scroll", handleScroll); cancelAnimationFrame(raf); };
+    if (window.scrollY > 20) setScrolled(true);
+
+    // Track active sections via IntersectionObserver instead of repeated getBoundingClientRect
+    const visibleSections = new Map<string, number>();
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            visibleSections.set(entry.target.id, entry.intersectionRatio);
+          } else {
+            visibleSections.delete(entry.target.id);
+          }
+        });
+
+        for (const id of sectionIds) {
+          if (visibleSections.has(id)) {
+            setActiveSection(`#${id}`);
+            return;
+          }
+        }
+      },
+      { rootMargin: "-80px 0px -40% 0px", threshold: [0, 0.1] }
+    );
+
+    sectionIds.forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      cancelAnimationFrame(raf);
+      observer.disconnect();
+    };
   }, []);
 
   const handleNavClick = useCallback(
@@ -130,6 +145,7 @@ export function LiquidNavbar({ onOpenCollaboration }: LiquidNavbarProps) {
                 sizes="(max-width: 640px) 80px, 112px"
                 className="object-contain"
                 priority
+                decoding="async"
               />
             </div>
           </a>

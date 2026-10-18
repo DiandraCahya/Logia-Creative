@@ -12,9 +12,10 @@ export function SplashScreen({ onComplete }: SplashScreenProps) {
   const [fading, setFading] = useState(false);
   const doneRef = useRef(onComplete);
   doneRef.current = onComplete;
+  const textRef = useRef<HTMLSpanElement>(null);
+  const cursorRef = useRef<HTMLSpanElement>(null);
 
   const TEXT = "LOGIA CREATIVE";
-  const [n, setN] = useState(0);
 
   const handleExit = useCallback(() => {
     setFading(true);
@@ -27,24 +28,29 @@ export function SplashScreen({ onComplete }: SplashScreenProps) {
   useEffect(() => {
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduced) {
-      setN(TEXT.length);
+      if (textRef.current) textRef.current.textContent = TEXT;
+      if (cursorRef.current) cursorRef.current.style.display = "none";
       handleExit();
       return;
     }
 
-    const t = setInterval(() => {
-      setN((v) => {
-        if (v >= TEXT.length) {
-          clearInterval(t);
-          return v;
+    let charIndex = 0;
+    const interval = setInterval(() => {
+      charIndex++;
+      if (textRef.current) {
+        textRef.current.textContent = TEXT.slice(0, charIndex);
+      }
+      if (charIndex >= TEXT.length) {
+        clearInterval(interval);
+        if (cursorRef.current) {
+          cursorRef.current.style.display = "none";
         }
-        return v + 1;
-      });
+      }
     }, 45);
 
     const timeout = setTimeout(handleExit, 1000);
     return () => {
-      clearInterval(t);
+      clearInterval(interval);
       clearTimeout(timeout);
     };
   }, [handleExit]);
@@ -59,10 +65,8 @@ export function SplashScreen({ onComplete }: SplashScreenProps) {
     >
       <div className="relative z-10 flex flex-col items-center gap-6 px-6 text-center">
         <p aria-label={TEXT} className="font-display text-4xl md:text-6xl font-medium tracking-[-0.02em] select-none">
-          {TEXT.slice(0, n)}
-          {n < TEXT.length && (
-            <span aria-hidden="true" className="animate-pulse text-[var(--accent-bronze)]">|</span>
-          )}
+          <span ref={textRef} />
+          <span ref={cursorRef} aria-hidden="true" className="animate-pulse text-[var(--accent-bronze)]">|</span>
         </p>
         {/* thin progress indicator */}
         <div

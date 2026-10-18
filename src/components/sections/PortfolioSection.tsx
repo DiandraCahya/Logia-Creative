@@ -18,9 +18,9 @@ type Project = {
   description: string;
   tags: string[];
   accent?: string;
-  /** URL proyek live; opsional — hanya karya yang punya tautan yang menampilkannya. */
+  /** URL proyek live; opsional - hanya karya yang punya tautan yang menampilkannya. */
   link?: string;
-  /** True bila gambarnya cut-out transparan (bukan foto) — panggung menampilkannya sebagai figur utuh. */
+  /** True bila gambarnya cut-out transparan (bukan foto) - panggung menampilkannya sebagai figur utuh. */
   figure?: boolean;
 };
 
@@ -50,10 +50,18 @@ const projects: Project[] = [
     accent: "#7b61ff",
   },
   {
+    title: "Video\nProfile\nKorporat",
+    category: "Marketing",
+    image: ART("1618005182384-a83a8bd57fbe"),
+    description: "Produksi video profil perusahaan energi terbarukan untuk investor asing.",
+    tags: ["Motion", "Premiere", "Storyboarding"],
+    accent: "#2f7bff",
+  },
+  {
     title: "KWN\nKelompok\n2",
     category: "Web Development",
     image: "/justicia.webp",
-    description: "Website profil kelompok KWN — mengangkat isu kebebasan berekspresi dan regulasi ruang digital. Dibangun dengan Next.js dan siap tayang.",
+    description: "Website profil kelompok KWN yang mengangkat isu kebebasan berekspresi dan regulasi ruang digital. Dibangun dengan Next.js dan siap tayang.",
     tags: ["Next.js", "Web Design", "Responsive"],
     link: "https://kwn-kelompok-2.vercel.app/",
     figure: true,
@@ -116,7 +124,7 @@ function PortfolioCard({ project, gridVisible, idx }: { project: any, gridVisibl
   const [py, setPy] = useState(50);
 
   // Tilt 3D hanya di perangkat berpointer presisi. Di layar sentuh efek ini
-  // tak terpakai — jadi jangan pasang listener sama sekali.
+  // tak terpakai - jadi jangan pasang listener sama sekali.
   useEffect(() => {
     const canHover = window.matchMedia("(hover: hover) and (pointer: fine)");
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -205,6 +213,7 @@ function PortfolioCard({ project, gridVisible, idx }: { project: any, gridVisibl
             alt={project.title.replace(/\n/g, ' ')}
             fill
             loading="lazy"
+            decoding="async"
             sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
             className="object-cover transition-all duration-700 ease-out [@media(hover:hover)]:grayscale [@media(hover:hover)]:group-hover:grayscale-0 group-hover:scale-105"
           />
@@ -358,28 +367,74 @@ export function PortfolioSection() {
 
   return (
     <section id="portfolio" className="py-24 sm:py-32 relative bg-transparent w-full overflow-hidden">
-      <div className="max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-12">
+      <div className="max-w-[1400px] mx-auto px-4 sm:px-8 lg:px-12">
 
         {/* Section Header */}
-        <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-12">
+        <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-12">
           <SplitWords as="h2" text="Selected Work" className="font-display font-medium tracking-[-0.02em] text-[clamp(2rem,4vw,3.5rem)] text-black dark:text-white" />
         </div>
 
-        {/* Filter Tabs (section) — scroll horizontal di mobile tanpa memotong teks */}
-        <div className="flex flex-wrap justify-center gap-2 mb-8 sm:mb-10">
-          {categories.map((category) => (
-            <button
-              key={category}
-              onClick={() => setActiveCategory(category)}
-              className={`px-5 py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all duration-300 ${
-                activeCategory === category
-                  ? "bg-black text-white dark:bg-white dark:text-black shadow-md"
-                  : "bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 text-[#666666] dark:text-[#999999] hover:text-black dark:hover:text-white"
-              }`}
-            >
-              {category}
-            </button>
-          ))}
+        {/* Filter Tabs:
+            - Mobile (< sm, termasuk iPhone 5 320px): 2 baris seimbang dan simetris, semua 5 opsi terlihat utuh tanpa terpotong
+            - Desktop (sm ke atas): 1 baris penuh di tengah */}
+        <div className="w-full mb-8 sm:mb-10">
+          {/* Mobile view: 2 baris terstruktur simetris */}
+          <div className="flex sm:hidden flex-col items-center gap-2">
+            <div className="flex items-center justify-center gap-1.5">
+              {["Semua", "Branding", "UI/UX"].map((category) => (
+                <button
+                  key={category}
+                  onClick={() => setActiveCategory(category)}
+                  className={`px-3.5 py-2 min-h-[40px] rounded-full text-xs font-semibold whitespace-nowrap transition-all duration-200 border ${
+                    activeCategory === category
+                      ? "bg-black text-white dark:bg-white dark:text-black border-black dark:border-white shadow-sm"
+                      : "bg-transparent text-[#666666] dark:text-[#999999] border-black/10 dark:border-white/10 hover:border-black/30 dark:hover:border-white/30 hover:text-black dark:hover:text-white"
+                  }`}
+                >
+                  {category}
+                </button>
+              ))}
+            </div>
+            <div className="flex items-center justify-center gap-1.5">
+              {["Web Development", "Marketing"].map((category) => (
+                <button
+                  key={category}
+                  onClick={() => setActiveCategory(category)}
+                  className={`px-3.5 py-2 min-h-[40px] rounded-full text-xs font-semibold whitespace-nowrap transition-all duration-200 border ${
+                    activeCategory === category
+                      ? "bg-black text-white dark:bg-white dark:text-black border-black dark:border-white shadow-sm"
+                      : "bg-transparent text-[#666666] dark:text-[#999999] border-black/10 dark:border-white/10 hover:border-black/30 dark:hover:border-white/30 hover:text-black dark:hover:text-white"
+                  }`}
+                >
+                  {category === "Web Development" ? (
+                    <>
+                      <span className="min-[350px]:hidden">Web Dev</span>
+                      <span className="hidden min-[350px]:inline">Web Development</span>
+                    </>
+                  ) : (
+                    category
+                  )}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Desktop view: 1 baris horizontal rapi */}
+          <div className="hidden sm:flex flex-wrap items-center justify-center gap-2.5">
+            {categories.map((category) => (
+              <button
+                key={category}
+                onClick={() => setActiveCategory(category)}
+                className={`px-5 py-2.5 min-h-[44px] rounded-full text-sm font-semibold whitespace-nowrap transition-all duration-200 border ${
+                  activeCategory === category
+                    ? "bg-black text-white dark:bg-white dark:text-black border-black dark:border-white shadow-md"
+                    : "bg-transparent text-[#666666] dark:text-[#999999] border-black/10 dark:border-white/10 hover:border-black/30 dark:hover:border-white/30 hover:text-black dark:hover:text-white"
+                }`}
+              >
+                {category}
+              </button>
+            ))}
+          </div>
         </div>
 
         {/* Portfolio List using HeroCarousel */}
@@ -408,7 +463,7 @@ export function PortfolioSection() {
 
       </div>
 
-      {/* Overlay Archive — di-portal ke <body> agar `fixed` mengacu ke viewport
+      {/* Overlay Archive - di-portal ke <body> agar `fixed` mengacu ke viewport
           (bukan ke <section data-cv> yang memakai content-visibility:auto).
           Fullscreen `fixed inset-0`, 100dvh + safe-area, scroll sendiri.
           Tutup HANYA lewat tombol X (sticky, safe-area); Esc memicu X yang sama.
@@ -446,15 +501,15 @@ export function PortfolioSection() {
                     </button>
                   </div>
 
-                  {/* Filter Tabs overlay — scroll horizontal di mobile, tidak memotong teks */}
-                  <div className="flex flex-wrap gap-2 mb-6 sm:mb-8 pb-1">
+                  {/* Filter Tabs overlay */}
+                  <div className="flex flex-wrap gap-1.5 sm:gap-2 mb-6 sm:mb-8 pb-1">
                     {categories.map((category) => (
                       <button
                         key={`overlay-${category}`}
                         onClick={() => setActiveCategory(category)}
-                        className={`shrink-0 min-h-[44px] px-4 sm:px-5 py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-colors duration-300 active:scale-95 ${
+                        className={`shrink-0 min-h-[40px] sm:min-h-[44px] px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-colors duration-200 active:scale-95 ${
                           activeCategory === category
-                            ? "bg-black text-white dark:bg-white dark:text-black border border-transparent"
+                            ? "bg-black text-white dark:bg-white dark:text-black border border-transparent shadow-sm"
                             : "bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 text-[var(--text-muted)] hover:text-[var(--text-primary)]"
                         }`}
                       >

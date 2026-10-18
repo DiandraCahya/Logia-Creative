@@ -74,7 +74,7 @@ export async function POST(req: NextRequest) {
   const resend = new Resend(apiKey);
   const stamp = wibTimestamp();
   const itemsRows = receipt && receipt.items.length
-    ? receipt.items.map((it) => `${esc(it.packageName)} · ${esc(it.solutionName)} — ${esc(it.priceLabel)}`).join("<br>")
+    ? receipt.items.map((it) => `${esc(it.packageName)} · ${esc(it.solutionName)} (${esc(it.priceLabel)})`).join("<br>")
     : `Paket: ${esc(receipt?.packageName ?? "-")} · ${esc(receipt?.solutionName ?? "-")}<br>\n        Harga: ${esc(receipt?.priceLabel ?? "-")}<br>`;
   const receiptBlock = receipt ? `
     <table cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-top:16px;border:1px solid #e5e5e5;border-radius:8px;">
@@ -86,7 +86,7 @@ export async function POST(req: NextRequest) {
         Kontak: ${esc(receipt.contact)}<br>
         ${receipt.notes ? `Catatan: ${esc(receipt.notes).replace(/\n/g, "<br>")}<br>` : ""}
         ${itemsRows}
-        ${receipt.total != null ? `Total (${receipt.items.length} paket, belum dikurangi DP): ${formatIDR(receipt.total)}<br>DP 50% — silakan lakukan pembayaran DP sebesar ${formatIDR(receipt.dp!)} untuk memulai pekerjaan.<br>Sisa pelunasan: ${formatIDR(receipt.sisa!)} (dibahas privat via WA admin).<br>` : ""}
+        ${receipt.total != null ? `Total (${receipt.items.length} paket, belum dikurangi DP): ${formatIDR(receipt.total)}<br>DP 50%: silakan lakukan pembayaran DP sebesar ${formatIDR(receipt.dp!)} untuk memulai pekerjaan.<br>Sisa pelunasan: ${formatIDR(receipt.sisa!)} (dibahas privat via WA admin).<br>` : ""}
         Status: <b>${esc(receipt.status)}</b>
         <br><br><span style="font-size:12px;color:#555;">${RECEIPT_TERMS.map(esc).join("<br>")}</span>
       </td></tr>
@@ -113,7 +113,7 @@ export async function POST(req: NextRequest) {
     // tidak menggagalkan yang lain. Struk tetap kembali ke user.
     const botToken = process.env.TELEGRAM_BOT_TOKEN;
     const chatId = process.env.TELEGRAM_CHAT_ID;
-    // Telegram SELALU dikirim bila bot terkonfigurasi — formatnya SAMA dengan
+    // Telegram SELALU dikirim bila bot terkonfigurasi: formatnya SAMA dengan
     // struk, termasuk untuk pesanan tanpa paket (mis. "Custom / Konsultasi").
     const tgHtml = botToken && chatId ? receiptTelegramHtml(receipt, notes, budget) : null;
     const [emailResult, tgResult] = await Promise.allSettled([

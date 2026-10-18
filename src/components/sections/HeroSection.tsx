@@ -116,7 +116,7 @@ function InteractiveShape() {
     <div className="flex flex-col items-center gap-2">
       <div
         ref={containerRef}
-        className="w-36 h-36 sm:w-80 sm:h-80 lg:w-[420px] lg:h-[420px] relative"
+        className="w-36 h-36 sm:w-80 sm:h-80 lg:w-[420px] lg:h-[420px] relative aspect-square"
         style={{ perspective: 1200 }}
       >
         <div
@@ -137,6 +137,8 @@ function InteractiveShape() {
               quality={85}
               priority
               fetchPriority="high"
+              loading="eager"
+              decoding="async"
               unoptimized
             />
           </div>
@@ -161,11 +163,10 @@ export function HeroSection({ onOpenCollaboration }: HeroSectionProps) {
     >
       <div className="relative z-10 max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-12 w-full">
         <div className="grid grid-cols-[1fr_auto] sm:grid-cols-2 lg:grid-cols-2 items-center gap-x-3 gap-y-5 sm:gap-4 lg:gap-8">
-          {/* Left: Typography & CTA */}
-          <div className="col-start-1 row-start-1 min-w-0 flex flex-col items-start justify-center gap-6 sm:gap-4 lg:gap-8">
-
-            {/* Headline — max 7 words, reveal via CSS keyframe */}
-            <h1 className="w-full font-display font-medium text-[clamp(2.25rem,11vw,3.5rem)] sm:text-[clamp(2rem,6vw,5rem)] leading-[1.05] tracking-[-0.02em] text-black dark:text-white min-w-0">
+          {/* Left: Typography */}
+          <div className="col-start-1 row-start-1 min-w-0 flex flex-col items-start justify-center">
+            {/* Headline - max 7 words, reveal via CSS keyframe */}
+            <h1 className="w-full font-display font-medium text-[clamp(2.1rem,9vw,3.5rem)] sm:text-[clamp(2rem,6vw,5rem)] leading-[1.05] tracking-[-0.02em] text-black dark:text-white min-w-0">
               <span className="overflow-hidden block pb-1">
                 <span className="block animate-[hero-line_0.5s_0.05s_both]">
                   Craft Your
@@ -177,29 +178,29 @@ export function HeroSection({ onOpenCollaboration }: HeroSectionProps) {
                 </span>
               </span>
             </h1>
-
-            {/* CTA Buttons */}
-            <div className="flex flex-nowrap items-center gap-3 sm:gap-4 w-full sm:w-auto animate-[hero-fade_0.5s_0.2s_both]">
-              <button
-                onClick={onOpenCollaboration}
-                className="btn-solid flex-1 sm:flex-none justify-center whitespace-nowrap px-5 sm:px-8 py-3.5 sm:py-4 min-h-[52px] bg-black dark:bg-white text-white dark:text-black text-sm font-semibold rounded-full flex items-center gap-2 group transition-transform hover:scale-[1.02] active:scale-[0.98]"
-              >
-                <span>Mulai Proyek</span>
-                <ArrowRight className="w-4 h-4 text-white dark:text-black transition-transform group-hover:translate-x-1" />
-              </button>
-
-              <a
-                href="#portfolio"
-                className="flex-1 sm:flex-none justify-center whitespace-nowrap px-5 sm:px-8 py-3.5 sm:py-4 min-h-[52px] inline-flex items-center text-sm font-semibold text-black dark:text-white border border-black/15 dark:border-white/15 rounded-full hover:bg-black/5 dark:hover:bg-white/5 transition-colors duration-200"
-              >
-                Lihat Portfolio
-              </a>
-            </div>
           </div>
 
           {/* Right: 3D Interactive Element */}
-          <div className="col-start-2 row-start-1 sm:col-auto sm:row-auto shrink-0 flex items-center justify-center">
+          <div className="col-start-2 row-start-1 sm:col-start-2 sm:row-start-1 sm:row-span-2 shrink-0 flex items-center justify-center">
             <InteractiveShape />
+          </div>
+
+          {/* CTA Buttons - pada mobile melebar penuh (col-span-2) agar tidak bertabrakan */}
+          <div className="col-span-2 sm:col-span-1 sm:col-start-1 sm:row-start-2 w-full flex flex-col min-[350px]:flex-row items-stretch sm:items-center gap-2.5 sm:gap-4 animate-[hero-fade_0.5s_0.2s_both]">
+            <button
+              onClick={onOpenCollaboration}
+              className="btn-solid flex-1 sm:flex-none justify-center whitespace-nowrap px-4 sm:px-8 py-3.5 sm:py-4 min-h-[48px] sm:min-h-[52px] bg-black dark:bg-white text-white dark:text-black text-sm font-semibold rounded-full flex items-center gap-2 group transition-transform hover:scale-[1.02] active:scale-[0.98]"
+            >
+              <span>Mulai Proyek</span>
+              <ArrowRight className="w-4 h-4 text-white dark:text-black transition-transform group-hover:translate-x-1" />
+            </button>
+
+            <a
+              href="#portfolio"
+              className="flex-1 sm:flex-none justify-center whitespace-nowrap px-4 sm:px-8 py-3.5 sm:py-4 min-h-[48px] sm:min-h-[52px] inline-flex items-center text-sm font-semibold text-black dark:text-white border border-black/15 dark:border-white/15 rounded-full hover:bg-black/5 dark:hover:bg-white/5 transition-colors duration-200"
+            >
+              Lihat Portfolio
+            </a>
           </div>
         </div>
       </div>

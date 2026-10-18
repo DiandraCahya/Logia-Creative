@@ -10,6 +10,11 @@ export function ScrollProgress() {
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    // Native scroll-driven animation supported in Chromium: GPU compositor handles it with 0 JS!
+    if (typeof CSS !== "undefined" && CSS.supports && CSS.supports("animation-timeline", "scroll()")) {
+      return;
+    }
+
     let rafId = 0;
 
     const updateProgress = () => {

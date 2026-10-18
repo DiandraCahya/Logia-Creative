@@ -239,27 +239,27 @@ export function solutionOf(ref: string): string | null {
 }
 
 /**
- * Normalisasi pilihan ke MAKS 1 paket per solusi (pilihan terakhir menang).
- * Opsi custom / tak dikenal selalu lolos. Urutan asli dipertahankan.
+ * Normalisasi pilihan ke MAKSIMAL 1 paket saja di seluruh kategori.
+ * Bila ada id baru yang dipilih, pilihan terakhir yang menang.
+ */
+export function singlePackageOnly(ids: string[]): string[] {
+  if (!ids || ids.length === 0) return [];
+  return [ids[ids.length - 1]];
+}
+
+/**
+ * Normalisasi pilihan ke MAKS 1 paket (kini berlaku 1 paket total di seluruh kategori).
+ * Menjaga kompatibilitas pemanggil yang masih menggunakan nama fungsi lama.
  */
 export function onePerSolution(ids: string[]): string[] {
-  const seen = new Map<string, string>();
-  const passthrough: string[] = [];
-  for (const id of ids) {
-    const sol = solutionOf(id);
-    if (sol) seen.set(sol, id);
-    else if (!passthrough.includes(id)) passthrough.push(id);
-  }
-  const kept = new Set(seen.values());
-  const ordered = ids.filter((id) => kept.has(id));
-  return [...ordered.filter((id, i) => ordered.indexOf(id) === i), ...passthrough].slice(0, 8);
+  return singlePackageOnly(ids);
 }
 
 export const TERMS: TermGroup[] = [
   {
     title: "Cara Memesan di Website",
     body: [
-      "Isi rincian langkah pemesanan di sini — kirim teksnya dan saya pasang (placeholder sementara).",
+      "Isi rincian langkah pemesanan di sini, kirim teksnya dan saya pasang (placeholder sementara).",
       "Langkah 1: pilih paket di Rate Card lalu tekan kirim pada form kolaborasi.",
       "Langkah 2: terima struk + total bayar, lalu selesaikan DP 50%.",
     ],
@@ -288,8 +288,8 @@ export const TERMS: TermGroup[] = [
   {
     title: "Waktu Pengerjaan",
     body: [
-      "Timeline branding 3–7 hari kerja per paket.",
-      "Timeline website & otomasi 7–14 hari kerja tergantung kompleksitas.",
+      "Timeline branding 3 - 7 hari kerja per paket.",
+      "Timeline website & otomasi 7 - 14 hari kerja tergantung kompleksitas.",
     ],
   },
 ];

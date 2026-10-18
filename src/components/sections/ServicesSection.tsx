@@ -72,7 +72,7 @@ export function ServicesSection() {
           </p>
         </div>
 
-        {/* Daftar layanan. Di ponsel: satu kolom, ikon di kiri, tanpa kotak —
+        {/* Daftar layanan. Di ponsel: satu kolom, ikon di kiri, tanpa kotak -
             grid 2 kolom membuat tiap kartu cuma 169px dan teksnya terlipat 5 baris. */}
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-6 lg:gap-8">
           {services.map((srv, idx) => {
@@ -87,7 +87,7 @@ export function ServicesSection() {
                   transform: isInView ? "translateY(0)" : "translateY(40px)",
                 }}
               >
-                {/* Tilt ringan via CSS hover — tanpa runtime framer */}
+                {/* Tilt ringan via CSS hover - tanpa runtime framer */}
                 <div className="glass-card rounded-2xl sm:rounded-3xl px-4 py-3.5 sm:p-8 flex flex-row items-center gap-3.5 sm:gap-6 sm:items-start h-full transition-transform duration-300 group-hover:-translate-y-1">
                   <div className="w-11 h-11 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-black/5 dark:bg-white/10 border border-black/10 dark:border-white/15 flex items-center justify-center shrink-0 transition-colors duration-300 shadow-sm group-hover:bg-black group-hover:border-black dark:group-hover:bg-white dark:group-hover:border-white">
                     <Icon className="w-5 h-5 sm:w-6 sm:h-6 text-black dark:text-white transition-colors duration-300 group-hover:text-white dark:group-hover:text-black" />
