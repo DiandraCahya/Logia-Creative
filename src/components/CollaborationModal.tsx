@@ -36,10 +36,10 @@ type Status = "idle" | "loading" | "success" | "error";
 const FIELD =
   "w-full bg-transparent text-base font-semibold text-black dark:text-white placeholder:text-neutral-500 dark:placeholder:text-neutral-400 placeholder:font-normal " +
   "border-b-2 border-neutral-400 dark:border-neutral-600 rounded-none " +
-  "px-0 py-3 min-h-[46px] transition-colors focus:outline-none focus:border-black dark:focus:border-white";
+  "px-1 py-3 min-h-[46px] transition-colors focus:outline-none focus:border-black dark:focus:border-white";
 
 const LABEL =
-  "block text-xs font-extrabold uppercase tracking-[0.09em] text-black dark:text-white mb-1.5";
+  "block text-xs font-extrabold uppercase tracking-[0.09em] text-black dark:text-white mb-1.5 px-1";
 
 // Label pengelompokan paket. Tanpa opacity: /80 menurunkan kontras 11px di bawah AA.
 const GROUP_LABEL =
@@ -257,7 +257,7 @@ export function CollaborationModal({ isOpen, onClose, initialDraft, onDraftConsu
           <div
             className="relative w-full max-w-2xl z-10 my-4 sm:my-8 flex flex-col form-sheet"
           >
-            <div className="animate-fade-up rounded-[1.25rem] sm:rounded-[1.75rem] border-2 border-neutral-300 dark:border-neutral-700 bg-white dark:bg-black p-5 sm:p-9 pb-[max(1.5rem,env(safe-area-inset-bottom))] sm:pb-9 flex-1 relative overflow-hidden shadow-2xl">
+            <div className="animate-fade-up rounded-[1.25rem] sm:rounded-[1.75rem] border-2 border-neutral-300 dark:border-neutral-700 bg-white dark:bg-black px-7 py-6 sm:px-10 sm:py-9 pb-[max(1.5rem,env(safe-area-inset-bottom))] sm:pb-9 flex-1 relative overflow-hidden shadow-2xl">
               <div className="absolute top-0 inset-x-0 h-px bg-[var(--text-primary)]/25" aria-hidden="true" />
 
               <button
@@ -546,7 +546,7 @@ export function CollaborationModal({ isOpen, onClose, initialDraft, onDraftConsu
                       </p>
                     )}
 
-                    <div className="sticky bottom-0 -mx-5 sm:-mx-9 px-5 sm:px-9 pt-4 pb-[max(1rem,env(safe-area-inset-bottom))] flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-6 border-t-2 border-neutral-300 dark:border-neutral-700 bg-white dark:bg-black">
+                    <div className="sticky bottom-0 -mx-7 sm:-mx-10 px-7 sm:px-10 pt-4 pb-[max(1rem,env(safe-area-inset-bottom))] flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-6 border-t-2 border-neutral-300 dark:border-neutral-700 bg-white dark:bg-black">
                       <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-xs font-semibold text-neutral-700 dark:text-neutral-300">
                         <span className="flex items-center gap-2">
                           <Mail className="w-3.5 h-3.5" />
