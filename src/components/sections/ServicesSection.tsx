@@ -72,8 +72,9 @@ export function ServicesSection() {
           </p>
         </div>
 
-        {/* Grid 2 Kolom - Responsive */}
-        <div className="grid grid-cols-2 gap-3 sm:gap-6 lg:gap-8">
+        {/* Daftar layanan. Di ponsel: satu kolom, ikon di kiri, tanpa kotak —
+            grid 2 kolom membuat tiap kartu cuma 169px dan teksnya terlipat 5 baris. */}
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-6 lg:gap-8">
           {services.map((srv, idx) => {
             const Icon = srv.icon;
             return (
@@ -87,15 +88,15 @@ export function ServicesSection() {
                 }}
               >
                 {/* Tilt ringan via CSS hover — tanpa runtime framer */}
-                <div className="glass-card rounded-2xl sm:rounded-3xl p-4 sm:p-8 flex flex-col sm:flex-row gap-3 sm:gap-6 items-start h-full transition-transform duration-300 group-hover:-translate-y-1">
-                  <div className="w-10 h-10 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-black/5 dark:bg-white/10 border border-black/10 dark:border-white/15 flex items-center justify-center shrink-0 transition-colors duration-300 shadow-sm group-hover:bg-black group-hover:border-black dark:group-hover:bg-white dark:group-hover:border-white">
+                <div className="glass-card rounded-2xl sm:rounded-3xl px-4 py-3.5 sm:p-8 flex flex-row items-center gap-3.5 sm:gap-6 sm:items-start h-full transition-transform duration-300 group-hover:-translate-y-1">
+                  <div className="w-11 h-11 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-black/5 dark:bg-white/10 border border-black/10 dark:border-white/15 flex items-center justify-center shrink-0 transition-colors duration-300 shadow-sm group-hover:bg-black group-hover:border-black dark:group-hover:bg-white dark:group-hover:border-white">
                     <Icon className="w-5 h-5 sm:w-6 sm:h-6 text-black dark:text-white transition-colors duration-300 group-hover:text-white dark:group-hover:text-black" />
                   </div>
-                  <div>
-                    <h3 className="text-sm sm:text-xl font-bold text-black dark:text-white mb-1 sm:mb-2 tracking-tight">
+                  <div className="min-w-0">
+                    <h3 className="text-base sm:text-xl font-bold text-black dark:text-white mb-0.5 sm:mb-2 tracking-tight">
                       {srv.title}
                     </h3>
-                    <p className="text-xs sm:text-sm text-[#555555] dark:text-[#999999] leading-[1.5] sm:leading-relaxed">
+                    <p className="text-[13px] sm:text-sm text-[#555555] dark:text-[#999999] leading-[1.45] sm:leading-relaxed">
                       {srv.desc}
                     </p>
                   </div>

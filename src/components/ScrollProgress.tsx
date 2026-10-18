@@ -32,7 +32,9 @@ export function ScrollProgress() {
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
-    updateProgress();
+    if (window.scrollY > 0) {
+      updateProgress();
+    }
 
     return () => {
       window.removeEventListener("scroll", handleScroll);

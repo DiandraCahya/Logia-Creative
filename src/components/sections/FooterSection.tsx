@@ -19,6 +19,14 @@ interface FooterSectionProps {
   onOpenCollaboration?: () => void;
 }
 
+const wibFormatter = new Intl.DateTimeFormat("id-ID", {
+  timeZone: "Asia/Jakarta",
+  hour: "2-digit",
+  minute: "2-digit",
+  second: "2-digit",
+  hour12: false,
+});
+
 export function FooterSection({ onOpenCollaboration }: FooterSectionProps) {
   const [wibTime, setWibTime] = useState<string>("");
   const { ref: ctaRef, isInView: ctaVisible } = useScrollReveal();
@@ -27,16 +35,7 @@ export function FooterSection({ onOpenCollaboration }: FooterSectionProps) {
   useEffect(() => {
     const updateTime = () => {
       if (document.hidden) return; // skip tick saat tab tak terlihat
-      const now = new Date();
-      const options: Intl.DateTimeFormatOptions = {
-        timeZone: "Asia/Jakarta",
-        hour: "2-digit",
-        minute: "2-digit",
-        second: "2-digit",
-        hour12: false,
-      };
-      const timeStr = new Intl.DateTimeFormat("id-ID", options).format(now);
-      setWibTime(timeStr);
+      setWibTime(wibFormatter.format(new Date()));
     };
 
     updateTime();
@@ -84,9 +83,10 @@ export function FooterSection({ onOpenCollaboration }: FooterSectionProps) {
           <div data-footer-brand className="lg:col-span-2 space-y-4">
             <div className="relative w-24 h-7">
               <Image
-                src="/Group 3.png"
+                src="/Group 3.webp"
                 alt="Logia Creative Logo"
                 fill
+                sizes="96px"
                 className="object-contain"
               />
             </div>

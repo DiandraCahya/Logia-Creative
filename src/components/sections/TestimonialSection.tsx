@@ -2,57 +2,53 @@
 
 import { TestimonialCarousel } from "@/components/ui/testimonial-carousel";
 
-// ponytail: placeholder testimonials — role-only, no real-person names.
-// Replace with real client quotes + photos when the owner supplies them.
+// ponytail: nama memakai nama sesuai foto di public/; kutipan masih placeholder.
 const TESTIMONIALS = [
   {
     quote: "Identitas brand kami terliat jauh lebih profesional setelah bekerja sama dengan Logia Creative.",
-    role: "Founder, UMKM Kuliner",
-    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=128&h=128&fit=crop",
-    alt: "Ilustrasi placeholder klien UMKM",
+    author: "Miyawaki Sakura",
+    image: "/miyawaki sakura.webp",
+    alt: "Miyawaki Sakura",
   },
   {
     quote: "Proses kerjanya rapi dan hasil desainnya konsisten dari awal sampai serah-terima.",
-    role: "Pemilik Brand Fashion Lokal",
-    image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=128&h=128&fit=crop",
-    alt: "Ilustrasi placeholder klien brand fashion",
+    author: "Kim Chaewon",
+    image: "/kim chaewon.webp",
+    alt: "Kim Chaewon",
   },
   {
     quote: "Website-nya cepat, rapi di mobile, dan mudah kami kelola sendiri setelahnya.",
-    role: "Marketing, Startup Layanan Jasa",
-    image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff0e?w=128&h=128&fit=crop",
-    alt: "Ilustrasi placeholder klien startup",
+    author: "Hong Eunchae",
+    image: "/hong eunchae.webp",
+    alt: "Hong Eunchae",
   },
   {
-    quote: "Setiap detail visual dikerjakan dengan teliti — hasil akhirnya sesuai ekspektasi kami.",
-    role: "Direktur, Perusahaan Jasa Profesional",
-    image: "https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=128&h=128&fit=crop",
-    alt: "Ilustrasi placeholder klien korporat",
+    quote: "Setiap detail visual dikerjakan dengan teliti, hasil akhirnya sesuai ekspektasi kami.",
+    author: "Hwang Ye-ji",
+    image: "/hwang ye-ji.webp",
+    alt: "Hwang Ye-ji",
   },
   {
     quote: "Konten sosmed yang dibuat membuat feed kami terliat konsisten dan rapi.",
-    role: "Pemilik Bisnis Produk Digital",
-    image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=128&h=128&fit=crop",
-    alt: "Ilustrasi placeholder klien produk digital",
+    author: "Enami Asa",
+    image: "/enami asa.webp",
+    alt: "Enami Asa",
   },
   {
     quote: "Otomatisasi yang dipasang menghemat waktu tim kami untuk hal-hal lain.",
-    role: "Operasional, UMKM Distributor",
-    image: "https://images.unsplash.com/photo-1531427186611-ecfd6d936c79?w=128&h=128&fit=crop",
-    alt: "Ilustrasi placeholder klien distributor",
+    author: "Pham Hanni",
+    image: "/pham hanni.webp",
+    alt: "Pham Hanni",
   },
 ];
 
 export function TestimonialSection() {
   return (
-    <section id="testimoni" className="w-full py-8 md:py-20 bg-transparent flex flex-col items-center justify-center relative z-10 border-t border-black/5 dark:border-white/5">
-      <div className="w-full max-w-4xl mx-auto px-4 sm:px-6 flex flex-col items-center">
-        <h2 className="font-display font-medium tracking-[-0.02em] text-[clamp(1.65rem,4vw,3.25rem)] text-black dark:text-white mb-2 text-center">
-          Testimoni Klien
+    <section id="testimoni" className="w-full py-14 md:py-28">
+      <div className="mx-auto w-full max-w-4xl flex flex-col items-center px-4 sm:px-6">
+        <h2 className="font-display font-bold text-[clamp(2.25rem,6vw,4.5rem)] tracking-[-0.03em] text-center text-black dark:text-white mb-6 sm:mb-8 leading-[1.05]">
+          Kata Mereka
         </h2>
-        <p className="text-sm text-[#666666] dark:text-[#999999] mb-5 sm:mb-12 text-center max-w-md px-2">
-          Kilas pengalaman kolaborasi bersama brand dan bisnis yang bertumbuh bersama Logia.
-        </p>
         <TestimonialCarousel testimonials={TESTIMONIALS} />
       </div>
     </section>

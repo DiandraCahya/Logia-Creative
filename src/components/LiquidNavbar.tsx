@@ -43,31 +43,18 @@ export function LiquidNavbar({ onOpenCollaboration }: LiquidNavbarProps) {
   }, [activeSection]);
   useEffect(() => {
     if (!mobileMenuOpen) return;
-    // Scroll-lock yang benar-benar memblokir di mobile: overflow:hidden saja
-    // tidak menghentikan scroll sentuh iOS/Android → pakai position:fixed.
-    const scrollY = window.scrollY;
-    const prevBody = { position: document.body.style.position, top: document.body.style.top, overflow: document.body.style.overflow, height: document.body.style.height };
-    document.body.style.position = "fixed";
-    document.body.style.top = `-${scrollY}px`;
-    document.body.style.left = "0";
-    document.body.style.right = "0";
+    const prevOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
-    document.body.style.height = "100%";
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") setMobileMenuOpen(false);
     };
     window.addEventListener("keydown", onKey);
     return () => {
-      document.body.style.position = prevBody.position;
-      document.body.style.top = prevBody.top;
-      document.body.style.left = "";
-      document.body.style.right = "";
-      document.body.style.overflow = prevBody.overflow;
-      document.body.style.height = prevBody.height;
+      document.body.style.overflow = prevOverflow;
       window.removeEventListener("keydown", onKey);
-      window.scrollTo({ top: scrollY });
     };
   }, [mobileMenuOpen]);
+
   useEffect(() => {
     let raf = 0;
     const NAVBAR_OFFSET = 80;
@@ -90,12 +77,14 @@ export function LiquidNavbar({ onOpenCollaboration }: LiquidNavbarProps) {
           }
         }
 
-        setActiveSection(currentSection);
+        setActiveSection((prev) => (prev !== currentSection ? currentSection : prev));
       });
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll();
+    if (window.scrollY > 20) {
+      handleScroll();
+    }
     return () => { window.removeEventListener("scroll", handleScroll); cancelAnimationFrame(raf); };
   }, []);
 
@@ -135,9 +124,10 @@ export function LiquidNavbar({ onOpenCollaboration }: LiquidNavbarProps) {
           >
             <div className="relative w-20 sm:w-28 h-6 sm:h-8 transition-transform duration-300 group-hover:scale-105">
               <Image
-                src="/Group 3.png"
+                src="/Group 3.webp"
                 alt="Logia Logo"
                 fill
+                sizes="(max-width: 640px) 80px, 112px"
                 className="object-contain"
                 priority
               />
@@ -202,48 +192,60 @@ export function LiquidNavbar({ onOpenCollaboration }: LiquidNavbarProps) {
         </div>
       </header>
 
-      {/* Mobile menu — pusat layar, tanpa framer (CSS-only) */}
+      {/* Mobile menu modal */}
       {mobileMenuOpen && (
         <div
-          className="fixed inset-0 z-30 lg:hidden bg-black/40 touch-none overscroll-contain"
+          className="fixed inset-0 z-30 lg:hidden bg-black/60 backdrop-blur-md touch-none overscroll-contain transition-all duration-300"
           onClick={() => setMobileMenuOpen(false)}
         >
           <div className="absolute inset-0 flex items-center justify-center p-4 overflow-y-auto">
             <div
               onClick={(e) => e.stopPropagation()}
-              className="relative w-[min(340px,calc(100vw-2rem))] max-h-[calc(100dvh-5rem)] overflow-y-auto overscroll-contain m-auto rounded-2xl bg-white/95 dark:bg-[#111]/95 border border-white/40 dark:border-white/10 shadow-xl py-4 px-4 supports-[backdrop-filter]:bg-white/55 supports-[backdrop-filter]:dark:bg-[#111]/55"
+              className="relative w-[min(340px,calc(100vw-2rem))] max-h-[calc(100dvh-5rem)] overflow-y-auto overscroll-contain m-auto rounded-3xl p-5 bg-white/80 dark:bg-[#0c0c0e]/80 backdrop-blur-2xl border border-white/60 dark:border-white/15 shadow-2xl shadow-black/40 ring-1 ring-black/5 dark:ring-white/10"
+              style={{
+                backdropFilter: "blur(24px)",
+                WebkitBackdropFilter: "blur(24px)",
+              }}
             >
-              <div className="flex flex-col">
-                {navLinks.map((link) => (
-                  <a
-                    key={link.name}
-                    href={link.href}
-                    onClick={(e) => handleNavClick(e, link.href)}
-                    className={`px-4 py-2 min-h-[40px] flex items-center rounded-xl text-sm font-medium transition-colors ${
-                      activeSection === link.href
-                        ? "text-black dark:text-white bg-black/5 dark:bg-white/10"
-                        : "text-neutral-600 dark:text-neutral-300 active:bg-black/5 dark:active:bg-white/5"
-                    }`}
-                  >
-                    {link.name}
-                  </a>
-                ))}
+              <div className="flex flex-col gap-1">
+                {navLinks.map((link) => {
+                  const isActive = activeSection === link.href;
+                  return (
+                    <a
+                      key={link.name}
+                      href={link.href}
+                      onClick={(e) => handleNavClick(e, link.href)}
+                      className={`px-4 py-2.5 min-h-[44px] flex items-center justify-between rounded-2xl text-[15px] font-semibold transition-all duration-200 active:scale-[0.98] ${
+                        isActive
+                          ? "text-black dark:text-white bg-black/10 dark:bg-white/15 shadow-sm font-bold"
+                          : "text-neutral-900 dark:text-neutral-100 hover:text-black dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10"
+                      }`}
+                    >
+                      <span>{link.name}</span>
+                      {isActive && (
+                        <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent-bronze)]" aria-hidden="true" />
+                      )}
+                    </a>
+                  );
+                })}
               </div>
-              <div className="flex items-center gap-3 mt-3">
-                <div className="flex-1">
-                  <ThemeToggle />
-                </div>
-                <span className="text-xs text-neutral-500 dark:text-neutral-400">Ganti tema</span>
+
+              <div className="flex items-center justify-between gap-3 mt-4 pt-3.5 border-t border-black/10 dark:border-white/10">
+                <span className="text-xs font-semibold tracking-wide text-neutral-800 dark:text-neutral-200">
+                  Ganti tema
+                </span>
+                <ThemeToggle />
               </div>
+
               <button
                 onClick={() => {
                   setMobileMenuOpen(false);
                   if (onOpenCollaboration) onOpenCollaboration();
                 }}
-                className="mt-3 w-full py-3 min-h-[44px] rounded-xl text-center text-sm font-semibold active:scale-[0.98] flex items-center justify-center gap-2 grad-cta"
+                className="mt-4 w-full py-3 min-h-[46px] rounded-2xl text-center text-sm font-bold active:scale-[0.98] flex items-center justify-center gap-2 grad-cta shadow-md transition-transform"
               >
                 <Sparkles className="w-4 h-4" />
-                Mulai Kolaborasi
+                <span>Mulai Kolaborasi</span>
               </button>
             </div>
           </div>

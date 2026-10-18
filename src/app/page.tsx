@@ -2,10 +2,11 @@
 
 import React, { useState } from "react";
 import dynamic from "next/dynamic";
-const SplashScreen = dynamic(() => import("@/components/SplashScreen").then(mod => mod.SplashScreen), { ssr: false });
+import { SplashScreen } from "@/components/SplashScreen";
 import { LiquidNavbar } from "@/components/LiquidNavbar";
 import { ScrollProgress } from "@/components/ScrollProgress";
 import { HeroSection } from "@/components/sections/HeroSection";
+
 import { BackgroundTargetSection } from "@/components/sections/BackgroundTargetSection";
 import { CompanyProfileSection } from "@/components/sections/CompanyProfileSection";
 import { ServicesSection } from "@/components/sections/ServicesSection";
@@ -14,19 +15,32 @@ import { PricingSection } from "@/components/sections/PricingSection";
 import { TestimonialSection } from "@/components/sections/TestimonialSection";
 import { FooterSection } from "@/components/sections/FooterSection";
 
-const Logo3DBackground = dynamic(() => import("@/components/Logo3DBackground").then(mod => mod.Logo3DBackground), { ssr: false });
-const CollaborationModal = dynamic(() => import("@/components/CollaborationModal").then(mod => mod.CollaborationModal), { ssr: false });
-const ChatWidget = dynamic(() => import("@/components/ChatWidget").then(mod => mod.ChatWidget), { ssr: false });
+const Logo3DBackground = dynamic(() => import("@/components/Logo3DBackground").then(mod => mod.Logo3DBackground), { loading: () => null });
+const CollaborationModal = dynamic(() => import("@/components/CollaborationModal").then(mod => mod.CollaborationModal), { loading: () => null });
+const ChatWidget = dynamic(() => import("@/components/ChatWidget").then(mod => mod.ChatWidget), { loading: () => null });
 
 export default function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-    const [collabDraft, setCollabDraft] = useState<import("@/lib/receipt").CollabDraft | null>(null);
+  const [collabDraft, setCollabDraft] = useState<import("@/lib/receipt").CollabDraft | null>(null);
+  const [loadChat, setLoadChat] = useState(false);
 
-    // "Pilih {PAKET}" di Rate Card → buka form dengan paket sudah ter-prefill.
-    const selectPackage = (packageId: string) => {
-      setCollabDraft({ name: "", brandName: "", contact: "", budget: "", services: [packageId], notes: "" });
-      setIsModalOpen(true);
-    };
+  React.useEffect(() => {
+    if (typeof window !== "undefined") {
+      if ("requestIdleCallback" in window) {
+        const id = (window as any).requestIdleCallback(() => setLoadChat(true), { timeout: 2000 });
+        return () => (window as any).cancelIdleCallback(id);
+      } else {
+        const t = setTimeout(() => setLoadChat(true), 1200);
+        return () => clearTimeout(t);
+      }
+    }
+  }, []);
+
+  // "Pilih {PAKET}" di Rate Card → buka form dengan paket sudah ter-prefill.
+  const selectPackage = (packageId: string) => {
+    setCollabDraft({ name: "", brandName: "", contact: "", budget: "", services: [packageId], notes: "" });
+    setIsModalOpen(true);
+  };
 
   return (
     <main className="relative min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)] overflow-x-hidden pb-[env(safe-area-inset-bottom)]">
@@ -37,7 +51,9 @@ export default function Home() {
       <ScrollProgress />
 
       {/* 3D Logo Background — follows cursor on desktop */}
-      <Logo3DBackground />
+      <React.Suspense fallback={null}>
+        <Logo3DBackground />
+      </React.Suspense>
 
       {/* Floating Liquid Glass Navbar */}
       <LiquidNavbar onOpenCollaboration={() => setIsModalOpen(true)} />
@@ -67,8 +83,8 @@ export default function Home() {
 
       {/* Pricing Catalog */}
       <section data-cv="true">
-              <PricingSection onSelectPackage={selectPackage} />
-            </section>
+        <PricingSection onSelectPackage={selectPackage} />
+      </section>
 
       {/* Client Testimonials */}
       <section data-cv="true">
@@ -81,15 +97,19 @@ export default function Home() {
       </section>
 
       {/* Interactive Collaboration Modal with Confetti Celebration */}
-      <CollaborationModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        initialDraft={collabDraft}
-        onDraftConsumed={() => setCollabDraft(null)}
-      />
+      <React.Suspense fallback={null}>
+        <CollaborationModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          initialDraft={collabDraft}
+          onDraftConsumed={() => setCollabDraft(null)}
+        />
+      </React.Suspense>
 
       {/* AI chatbox pelanggan — lazy setelah idle */}
-      <ChatWidget onAutofill={(d) => { setCollabDraft(d); setIsModalOpen(true); }} />
+      <React.Suspense fallback={null}>
+        {loadChat && <ChatWidget onAutofill={(d) => { setCollabDraft(d); setIsModalOpen(true); }} />}
+      </React.Suspense>
     </main>
   );
 }

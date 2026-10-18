@@ -126,7 +126,7 @@ export function CompanyProfileSection() {
                   <div className="p-5 sm:p-10 glass-card rounded-2xl sm:rounded-3xl flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8">
                     <div className="relative w-32 h-16">
                       <Image
-                        src="/LOGO.png"
+                        src="/LOGO.webp"
                         alt="Logo Logia"
                         fill
                         loading="lazy"
@@ -137,9 +137,10 @@ export function CompanyProfileSection() {
                     <div className="hidden sm:block w-px h-12 bg-black/10 dark:bg-white/10" />
                     <div className="relative w-24 h-6">
                       <Image
-                        src="/Group 1.png"
+                        src="/Group 1.webp"
                         alt="Creative Wordmark"
                         fill
+                        sizes="96px"
                         className="object-contain dark:invert-0 invert"
                       />
                     </div>

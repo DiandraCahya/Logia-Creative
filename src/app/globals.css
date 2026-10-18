@@ -200,6 +200,21 @@ section[data-cv] {
   from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
 }
+/* ponytail: nama kelas di hero-carousel: .hero-fade/.hero-rise/.hero-rise-line
+   meng-trigger @keyframes heroFadeIn/heroRise lewat inline style karena durasi
+   dan easing beda per elemen; kelas hanya memberi default reduced-motion off
+   agar elemen baru tidak muncul instan. */
+@keyframes heroFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes heroRise {
+  from { opacity: 0; transform: translateY(110%); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-fade, .hero-rise, .hero-rise-line { animation: none !important; }
+}
 
 /* Base class untuk SEMUA container */
 .glass-container {
@@ -636,29 +651,11 @@ html:not(.dark) select:focus,
   box-shadow: none !important;
 }
 
-/* Footer - TRANSPARENT */
+/* Footer — transparan, menyatu dengan halaman (theme-aware). */
 footer {
-  background: transparent !important;
-  backdrop-filter: none !important;
+  background: transparent;
+  backdrop-filter: none;
 }
-
-html:not(.dark) footer,
-.light footer {
-  background: transparent !important;
-}
-
-html:not(.dark) footer p,
-html:not(.dark) footer a,
-.light footer p,
-.light footer a {
-  color: #475569 !important; /* slate-600 */
-}
-
-html:not(.dark) footer a:hover,
-.light footer a:hover {
-  color: #000 !important;
-}
-
 
 
 /* ============= MOBILE RESPONSIVE ============= */
@@ -751,8 +748,9 @@ html:not(.dark) footer a:hover,
       grid-template-columns: 1fr !important;
       gap: 12px !important;
     }
-    /* Layanan & Target Pasar: kartu pendek → 2 kolom di mobile */
-    #layanan .grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 10px !important; }
+    /* Layanan kini punya komposisi mobile sendiri (1 kolom, ikon kiri) lewat
+       utility di ServicesSection.tsx — jangan dipaksa 2 kolom lagi.
+       Target Pasar tetap 2 kolom karena kartunya memang pendek. */
     #target-pasar .grid.grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
 
     /* Overlay/dialog fullscreen: overflow-x:hidden pada [class*="max-w-"]
@@ -762,11 +760,7 @@ html:not(.dark) footer a:hover,
       overflow-x: visible !important;
     }
 
-  /* Layanan: kartu jadi stacked & compact agar 2 kolom muat rapi */
-  #layanan .glass-card { flex-direction: column !important; gap: 12px !important; padding: 16px 14px !important; border-radius: 18px !important; }
-  #layanan .glass-card > div:first-child { width: 40px !important; height: 40px !important; border-radius: 12px !important; }
-  #layanan h3 { font-size: 14px !important; margin-bottom: 4px !important; }
-  #layanan p { font-size: 12px !important; line-height: 1.45 !important; }
+  /* Layanan: tipografi & arah kartu diatur di komponen (mobile = baris ikon-kiri). */
 
   /* Mobile pass: hierarki section */
   section > div[class*="max-w-"] h2,
@@ -789,8 +783,8 @@ html:not(.dark) footer a:hover,
   #target-pasar .rounded-\[2rem\] { padding: 18px 14px !important; border-radius: 1.25rem !important; }
   #target-pasar .min-h-\[400px\] { min-height: 0 !important; }
 
-  /* Portfolio carousel: tinggi proporsional mobile */
-  #portfolio .h-\[85vh\] { height: 68svh !important; min-height: 68svh !important; }
+  /* Portfolio carousel: di ponsel tingginya mengikuti isi (kartu mobile
+     sendiri: visual 4:5 + teks + kontrol), jadi tidak dipaksa 68svh lagi. */
 
   /* Testimoni: compact */
   #testimoni { padding-left: 8px !important; padding-right: 8px !important; }
@@ -843,11 +837,8 @@ html:not(.dark) footer a:hover,
   [class*="rotateX"], [class*="rotateY"] { transform: none !important; }
 }
 
-/* Mobile ekstra-sempit (360px) */
-@media (max-width: 380px) {
-  #layanan .grid { grid-template-columns: 1fr !important; }
-  #layanan .glass-card { flex-direction: row !important; }
-}
+/* Mobile ekstra-sempit: Layanan sudah 1 kolom dari komponen, tidak perlu
+   dipaksa lagi di sini. */
 
 /* Hormati prefers-reduced-motion: hilangkan entrance transform */
 @media (prefers-reduced-motion: reduce) {

@@ -221,12 +221,13 @@ export function BackgroundTargetSection({ onOpenCollaboration }: Props) {
                       &ldquo;{currentMarket.problemText}&rdquo;
                     </p>
                   </div>
-                  <div className="grid grid-cols-2 gap-3 sm:gap-4">
+                  {/* Metrik: 1 kolom di layar sempit supaya teks tidak terpotong */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                     {currentMarket.stats.map((stat, i) => (
                       <div key={i} className="p-4 glass-card rounded-xl">
                         <p className="text-2xl font-black text-black dark:text-white mb-1">{stat.value}</p>
                         <p className="text-xs font-semibold text-black dark:text-white">{stat.label}</p>
-                        <p className="text-[10px] text-[#666666] dark:text-[#999999] mt-0.5">{stat.sublabel}</p>
+                        <p className="text-[10px] max-sm:text-[11px] text-[#666666] dark:text-[#999999] mt-0.5">{stat.sublabel}</p>
                       </div>
                     ))}
                   </div>

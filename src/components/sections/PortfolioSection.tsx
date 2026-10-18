@@ -52,7 +52,7 @@ const projects: Project[] = [
   {
     title: "KWN\nKelompok\n2",
     category: "Web Development",
-    image: "/justicia.png",
+    image: "/justicia.webp",
     description: "Website profil kelompok KWN — mengangkat isu kebebasan berekspresi dan regulasi ruang digital. Dibangun dengan Next.js dan siap tayang.",
     tags: ["Next.js", "Web Design", "Responsive"],
     link: "https://kwn-kelompok-2.vercel.app/",
@@ -260,21 +260,16 @@ export function PortfolioSection() {
   const [displayedCategory, setDisplayedCategory] = useState("Semua");
   const [isExiting, setIsExiting] = useState(false);
   const [showAllProjects, setShowAllProjects] = useState(false);
+  const [isClosing, setIsClosing] = useState(false);
   const [mounted, setMounted] = useState(false);
   const { ref: gridRef, isInView: gridVisible } = useScrollReveal();
 
-  // Overlay harus keluar dari pohon DOM bab ini: nenek moyangnya
-  // <section data-cv> memakai `content-visibility:auto` yang meng-IMPLY
-  // `contain:paint`, dan itu menjadikannya containing block untuk
-  // `position:fixed` → overlay akan tampil di tengah dokumen, bukan di
-  // viewport. Portal ke <body> = fixed benar-benar mengacu ke viewport.
   useEffect(() => setMounted(true), []);
 
   // Archive overlay: refs untuk focus restore + focus trap
   const overlayRef = useRef<HTMLDivElement>(null);
   const closeBtnRef = useRef<HTMLButtonElement>(null);
   const seeAllBtnRef = useRef<HTMLButtonElement>(null);
-  const scrollYRef = useRef(0);
 
   useEffect(() => {
     if (activeCategory !== displayedCategory) {
@@ -303,23 +298,21 @@ export function PortfolioSection() {
   }));
 
   const openArchive = useCallback(() => {
-    scrollYRef.current = window.scrollY;
+    setIsClosing(false);
     setShowAllProjects(true);
   }, []);
 
-  const closeArchive = useCallback(() => setShowAllProjects(false), []);
+  const closeArchive = useCallback(() => {
+    setIsClosing(true);
+    setTimeout(() => {
+      setShowAllProjects(false);
+      setIsClosing(false);
+    }, 250);
+  }, []);
 
-  // MODUL 3: overlay fullscreen. Kunci scroll body (posisi dipertahankan via
-  // position:fixed + top:-Y), pause hero/3D lewat data-overlay, Esc = tombol X
-  // yang sama, focus trap + focus kembali ke tombol See all saat ditutup.
   useEffect(() => {
     if (!showAllProjects) return;
-    const bodyPrev = document.body.style.cssText;
-    document.body.style.position = "fixed";
-    document.body.style.top = `-${scrollYRef.current}px`;
-    document.body.style.left = "0";
-    document.body.style.right = "0";
-    document.body.style.width = "100%";
+    const prevOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     document.documentElement.dataset.overlay = "1"; // pause render 3D & hero
 
@@ -351,18 +344,15 @@ export function PortfolioSection() {
 
     window.addEventListener("keydown", onKey);
     closeBtnRef.current?.focus();
-    const seeAllNode = seeAllBtnRef.current; // node stabil; disimpan untuk cleanup
+    const seeAllNode = seeAllBtnRef.current;
 
     return () => {
       window.removeEventListener("keydown", onKey);
-      document.body.style.cssText = bodyPrev;
+      document.body.style.overflow = prevOverflow;
       delete document.documentElement.dataset.overlay;
-      // `behavior:"instant"` menimpa html{scroll-behavior:smooth} supaya posisi
-      // pulih seketika (bukan beranimasi dari atas).
-      window.scrollTo({ top: scrollYRef.current, left: 0, behavior: "instant" as ScrollBehavior });
-      // preventScroll WAJIB: tanpa itu focus() menggulir tombol ke tengah layar
-      // dan menimpa posisi scroll yang baru dipulihkan di atas.
-      requestAnimationFrame(() => seeAllNode?.focus({ preventScroll: true }));
+      if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+        seeAllNode?.focus({ preventScroll: true });
+      }
     };
   }, [showAllProjects, closeArchive]);
 
@@ -393,7 +383,7 @@ export function PortfolioSection() {
         </div>
 
         {/* Portfolio List using HeroCarousel */}
-        <div ref={gridRef} className={`w-full h-[68svh] min-h-[440px] sm:h-[85vh] sm:min-h-[85vh] overflow-hidden transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+        <div ref={gridRef} className={`w-full h-auto sm:h-[85vh] min-h-0 sm:min-h-[85vh] overflow-hidden transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${
           (gridVisible && !isExiting) ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
         }`}>
           {carouselItems.length > 0 ? (
@@ -423,15 +413,15 @@ export function PortfolioSection() {
           Fullscreen `fixed inset-0`, 100dvh + safe-area, scroll sendiri.
           Tutup HANYA lewat tombol X (sticky, safe-area); Esc memicu X yang sama.
           Tidak ada tutup via klik backdrop / swipe. */}
-      {mounted && createPortal(
+      {mounted && (showAllProjects || isClosing) && createPortal(
         <div
           role="dialog"
           aria-modal="true"
           aria-label="Archive proyek"
-          ref={showAllProjects ? overlayRef : undefined}
+          ref={overlayRef}
           style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0 }}
-          className={`z-[60] h-[100dvh] w-full overflow-y-auto overscroll-contain bg-[#fafafa] dark:bg-[#0a0a0a] transition-opacity duration-300 ${
-            showAllProjects ? "opacity-100" : "opacity-0 pointer-events-none"
+          className={`z-[60] h-[100dvh] w-full overflow-y-auto overscroll-contain bg-[#fafafa] dark:bg-[#0a0a0a] transition-opacity duration-200 ${
+            showAllProjects && !isClosing ? "opacity-100" : "opacity-0 pointer-events-none"
           }`}
         >
               <div className="min-h-full pt-[max(0.75rem,env(safe-area-inset-top))] pb-[max(1.5rem,env(safe-area-inset-bottom))] px-4 sm:px-8">

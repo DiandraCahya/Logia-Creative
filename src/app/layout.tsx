@@ -77,6 +77,12 @@ export default function RootLayout({
       suppressHydrationWarning
       className={`scroll-smooth ${fontSubstitute.variable}`}
     >
+      <head>
+        {/* Preload hero image directly */}
+        <link rel="preload" href="/LUOGIA2.webp" as="image" type="image/webp" fetchPriority="high" />
+        {/* DNS prefetch untuk Unsplash (portfolio images) */}
+        <link rel="dns-prefetch" href="https://images.unsplash.com" />
+      </head>
       <body className="font-sans antialiased">
         <PerformanceInit />
         <ThemeProvider

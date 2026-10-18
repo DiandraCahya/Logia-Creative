@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { useScrollReveal } from "@/lib/useScrollReveal";
 import { Check, ChevronDown } from "lucide-react";
+import { cn } from "@/lib/utils";
 import {
   SOLUTIONS,
   TERMS,
@@ -52,8 +53,15 @@ export function PricingSection({ onSelectPackage }: { onSelectPackage?: (package
           </p>
         </div>
 
-        {/* Tabs: strip mengecil ke lebar isi lalu di tengah; flex-wrap + max-w-full jaga mobile tanpa overflow */}
-        <div className="flex flex-wrap justify-center w-fit max-w-full mx-auto gap-1 mb-8 sm:mb-12 p-1 rounded-full border border-[color-mix(in_srgb,var(--text-primary)_12%,transparent)]" role="tablist" aria-label="Jenis solusi">
+        {/* Tabs: mobile = scroll horizontal; ≥640 = satu baris di tengah (w-fit, tanpa scroll) */}
+        <div
+          className={cn(
+            "hide-scrollbar flex w-full max-w-full overflow-x-auto p-1 gap-1 mb-8 rounded-full border border-[color-mix(in_srgb,var(--text-primary)_12%,transparent)]",
+            "sm:mx-auto sm:w-fit sm:overflow-visible sm:justify-center sm:mb-12"
+          )}
+          role="tablist"
+          aria-label="Jenis solusi"
+        >
           {SOLUTIONS.map((s) => (
             <button
               key={s.id}
