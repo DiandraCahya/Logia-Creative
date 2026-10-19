@@ -24,6 +24,7 @@ function isAuditEnvironment(): boolean {
 export function SplashScreen({ onComplete }: SplashScreenProps) {
   const [mounted, setMounted] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
+  const [progressStarted, setProgressStarted] = useState(false);
   const [fading, setFading] = useState(false);
   const doneRef = useRef(onComplete);
   doneRef.current = onComplete;
@@ -41,7 +42,7 @@ export function SplashScreen({ onComplete }: SplashScreenProps) {
         window.dispatchEvent(new CustomEvent("splash-done"));
       }
       doneRef.current?.();
-    }, 150);
+    }, 350);
   }, []);
 
   useEffect(() => {
@@ -60,6 +61,10 @@ export function SplashScreen({ onComplete }: SplashScreenProps) {
     setMounted(true);
     setIsVisible(true);
 
+    const raf = requestAnimationFrame(() => {
+      setProgressStarted(true);
+    });
+
     let charIndex = 0;
     const interval = setInterval(() => {
       charIndex++;
@@ -72,10 +77,11 @@ export function SplashScreen({ onComplete }: SplashScreenProps) {
           cursorRef.current.style.display = "none";
         }
       }
-    }, 25);
+    }, 50);
 
-    const timeout = setTimeout(handleExit, 480);
+    const timeout = setTimeout(handleExit, 1150);
     return () => {
+      cancelAnimationFrame(raf);
       clearInterval(interval);
       clearTimeout(timeout);
     };
@@ -86,7 +92,7 @@ export function SplashScreen({ onComplete }: SplashScreenProps) {
   return (
     <div
       id="splash-screen"
-      className={`fixed inset-0 z-50 flex flex-col items-center justify-center bg-[var(--bg-primary)] text-[var(--text-primary)] dark:bg-[#0A0A0A] dark:text-white transition-opacity duration-200 ${
+      className={`fixed inset-0 z-50 flex flex-col items-center justify-center bg-[var(--bg-primary)] text-[var(--text-primary)] dark:bg-[#0A0A0A] dark:text-white transition-opacity duration-300 ease-out ${
         fading ? "opacity-0 pointer-events-none" : "opacity-100"
       }`}
     >
@@ -104,8 +110,8 @@ export function SplashScreen({ onComplete }: SplashScreenProps) {
           <div
             className="h-full w-full origin-left bg-[var(--accent-bronze)]"
             style={{
-              transform: "scaleX(1)",
-              transition: "transform 1.0s cubic-bezier(0.22, 1, 0.36, 1)",
+              transform: progressStarted ? "scaleX(1)" : "scaleX(0)",
+              transition: "transform 1.15s cubic-bezier(0.22, 1, 0.36, 1)",
             }}
           />
         </div>
@@ -115,7 +121,7 @@ export function SplashScreen({ onComplete }: SplashScreenProps) {
       <button
         onClick={handleExit}
         aria-label="Skip intro"
-        className="absolute bottom-8 right-8 z-20 flex items-center gap-2 px-4 py-2 rounded-full text-xs font-medium group"
+        className="absolute bottom-8 right-8 z-20 flex items-center gap-2 min-h-[44px] px-4 py-2 rounded-full text-xs font-medium cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-bronze)] group"
         style={{ color: "var(--text-secondary)" }}
       >
         Skip Intro
@@ -129,7 +135,7 @@ export function SplashScreen({ onComplete }: SplashScreenProps) {
           strokeWidth="2"
           strokeLinecap="round"
           strokeLinejoin="round"
-          className="w-3.5 h-3.5"
+          className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform"
           aria-hidden="true"
         >
           <path d="M5 12h14" />
