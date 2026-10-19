@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { openCollaborationModal } from "@/components/CollaborationManager";
 import { useScrollReveal } from "@/lib/useScrollReveal";
 import {
   Store,
@@ -138,7 +139,7 @@ export function BackgroundTargetSection({ onOpenCollaboration }: Props) {
   const ActiveIcon = currentMarket.icon;
 
   return (
-    <section id="target-pasar" className="py-12 md:py-20 relative bg-transparent border-t border-black/5 dark:border-white/5">
+    <section id="target-pasar" className="py-12 md:py-20 relative bg-transparent">
       <div className="max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-12 relative z-10" ref={ref}>
         {/* Header */}
         <div className={`text-center max-w-2xl mx-auto mb-16 transition-all duration-700 ${isInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
@@ -259,7 +260,10 @@ export function BackgroundTargetSection({ onOpenCollaboration }: Props) {
 
           <div className="mt-8 text-center">
             <button
-              onClick={onOpenCollaboration}
+              onClick={() => {
+                if (onOpenCollaboration) onOpenCollaboration();
+                else openCollaborationModal();
+              }}
               className="btn-solid px-6 py-3 min-h-[44px] bg-black dark:bg-white text-white dark:text-black text-sm font-semibold rounded-full hover:scale-[1.02] active:scale-[0.98] transition-transform duration-200 inline-flex items-center gap-2 group"
             >
               <span>Konsultasikan Bisnis Anda</span>

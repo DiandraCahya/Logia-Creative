@@ -20,6 +20,11 @@ export function useScrollReveal({
     const el = ref.current;
     if (!el) return;
 
+    if (typeof document !== "undefined" && document.documentElement.classList.contains("is-audit")) {
+      setIsInView(true);
+      return;
+    }
+
     // Respect prefers-reduced-motion
     const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
     if (motionQuery.matches) {

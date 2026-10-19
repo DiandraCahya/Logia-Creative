@@ -152,10 +152,12 @@ export function HeroCarousel({
   React.useEffect(() => {
     const stage = stageRef.current
     if (!stage) return
-    const read = () =>
-      setBox({ w: stage.clientWidth, h: stage.clientHeight })
-    read()
-    const ro = new ResizeObserver(read)
+    const ro = new ResizeObserver((entries) => {
+      const entry = entries[0]
+      if (entry) {
+        setBox({ w: entry.contentRect.width, h: entry.contentRect.height })
+      }
+    })
     ro.observe(stage)
     return () => ro.disconnect()
   }, [])

@@ -2,7 +2,11 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
-  experimental: { optimizePackageImports: ["lucide-react"] },
+  compress: true,
+  poweredByHeader: false,
+  experimental: {
+    optimizePackageImports: ["lucide-react", "clsx", "tailwind-merge", "next-themes"],
+  },
   images: {
     formats: ["image/avif", "image/webp"],
     qualities: [60, 75, 85, 90],

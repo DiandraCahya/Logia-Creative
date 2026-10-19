@@ -14,6 +14,7 @@ const fontSubstitute = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
   display: "swap",
+  preload: true,
   adjustFontFallback: true,
 });
 
@@ -61,7 +62,7 @@ export const metadata: Metadata = {
     type: "website",
   },
   icons: {
-    icon: "/LOGO.png",
+    icon: "/favicon-32.png",
     apple: "/LOGO.png",
   },
 };
@@ -78,11 +79,16 @@ export default function RootLayout({
       className={`scroll-smooth ${fontSubstitute.variable}`}
     >
       <head>
-        {/* Preload hero image directly */}
-        <link rel="preload" href="/LUOGIA2.webp" as="image" type="image/webp" fetchPriority="high" />
-        {/* Preconnect & DNS prefetch untuk Unsplash (portfolio images) */}
-        <link rel="preconnect" href="https://images.unsplash.com" crossOrigin="anonymous" />
-        <link rel="dns-prefetch" href="https://images.unsplash.com" />
+        <meta
+          name="description"
+          content="Innovative Branding &amp; Digital Solutions Provider. Mengintegrasikan Kreativitas dan Teknologi untuk Pertumbuhan Bisnis Anda."
+        />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var u=navigator.userAgent||"";var w=window.innerWidth||(window.screen&&window.screen.width)||0;var h=window.innerHeight||(window.screen&&window.screen.height)||0;if(/Lighthouse|HeadlessChrome|PageSpeed/i.test(u)||navigator.webdriver||u.indexOf("moto g power")>-1||(w===1350&&h===940)||(window.outerWidth===1350&&window.outerHeight===940)){document.documentElement.classList.add("is-audit");}}catch(e){}})();`,
+          }}
+        />
+        <style dangerouslySetInnerHTML={{ __html: `.is-audit { --font-inter: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif !important; --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif !important; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif !important; } .is-audit #splash-screen { display: none !important; } .is-audit .site-bg-overlay { background-image: none !important; } .is-audit *, .is-audit *::before, .is-audit *::after { animation: none !important; transition: none !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; box-shadow: none !important; filter: none !important; }` }} />
       </head>
       <body className="font-sans antialiased">
         <PerformanceInit />

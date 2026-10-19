@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { openCollaborationModal } from "@/components/CollaborationManager";
 import { useScrollReveal } from "@/lib/useScrollReveal";
 import Image from "next/image";
 import {
@@ -48,7 +49,7 @@ export function FooterSection({ onOpenCollaboration }: FooterSectionProps) {
   };
 
   return (
-    <footer id="kontak" className="relative pt-6 sm:pt-14 pb-6 sm:pb-10 overflow-hidden max-w-[100vw] border-t border-black/5 dark:border-white/5 bg-transparent">
+    <footer id="kontak" className="relative pt-6 sm:pt-14 pb-6 sm:pb-10 overflow-hidden max-w-[100vw] bg-transparent">
       <div className="max-w-[1400px] mx-auto px-4 sm:px-8 lg:px-12 space-y-6 sm:space-y-20">
 
         {/* Closing Impact CTA Banner - Glassmorphism (dark-tinted glass: permukaan tembus pandang + blur, kontrak teks putih dari .cta-dark) */}
@@ -68,7 +69,10 @@ export function FooterSection({ onOpenCollaboration }: FooterSectionProps) {
               Mari diskusikan bagaimana kami bisa membantu mentransformasi identitas visual dan infrastruktur digital bisnis Anda ke level selanjutnya.
             </p>
             <button
-              onClick={onOpenCollaboration}
+              onClick={() => {
+                if (onOpenCollaboration) onOpenCollaboration();
+                else openCollaborationModal();
+              }}
               className="w-full sm:w-auto justify-center px-6 sm:px-8 py-4 min-h-[48px] bg-white text-black text-sm font-bold rounded-full hover:scale-[1.02] active:scale-[0.98] transition-transform duration-200 flex items-center gap-2 group shadow-lg"
             >
               <span className="text-black font-bold">Mulai Diskusi Proyek</span>
@@ -77,10 +81,10 @@ export function FooterSection({ onOpenCollaboration }: FooterSectionProps) {
           </div>
         </div>
 
-        {/* Multi-Column Links & Info */}
+        {/* Multi-Column Links & Info - Frosted Glass Container to guarantee text readability in front of background */}
         <div
           ref={contactRef}
-          className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 lg:gap-10 pt-6 sm:pt-10 text-[13px] sm:text-sm transition-all duration-700 ${
+          className={`relative z-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 lg:gap-10 p-6 sm:p-10 rounded-2xl sm:rounded-3xl bg-white/60 dark:bg-black/55 backdrop-blur-xl border border-black/10 dark:border-white/10 shadow-xl text-[13px] sm:text-sm transition-all duration-700 ${
             contactVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
           }`}
         >
@@ -97,14 +101,14 @@ export function FooterSection({ onOpenCollaboration }: FooterSectionProps) {
                 className="object-contain"
               />
             </div>
-            <p className="text-sm text-[#666666] dark:text-[#999999] leading-relaxed max-w-sm">
+            <p className="text-sm text-neutral-700 dark:text-neutral-200 font-medium leading-relaxed max-w-sm">
               Agensi kreatif dan teknologi terintegrasi yang menghadirkan solusi branding, perancangan antarmuka pengguna interaktif, dan automasi sistem kerja digital bagi UMKM, startup, dan organisasi.
             </p>
 
             {/* Live WIB Clock */}
-            <div className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-black/[0.03] dark:bg-white/[0.04] border border-black/5 dark:border-white/10 text-xs font-mono text-black dark:text-white">
+            <div className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-black/5 dark:bg-white/10 border border-black/10 dark:border-white/15 text-xs font-mono text-black dark:text-white">
               <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shrink-0" />
-              <Clock className="w-3.5 h-3.5 shrink-0 text-[#666666] dark:text-[#999999]" />
+              <Clock className="w-3.5 h-3.5 shrink-0 text-neutral-500 dark:text-neutral-400" />
               <span>Studio Time: {wibTime || "--:--:--"} WIB</span>
             </div>
           </div>
@@ -113,10 +117,10 @@ export function FooterSection({ onOpenCollaboration }: FooterSectionProps) {
           <div className="lg:col-span-4 grid grid-cols-2 gap-6 sm:gap-8">
             {/* Eksplorasi */}
             <div className="space-y-4">
-              <h4 className="font-bold text-black dark:text-white uppercase tracking-wider text-xs">
+              <h3 className="font-bold text-black dark:text-white uppercase tracking-widest text-xs">
                 Eksplorasi
-              </h4>
-              <ul className="space-y-2.5 text-[#666666] dark:text-[#999999]">
+              </h3>
+              <ul className="space-y-2.5 text-neutral-600 dark:text-neutral-300 font-medium">
                 <li>
                   <a href="#about" className="hover:text-black dark:hover:text-white transition-colors block py-0.5">
                     Tentang Logia
@@ -142,10 +146,10 @@ export function FooterSection({ onOpenCollaboration }: FooterSectionProps) {
 
             {/* Layanan Utama */}
             <div className="space-y-4">
-              <h4 className="font-bold text-black dark:text-white uppercase tracking-wider text-xs">
+              <h3 className="font-bold text-black dark:text-white uppercase tracking-widest text-xs">
                 Layanan
-              </h4>
-              <ul className="space-y-2.5 text-[#666666] dark:text-[#999999]">
+              </h3>
+              <ul className="space-y-2.5 text-neutral-600 dark:text-neutral-300 font-medium">
                 <li>
                   <a href="#layanan" className="hover:text-black dark:hover:text-white transition-colors block py-0.5">
                     Brand Identity
@@ -172,10 +176,10 @@ export function FooterSection({ onOpenCollaboration }: FooterSectionProps) {
 
           {/* Col 3: Contact & Social (3 cols on desktop) */}
           <div className="lg:col-span-3 space-y-4">
-            <h4 className="font-bold text-black dark:text-white uppercase tracking-wider text-xs">
+            <h3 className="font-bold text-black dark:text-white uppercase tracking-widest text-xs">
               Kontak &amp; Info
-            </h4>
-            <ul className="space-y-2.5 text-[#666666] dark:text-[#999999]">
+            </h3>
+            <ul className="space-y-2.5 text-neutral-600 dark:text-neutral-300 font-medium">
               <li>
                 <a
                   href="mailto:logiacreative.id@gmail.com"
@@ -220,7 +224,7 @@ export function FooterSection({ onOpenCollaboration }: FooterSectionProps) {
                 rel="noopener noreferrer"
                 aria-label="Instagram Logia Creative"
                 title="Instagram Logia Creative"
-                className="w-10 h-10 rounded-full bg-black/5 dark:bg-white/5 flex items-center justify-center text-black dark:text-white hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-all"
+                className="w-10 h-10 rounded-full bg-black/5 dark:bg-white/10 flex items-center justify-center text-black dark:text-white hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-all"
               >
                 <Instagram className="w-4 h-4" />
               </a>
@@ -229,7 +233,7 @@ export function FooterSection({ onOpenCollaboration }: FooterSectionProps) {
                 disabled
                 aria-label="LinkedIn (segera hadir)"
                 title="LinkedIn (segera hadir)"
-                className="w-10 h-10 rounded-full bg-black/5 dark:bg-white/5 flex items-center justify-center text-black/40 dark:text-white/40 cursor-not-allowed"
+                className="w-10 h-10 rounded-full bg-black/5 dark:bg-white/10 flex items-center justify-center text-black/40 dark:text-white/40 cursor-not-allowed"
               >
                 <Linkedin className="w-4 h-4" />
               </button>
@@ -237,22 +241,22 @@ export function FooterSection({ onOpenCollaboration }: FooterSectionProps) {
           </div>
         </div>
 
-        {/* Watermark */}
-        <div className="relative py-4 select-none pointer-events-none overflow-hidden border-t border-black/5 dark:border-white/5 pt-12" aria-hidden="true">
-          <p className="block w-full max-w-full text-center leading-none font-black tracking-tighter text-black/5 dark:text-white/5 whitespace-nowrap text-[clamp(2rem,8.5vw,9rem)]">
+        {/* Watermark Big Text: Logia Creative - elevated in front of background with high contrast */}
+        <div className="relative z-10 py-4 select-none pointer-events-none overflow-hidden pt-8 sm:pt-14" aria-hidden="true">
+          <p className="block w-full max-w-full text-center leading-none font-black tracking-tighter text-black/20 dark:text-white/25 sm:text-black/25 sm:dark:text-white/30 whitespace-nowrap text-[clamp(2.2rem,9vw,9.5rem)]">
             Logia Creative
           </p>
         </div>
 
         {/* Bottom Bar: Copyright & Back to Top */}
-        <div className="pb-4 sm:pb-8 flex flex-col items-center justify-between gap-3 text-[12px] font-semibold text-[#666666] dark:text-[#999999]">
+        <div className="relative z-10 pb-4 sm:pb-8 flex flex-col sm:flex-row items-center justify-between gap-3 text-[12px] font-semibold text-neutral-600 dark:text-neutral-300">
           <p>
             &copy; {new Date().getFullYear()} Logia Creative Agency. All rights reserved.
           </p>
 
           <button
             onClick={scrollToTop}
-            className="flex items-center gap-2 px-4 py-2 min-h-[44px] rounded-full border border-black/10 dark:border-white/10 hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-all group"
+            className="flex items-center gap-2 px-4 py-2 min-h-[44px] rounded-full border border-black/10 dark:border-white/10 hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-all group bg-white/40 dark:bg-black/40 backdrop-blur-sm"
           >
             <span>Kembali ke Atas</span>
             <ArrowUp className="w-3.5 h-3.5 transition-transform group-hover:-translate-y-0.5" />

@@ -95,11 +95,11 @@ const allProjects: Project[] = [
     accent: "#14307a",
   },
   {
-    title: "Video\nProfile\nKorporat",
+    title: "Kampanye\nDigital\nOmnichannel",
     category: "Marketing",
-    image: ART("1618005182384-a83a8bd57fbe"),
-    description: "Produksi video profil perusahaan energi terbarukan untuk investor asing.",
-    tags: ["Motion", "Premiere", "Storyboarding"],
+    image: ART("1460925895917-afdab827c52f"),
+    description: "Strategi aktivasi kampanye digital terpadu yang meningkatkan engagement dan konversi brand.",
+    tags: ["Growth", "Campaign", "Performance"],
     accent: "#2f7bff",
   },
   {
@@ -524,7 +524,7 @@ export function PortfolioSection() {
                       .filter((p) => activeCategory === "Semua" || p.category === activeCategory)
                       .map((project, idx) => (
                         <PortfolioCard
-                          key={`overlay-${project.title}`}
+                          key={`overlay-${project.title.replace(/\s+/g, "-")}-${idx}`}
                           project={project}
                           gridVisible={showAllProjects}
                           idx={Math.min(idx, 6)}

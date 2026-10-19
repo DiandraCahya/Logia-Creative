@@ -45,7 +45,7 @@ export function CompanyProfileSection() {
   ];
 
   return (
-    <section id="about" className="py-12 md:py-20 relative bg-transparent border-t border-black/[0.05] dark:border-white/[0.05]">
+    <section id="about" className="py-12 md:py-20 relative bg-transparent">
       <div className="max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-12" ref={ref}>
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-16 items-start">
           {/* Left Column: Heading & Tabs */}

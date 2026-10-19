@@ -1,79 +1,48 @@
-"use client";
-
-import React, { useState } from "react";
+import React from "react";
 import dynamic from "next/dynamic";
-import { SplashScreen } from "@/components/SplashScreen";
-import { LiquidNavbar } from "@/components/LiquidNavbar";
-import { ScrollProgress } from "@/components/ScrollProgress";
+const SplashScreen = dynamic(
+  () => import("@/components/SplashScreen").then((m) => m.SplashScreen)
+);
+const LiquidNavbar = dynamic(
+  () => import("@/components/LiquidNavbar").then((m) => m.LiquidNavbar)
+);
+const ScrollProgress = dynamic(
+  () => import("@/components/ScrollProgress").then((m) => m.ScrollProgress)
+);
 import { HeroSection } from "@/components/sections/HeroSection";
+const CollaborationManager = dynamic(
+  () => import("@/components/CollaborationManager").then((m) => m.CollaborationManager)
+);
+const Logo3DBackground = dynamic(
+  () => import("@/components/Logo3DBackground").then((m) => m.Logo3DBackground)
+);
 
 const BackgroundTargetSection = dynamic(
-  () => import("@/components/sections/BackgroundTargetSection").then((mod) => mod.BackgroundTargetSection),
-  { ssr: true }
+  () => import("@/components/sections/BackgroundTargetSection").then((m) => m.BackgroundTargetSection)
 );
 const CompanyProfileSection = dynamic(
-  () => import("@/components/sections/CompanyProfileSection").then((mod) => mod.CompanyProfileSection),
-  { ssr: true }
+  () => import("@/components/sections/CompanyProfileSection").then((m) => m.CompanyProfileSection)
 );
-const ServicesSection = dynamic(
-  () => import("@/components/sections/ServicesSection").then((mod) => mod.ServicesSection),
-  { ssr: true }
-);
+import { ServicesSection } from "@/components/sections/ServicesSection";
 const PortfolioSection = dynamic(
-  () => import("@/components/sections/PortfolioSection").then((mod) => mod.PortfolioSection),
-  { ssr: true }
+  () => import("@/components/sections/PortfolioSection").then((m) => m.PortfolioSection)
 );
 const PricingSection = dynamic(
-  () => import("@/components/sections/PricingSection").then((mod) => mod.PricingSection),
-  { ssr: true }
+  () => import("@/components/sections/PricingSection").then((m) => m.PricingSection)
 );
 const TestimonialSection = dynamic(
-  () => import("@/components/sections/TestimonialSection").then((mod) => mod.TestimonialSection),
-  { ssr: true }
+  () => import("@/components/sections/TestimonialSection").then((m) => m.TestimonialSection)
 );
 const FooterSection = dynamic(
-  () => import("@/components/sections/FooterSection").then((mod) => mod.FooterSection),
-  { ssr: true }
-);
-
-const Logo3DBackground = dynamic(
-  () => import("@/components/Logo3DBackground").then((mod) => mod.Logo3DBackground),
-  { ssr: false, loading: () => null }
-);
-const CollaborationModal = dynamic(
-  () => import("@/components/CollaborationModal").then((mod) => mod.CollaborationModal),
-  { ssr: false, loading: () => null }
-);
-const ChatWidget = dynamic(
-  () => import("@/components/ChatWidget").then((mod) => mod.ChatWidget),
-  { ssr: false, loading: () => null }
+  () => import("@/components/sections/FooterSection").then((m) => m.FooterSection)
 );
 
 export default function Home() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [collabDraft, setCollabDraft] = useState<import("@/lib/receipt").CollabDraft | null>(null);
-  const [loadChat, setLoadChat] = useState(false);
-
-  React.useEffect(() => {
-    if (typeof window !== "undefined") {
-      if ("requestIdleCallback" in window) {
-        const id = (window as any).requestIdleCallback(() => setLoadChat(true), { timeout: 2000 });
-        return () => (window as any).cancelIdleCallback(id);
-      } else {
-        const t = setTimeout(() => setLoadChat(true), 1200);
-        return () => clearTimeout(t);
-      }
-    }
-  }, []);
-
-  // "Pilih {PAKET}" di Rate Card → buka form dengan paket sudah ter-prefill.
-  const selectPackage = (packageId: string) => {
-    setCollabDraft({ name: "", brandName: "", contact: "", budget: "", services: [packageId], notes: "" });
-    setIsModalOpen(true);
-  };
-
   return (
     <main className="relative min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)] overflow-x-hidden pb-[env(safe-area-inset-bottom)]">
+      {/* Full-Length Ambient Background Artwork */}
+      <div className="site-bg-overlay" aria-hidden="true" />
+
       {/* Faux-3D Perspective Initial Splash Screen */}
       <SplashScreen />
 
@@ -86,62 +55,62 @@ export default function Home() {
       </React.Suspense>
 
       {/* Floating Liquid Glass Navbar */}
-      <LiquidNavbar onOpenCollaboration={() => setIsModalOpen(true)} />
+      <LiquidNavbar />
 
       {/* Hero Section with Kinetic Typography & Parallax */}
-      <HeroSection onOpenCollaboration={() => setIsModalOpen(true)} />
+      <div className="relative z-10">
+        <HeroSection />
+      </div>
 
       {/* Proposal Poin 3: Background & Target Market */}
-      <section data-cv="true">
-        <BackgroundTargetSection onOpenCollaboration={() => setIsModalOpen(true)} />
+      <section data-cv="true" className="relative z-10">
+        <React.Suspense fallback={null}>
+          <BackgroundTargetSection />
+        </React.Suspense>
       </section>
 
       {/* Proposal Poin 4 (Part 1): Profile, Visi, Misi, Filosofi */}
-      <section data-cv="true">
-        <CompanyProfileSection />
+      <section data-cv="true" className="relative z-10">
+        <React.Suspense fallback={null}>
+          <CompanyProfileSection />
+        </React.Suspense>
       </section>
 
       {/* Creative & Tech Services */}
-      <section data-cv="true">
+      <section data-cv="true" className="relative z-10">
         <ServicesSection />
       </section>
 
       {/* Karya & Portfolio */}
-      <section data-cv="true">
-        <PortfolioSection />
+      <section data-cv="true" className="relative z-10">
+        <React.Suspense fallback={null}>
+          <PortfolioSection />
+        </React.Suspense>
       </section>
 
       {/* Pricing Catalog */}
-      <section data-cv="true">
-        <PricingSection onSelectPackage={selectPackage} />
+      <section data-cv="true" className="relative z-10">
+        <React.Suspense fallback={null}>
+          <PricingSection />
+        </React.Suspense>
       </section>
 
       {/* Client Testimonials */}
-      <section data-cv="true">
-        <TestimonialSection />
+      <section data-cv="true" className="relative z-10">
+        <React.Suspense fallback={null}>
+          <TestimonialSection />
+        </React.Suspense>
       </section>
 
       {/* Footer & Collaboration Closing */}
-      <section data-cv="true">
-        <FooterSection onOpenCollaboration={() => setIsModalOpen(true)} />
+      <section data-cv="true" className="relative z-10">
+        <React.Suspense fallback={null}>
+          <FooterSection />
+        </React.Suspense>
       </section>
 
-      {/* Interactive Collaboration Modal with Confetti Celebration */}
-      {isModalOpen && (
-        <React.Suspense fallback={null}>
-          <CollaborationModal
-            isOpen={isModalOpen}
-            onClose={() => setIsModalOpen(false)}
-            initialDraft={collabDraft}
-            onDraftConsumed={() => setCollabDraft(null)}
-          />
-        </React.Suspense>
-      )}
-
-      {/* AI chatbox pelanggan - lazy setelah idle */}
-      <React.Suspense fallback={null}>
-        {loadChat && <ChatWidget onAutofill={(d) => { setCollabDraft(d); setIsModalOpen(true); }} />}
-      </React.Suspense>
+      {/* Interactive Collaboration Modal & Chat Manager */}
+      <CollaborationManager />
     </main>
   );
 }

@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { useScrollReveal } from "@/lib/useScrollReveal";
 import { Check, ChevronDown, Code2, Palette, Layers } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { openCollaborationModal } from "@/components/CollaborationManager";
 import {
   SOLUTIONS,
   TERMS,
@@ -30,16 +31,25 @@ export function PricingSection({ onSelectPackage }: { onSelectPackage?: (package
   const active = SOLUTIONS.find((s) => s.id === tab) ?? SOLUTIONS[0];
 
   // "Pilih {PAKET}" → buka form kolaborasi dengan paket sudah ter-prefill.
-  // Tanpa handler (mis. render tanpa modal) jatuh ke anchor #kontak seperti sebelumnya.
   const pick = (packageId: string) => {
-    if (onSelectPackage) onSelectPackage(packageId);
-    else document.getElementById("kontak")?.scrollIntoView({ behavior: "smooth" });
+    if (onSelectPackage) {
+      onSelectPackage(packageId);
+    } else {
+      openCollaborationModal({
+        name: "",
+        brandName: "",
+        contact: "",
+        budget: "",
+        services: [packageId],
+        notes: "",
+      });
+    }
   };
 
   return (
     <section
       id="pricing"
-      className="py-12 sm:py-20 relative bg-transparent border-t border-black/5 dark:border-white/5"
+      className="py-12 sm:py-20 relative bg-transparent"
     >
       <div className="max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-12" ref={ref}>
         <div className="text-center max-w-2xl mx-auto mb-10">
