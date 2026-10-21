@@ -145,15 +145,19 @@ export function CollaborationManager() {
   useEffect(() => {
     if (typeof window === "undefined") return;
     if (isOpen) {
+      document.documentElement.dataset.collabActive = "true";
       document.documentElement.dataset.collabOpen = "true";
       window.dispatchEvent(
         new CustomEvent("collab-modal-state", { detail: { isOpen: true } })
       );
     } else {
-      delete document.documentElement.dataset.collabOpen;
-      window.dispatchEvent(
-        new CustomEvent("collab-modal-state", { detail: { isOpen: false } })
-      );
+      delete document.documentElement.dataset.collabActive;
+      if (!document.documentElement.dataset.archiveOpen) {
+        delete document.documentElement.dataset.collabOpen;
+        window.dispatchEvent(
+          new CustomEvent("collab-modal-state", { detail: { isOpen: false } })
+        );
+      }
     }
   }, [isOpen]);
 

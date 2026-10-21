@@ -277,10 +277,15 @@ export function PortfolioSection() {
   const [showAllProjects, setShowAllProjects] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const [isOverlayFiltering, setIsOverlayFiltering] = useState(false);
   const [mounted, setMounted] = useState(false);
   const { ref: gridRef, isInView: gridVisible } = useScrollReveal();
 
   useEffect(() => setMounted(true), []);
+
+  const transitioningToCollabRef = useRef(false);
+  const selectedProjectRef = useRef<Project | null>(null);
+  selectedProjectRef.current = selectedProject;
 
   // Archive overlay: refs untuk focus restore + focus trap
   const overlayRef = useRef<HTMLDivElement>(null);
@@ -297,6 +302,15 @@ export function PortfolioSection() {
       return () => clearTimeout(timer);
     }
   }, [activeCategory, displayedCategory]);
+
+  const handleSelectCategory = (cat: string) => {
+    if (cat === activeCategory) return;
+    setIsOverlayFiltering(true);
+    setActiveCategory(cat);
+    setTimeout(() => {
+      setIsOverlayFiltering(false);
+    }, 180);
+  };
 
   const filteredProjects = projects.filter(
     (project) => displayedCategory === "Semua" || project.category === displayedCategory
@@ -317,6 +331,7 @@ export function PortfolioSection() {
     setIsClosing(false);
     setShowAllProjects(true);
     if (typeof window !== "undefined") {
+      document.documentElement.dataset.archiveOpen = "true";
       document.documentElement.dataset.collabOpen = "true";
       window.dispatchEvent(
         new CustomEvent("collab-modal-state", { detail: { isOpen: true } })
@@ -324,13 +339,24 @@ export function PortfolioSection() {
     }
   }, []);
 
-  const closeArchive = useCallback(() => {
+  const closeArchive = useCallback((options?: { keepCollabOpen?: boolean }) => {
     setIsClosing(true);
-    if (typeof window !== "undefined") {
-      delete document.documentElement.dataset.collabOpen;
-      window.dispatchEvent(
-        new CustomEvent("collab-modal-state", { detail: { isOpen: false } })
-      );
+    if (options?.keepCollabOpen) {
+      transitioningToCollabRef.current = true;
+      if (typeof window !== "undefined") {
+        delete document.documentElement.dataset.archiveOpen;
+      }
+    } else {
+      transitioningToCollabRef.current = false;
+      if (typeof window !== "undefined") {
+        delete document.documentElement.dataset.archiveOpen;
+        if (!document.documentElement.dataset.collabActive) {
+          delete document.documentElement.dataset.collabOpen;
+          window.dispatchEvent(
+            new CustomEvent("collab-modal-state", { detail: { isOpen: false } })
+          );
+        }
+      }
     }
     setTimeout(() => {
       setShowAllProjects(false);
@@ -343,12 +369,16 @@ export function PortfolioSection() {
     const prevOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     document.documentElement.dataset.overlay = "1"; // pause render 3D & hero
+    document.documentElement.dataset.archiveOpen = "true";
     document.documentElement.dataset.collabOpen = "true"; // buat navbar menyusut seperti kolaborasi
+    window.dispatchEvent(
+      new CustomEvent("collab-modal-state", { detail: { isOpen: true } })
+    );
 
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         e.preventDefault();
-        if (selectedProject) {
+        if (selectedProjectRef.current) {
           setSelectedProject(null);
           return;
         }
@@ -381,17 +411,27 @@ export function PortfolioSection() {
 
     return () => {
       window.removeEventListener("keydown", onKey);
-      document.body.style.overflow = prevOverflow;
       delete document.documentElement.dataset.overlay;
-      delete document.documentElement.dataset.collabOpen;
-      window.dispatchEvent(
-        new CustomEvent("collab-modal-state", { detail: { isOpen: false } })
-      );
+      delete document.documentElement.dataset.archiveOpen;
+
+      const shouldPreserveCollab =
+        transitioningToCollabRef.current ||
+        document.documentElement.dataset.collabActive === "true";
+
+      if (!shouldPreserveCollab) {
+        document.body.style.overflow = prevOverflow;
+        delete document.documentElement.dataset.collabOpen;
+        window.dispatchEvent(
+          new CustomEvent("collab-modal-state", { detail: { isOpen: false } })
+        );
+      }
+      transitioningToCollabRef.current = false;
+
       if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
         seeAllNode?.focus({ preventScroll: true });
       }
     };
-  }, [showAllProjects, closeArchive, selectedProject]);
+  }, [showAllProjects, closeArchive]);
 
   return (
     <section id="portfolio" className="py-24 sm:py-32 relative bg-transparent w-full overflow-hidden">
@@ -409,7 +449,7 @@ export function PortfolioSection() {
           {/* Mobile view: 2 baris terstruktur simetris */}
           <div className="flex sm:hidden flex-col items-center gap-2">
             <div className="flex items-center justify-center gap-1.5">
-              {["Semua", "Branding", "UI/UX"].map((category) => {
+              {["Semua", "Branding", "UI/UX"].map((category, idx) => {
                 const isActive = activeCategory === category;
                 return (
                   <button
@@ -417,19 +457,23 @@ export function PortfolioSection() {
                     role="tab"
                     aria-selected={isActive}
                     onClick={() => setActiveCategory(category)}
-                    className={`px-3.5 py-2 min-h-[40px] rounded-full text-xs font-semibold whitespace-nowrap transition-all duration-200 border ${
+                    style={{ animationDelay: `${idx * 60}ms` }}
+                    className={`animate-category-pill px-3.5 py-2 min-h-[40px] rounded-full text-xs font-semibold whitespace-nowrap transition-all duration-300 active:scale-95 border flex items-center justify-center ${
                       isActive
-                        ? "bg-black text-white dark:bg-white dark:text-black border-black dark:border-white shadow-md backdrop-blur-md"
-                        : "bg-white/60 dark:bg-white/10 text-neutral-800 dark:text-neutral-200 hover:text-black dark:hover:text-white hover:bg-white/80 dark:hover:bg-white/20 border-black/10 dark:border-white/15 backdrop-blur-md shadow-sm"
+                        ? "bg-black text-white dark:bg-white dark:text-black border-black dark:border-white shadow-md backdrop-blur-md scale-[1.02]"
+                        : "bg-white/60 dark:bg-white/10 text-neutral-800 dark:text-neutral-200 hover:text-black dark:hover:text-white hover:bg-white/80 dark:hover:bg-white/20 hover:scale-[1.02] border-black/10 dark:border-white/15 backdrop-blur-md shadow-sm"
                     }`}
                   >
-                    {category}
+                    {isActive && (
+                      <span className="w-1.5 h-1.5 rounded-full bg-white dark:bg-black mr-1.5 shrink-0 animate-scale-in" aria-hidden="true" />
+                    )}
+                    <span>{category}</span>
                   </button>
                 );
               })}
             </div>
             <div className="flex items-center justify-center gap-1.5">
-              {["Web Development", "Marketing"].map((category) => {
+              {["Web Development", "Marketing"].map((category, idx) => {
                 const isActive = activeCategory === category;
                 return (
                   <button
@@ -437,20 +481,26 @@ export function PortfolioSection() {
                     role="tab"
                     aria-selected={isActive}
                     onClick={() => setActiveCategory(category)}
-                    className={`px-3.5 py-2 min-h-[40px] rounded-full text-xs font-semibold whitespace-nowrap transition-all duration-200 border ${
+                    style={{ animationDelay: `${(idx + 3) * 60}ms` }}
+                    className={`animate-category-pill px-3.5 py-2 min-h-[40px] rounded-full text-xs font-semibold whitespace-nowrap transition-all duration-300 active:scale-95 border flex items-center justify-center ${
                       isActive
-                        ? "bg-black text-white dark:bg-white dark:text-black border-black dark:border-white shadow-md backdrop-blur-md"
-                        : "bg-white/60 dark:bg-white/10 text-neutral-800 dark:text-neutral-200 hover:text-black dark:hover:text-white hover:bg-white/80 dark:hover:bg-white/20 border-black/10 dark:border-white/15 backdrop-blur-md shadow-sm"
+                        ? "bg-black text-white dark:bg-white dark:text-black border-black dark:border-white shadow-md backdrop-blur-md scale-[1.02]"
+                        : "bg-white/60 dark:bg-white/10 text-neutral-800 dark:text-neutral-200 hover:text-black dark:hover:text-white hover:bg-white/80 dark:hover:bg-white/20 hover:scale-[1.02] border-black/10 dark:border-white/15 backdrop-blur-md shadow-sm"
                     }`}
                   >
-                    {category === "Web Development" ? (
-                      <>
-                        <span className="min-[350px]:hidden">Web Dev</span>
-                        <span className="hidden min-[350px]:inline">Web Development</span>
-                      </>
-                    ) : (
-                      category
+                    {isActive && (
+                      <span className="w-1.5 h-1.5 rounded-full bg-white dark:bg-black mr-1.5 shrink-0 animate-scale-in" aria-hidden="true" />
                     )}
+                    <span>
+                      {category === "Web Development" ? (
+                        <>
+                          <span className="min-[350px]:hidden">Web Dev</span>
+                          <span className="hidden min-[350px]:inline">Web Development</span>
+                        </>
+                      ) : (
+                        category
+                      )}
+                    </span>
                   </button>
                 );
               })}
@@ -459,7 +509,7 @@ export function PortfolioSection() {
 
           {/* Desktop view: 1 baris horizontal rapi */}
           <div className="hidden sm:flex flex-wrap items-center justify-center gap-2.5">
-            {categories.map((category) => {
+            {categories.map((category, idx) => {
               const isActive = activeCategory === category;
               return (
                 <button
@@ -467,13 +517,17 @@ export function PortfolioSection() {
                   role="tab"
                   aria-selected={isActive}
                   onClick={() => setActiveCategory(category)}
-                  className={`px-5 py-2.5 min-h-[44px] rounded-full text-sm font-semibold whitespace-nowrap transition-all duration-200 border ${
+                  style={{ animationDelay: `${idx * 70}ms` }}
+                  className={`animate-category-pill px-5 py-2.5 min-h-[44px] rounded-full text-sm font-semibold whitespace-nowrap transition-all duration-300 active:scale-95 border flex items-center justify-center ${
                     isActive
-                      ? "bg-black text-white dark:bg-white dark:text-black border-black dark:border-white shadow-md backdrop-blur-md"
-                      : "bg-white/60 dark:bg-white/10 text-neutral-800 dark:text-neutral-200 hover:text-black dark:hover:text-white hover:bg-white/80 dark:hover:bg-white/20 border-black/10 dark:border-white/15 backdrop-blur-md shadow-sm"
+                      ? "bg-black text-white dark:bg-white dark:text-black border-black dark:border-white shadow-md backdrop-blur-md scale-[1.02]"
+                      : "bg-white/60 dark:bg-white/10 text-neutral-800 dark:text-neutral-200 hover:text-black dark:hover:text-white hover:bg-white/80 dark:hover:bg-white/20 hover:scale-[1.03] hover:-translate-y-0.5 border-black/10 dark:border-white/15 backdrop-blur-md shadow-sm"
                   }`}
                 >
-                  {category}
+                  {isActive && (
+                    <span className="w-1.5 h-1.5 rounded-full bg-white dark:bg-black mr-2 shrink-0 animate-scale-in" aria-hidden="true" />
+                  )}
+                  <span>{category}</span>
                 </button>
               );
             })}
@@ -532,7 +586,7 @@ export function PortfolioSection() {
                     </div>
                     <button
                       ref={closeBtnRef}
-                      onClick={closeArchive}
+                      onClick={() => closeArchive()}
                       className="shrink-0 min-h-[48px] min-w-[48px] flex items-center justify-center rounded-full border border-[color-mix(in_srgb,var(--text-primary)_14%,transparent)] text-[var(--text-primary)] hover:bg-black/5 dark:hover:bg-white/10 transition-colors active:scale-95 cursor-pointer"
                       aria-label="Tutup Archive"
                     >
@@ -542,35 +596,41 @@ export function PortfolioSection() {
 
                   {/* Filter Tabs overlay dengan glassmorphism & teks kontras tinggi */}
                   <div className="flex flex-wrap gap-1.5 sm:gap-2 mb-6 sm:mb-8 pb-1" role="tablist" aria-label="Filter kategori archive">
-                    {categories.map((category) => {
+                    {categories.map((category, idx) => {
                       const isActive = activeCategory === category;
                       return (
                         <button
                           key={`overlay-${category}`}
                           role="tab"
                           aria-selected={isActive}
-                          onClick={() => setActiveCategory(category)}
-                          className={`shrink-0 min-h-[40px] sm:min-h-[44px] px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all duration-200 active:scale-95 border ${
+                          onClick={() => handleSelectCategory(category)}
+                          style={{ animationDelay: `${idx * 60 + 80}ms` }}
+                          className={`animate-category-pill shrink-0 min-h-[40px] sm:min-h-[44px] px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all duration-300 active:scale-95 border flex items-center justify-center ${
                             isActive
-                              ? "bg-black text-white dark:bg-white dark:text-black border-black dark:border-white shadow-md backdrop-blur-md"
-                              : "bg-white/60 dark:bg-white/10 text-neutral-800 dark:text-neutral-200 hover:text-black dark:hover:text-white hover:bg-white/80 dark:hover:bg-white/20 border-black/10 dark:border-white/15 backdrop-blur-md shadow-sm"
+                              ? "bg-black text-white dark:bg-white dark:text-black border-black dark:border-white shadow-md backdrop-blur-md scale-[1.02]"
+                              : "bg-white/60 dark:bg-white/10 text-neutral-800 dark:text-neutral-200 hover:text-black dark:hover:text-white hover:bg-white/90 dark:hover:bg-white/20 hover:scale-[1.03] hover:-translate-y-0.5 border-black/10 dark:border-white/15 backdrop-blur-md shadow-sm"
                           }`}
                         >
-                          {category}
+                          {isActive && (
+                            <span className="w-1.5 h-1.5 rounded-full bg-white dark:bg-black mr-2 shrink-0 animate-scale-in" aria-hidden="true" />
+                          )}
+                          <span>{category}</span>
                         </button>
                       );
                     })}
                   </div>
 
                   {/* Mobile 1 kolom, tablet 2, desktop 3 (dengan 3D tilt di desktop & popup detail saat diklik) */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
+                  <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                    isOverlayFiltering ? "opacity-0 translate-y-3 scale-[0.99]" : "opacity-100 translate-y-0 scale-100"
+                  }`}>
                     {allProjects
                       .filter((p) => activeCategory === "Semua" || p.category === activeCategory)
                       .map((project, idx) => (
                         <PortfolioCard
                           key={`overlay-${project.title.replace(/\s+/g, "-")}-${idx}`}
                           project={project}
-                          gridVisible={showAllProjects}
+                          gridVisible={showAllProjects && !isOverlayFiltering}
                           idx={Math.min(idx, 6)}
                           onSelect={(proj) => setSelectedProject(proj)}
                         />
@@ -662,15 +722,17 @@ export function PortfolioSection() {
                 onClick={() => {
                   const proj = selectedProject;
                   setSelectedProject(null);
-                  closeArchive();
-                  openCollaborationModal({
-                    name: "",
-                    brandName: "",
-                    contact: "",
-                    budget: "",
-                    services: [proj.category],
-                    notes: `Tertarik dengan portofolio ${proj.title.replace(/\n/g, " ")}.`,
-                  });
+                  closeArchive({ keepCollabOpen: true });
+                  if (proj) {
+                    openCollaborationModal({
+                      name: "",
+                      brandName: "",
+                      contact: "",
+                      budget: "",
+                      services: [proj.category],
+                      notes: `Tertarik dengan portofolio ${proj.title.replace(/\n/g, " ")}.`,
+                    });
+                  }
                 }}
                 className="inline-flex items-center gap-1.5 px-5 py-2.5 min-h-[44px] rounded-full border border-black/20 dark:border-white/20 text-black dark:text-white text-xs sm:text-sm font-semibold hover:bg-black/5 dark:hover:bg-white/10 active:scale-[0.98] transition-all cursor-pointer"
               >

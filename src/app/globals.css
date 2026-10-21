@@ -344,8 +344,39 @@ section[data-cv] {
 .animate-fade-up {
   animation: fade-up 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
+
+@keyframes category-pill-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+.animate-category-pill {
+  animation: category-pill-in 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+.animate-scale-in {
+  animation: scale-in 0.25s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .animate-fade-up { animation: none; }
+  .animate-fade-up,
+  .animate-category-pill,
+  .animate-scale-in { animation: none !important; }
 }
 
 @keyframes hero-line {

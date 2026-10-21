@@ -76,8 +76,9 @@ export function LiquidNavbar({ onOpenCollaboration, isSplashDone: propSplashDone
     const handleCollabState = (e: Event) => {
       const customEvent = e as CustomEvent<{ isOpen: boolean }>;
       const open = Boolean(customEvent.detail?.isOpen);
-      setIsCollabOpen(open);
-      if (!open) {
+      const isActuallyOpen = open || document.documentElement.dataset.collabOpen === "true";
+      setIsCollabOpen(isActuallyOpen);
+      if (!isActuallyOpen) {
         setIsCollabRevealed(false);
       } else {
         setIsExpanded(false);
