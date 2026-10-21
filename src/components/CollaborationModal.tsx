@@ -247,17 +247,17 @@ export function CollaborationModal({ isOpen, onClose, initialDraft, onDraftConsu
   return (
     <>
       {isOpen && (
-        <div className="collab-dialog fixed inset-0 z-50 flex items-start sm:items-center justify-center p-3 max-sm:pb-12 sm:p-4 overflow-y-auto overscroll-contain" role="dialog" aria-modal="true" aria-label="Formulir kolaborasi">
+        <div className="collab-dialog fixed inset-0 z-[10000] flex items-start justify-center p-3 sm:px-6 pt-12 sm:pt-16 pb-12 sm:pb-24 overflow-y-auto overscroll-contain" role="dialog" aria-modal="true" aria-label="Formulir kolaborasi">
           <div
             onClick={onClose}
             aria-hidden="true"
-            className="fixed inset-0 bg-black/60"
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm"
           />
 
           <div
-            className="relative w-full max-w-2xl z-10 my-4 sm:my-8 flex flex-col form-sheet"
+            className="relative w-full max-w-2xl z-10 my-0 sm:my-2 flex flex-col form-sheet"
           >
-            <div className="animate-fade-up rounded-[1.25rem] sm:rounded-[1.75rem] border-2 border-neutral-300 dark:border-neutral-700 bg-white dark:bg-black px-7 py-6 sm:px-10 sm:py-9 pb-[max(1.5rem,env(safe-area-inset-bottom))] sm:pb-9 flex-1 relative overflow-hidden shadow-2xl">
+            <div className="animate-fade-up rounded-[1.25rem] sm:rounded-[1.75rem] border-2 border-neutral-300 dark:border-neutral-700 bg-white dark:bg-black px-6 py-6 sm:px-10 sm:py-8 flex-1 relative shadow-2xl">
               <div className="absolute top-0 inset-x-0 h-px bg-[var(--text-primary)]/25" aria-hidden="true" />
 
               <button
@@ -546,7 +546,7 @@ export function CollaborationModal({ isOpen, onClose, initialDraft, onDraftConsu
                       </p>
                     )}
 
-                    <div className="sticky bottom-0 -mx-7 sm:-mx-10 px-7 sm:px-10 pt-4 pb-[max(1rem,env(safe-area-inset-bottom))] flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-6 border-t-2 border-neutral-300 dark:border-neutral-700 bg-white dark:bg-black">
+                    <div className="mt-8 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-6 border-t-2 border-neutral-300 dark:border-neutral-700">
                       <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-xs font-semibold text-neutral-700 dark:text-neutral-300">
                         <span className="flex items-center gap-2">
                           <Mail className="w-3.5 h-3.5" />
