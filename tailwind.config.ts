@@ -16,6 +16,7 @@ const config: Config = {
         sans: ["var(--font-sans)"],
         mono: ["var(--font-mono)"],
         display: ["var(--font-sans)"],
+        righteous: ["var(--font-righteous)", "Righteous", "cursive", "sans-serif"],
       },
       colors: {
         "accent-bronze": "#A08C6A",

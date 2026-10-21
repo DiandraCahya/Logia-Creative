@@ -1,21 +1,22 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Righteous } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { PerformanceInit } from "@/components/PerformanceInit";
 
-// ─────────────────────────────────────────────────────────────────────────────
-// FONT: satu sumber saja, `--font-sans`.
-// Inter dimuat sebagai VARIABLE font (tanpa `weight`) → satu file, display swap,
-// tidak ada CLS. Nama "Inter" tidak pernah ditulis di komponen; semuanya lewat
-// `--font-sans` di globals.css, jadi ganti font = ganti satu blok di sini.
-// ─────────────────────────────────────────────────────────────────────────────
 const fontSubstitute = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
   display: "swap",
   preload: true,
   adjustFontFallback: true,
+});
+
+const fontRighteous = Righteous({
+  weight: "400",
+  subsets: ["latin"],
+  variable: "--font-righteous",
+  display: "swap",
 });
 
 // SLOT "Anthropic Sans" (font proprietary Anthropic, tidak boleh dipakai publik).
@@ -76,7 +77,7 @@ export default function RootLayout({
     <html
       lang="id"
       suppressHydrationWarning
-      className={`scroll-smooth ${fontSubstitute.variable}`}
+      className={`scroll-smooth ${fontSubstitute.variable} ${fontRighteous.variable}`}
     >
       <head>
         <meta

@@ -7,6 +7,7 @@ import Image from "next/image";
 import { ArrowRight, ArrowUpRight, X } from "lucide-react";
 import SplitWords from "@/components/animations/SplitWords";
 import { HeroCarousel, type HeroCarouselItem } from "@/components/ui/hero-carousel";
+import { openCollaborationModal } from "@/components/CollaborationManager";
 
 const ART = (id: string) =>
   `https://images.unsplash.com/photo-${id}?q=70&w=1400&auto=format&fit=crop`
@@ -114,7 +115,17 @@ const allProjects: Project[] = [
 
 const categories = ["Semua", "Branding", "Web Development", "UI/UX", "Marketing"];
 
-function PortfolioCard({ project, gridVisible, idx }: { project: any, gridVisible: boolean, idx: number }) {
+function PortfolioCard({
+  project,
+  gridVisible,
+  idx,
+  onSelect,
+}: {
+  project: Project;
+  gridVisible: boolean;
+  idx: number;
+  onSelect?: (project: Project) => void;
+}) {
   const cardRef = useRef<HTMLDivElement>(null);
   const [isHovered, setIsHovered] = useState(false);
   const [tiltEnabled, setTiltEnabled] = useState(false);
@@ -123,8 +134,7 @@ function PortfolioCard({ project, gridVisible, idx }: { project: any, gridVisibl
   const [px, setPx] = useState(50);
   const [py, setPy] = useState(50);
 
-  // Tilt 3D hanya di perangkat berpointer presisi. Di layar sentuh efek ini
-  // tak terpakai - jadi jangan pasang listener sama sekali.
+  // Tilt 3D hanya di desktop dengan cursor/mouse. Di layar sentuh mobile, tidak diaktifkan.
   useEffect(() => {
     const canHover = window.matchMedia("(hover: hover) and (pointer: fine)");
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -138,21 +148,18 @@ function PortfolioCard({ project, gridVisible, idx }: { project: any, gridVisibl
     };
   }, []);
 
-  // Pointer dipegang di elemen kartu, bukan di window: satu handler per kartu
-  // dan hanya aktif saat kursor benar-benar di atasnya. rAF-throttle menjaga
-  // hitungan maksimal sekali per frame walau pointer bergerak lebih cepat.
   const frameRef = useRef(0);
   const rectRef = useRef<DOMRect | null>(null);
 
   const handlePointerEnter = (e: React.PointerEvent<HTMLDivElement>) => {
     if (!tiltEnabled) return;
-    rectRef.current = e.currentTarget.getBoundingClientRect(); // baca layout sekali
+    rectRef.current = e.currentTarget.getBoundingClientRect();
     setIsHovered(true);
   };
 
   const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
-    if (!tiltEnabled || !stillAnimating()) return;
-    if (frameRef.current) return; // sudah ada frame terjadwal
+    if (!tiltEnabled) return;
+    if (frameRef.current) return;
     const { clientX, clientY } = e;
     frameRef.current = requestAnimationFrame(() => {
       frameRef.current = 0;
@@ -160,7 +167,8 @@ function PortfolioCard({ project, gridVisible, idx }: { project: any, gridVisibl
       if (!rect || !rect.width || !rect.height) return;
       const xPct = (clientX - rect.left) / rect.width - 0.5;
       const yPct = (clientY - rect.top) / rect.height - 0.5;
-      setTilt({ rx: yPct * -8, ry: xPct * 8 }); // max ±8deg, CSS transition meratakan
+      // Card menghadap ke arah kursor secara responsif dan presisi
+      setTilt({ rx: yPct * -12, ry: xPct * 12 });
       setPx(((clientX - rect.left) / rect.width) * 100);
       setPy(((clientY - rect.top) / rect.height) * 100);
     });
@@ -189,12 +197,13 @@ function PortfolioCard({ project, gridVisible, idx }: { project: any, gridVisibl
       className={`h-full transition-all duration-500 ${gridVisible ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-8 scale-[0.98]"}`}
     >
       <div
-        className="glass-container overflow-hidden group cursor-pointer flex flex-col h-full border border-slate-200 dark:border-white/10 relative transition-transform duration-200 ease-out"
+        onClick={() => onSelect?.(project)}
+        className="glass-container overflow-hidden group cursor-pointer flex flex-col h-full border border-slate-200 dark:border-white/10 relative transition-transform duration-200 ease-out active:scale-[0.98]"
         onPointerEnter={handlePointerEnter}
         onPointerMove={handlePointerMove}
         onPointerLeave={handlePointerLeave}
         style={{
-          transform: `rotateX(${tilt.rx}deg) rotateY(${tilt.ry}deg)`,
+          transform: `rotateX(${tilt.rx}deg) rotateY(${tilt.ry}deg) ${isHovered ? "scale3d(1.02, 1.02, 1.02)" : "scale3d(1, 1, 1)"}`,
           transformStyle: "preserve-3d",
         }}
       >
@@ -202,7 +211,7 @@ function PortfolioCard({ project, gridVisible, idx }: { project: any, gridVisibl
         <div
           className={`absolute inset-0 pointer-events-none z-20 mix-blend-overlay transition-opacity duration-300 ${isHovered ? "opacity-100" : "opacity-0"}`}
           style={{
-            background: `radial-gradient(circle 300px at ${px}% ${py}%, rgba(255,255,255,0.4), transparent)`,
+            background: `radial-gradient(circle 320px at ${px}% ${py}%, rgba(255,255,255,0.45), transparent)`,
           }}
         />
 
@@ -225,19 +234,16 @@ function PortfolioCard({ project, gridVisible, idx }: { project: any, gridVisibl
           <span className="inline-block text-[11px] font-bold text-[#666666] dark:text-[#999999] uppercase tracking-wider mb-2 transition-transform duration-300 group-hover:-translate-y-1">
             {project.category}
           </span>
-          <h3 className="font-display text-xl font-medium text-black dark:text-white mb-6 flex-grow transition-colors whitespace-pre-line">
+          <h3 className="font-righteous text-xl tracking-normal text-black dark:text-white mb-6 flex-grow transition-colors whitespace-pre-line">
             {project.title}
           </h3>
-          {/* Sama seperti di carousel: hanya karya yang punya `link` yang
-              menampilkan tombol ini, supaya tidak ada tautan karangan.
-              Ditaruh SEBELUM baris tag: tag tetap jadi elemen paling bawah
-              yang rata dengan kartu tetangganya. */}
           {project.link ? (
             <a
               href={project.link}
               target="_blank"
               rel="noopener noreferrer"
-              className="mb-5 inline-flex items-center gap-1.5 self-start rounded-full bg-black px-4 py-2 text-[11px] font-semibold text-white transition-transform hover:scale-[1.03] active:scale-[0.97] dark:bg-white dark:text-black"
+              onClick={(e) => e.stopPropagation()}
+              className="mb-5 inline-flex items-center gap-1.5 self-start rounded-full bg-black px-4 py-2 text-[11px] font-semibold text-white transition-transform hover:scale-[1.03] active:scale-[0.97] dark:bg-white dark:text-black z-10"
             >
               <span>Kunjungi Website</span>
               <ArrowUpRight className="h-3.5 w-3.5" />
@@ -270,6 +276,7 @@ export function PortfolioSection() {
   const [isExiting, setIsExiting] = useState(false);
   const [showAllProjects, setShowAllProjects] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [mounted, setMounted] = useState(false);
   const { ref: gridRef, isInView: gridVisible } = useScrollReveal();
 
@@ -309,10 +316,22 @@ export function PortfolioSection() {
   const openArchive = useCallback(() => {
     setIsClosing(false);
     setShowAllProjects(true);
+    if (typeof window !== "undefined") {
+      document.documentElement.dataset.collabOpen = "true";
+      window.dispatchEvent(
+        new CustomEvent("collab-modal-state", { detail: { isOpen: true } })
+      );
+    }
   }, []);
 
   const closeArchive = useCallback(() => {
     setIsClosing(true);
+    if (typeof window !== "undefined") {
+      delete document.documentElement.dataset.collabOpen;
+      window.dispatchEvent(
+        new CustomEvent("collab-modal-state", { detail: { isOpen: false } })
+      );
+    }
     setTimeout(() => {
       setShowAllProjects(false);
       setIsClosing(false);
@@ -324,10 +343,15 @@ export function PortfolioSection() {
     const prevOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     document.documentElement.dataset.overlay = "1"; // pause render 3D & hero
+    document.documentElement.dataset.collabOpen = "true"; // buat navbar menyusut seperti kolaborasi
 
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         e.preventDefault();
+        if (selectedProject) {
+          setSelectedProject(null);
+          return;
+        }
         closeArchive();
         return;
       }
@@ -359,11 +383,15 @@ export function PortfolioSection() {
       window.removeEventListener("keydown", onKey);
       document.body.style.overflow = prevOverflow;
       delete document.documentElement.dataset.overlay;
+      delete document.documentElement.dataset.collabOpen;
+      window.dispatchEvent(
+        new CustomEvent("collab-modal-state", { detail: { isOpen: false } })
+      );
       if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
         seeAllNode?.focus({ preventScroll: true });
       }
     };
-  }, [showAllProjects, closeArchive]);
+  }, [showAllProjects, closeArchive, selectedProject]);
 
   return (
     <section id="portfolio" className="py-24 sm:py-32 relative bg-transparent w-full overflow-hidden">
@@ -371,69 +399,84 @@ export function PortfolioSection() {
 
         {/* Section Header */}
         <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-12">
-          <SplitWords as="h2" text="Selected Work" className="font-display font-medium tracking-[-0.02em] text-[clamp(2rem,4vw,3.5rem)] text-black dark:text-white" />
+          <SplitWords as="h2" text="Selected Work" className="font-righteous tracking-normal text-[clamp(2.1rem,4.5vw,3.75rem)] text-black dark:text-white" />
         </div>
 
-        {/* Filter Tabs:
-            - Mobile (< sm, termasuk iPhone 5 320px): 2 baris seimbang dan simetris, semua 5 opsi terlihat utuh tanpa terpotong
-            - Desktop (sm ke atas): 1 baris penuh di tengah */}
-        <div className="w-full mb-8 sm:mb-10">
+        {/* Filter Tabs Glassmorphism:
+            - Mobile (< sm): 2 baris terstruktur simetris dengan glassmorphism & teks kontras tinggi
+            - Desktop (sm ke atas): 1 baris horizontal rapi */}
+        <div className="w-full mb-8 sm:mb-10" role="tablist" aria-label="Kategori karya">
           {/* Mobile view: 2 baris terstruktur simetris */}
           <div className="flex sm:hidden flex-col items-center gap-2">
             <div className="flex items-center justify-center gap-1.5">
-              {["Semua", "Branding", "UI/UX"].map((category) => (
-                <button
-                  key={category}
-                  onClick={() => setActiveCategory(category)}
-                  className={`px-3.5 py-2 min-h-[40px] rounded-full text-xs font-semibold whitespace-nowrap transition-all duration-200 border ${
-                    activeCategory === category
-                      ? "bg-black text-white dark:bg-white dark:text-black border-black dark:border-white shadow-sm"
-                      : "bg-transparent text-[#666666] dark:text-[#999999] border-black/10 dark:border-white/10 hover:border-black/30 dark:hover:border-white/30 hover:text-black dark:hover:text-white"
-                  }`}
-                >
-                  {category}
-                </button>
-              ))}
+              {["Semua", "Branding", "UI/UX"].map((category) => {
+                const isActive = activeCategory === category;
+                return (
+                  <button
+                    key={category}
+                    role="tab"
+                    aria-selected={isActive}
+                    onClick={() => setActiveCategory(category)}
+                    className={`px-3.5 py-2 min-h-[40px] rounded-full text-xs font-semibold whitespace-nowrap transition-all duration-200 border ${
+                      isActive
+                        ? "bg-black text-white dark:bg-white dark:text-black border-black dark:border-white shadow-md backdrop-blur-md"
+                        : "bg-white/60 dark:bg-white/10 text-neutral-800 dark:text-neutral-200 hover:text-black dark:hover:text-white hover:bg-white/80 dark:hover:bg-white/20 border-black/10 dark:border-white/15 backdrop-blur-md shadow-sm"
+                    }`}
+                  >
+                    {category}
+                  </button>
+                );
+              })}
             </div>
             <div className="flex items-center justify-center gap-1.5">
-              {["Web Development", "Marketing"].map((category) => (
-                <button
-                  key={category}
-                  onClick={() => setActiveCategory(category)}
-                  className={`px-3.5 py-2 min-h-[40px] rounded-full text-xs font-semibold whitespace-nowrap transition-all duration-200 border ${
-                    activeCategory === category
-                      ? "bg-black text-white dark:bg-white dark:text-black border-black dark:border-white shadow-sm"
-                      : "bg-transparent text-[#666666] dark:text-[#999999] border-black/10 dark:border-white/10 hover:border-black/30 dark:hover:border-white/30 hover:text-black dark:hover:text-white"
-                  }`}
-                >
-                  {category === "Web Development" ? (
-                    <>
-                      <span className="min-[350px]:hidden">Web Dev</span>
-                      <span className="hidden min-[350px]:inline">Web Development</span>
-                    </>
-                  ) : (
-                    category
-                  )}
-                </button>
-              ))}
+              {["Web Development", "Marketing"].map((category) => {
+                const isActive = activeCategory === category;
+                return (
+                  <button
+                    key={category}
+                    role="tab"
+                    aria-selected={isActive}
+                    onClick={() => setActiveCategory(category)}
+                    className={`px-3.5 py-2 min-h-[40px] rounded-full text-xs font-semibold whitespace-nowrap transition-all duration-200 border ${
+                      isActive
+                        ? "bg-black text-white dark:bg-white dark:text-black border-black dark:border-white shadow-md backdrop-blur-md"
+                        : "bg-white/60 dark:bg-white/10 text-neutral-800 dark:text-neutral-200 hover:text-black dark:hover:text-white hover:bg-white/80 dark:hover:bg-white/20 border-black/10 dark:border-white/15 backdrop-blur-md shadow-sm"
+                    }`}
+                  >
+                    {category === "Web Development" ? (
+                      <>
+                        <span className="min-[350px]:hidden">Web Dev</span>
+                        <span className="hidden min-[350px]:inline">Web Development</span>
+                      </>
+                    ) : (
+                      category
+                    )}
+                  </button>
+                );
+              })}
             </div>
           </div>
 
           {/* Desktop view: 1 baris horizontal rapi */}
           <div className="hidden sm:flex flex-wrap items-center justify-center gap-2.5">
-            {categories.map((category) => (
-              <button
-                key={category}
-                onClick={() => setActiveCategory(category)}
-                className={`px-5 py-2.5 min-h-[44px] rounded-full text-sm font-semibold whitespace-nowrap transition-all duration-200 border ${
-                  activeCategory === category
-                    ? "bg-black text-white dark:bg-white dark:text-black border-black dark:border-white shadow-md"
-                    : "bg-transparent text-[#666666] dark:text-[#999999] border-black/10 dark:border-white/10 hover:border-black/30 dark:hover:border-white/30 hover:text-black dark:hover:text-white"
-                }`}
-              >
-                {category}
-              </button>
-            ))}
+            {categories.map((category) => {
+              const isActive = activeCategory === category;
+              return (
+                <button
+                  key={category}
+                  role="tab"
+                  aria-selected={isActive}
+                  onClick={() => setActiveCategory(category)}
+                  className={`px-5 py-2.5 min-h-[44px] rounded-full text-sm font-semibold whitespace-nowrap transition-all duration-200 border ${
+                    isActive
+                      ? "bg-black text-white dark:bg-white dark:text-black border-black dark:border-white shadow-md backdrop-blur-md"
+                      : "bg-white/60 dark:bg-white/10 text-neutral-800 dark:text-neutral-200 hover:text-black dark:hover:text-white hover:bg-white/80 dark:hover:bg-white/20 border-black/10 dark:border-white/15 backdrop-blur-md shadow-sm"
+                  }`}
+                >
+                  {category}
+                </button>
+              );
+            })}
           </div>
         </div>
 
@@ -454,7 +497,7 @@ export function PortfolioSection() {
           <button
             ref={seeAllBtnRef}
             onClick={openArchive}
-            className="inline-flex items-center justify-center gap-2 px-7 py-3.5 min-h-[52px] rounded-full bg-black text-white dark:bg-white dark:text-black font-semibold text-sm hover:scale-[1.02] active:scale-[0.98] transition-transform group"
+            className="inline-flex items-center justify-center gap-2 px-7 py-3.5 min-h-[52px] rounded-full bg-black text-white dark:bg-white dark:text-black font-semibold text-sm hover:scale-[1.02] active:scale-[0.98] transition-transform group cursor-pointer"
           >
             <span>Lihat Semua Proyek</span>
             <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
@@ -463,11 +506,7 @@ export function PortfolioSection() {
 
       </div>
 
-      {/* Overlay Archive - di-portal ke <body> agar `fixed` mengacu ke viewport
-          (bukan ke <section data-cv> yang memakai content-visibility:auto).
-          Fullscreen `fixed inset-0`, 100dvh + safe-area, scroll sendiri.
-          Tutup HANYA lewat tombol X (sticky, safe-area); Esc memicu X yang sama.
-          Tidak ada tutup via klik backdrop / swipe. */}
+      {/* Overlay Archive - di-portal ke <body> */}
       {mounted && (showAllProjects || isClosing) && createPortal(
         <div
           role="dialog"
@@ -479,7 +518,7 @@ export function PortfolioSection() {
             showAllProjects && !isClosing ? "opacity-100" : "opacity-0 pointer-events-none"
           }`}
         >
-              <div className="min-h-full pt-[max(0.75rem,env(safe-area-inset-top))] pb-[max(1.5rem,env(safe-area-inset-bottom))] px-4 sm:px-8">
+              <div className="min-h-full pt-[max(2.5rem,calc(env(safe-area-inset-top)+2rem))] pb-[max(1.5rem,env(safe-area-inset-bottom))] px-4 sm:px-8">
                 <div className="max-w-7xl mx-auto">
                   {/* Header sticky + tombol X satu-satunya penutup */}
                   <div className="flex items-start justify-between gap-3 mb-5 sm:mb-10 sticky top-[max(0.5rem,env(safe-area-inset-top))] z-20 py-2.5 px-3 sm:px-6 rounded-[var(--radius-md)] border border-[color-mix(in_srgb,var(--text-primary)_12%,transparent)] glass-card">
@@ -494,31 +533,36 @@ export function PortfolioSection() {
                     <button
                       ref={closeBtnRef}
                       onClick={closeArchive}
-                      className="shrink-0 min-h-[48px] min-w-[48px] flex items-center justify-center rounded-full border border-[color-mix(in_srgb,var(--text-primary)_14%,transparent)] text-[var(--text-primary)] hover:bg-black/5 dark:hover:bg-white/10 transition-colors active:scale-95"
+                      className="shrink-0 min-h-[48px] min-w-[48px] flex items-center justify-center rounded-full border border-[color-mix(in_srgb,var(--text-primary)_14%,transparent)] text-[var(--text-primary)] hover:bg-black/5 dark:hover:bg-white/10 transition-colors active:scale-95 cursor-pointer"
                       aria-label="Tutup Archive"
                     >
                       <X className="w-5 h-5" />
                     </button>
                   </div>
 
-                  {/* Filter Tabs overlay */}
-                  <div className="flex flex-wrap gap-1.5 sm:gap-2 mb-6 sm:mb-8 pb-1">
-                    {categories.map((category) => (
-                      <button
-                        key={`overlay-${category}`}
-                        onClick={() => setActiveCategory(category)}
-                        className={`shrink-0 min-h-[40px] sm:min-h-[44px] px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-colors duration-200 active:scale-95 ${
-                          activeCategory === category
-                            ? "bg-black text-white dark:bg-white dark:text-black border border-transparent shadow-sm"
-                            : "bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 text-[var(--text-muted)] hover:text-[var(--text-primary)]"
-                        }`}
-                      >
-                        {category}
-                      </button>
-                    ))}
+                  {/* Filter Tabs overlay dengan glassmorphism & teks kontras tinggi */}
+                  <div className="flex flex-wrap gap-1.5 sm:gap-2 mb-6 sm:mb-8 pb-1" role="tablist" aria-label="Filter kategori archive">
+                    {categories.map((category) => {
+                      const isActive = activeCategory === category;
+                      return (
+                        <button
+                          key={`overlay-${category}`}
+                          role="tab"
+                          aria-selected={isActive}
+                          onClick={() => setActiveCategory(category)}
+                          className={`shrink-0 min-h-[40px] sm:min-h-[44px] px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all duration-200 active:scale-95 border ${
+                            isActive
+                              ? "bg-black text-white dark:bg-white dark:text-black border-black dark:border-white shadow-md backdrop-blur-md"
+                              : "bg-white/60 dark:bg-white/10 text-neutral-800 dark:text-neutral-200 hover:text-black dark:hover:text-white hover:bg-white/80 dark:hover:bg-white/20 border-black/10 dark:border-white/15 backdrop-blur-md shadow-sm"
+                          }`}
+                        >
+                          {category}
+                        </button>
+                      );
+                    })}
                   </div>
 
-                  {/* Mobile 1 kolom (kartu lebih pendek), tablet 2, desktop 3 */}
+                  {/* Mobile 1 kolom, tablet 2, desktop 3 (dengan 3D tilt di desktop & popup detail saat diklik) */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
                     {allProjects
                       .filter((p) => activeCategory === "Semua" || p.category === activeCategory)
@@ -528,11 +572,113 @@ export function PortfolioSection() {
                           project={project}
                           gridVisible={showAllProjects}
                           idx={Math.min(idx, 6)}
+                          onSelect={(proj) => setSelectedProject(proj)}
                         />
                       ))}
                   </div>
                 </div>
               </div>
+        </div>,
+        document.body
+      )}
+
+      {/* Popup Detail Mengenai Card Proyek (Desktop & Mobile) */}
+      {mounted && selectedProject && createPortal(
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label={`Detail proyek ${selectedProject.title.replace(/\n/g, " ")}`}
+          className="fixed inset-0 z-[10005] flex items-center justify-center p-4 sm:p-6 bg-black/70 backdrop-blur-md animate-fade-up overscroll-contain"
+          onClick={() => setSelectedProject(null)}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="relative w-full max-w-xl max-h-[90vh] overflow-y-auto rounded-3xl border border-black/10 dark:border-white/15 bg-white dark:bg-[#121212] p-5 sm:p-8 text-black dark:text-white shadow-2xl flex flex-col"
+          >
+            {/* Tombol Tutup X */}
+            <button
+              onClick={() => setSelectedProject(null)}
+              className="absolute top-4 right-4 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-full bg-black/5 dark:bg-white/10 text-black dark:text-white hover:bg-black/10 dark:hover:bg-white/20 transition-colors active:scale-95 z-20 cursor-pointer"
+              aria-label="Tutup detail proyek"
+            >
+              <X className="w-5 h-5" />
+            </button>
+
+            {/* Gambar Proyek */}
+            <div className="relative aspect-video w-full rounded-2xl overflow-hidden mb-5 border border-black/5 dark:border-white/10 bg-slate-100 dark:bg-neutral-900 shrink-0">
+              <Image
+                src={selectedProject.image}
+                alt={selectedProject.title.replace(/\n/g, " ")}
+                fill
+                sizes="(max-width: 640px) 100vw, 600px"
+                className="object-cover"
+              />
+            </div>
+
+            {/* Kategori Badge */}
+            <div className="mb-2">
+              <span className="inline-block text-xs font-bold text-[#666666] dark:text-[#999999] uppercase tracking-wider px-3 py-1 rounded-full bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10">
+                {selectedProject.category}
+              </span>
+            </div>
+
+            {/* Judul Proyek */}
+            <h3 className="font-righteous text-2xl sm:text-3xl text-black dark:text-white mb-3 whitespace-pre-line leading-tight">
+              {selectedProject.title}
+            </h3>
+
+            {/* Deskripsi */}
+            <p className="text-sm sm:text-base text-neutral-600 dark:text-neutral-300 leading-relaxed mb-5">
+              {selectedProject.description}
+            </p>
+
+            {/* Tags */}
+            <div className="flex flex-wrap gap-2 mb-6">
+              {selectedProject.tags.map((tag) => (
+                <span
+                  key={tag}
+                  className="text-xs px-3 py-1 bg-black/5 dark:bg-white/5 text-black dark:text-white border border-black/10 dark:border-white/10 rounded-full font-medium"
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
+
+            {/* Aksi */}
+            <div className="flex flex-wrap items-center gap-3 mt-auto pt-4 border-t border-black/10 dark:border-white/10">
+              {selectedProject.link && (
+                <a
+                  href={selectedProject.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 px-5 py-2.5 min-h-[44px] rounded-full bg-black text-white dark:bg-white dark:text-black text-xs sm:text-sm font-semibold hover:scale-[1.02] active:scale-[0.98] transition-transform"
+                >
+                  <span>Kunjungi Website</span>
+                  <ArrowUpRight className="w-4 h-4" />
+                </a>
+              )}
+              <button
+                type="button"
+                onClick={() => {
+                  const proj = selectedProject;
+                  setSelectedProject(null);
+                  closeArchive();
+                  openCollaborationModal({
+                    name: "",
+                    brandName: "",
+                    contact: "",
+                    budget: "",
+                    services: [proj.category],
+                    notes: `Tertarik dengan portofolio ${proj.title.replace(/\n/g, " ")}.`,
+                  });
+                }}
+                className="inline-flex items-center gap-1.5 px-5 py-2.5 min-h-[44px] rounded-full border border-black/20 dark:border-white/20 text-black dark:text-white text-xs sm:text-sm font-semibold hover:bg-black/5 dark:hover:bg-white/10 active:scale-[0.98] transition-all cursor-pointer"
+              >
+                <span>Konsultasikan Proyek Serupa</span>
+                <ArrowRight className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
         </div>,
         document.body
       )}

@@ -143,7 +143,7 @@ export function BackgroundTargetSection({ onOpenCollaboration }: Props) {
       <div className="max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-12 relative z-10" ref={ref}>
         {/* Header */}
         <div className={`text-center max-w-2xl mx-auto mb-16 transition-all duration-700 ${isInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
-          <h2 className="font-display font-medium text-[clamp(2rem,4vw,3.5rem)] tracking-[-0.02em] text-black dark:text-white mb-4">
+          <h2 className="font-righteous text-[clamp(2.1rem,4.5vw,3.75rem)] tracking-normal text-black dark:text-white mb-4">
             Target Pasar
           </h2>
           <p className="text-base text-[#666666] dark:text-[#999999]">
@@ -152,19 +152,20 @@ export function BackgroundTargetSection({ onOpenCollaboration }: Props) {
         </div>
 
         {/* Individual Tab Buttons tanpa card pembungkus */}
-        <div className="flex flex-wrap justify-center gap-2 sm:gap-3 mb-12 sm:mb-16">
+        <div className="flex flex-wrap justify-center gap-2 sm:gap-3 mb-12 sm:mb-16" role="tablist" aria-label="Target pasar">
           {targetMarkets.map((market) => {
             const Icon = market.icon;
             const isActive = activeTab === market.id;
             return (
               <button
                 key={market.id}
+                role="tab"
+                aria-selected={isActive}
                 onClick={() => setActiveTab(market.id)}
-                aria-pressed={isActive}
                 className={`px-5 py-2.5 min-h-[44px] rounded-full text-xs sm:text-sm font-semibold transition-all duration-300 flex items-center gap-2 whitespace-nowrap border ${
                   isActive
-                    ? "bg-black text-white dark:bg-white dark:text-black border-black dark:border-white shadow-sm"
-                    : "bg-transparent text-[#666666] dark:text-[#999999] border-black/10 dark:border-white/10 hover:border-black/30 dark:hover:border-white/30 hover:text-black dark:hover:text-white"
+                    ? "bg-black text-white dark:bg-white dark:text-black border-black dark:border-white shadow-md backdrop-blur-md"
+                    : "bg-white/60 dark:bg-white/10 text-neutral-800 dark:text-neutral-200 hover:text-black dark:hover:text-white hover:bg-white/80 dark:hover:bg-white/20 border-black/10 dark:border-white/15 backdrop-blur-md shadow-sm"
                 }`}
               >
                 <Icon className="w-4 h-4 shrink-0" />

@@ -22,7 +22,7 @@ export function HeroSection({ onOpenCollaboration }: HeroSectionProps) {
           {/* Left: Typography */}
           <div className="col-start-1 row-start-1 min-w-0 flex flex-col items-start justify-center">
             {/* Headline - max 7 words */}
-            <h1 className="w-full font-display font-medium text-[clamp(2.1rem,9vw,3.5rem)] sm:text-[clamp(2rem,6vw,5rem)] leading-[1.05] tracking-[-0.02em] text-black dark:text-white min-w-0">
+            <h1 className="w-full font-righteous text-[clamp(2.1rem,9vw,3.5rem)] sm:text-[clamp(2rem,6vw,5rem)] leading-[1.08] tracking-normal text-black dark:text-white min-w-0">
               <span className="overflow-hidden block pb-1">
                 <span className="block">
                   Craft Your<br />Brand Identity.

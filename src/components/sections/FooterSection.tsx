@@ -62,7 +62,7 @@ export function FooterSection({ onOpenCollaboration }: FooterSectionProps) {
           {/* Pantulan cahaya di tepi atas kaca (1px), bahasa visual sama dengan modal */}
           <div className="absolute top-0 inset-x-0 h-px bg-white/25" aria-hidden="true" />
           <div className="relative z-10 max-w-3xl mx-auto flex flex-col items-center">
-            <h2 className="text-white font-display font-medium tracking-[-0.02em] text-[clamp(1.6rem,7vw,4rem)] leading-[1.12] mb-4 sm:mb-6">
+            <h2 className="text-white font-righteous tracking-normal text-[clamp(1.75rem,7vw,4rem)] leading-[1.12] mb-4 sm:mb-6">
               Ready to elevate your brand?
             </h2>
             <p className="text-white/90 text-sm sm:text-base mb-7 sm:mb-10 max-w-xl leading-[1.55] sm:leading-relaxed">

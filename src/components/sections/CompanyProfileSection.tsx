@@ -55,7 +55,7 @@ export function CompanyProfileSection() {
             }`}
           >
             <div className="mb-10">
-              <h2 className="font-display font-medium text-[clamp(2rem,4vw,3.5rem)] leading-[1.05] tracking-[-0.02em] text-black dark:text-white mb-4">
+              <h2 className="font-righteous text-[clamp(2.1rem,4.5vw,3.75rem)] leading-[1.08] tracking-normal text-black dark:text-white mb-4">
                 Logia Creative Agency
               </h2>
               <p className="text-[#666666] dark:text-[#999999] text-base leading-relaxed">
@@ -64,20 +64,25 @@ export function CompanyProfileSection() {
             </div>
 
             {/* Tab Interface */}
-            <div className="flex lg:flex-col gap-2 overflow-x-auto lg:overflow-visible hide-scrollbar pb-4 lg:pb-0">
-              {tabs.map((tab) => (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={`px-6 py-3 rounded-full lg:rounded-xl text-left text-sm font-semibold transition-all duration-200 whitespace-nowrap ${
-                    activeTab === tab.id
-                      ? "bg-black text-white dark:bg-white dark:text-black"
-                      : "bg-black/[0.03] dark:bg-white/[0.03] text-[#666666] dark:text-[#999999] hover:text-black dark:hover:text-white"
-                  }`}
-                >
-                  {tab.label}
-                </button>
-              ))}
+            <div className="flex lg:flex-col gap-2 overflow-x-auto lg:overflow-visible hide-scrollbar pb-4 lg:pb-0" role="tablist" aria-label="Profil perusahaan">
+              {tabs.map((tab) => {
+                const isActive = activeTab === tab.id;
+                return (
+                  <button
+                    key={tab.id}
+                    role="tab"
+                    aria-selected={isActive}
+                    onClick={() => setActiveTab(tab.id)}
+                    className={`px-6 py-3 rounded-full lg:rounded-xl text-left text-sm font-semibold transition-all duration-200 whitespace-nowrap min-h-[44px] flex items-center border ${
+                      isActive
+                        ? "bg-black text-white dark:bg-white dark:text-black border-black dark:border-white shadow-md backdrop-blur-md"
+                        : "bg-white/60 dark:bg-white/10 text-neutral-800 dark:text-neutral-200 hover:text-black dark:hover:text-white hover:bg-white/80 dark:hover:bg-white/20 border-black/10 dark:border-white/15 backdrop-blur-md shadow-sm"
+                    }`}
+                  >
+                    {tab.label}
+                  </button>
+                );
+              })}
             </div>
           </div>
 
@@ -98,31 +103,33 @@ export function CompanyProfileSection() {
               )}
 
               {activeTab === "misi" && (
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-6 animate-fade-up">
-                  {missions.map((m, idx) => (
-                    <div
-                      key={idx}
-                      className={`p-5 sm:p-8 glass-card rounded-3xl ${
-                        idx === 2 ? "sm:col-span-2" : ""
-                      }`}
-                    >
-                      <span className="text-black/10 dark:text-white/10 font-black text-4xl block mb-4">
-                        0{idx + 1}
-                      </span>
-                      <h4 className="text-lg font-bold mb-2 text-black dark:text-white">
-                        {m.title}
-                      </h4>
-                      <p className="text-sm text-[#666666] dark:text-[#999999] leading-relaxed">
-                        {m.desc}
-                      </p>
-                    </div>
-                  ))}
+                <div className="animate-fade-up">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+                    {missions.map((m, idx) => (
+                      <div
+                        key={idx}
+                        className={`p-5 sm:p-6 glass-card rounded-2xl transition-all duration-300 hover:scale-[1.01] ${
+                          idx === 2 ? "sm:col-span-2" : ""
+                        }`}
+                      >
+                        <span className="text-black/30 dark:text-white/30 font-black text-3xl sm:text-4xl block mb-3">
+                          0{idx + 1}
+                        </span>
+                        <h4 className="text-base sm:text-lg font-bold mb-2 text-black dark:text-white">
+                          {m.title}
+                        </h4>
+                        <p className="text-xs sm:text-sm text-[#666666] dark:text-[#999999] leading-relaxed">
+                          {m.desc}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               )}
 
               {activeTab === "filosofi" && (
-                <div className="space-y-6 animate-fade-up">
-                  <div className="p-5 sm:p-10 glass-card rounded-2xl sm:rounded-3xl flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8">
+                <div className="animate-fade-up space-y-6">
+                  <div className="p-5 sm:p-8 glass-card rounded-2xl flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8 transition-all duration-300 hover:scale-[1.01]">
                     <div className="relative w-32 h-16">
                       <Image
                         src="/LOGO.webp"
@@ -152,16 +159,14 @@ export function CompanyProfileSection() {
                     {brandPillars.map((bp, idx) => (
                       <div
                         key={idx}
-                        className="p-5 glass-card rounded-2xl flex flex-col gap-2"
+                        className="p-5 glass-card rounded-2xl flex flex-col gap-2 transition-all duration-300 hover:scale-[1.01]"
                       >
-                        <div>
-                          <h4 className="font-bold text-sm text-black dark:text-white mb-2">
-                            {bp.title}
-                          </h4>
-                          <p className="text-xs text-[#666666] dark:text-[#999999] leading-relaxed">
-                            {bp.desc}
-                          </p>
-                        </div>
+                        <h4 className="font-bold text-sm text-black dark:text-white mb-1.5">
+                          {bp.title}
+                        </h4>
+                        <p className="text-xs text-[#666666] dark:text-[#999999] leading-relaxed">
+                          {bp.desc}
+                        </p>
                       </div>
                     ))}
                   </div>

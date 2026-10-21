@@ -1,18 +1,54 @@
-﻿node_modules/
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Next.js Build Output
 .next/
 out/
 build/
-.env*.local
-*.log
-.DS_Store
-UpdateLogia.md
 
-.next/
-node_modules/
+# Environment Variables & Secrets
+.env
+.env*.local
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Debug & Error Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+*.log
+
+# TypeScript Build Info
 *.tsbuildinfo
+
+# OS Metadata
+.DS_Store
+Thumbs.db
+ehthumbs.db
+desktop.ini
+
+# IDE & Editor Settings
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Project Temporary, Audit, & Scratch Files
+scratch/
+lighthouse-*.json
+.lh/
+UpdateLogia.md
+image 2.png
+
+# AI Agent Caches & Metadata
 .aider*
-opencode.json 
-opencode.json 
-.taste-skill
-.superpowers
-.agents
+.claude/
+.agents/
+.taste-skill/
+.superpowers/
+opencode.json

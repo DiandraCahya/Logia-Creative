@@ -46,7 +46,7 @@ export function TestimonialSection() {
   return (
     <section id="testimoni" className="w-full py-14 md:py-28">
       <div className="mx-auto w-full max-w-4xl flex flex-col items-center px-4 sm:px-6">
-        <h2 className="font-display font-bold text-[clamp(2.25rem,6vw,4.5rem)] tracking-[-0.03em] text-center text-black dark:text-white mb-6 sm:mb-8 leading-[1.05]">
+        <h2 className="font-righteous tracking-normal text-[clamp(2.25rem,6vw,4.5rem)] text-center text-black dark:text-white mb-6 sm:mb-8 leading-[1.05]">
           Kata Mereka
         </h2>
         <TestimonialCarousel testimonials={TESTIMONIALS} />

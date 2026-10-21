@@ -4,16 +4,119 @@ import React, { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 import type { CollabDraft } from "@/lib/receipt";
 
+function retryDynamicImport<T>(
+  importer: () => Promise<T>,
+  retriesLeft = 2,
+  interval = 800
+): Promise<T> {
+  return new Promise((resolve, reject) => {
+    importer()
+      .then(resolve)
+      .catch((error) => {
+        const isChunkError =
+          error?.name === "ChunkLoadError" ||
+          (error?.message && error.message.includes("Loading chunk"));
+
+        if (retriesLeft > 0) {
+          setTimeout(() => {
+            retryDynamicImport(importer, retriesLeft - 1, interval).then(resolve, reject);
+          }, interval);
+          return;
+        }
+
+        if (typeof window !== "undefined" && isChunkError) {
+          const reloadKey = "collab_chunk_retry_reloaded";
+          const hasReloaded = sessionStorage.getItem(reloadKey);
+          if (!hasReloaded) {
+            sessionStorage.setItem(reloadKey, "true");
+            window.location.reload();
+            return;
+          }
+        }
+        reject(error);
+      });
+  });
+}
+
 const CollaborationModal = dynamic(
-  () => import("@/components/CollaborationModal").then((mod) => mod.CollaborationModal),
+  () =>
+    retryDynamicImport(() =>
+      import("@/components/CollaborationModal").then((mod) => mod.CollaborationModal)
+    ),
   { ssr: false, loading: () => null }
 );
+
 const ChatWidget = dynamic(
-  () => import("@/components/ChatWidget").then((mod) => mod.ChatWidget),
+  () =>
+    retryDynamicImport(() =>
+      import("@/components/ChatWidget").then((mod) => mod.ChatWidget)
+    ),
   { ssr: false, loading: () => null }
 );
 
 export { openCollaborationModal } from "@/lib/collaboration-events";
+
+interface ErrorBoundaryProps {
+  children: React.ReactNode;
+  onReset: () => void;
+}
+
+interface ErrorBoundaryState {
+  hasError: boolean;
+}
+
+class ModalErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
+  constructor(props: ErrorBoundaryProps) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error: Error) {
+    console.error("CollaborationModal Error:", error);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="fixed inset-0 z-[10003] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+          <div className="bg-white dark:bg-neutral-900 text-black dark:text-white p-6 rounded-2xl max-w-sm w-full text-center shadow-2xl border border-black/10 dark:border-white/10">
+            <h3 className="font-bold text-lg mb-2">Gagal Memuat Formulir</h3>
+            <p className="text-sm text-neutral-600 dark:text-neutral-400 mb-5">
+              Koneksi atau chunk pembaruan aplikasi terputus. Silakan coba muat ulang halaman.
+            </p>
+            <div className="flex gap-2 justify-center">
+              <button
+                type="button"
+                onClick={() => {
+                  this.setState({ hasError: false });
+                  if (typeof window !== "undefined") window.location.reload();
+                }}
+                className="px-4 py-2 bg-black text-white dark:bg-white dark:text-black rounded-full text-xs font-semibold cursor-pointer"
+              >
+                Muat Ulang Halaman
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  this.setState({ hasError: false });
+                  this.props.onReset();
+                }}
+                className="px-4 py-2 bg-neutral-200 dark:bg-neutral-800 text-black dark:text-white rounded-full text-xs font-semibold cursor-pointer"
+              >
+                Tutup
+              </button>
+            </div>
+          </div>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
 
 export function CollaborationManager() {
   const [isOpen, setIsOpen] = useState(false);
@@ -54,6 +157,26 @@ export function CollaborationManager() {
     }
   }, [isOpen]);
 
+  // Preload dynamic chunks pada saat idle agar klik langsung responsif dan chunk siap di browser cache
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (typeof document !== "undefined" && document.documentElement.classList.contains("is-audit")) {
+      return;
+    }
+
+    const preloadModal = () => {
+      import("@/components/CollaborationModal").catch(() => {});
+    };
+
+    if ("requestIdleCallback" in window) {
+      const id = (window as any).requestIdleCallback(preloadModal, { timeout: 3500 });
+      return () => (window as any).cancelIdleCallback(id);
+    } else {
+      const t = setTimeout(preloadModal, 2000);
+      return () => clearTimeout(t);
+    }
+  }, []);
+
   useEffect(() => {
     if (typeof document !== "undefined" && document.documentElement.classList.contains("is-audit")) {
       return;
@@ -78,12 +201,14 @@ export function CollaborationManager() {
   return (
     <>
       {isOpen && (
-        <CollaborationModal
-          isOpen={isOpen}
-          onClose={() => setIsOpen(false)}
-          initialDraft={draft}
-          onDraftConsumed={() => setDraft(null)}
-        />
+        <ModalErrorBoundary onReset={() => setIsOpen(false)}>
+          <CollaborationModal
+            isOpen={isOpen}
+            onClose={() => setIsOpen(false)}
+            initialDraft={draft}
+            onDraftConsumed={() => setDraft(null)}
+          />
+        </ModalErrorBoundary>
       )}
       {loadChat && (
         <ChatWidget

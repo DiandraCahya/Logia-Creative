@@ -141,11 +141,13 @@ export function HeroCarousel({
 
   const go = React.useCallback(
     (next: number) => {
-      const clamped = clamp(next, 0, Math.max(0, last))
-      if (controlled === undefined) setUncontrolled(clamped)
-      if (clamped !== index) onIndexChange?.(clamped)
+      const total = items.length
+      if (total <= 0) return
+      const wrapped = ((next % total) + total) % total
+      if (controlled === undefined) setUncontrolled(wrapped)
+      if (wrapped !== index) onIndexChange?.(wrapped)
     },
-    [controlled, index, last, onIndexChange]
+    [controlled, index, items.length, onIndexChange]
   )
 
   // One observer feeds every measurement below.
@@ -329,7 +331,7 @@ export function HeroCarousel({
             </span>
           ) : null}
 
-          <h3 className="font-display text-[26px] font-medium leading-[1.05] tracking-[-0.03em] text-black dark:text-white">
+          <h3 className="font-righteous text-[26px] leading-[1.12] tracking-normal text-black dark:text-white">
             {titleFlat}
           </h3>
 
@@ -392,7 +394,7 @@ export function HeroCarousel({
               <button
                 type="button"
                 onClick={() => go(index - 1)}
-                disabled={index === 0}
+                disabled={items.length <= 1}
                 aria-label="Karya sebelumnya"
                 className="flex h-10 w-10 items-center justify-center rounded-full border border-black/15 text-black transition-colors active:scale-95 disabled:opacity-30 dark:border-white/20 dark:text-white"
               >
@@ -401,7 +403,7 @@ export function HeroCarousel({
               <button
                 type="button"
                 onClick={() => go(index + 1)}
-                disabled={index === last}
+                disabled={items.length <= 1}
                 aria-label="Karya berikutnya"
                 className="flex h-10 w-10 items-center justify-center rounded-full border border-black/15 text-black transition-colors active:scale-95 disabled:opacity-30 dark:border-white/20 dark:text-white"
               >
@@ -548,8 +550,8 @@ export function HeroCarousel({
         className="absolute inset-x-0 top-0 flex flex-col justify-end"
         style={{
           height: `${STRIP_TOP * 100}%`,
-          paddingLeft: pad,
-          paddingRight: pad,
+          paddingLeft: Math.max(36, Math.round(box.w * 0.055)),
+          paddingRight: Math.max(24, Math.round(box.w * 0.03)),
           paddingBottom: Math.round(box.h * 0.055),
         }}
       >
@@ -567,7 +569,7 @@ export function HeroCarousel({
           ) : null}
           <h3
             key={index}
-            className="font-display font-medium leading-[0.95] tracking-[-0.03em]"
+            className="font-righteous leading-[1.1] tracking-normal text-black dark:text-white"
             style={{
               fontSize: Math.max(24, Math.round(box.h * TITLE)),
               ...(reduced ? {} : {
@@ -576,8 +578,8 @@ export function HeroCarousel({
             }}
           >
             {lines.map((line, i) => (
-              // Each line wipes up from behind its own edge.
-              <span key={i} className="block overflow-hidden">
+              // Each line wipes up from behind its own edge with generous padding to prevent glyph clipping
+              <span key={i} className="block overflow-hidden pr-8 pb-3 -mr-8 -mb-1">
                 <span
                   className="block"
                   style={
@@ -697,7 +699,7 @@ export function HeroCarousel({
       {/* ── Kontrol: titik indikator + tombol sebelumnya/berikutnya ── */}
       <div
         className="absolute flex items-center justify-between gap-2 sm:gap-4"
-        style={{ left: pad, right: pad, bottom: Math.max(16, Math.round(box.h * 0.03)) }}
+        style={{ left: Math.max(36, Math.round(box.w * 0.055)), right: Math.max(24, Math.round(box.w * 0.03)), bottom: Math.max(16, Math.round(box.h * 0.03)) }}
       >
         <div className="flex items-center gap-1 sm:gap-1.5 shrink-0" role="group" aria-label="Pilih karya">
           {items.map((_, i) => (
@@ -725,7 +727,7 @@ export function HeroCarousel({
             type="button"
             onClick={() => go(index - 1)}
             aria-label="Karya sebelumnya"
-            disabled={index === 0}
+            disabled={items.length <= 1}
             className="flex h-9 w-9 sm:h-11 sm:w-11 items-center justify-center rounded-full border border-black/15 text-black transition-colors hover:bg-black/5 disabled:opacity-30 disabled:hover:bg-transparent dark:border-white/20 dark:text-white dark:hover:bg-white/10 shrink-0"
           >
             <ChevronLeft className="h-4 w-4 sm:h-5 sm:w-5" />
@@ -734,7 +736,7 @@ export function HeroCarousel({
             type="button"
             onClick={() => go(index + 1)}
             aria-label="Karya berikutnya"
-            disabled={index === last}
+            disabled={items.length <= 1}
             className="flex h-9 w-9 sm:h-11 sm:w-11 items-center justify-center rounded-full border border-black/15 text-black transition-colors hover:bg-black/5 disabled:opacity-30 disabled:hover:bg-transparent dark:border-white/20 dark:text-white dark:hover:bg-white/10 shrink-0"
           >
             <ChevronRight className="h-4 w-4 sm:h-5 sm:w-5" />

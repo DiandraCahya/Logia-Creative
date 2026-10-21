@@ -48,7 +48,7 @@ export function ServicesSection() {
       <div className="max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-12">
         {/* Header */}
         <div className="max-w-3xl mb-5 sm:mb-10">
-          <h2 className="text-[clamp(1.65rem,5vw,3.25rem)] font-extrabold tracking-[-0.02em] text-black dark:text-white leading-[1.12] mb-2.5">
+          <h2 className="font-righteous text-[clamp(1.75rem,5vw,3.5rem)] tracking-normal text-black dark:text-white leading-[1.12] mb-2.5">
             Layanan Kami
           </h2>
           <p className="text-sm sm:text-base text-[#1A1A1A] dark:text-[#999999] max-w-xl leading-[1.55]">

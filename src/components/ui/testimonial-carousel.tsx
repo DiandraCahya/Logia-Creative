@@ -21,6 +21,7 @@ export function TestimonialCarousel({ testimonials }: { testimonials: Testimonia
   const [paused, setPaused] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(false);
   const [dragX, setDragX] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
   const [compact, setCompact] = useState(false);
   const [inView, setInView] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -61,9 +62,10 @@ export function TestimonialCarousel({ testimonials }: { testimonials: Testimonia
     else if (e.key === "End") setIndex(testimonials.length - 1);
   };
 
-  // ── Swipe: pointer events, threshold 60px ──
+  // ── Swipe: pointer events, responsive during drag, smooth & relaxed ease on release ──
   const onPointerDown = (e: React.PointerEvent) => {
     dragRef.current = { startX: e.clientX, dragging: true };
+    setIsDragging(true);
     (e.target as HTMLElement).setPointerCapture?.(e.pointerId);
   };
   const onPointerMove = (e: React.PointerEvent) => {
@@ -74,9 +76,10 @@ export function TestimonialCarousel({ testimonials }: { testimonials: Testimonia
     if (!dragRef.current.dragging) return;
     const dx = e.clientX - dragRef.current.startX;
     dragRef.current.dragging = false;
+    setIsDragging(false);
     setDragX(0);
-    if (dx < -60) next();
-    else if (dx > 60) prev();
+    if (dx < -40) next();
+    else if (dx > 40) prev();
   };
 
   // Geser 100% = lebar carousel (bukan 100vw), jadi selisih antar lebar tidak
@@ -101,14 +104,18 @@ export function TestimonialCarousel({ testimonials }: { testimonials: Testimonia
         className="w-full"
       >
         <div
-          className="overflow-hidden touch-none select-none"
+          className="overflow-hidden touch-none select-none cursor-grab active:cursor-grabbing"
           onPointerDown={onPointerDown}
           onPointerMove={onPointerMove}
           onPointerUp={onPointerUp}
           onPointerCancel={onPointerUp}
         >
           <div
-            className="flex transition-transform duration-500"
+            className={`flex ${
+              isDragging
+                ? "transition-none"
+                : "transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]"
+            }`}
             style={{ transform: trackTransform }}
           >
             {testimonials.map((t, i) => (
@@ -173,7 +180,7 @@ export function TestimonialCarousel({ testimonials }: { testimonials: Testimonia
             <button
               type="button"
               onClick={prev}
-              disabled={index === 0}
+              disabled={testimonials.length <= 1}
               aria-label="Testimoni sebelumnya"
               className="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-full border border-black/15 text-black transition-colors active:scale-95 disabled:opacity-30 dark:border-white/20 dark:text-white shrink-0"
             >
@@ -182,7 +189,7 @@ export function TestimonialCarousel({ testimonials }: { testimonials: Testimonia
             <button
               type="button"
               onClick={next}
-              disabled={index === testimonials.length - 1}
+              disabled={testimonials.length <= 1}
               aria-label="Testimoni berikutnya"
               className="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-full border border-black/15 text-black transition-colors active:scale-95 disabled:opacity-30 dark:border-white/20 dark:text-white shrink-0"
             >
@@ -210,14 +217,28 @@ export function TestimonialCarousel({ testimonials }: { testimonials: Testimonia
       className="w-full overflow-hidden focus-visible:outline-2 focus-visible:outline-offset-4"
     >
       <div
-        className="overflow-hidden touch-none select-none"
+        className="relative overflow-hidden touch-none select-none cursor-grab active:cursor-grabbing sm:[mask-image:linear-gradient(to_right,transparent_0%,black_8%,black_92%,transparent_100%)] sm:[-webkit-mask-image:linear-gradient(to_right,transparent_0%,black_8%,black_92%,transparent_100%)]"
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
         onPointerUp={onPointerUp}
         onPointerCancel={onPointerUp}
       >
+        {/* Efek vignet halus di sisi kiri & kanan carousel desktop */}
         <div
-          className="flex transition-transform duration-500"
+          aria-hidden="true"
+          className="hidden sm:block pointer-events-none absolute left-0 top-0 bottom-0 w-16 md:w-24 z-10 bg-gradient-to-r from-[var(--bg-primary)]/80 via-[var(--bg-primary)]/20 to-transparent"
+        />
+        <div
+          aria-hidden="true"
+          className="hidden sm:block pointer-events-none absolute right-0 top-0 bottom-0 w-16 md:w-24 z-10 bg-gradient-to-l from-[var(--bg-primary)]/80 via-[var(--bg-primary)]/20 to-transparent"
+        />
+
+        <div
+          className={`flex ${
+            isDragging
+              ? "transition-none"
+              : "transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]"
+          }`}
           style={{ transform: trackTransform }}
         >
           {testimonials.map((t, i) => (
@@ -269,7 +290,7 @@ export function TestimonialCarousel({ testimonials }: { testimonials: Testimonia
         <button
           onClick={prev}
           aria-label="Previous testimonial"
-          disabled={index === 0}
+          disabled={testimonials.length <= 1}
           className="hidden sm:flex p-1.5 sm:p-2 rounded-full border border-black/10 dark:border-white/15 text-black dark:text-white hover:bg-black/5 dark:hover:bg-white/10 transition-colors min-h-[44px] min-w-[44px] items-center justify-center disabled:opacity-30 disabled:cursor-not-allowed"
         >
           <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5" aria-hidden="true" />
@@ -296,7 +317,7 @@ export function TestimonialCarousel({ testimonials }: { testimonials: Testimonia
         <button
           onClick={next}
           aria-label="Next testimonial"
-          disabled={index === testimonials.length - 1}
+          disabled={testimonials.length <= 1}
           className="hidden sm:flex p-1.5 sm:p-2 rounded-full border border-black/10 dark:border-white/15 text-black dark:text-white hover:bg-black/5 dark:hover:bg-white/10 transition-colors min-h-[44px] min-w-[44px] items-center justify-center disabled:opacity-30 disabled:cursor-not-allowed"
         >
           <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" aria-hidden="true" />

@@ -35,6 +35,9 @@ const navLinks = [
   { name: "Contact", href: "#kontak" },
 ];
 
+const leftNavLinks = navLinks.slice(0, 3);
+const rightNavLinks = navLinks.slice(3);
+
 const sectionIds = ["top", "about", "layanan", "portfolio", "pricing", "kontak"];
 
 export function LiquidNavbar({ onOpenCollaboration, isSplashDone: propSplashDone }: LiquidNavbarProps) {
@@ -76,11 +79,16 @@ export function LiquidNavbar({ onOpenCollaboration, isSplashDone: propSplashDone
       setIsCollabOpen(open);
       if (!open) {
         setIsCollabRevealed(false);
+      } else {
+        setIsExpanded(false);
+        setIsCollabRevealed(false);
       }
     };
 
     if (document.documentElement.dataset.collabOpen === "true") {
       setIsCollabOpen(true);
+      setIsExpanded(false);
+      setIsCollabRevealed(false);
     }
 
     window.addEventListener("collab-modal-state", handleCollabState);
@@ -107,8 +115,8 @@ export function LiquidNavbar({ onOpenCollaboration, isSplashDone: propSplashDone
       if (typeof window !== "undefined" && window.innerWidth < 1024) return;
 
       const rect = navRef.current.getBoundingClientRect();
-      const BUFFER_X = 16;
-      const BUFFER_Y = 20;
+      const BUFFER_X = 24;
+      const BUFFER_Y = 28;
       const isInside =
         e.clientX >= rect.left - BUFFER_X &&
         e.clientX <= rect.right + BUFFER_X &&
@@ -234,7 +242,7 @@ export function LiquidNavbar({ onOpenCollaboration, isSplashDone: propSplashDone
       const id = href.replace("#", "");
       const el = document.getElementById(id);
       if (el) {
-        const NAVBAR_OFFSET = 60;
+        const NAVBAR_OFFSET = 72;
         const elementTop = el.getBoundingClientRect().top + window.scrollY;
         window.scrollTo({
           top: elementTop - NAVBAR_OFFSET,
@@ -275,7 +283,7 @@ export function LiquidNavbar({ onOpenCollaboration, isSplashDone: propSplashDone
 
       {/* Header Container pinned flush to top: 0 (Hidden until splashscreen completes) */}
       <header
-        className={`fixed top-0 inset-x-0 z-[10001] flex justify-center pointer-events-none transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+        className={`fixed top-0 inset-x-0 z-[10001] flex justify-center pointer-events-none overflow-x-clip transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${
           isSplashDone ? "translate-y-0 opacity-100" : "-translate-y-full opacity-0"
         }`}
       >
@@ -309,21 +317,21 @@ export function LiquidNavbar({ onOpenCollaboration, isSplashDone: propSplashDone
             isHoveredRef.current = false;
             setIsHovered(false);
           }}
-          className={`macbook-island pointer-events-auto relative select-none flex flex-col mx-auto ${
+          className={`macbook-island pointer-events-auto relative select-none flex flex-col mx-auto overflow-hidden hide-scrollbar ${
             isTuckedForCollab
-              ? "is-tucked w-28 sm:w-32 lg:w-36 rounded-b-[10px] sm:rounded-b-[12px] px-2 py-0.5 min-h-[16px] sm:min-h-[18px] max-h-[18px] justify-center cursor-pointer shadow-[0_4px_16px_rgba(0,0,0,0.25)] hover:bg-black/10 dark:hover:bg-white/10"
+              ? "is-tucked w-28 sm:w-32 lg:w-36 rounded-b-[10px] sm:rounded-b-[12px] px-2 py-0.5 min-h-[18px] sm:min-h-[20px] max-h-[22px] justify-center cursor-pointer shadow-[0_4px_16px_rgba(0,0,0,0.25)] hover:bg-black/10 dark:hover:bg-white/10"
               : isExpanded
-              ? "w-[min(480px,calc(100vw-1.25rem))] rounded-b-[20px] sm:rounded-b-[22px] pt-1.5 pb-3.5 px-3 sm:px-4 shadow-[0_20px_50px_-10px_rgba(0,0,0,0.5)] justify-start"
+              ? "w-[min(500px,calc(100vw-1.25rem))] rounded-b-[24px] sm:rounded-b-[26px] pt-2.5 pb-4 px-4 sm:px-5 shadow-[0_20px_50px_-10px_rgba(0,0,0,0.5)] justify-start"
               : showCompact
-              ? "w-auto min-w-[160px] max-w-[176px] lg:w-[224px] lg:min-w-[224px] lg:max-w-[236px] rounded-b-[12px] lg:rounded-b-[16px] px-2.5 sm:px-3 lg:px-4 py-0.5 sm:py-1 min-h-[30px] sm:min-h-[32px] lg:min-h-[40px] justify-center"
-              : "w-auto min-w-[190px] max-w-[210px] lg:w-auto lg:min-w-[700px] lg:max-w-[calc(100vw-2rem)] rounded-b-[14px] lg:rounded-b-[18px] px-3 sm:px-3.5 lg:px-5 py-0.5 sm:py-1 min-h-[30px] sm:min-h-[32px] lg:min-h-[42px] justify-center"
+              ? "w-auto min-w-[185px] sm:min-w-[200px] max-w-[230px] lg:w-[280px] lg:min-w-[280px] lg:max-w-[320px] rounded-b-[20px] lg:rounded-b-[22px] px-3.5 sm:px-4 lg:px-6 py-1.5 sm:py-2 lg:py-2 min-h-[48px] sm:min-h-[50px] lg:min-h-[50px] justify-center"
+              : "w-auto min-w-[185px] sm:min-w-[200px] max-w-[230px] lg:w-[min(1080px,calc(100vw-3rem))] lg:min-w-[960px] xl:min-w-[1040px] lg:max-w-[1100px] rounded-b-[20px] lg:rounded-b-[24px] px-4 sm:px-4.5 lg:px-7 py-1.5 sm:py-2 lg:py-2.5 min-h-[48px] sm:min-h-[50px] lg:min-h-[52px] justify-center"
           }`}
         >
           {/* Top-Left Concave Ear (Curves notch seamlessly into top screen bezel) */}
           <svg
             aria-hidden="true"
             viewBox="0 0 16 16"
-            className="macbook-ear absolute top-0 right-full w-2.5 sm:w-3 lg:w-3.5 h-2.5 sm:h-3 lg:h-3.5 pointer-events-none"
+            className="macbook-ear absolute top-0 right-full w-3.5 sm:w-4 lg:w-4.5 h-3.5 sm:h-4 lg:h-4.5 pointer-events-none"
           >
             <path d="M 0 0 L 16 0 L 16 16 C 16 7.163 8.837 0 0 0 Z" />
           </svg>
@@ -332,7 +340,7 @@ export function LiquidNavbar({ onOpenCollaboration, isSplashDone: propSplashDone
           <svg
             aria-hidden="true"
             viewBox="0 0 16 16"
-            className="macbook-ear absolute top-0 left-full w-2.5 sm:w-3 lg:w-3.5 h-2.5 sm:h-3 lg:h-3.5 pointer-events-none"
+            className="macbook-ear absolute top-0 left-full w-3.5 sm:w-4 lg:w-4.5 h-3.5 sm:h-4 lg:h-4.5 pointer-events-none"
           >
             <path d="M 0 16 C 0 7.163 7.163 0 16 0 L 0 0 Z" />
           </svg>
@@ -359,53 +367,35 @@ export function LiquidNavbar({ onOpenCollaboration, isSplashDone: propSplashDone
           ) : (
             <>
               {/* PRIMARY BAR: Visible in collapsed state, stays as top row when expanded */}
-              <div className="flex items-center justify-between gap-1.5 sm:gap-2 lg:gap-3 w-full h-[28px] sm:h-[30px] lg:h-[36px] shrink-0">
-                {/* ThemeToggle: order-1 on mobile (left), order-3 on desktop (right) */}
-                <div onClick={triggerHoldExpanded} className="order-1 lg:order-3 flex items-center shrink-0">
-                  <ThemeToggle className="!w-7 !h-7 lg:!w-8 lg:!h-8" />
+              <div className="relative flex items-center justify-between gap-2.5 sm:gap-3 lg:gap-3.5 w-full h-[40px] sm:h-[42px] lg:h-[44px] shrink-0">
+                {/* Mobile ThemeToggle: order-1 on mobile, HIDDEN on desktop. Selalu aktif di mobile */}
+                <div
+                  onClick={triggerHoldExpanded}
+                  className="order-1 lg:hidden flex items-center shrink-0 opacity-100 max-w-[44px] pointer-events-auto scale-100"
+                >
+                  <ThemeToggle className="!w-8.5 !h-8.5" />
                 </div>
 
-                {/* Brand Logo: order-2 on mobile (center), order-1 on desktop (left) */}
-                <a
-                  href="#top"
-                  onClick={(e) => handleNavClick(e, "#top")}
-                  className="order-2 lg:order-1 flex-1 lg:flex-initial flex items-center justify-center lg:justify-start group cursor-pointer shrink-0"
-                  aria-label="Kembali ke Beranda Logia Creative"
-                >
-                  <div
-                    className={`relative h-3.5 sm:h-4 lg:h-6 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-105 shrink-0 ${
-                      showCompact ? "w-12 sm:w-13 lg:w-20" : "w-14 sm:w-16 lg:w-24"
-                    }`}
-                  >
-                    <Image
-                      src="/Group 3.webp"
-                      alt="Logia Logo"
-                      fill
-                      sizes="(max-width: 640px) 64px, 96px"
-                      className="object-contain brightness-0 dark:invert transition-all duration-300"
-                      loading="lazy"
-                      decoding="async"
-                    />
-                  </div>
-                </a>
-
-                {/* Center Area: Desktop Nav Links (Visible only on desktop >= 1024px when not compact) */}
+                {/* Desktop Left Group: ThemeToggle + Left Nav Links (Home, About, Services) */}
                 {!isExpanded && (
                   <div
-                    className={`hidden lg:flex lg:order-2 items-center gap-1.5 xl:gap-2 shrink-0 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+                    className={`hidden lg:flex items-center gap-1.5 xl:gap-2 shrink-0 transition-[opacity,max-width] duration-300 ease-out ${
                       showCompact
-                        ? "opacity-0 max-w-0 overflow-hidden pointer-events-none scale-95"
-                        : "opacity-100 max-w-[540px] pointer-events-auto scale-100"
+                        ? "opacity-0 max-w-0 overflow-hidden pointer-events-none"
+                        : "opacity-100 max-w-[460px] pointer-events-auto"
                     }`}
                   >
-                    {navLinks.map((link) => {
+                    <div onClick={triggerHoldExpanded} className="shrink-0 mr-1.5">
+                      <ThemeToggle className="!w-8.5 !h-8.5" />
+                    </div>
+                    {leftNavLinks.map((link) => {
                       const isActive = activeSection === link.href;
                       return (
                         <a
                           key={link.name}
                           href={link.href}
                           onClick={(e) => handleNavClick(e, link.href)}
-                          className={`px-3 py-1 text-[13px] font-medium rounded-full transition-all duration-200 shrink-0 ${
+                          className={`px-3.5 py-1.5 text-[13.5px] font-medium rounded-full transition-all duration-200 shrink-0 ${
                             isActive
                               ? "bg-black/15 dark:bg-white/20 text-black dark:text-white font-bold shadow-sm ring-1 ring-black/15 dark:ring-white/25 backdrop-blur-sm"
                               : "text-neutral-800 dark:text-neutral-100 hover:text-black dark:hover:text-white hover:bg-black/10 dark:hover:bg-white/15"
@@ -418,37 +408,80 @@ export function LiquidNavbar({ onOpenCollaboration, isSplashDone: propSplashDone
                   </div>
                 )}
 
-                {/* Desktop CTA (Kolaborasi atau Tutup Navbar saat form aktif): Visible only on desktop >= 1024px when not compact */}
+                {/* Brand Logo: order-2 on mobile (center), and DEAD CENTER on desktop via absolute center */}
+                <a
+                  href="#top"
+                  onClick={(e) => handleNavClick(e, "#top")}
+                  className="order-2 flex-1 lg:flex-initial flex items-center justify-center lg:absolute lg:left-1/2 lg:-translate-x-1/2 group cursor-pointer shrink-0 z-10 transition-all duration-300"
+                  aria-label="Kembali ke Beranda Logia Creative"
+                >
+                  <div
+                    className="relative shrink-0 transition-opacity duration-300 w-[68px] h-[20px] sm:w-[76px] sm:h-[22px] lg:w-[88px] lg:h-[26px]"
+                  >
+                    <Image
+                      src="/Group 3.webp"
+                      alt="Logia Logo"
+                      fill
+                      sizes="(max-width: 640px) 76px, 110px"
+                      className="object-contain brightness-0 dark:invert transition-all duration-300"
+                      priority
+                    />
+                  </div>
+                </a>
+
+                {/* Desktop Right Group: Right Nav Links (Portfolio, Pricing, Contact) + CTA */}
                 {!isExpanded && (
-                  isCollabOpen ? (
-                    <button
-                      type="button"
-                      onClick={() => setIsCollabRevealed(false)}
-                      aria-label="Sembunyikan navbar ke atas"
-                      title="Sembunyikan navbar ke atas"
-                      className="hidden lg:flex lg:order-4 items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-black/10 dark:bg-white/15 text-black dark:text-white hover:bg-black/20 dark:hover:bg-white/25 active:scale-95 transition-all shrink-0 cursor-pointer"
-                    >
-                      <span>Tutup Navbar</span>
-                      <ChevronUp className="w-3 h-3" />
-                    </button>
-                  ) : (
-                    <button
-                      type="button"
-                      onClick={() => {
-                        if (onOpenCollaboration) onOpenCollaboration();
-                        else openCollaborationModal();
-                      }}
-                      className={`hidden lg:flex lg:order-4 items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-black dark:bg-white text-white dark:text-black hover:bg-neutral-800 dark:hover:bg-neutral-200 active:scale-95 shadow-sm shrink-0 cursor-pointer transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
-                        showCompact
-                          ? "opacity-0 max-w-0 overflow-hidden pointer-events-none scale-95 p-0 m-0 border-0"
-                          : "opacity-100 max-w-[140px] pointer-events-auto scale-100"
-                      }`}
-                    >
-                      <Sparkles className="w-2.5 h-2.5 text-[#A08C6A]" />
-                      <span>Kolaborasi</span>
-                      <ArrowUpRight className="w-2.5 h-2.5" />
-                    </button>
-                  )
+                  <div
+                    className={`hidden lg:flex items-center gap-1.5 xl:gap-2.5 shrink-0 transition-[opacity,max-width] duration-300 ease-out ${
+                      showCompact
+                        ? "opacity-0 max-w-0 overflow-hidden pointer-events-none"
+                        : "opacity-100 max-w-[480px] pointer-events-auto"
+                    }`}
+                  >
+                    {rightNavLinks.map((link) => {
+                      const isActive = activeSection === link.href;
+                      return (
+                        <a
+                          key={link.name}
+                          href={link.href}
+                          onClick={(e) => handleNavClick(e, link.href)}
+                          className={`px-3.5 py-1.5 text-[13.5px] font-medium rounded-full transition-all duration-200 shrink-0 ${
+                            isActive
+                              ? "bg-black/15 dark:bg-white/20 text-black dark:text-white font-bold shadow-sm ring-1 ring-black/15 dark:ring-white/25 backdrop-blur-sm"
+                              : "text-neutral-800 dark:text-neutral-100 hover:text-black dark:hover:text-white hover:bg-black/10 dark:hover:bg-white/15"
+                          }`}
+                        >
+                          {link.name}
+                        </a>
+                      );
+                    })}
+
+                    {isCollabOpen ? (
+                      <button
+                        type="button"
+                        onClick={() => setIsCollabRevealed(false)}
+                        aria-label="Sembunyikan navbar ke atas"
+                        title="Sembunyikan navbar ke atas"
+                        className="flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold bg-black/10 dark:bg-white/15 text-black dark:text-white hover:bg-black/20 dark:hover:bg-white/25 active:scale-95 transition-all shrink-0 cursor-pointer ml-1"
+                      >
+                        <span>Tutup Navbar</span>
+                        <ChevronUp className="w-3 h-3" />
+                      </button>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          if (onOpenCollaboration) onOpenCollaboration();
+                          else openCollaborationModal();
+                        }}
+                        className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-black dark:bg-white text-white dark:text-black hover:bg-neutral-800 dark:hover:bg-neutral-200 active:scale-95 shadow-sm shrink-0 cursor-pointer transition-all duration-300 ml-1"
+                      >
+                        <Sparkles className="w-2.5 h-2.5 text-[#A08C6A]" />
+                        <span>Kolaborasi</span>
+                        <ArrowUpRight className="w-2.5 h-2.5" />
+                      </button>
+                    )}
+                  </div>
                 )}
 
                 {/* 3-Lines Hamburger Button: order-3 on mobile, HIDDEN on desktop (lg:hidden) */}
@@ -469,21 +502,21 @@ export function LiquidNavbar({ onOpenCollaboration, isSplashDone: propSplashDone
                   }}
                   aria-label={isExpanded ? "Tutup Menu Navigasi" : "Buka Menu Navigasi"}
                   aria-expanded={isExpanded}
-                  className="order-3 lg:hidden relative p-1 rounded-lg hover:bg-black/5 dark:hover:bg-white/10 active:scale-95 transition-all flex flex-col justify-center items-center gap-[2.5px] w-7 h-7 shrink-0 cursor-pointer after:content-[''] after:absolute after:-inset-2"
+                  className="order-3 lg:hidden relative p-1 rounded-lg hover:bg-black/5 dark:hover:bg-white/10 active:scale-95 transition-all flex flex-col justify-center items-center gap-[3px] w-8.5 h-8.5 shrink-0 cursor-pointer after:content-[''] after:absolute after:-inset-2"
                 >
                   <span
                     className={`h-[1.5px] bg-black dark:bg-white rounded-full transition-all duration-300 origin-center ${
-                      isExpanded ? "w-3.5 rotate-45 translate-y-[4px]" : "w-3.5"
+                      isExpanded ? "w-4 rotate-45 translate-y-[4.5px]" : "w-4"
                     }`}
                   />
                   <span
                     className={`h-[1.5px] bg-black dark:bg-white rounded-full transition-all duration-300 ${
-                      isExpanded ? "w-3.5 opacity-0 scale-0" : "w-2.5"
+                      isExpanded ? "w-4 opacity-0 scale-0" : "w-2.5"
                     }`}
                   />
                   <span
                     className={`h-[1.5px] bg-black dark:bg-white rounded-full transition-all duration-300 origin-center ${
-                      isExpanded ? "w-3.5 -rotate-45 -translate-y-[4px]" : "w-3.5"
+                      isExpanded ? "w-4 -rotate-45 -translate-y-[4.5px]" : "w-4"
                     }`}
                   />
                 </button>
@@ -491,7 +524,7 @@ export function LiquidNavbar({ onOpenCollaboration, isSplashDone: propSplashDone
 
               {/* EXPANDED CONTENT: Dynamic Island Menu on Mobile */}
               {isExpanded && (
-                <div className="w-full mt-2 flex flex-col gap-2 w-full animate-fadeIn">
+                <div className="w-full mt-2 flex flex-col gap-2 w-full animate-fadeIn overflow-hidden hide-scrollbar">
                   {/* Navigation Pills (3 columns on mobile) */}
                   <div className="grid grid-cols-3 gap-1.5 w-full">
                     {navLinks.map((link) => {
