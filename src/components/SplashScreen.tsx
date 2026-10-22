@@ -1,9 +1,11 @@
 "use client";
 
 import React, { useCallback, useEffect, useRef, useState } from "react";
+import type { SplashContent } from "@/lib/cms/types";
 
 interface SplashScreenProps {
   onComplete?: () => void;
+  content?: SplashContent;
 }
 
 function isAuditEnvironment(): boolean {
@@ -21,7 +23,7 @@ function isAuditEnvironment(): boolean {
   );
 }
 
-export function SplashScreen({ onComplete }: SplashScreenProps) {
+export function SplashScreen({ onComplete, content }: SplashScreenProps) {
   const [mounted, setMounted] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [progressStarted, setProgressStarted] = useState(false);
@@ -31,7 +33,8 @@ export function SplashScreen({ onComplete }: SplashScreenProps) {
   const textRef = useRef<HTMLSpanElement>(null);
   const cursorRef = useRef<HTMLSpanElement>(null);
 
-  const TEXT = "LOGIA CREATIVE";
+  const TEXT = content?.text || "LOGIA CREATIVE";
+  const skipText = content?.skipText || "Skip Intro";
 
   const handleExit = useCallback(() => {
     setFading(true);
@@ -85,7 +88,7 @@ export function SplashScreen({ onComplete }: SplashScreenProps) {
       clearInterval(interval);
       clearTimeout(timeout);
     };
-  }, [handleExit]);
+  }, [handleExit, TEXT]);
 
   if (!mounted || !isVisible) return null;
 
@@ -120,11 +123,11 @@ export function SplashScreen({ onComplete }: SplashScreenProps) {
       {/* Skip Button */}
       <button
         onClick={handleExit}
-        aria-label="Skip intro"
+        aria-label={skipText}
         className="absolute bottom-8 right-8 z-20 flex items-center gap-2 min-h-[44px] px-4 py-2 rounded-full text-xs font-medium cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-bronze)] group"
         style={{ color: "var(--text-secondary)" }}
       >
-        Skip Intro
+        {skipText}
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="14"

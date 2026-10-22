@@ -13,6 +13,7 @@ import {
   priceTypeLabel,
   priceUnitLabel,
 } from "@/lib/rate-card";
+import type { RateCardContent } from "@/lib/cms/types";
 
 const solutionIcons: Record<string, React.ElementType> = {
   tech: Code2,
@@ -22,13 +23,27 @@ const solutionIcons: Record<string, React.ElementType> = {
 
 const ease = [0.22, 1, 0.36, 1] as const; // --ease-out-expo, satu easing global
 
-export function PricingSection({ onSelectPackage }: { onSelectPackage?: (packageId: string) => void }) {
+export function PricingSection({
+  onSelectPackage,
+  content,
+}: {
+  onSelectPackage?: (packageId: string) => void;
+  content?: RateCardContent;
+} = {}) {
+  const solutionsToUse = content?.solutions && content.solutions.length > 0 ? content.solutions : SOLUTIONS;
+  const termsToUse = content?.terms && content.terms.length > 0 ? content.terms : TERMS;
+  const title = content?.sectionTitle?.trim() || "Rate Card";
+  const subtitle = content?.sectionSubtitle?.trim() || "Pilih paket layanan yang sesuai dengan tahap pertumbuhan bisnis Anda.";
+  const termsTitle = content?.termsTitle?.trim() || "Syarat & Ketentuan Layanan";
+  const note = content?.customInquiryText?.trim() || "Butuh solusi di luar paket? Diskusikan kebutuhanmu bersama kami.";
+  const customInquiryButton = content?.customInquiryButton?.trim() || "Diskusikan Kebutuhan Anda";
+
   const { ref, isInView } = useScrollReveal();
-  const [tab, setTab] = useState(SOLUTIONS[0].id);
+  const [tab, setTab] = useState(solutionsToUse[0]?.id || SOLUTIONS[0].id);
   const [expanded, setExpanded] = useState<string | null>(null);
   const [openTerm, setOpenTerm] = useState<number | null>(null);
 
-  const active = SOLUTIONS.find((s) => s.id === tab) ?? SOLUTIONS[0];
+  const active = solutionsToUse.find((s) => s.id === tab) ?? solutionsToUse[0] ?? SOLUTIONS[0];
 
   // "Pilih {PAKET}" → buka form kolaborasi dengan paket sudah ter-prefill.
   const pick = (packageId: string) => {
@@ -58,14 +73,14 @@ export function PricingSection({ onSelectPackage }: { onSelectPackage?: (package
               isInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"
             }`}
           >
-            Rate Card
+            {title}
           </h2>
           <p
             className={`text-base text-[#666666] dark:text-[#999999] transition-all duration-700 delay-150 ${
               isInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"
             }`}
           >
-            Pilih paket layanan yang sesuai dengan tahap pertumbuhan bisnis Anda.
+            {subtitle}
           </p>
         </div>
 
@@ -75,7 +90,7 @@ export function PricingSection({ onSelectPackage }: { onSelectPackage?: (package
           role="tablist"
           aria-label="Jenis solusi"
         >
-          {SOLUTIONS.map((s) => {
+          {solutionsToUse.map((s) => {
             const Icon = solutionIcons[s.id] || Layers;
             const isActive = tab === s.id;
             return (
@@ -269,10 +284,10 @@ export function PricingSection({ onSelectPackage }: { onSelectPackage?: (package
         {/* Syarat & Ketentuan accordion */}
         <div className="max-w-3xl mx-auto mt-20">
           <h3 className="font-righteous tracking-normal text-2xl text-black dark:text-white text-center mb-8">
-            Syarat & Ketentuan Layanan
+            {termsTitle}
           </h3>
           <div className="space-y-3">
-            {TERMS.map((term, i) => (
+            {termsToUse.map((term, i) => (
               <div
                 key={term.title}
                 className="glass-accordion rounded-2xl overflow-hidden transition-all duration-300 hover:border-black/20 dark:hover:border-white/20"
@@ -322,14 +337,14 @@ export function PricingSection({ onSelectPackage }: { onSelectPackage?: (package
           }`}
         >
           <p className="text-sm text-[#666666] dark:text-[#999999]">
-            Butuh solusi di luar paket? Diskusikan kebutuhanmu bersama kami.
+            {note}
           </p>
           <div className="flex items-center justify-center">
             <a
               href="#kontak"
               className="inline-flex items-center gap-2 px-8 py-3 bg-black dark:bg-white text-white dark:text-black rounded-full text-sm font-bold hover:scale-[1.02] active:scale-[0.98] transition-transform"
             >
-              Diskusikan Kebutuhan Anda
+              {customInquiryButton}
             </a>
           </div>
         </div>

@@ -2,6 +2,7 @@ import React from "react";
 import Image from "next/image";
 import dynamic from "next/dynamic";
 import { HeroCtaButton } from "@/components/HeroCtaButton";
+import type { HeroContent } from "@/lib/cms/types";
 
 const InteractiveShape = dynamic(
   () => import("@/components/InteractiveShape").then((m) => m.InteractiveShape)
@@ -9,9 +10,17 @@ const InteractiveShape = dynamic(
 
 interface HeroSectionProps {
   onOpenCollaboration?: () => void;
+  content?: HeroContent;
 }
 
-export function HeroSection({ onOpenCollaboration }: HeroSectionProps) {
+export function HeroSection({ onOpenCollaboration, content }: HeroSectionProps) {
+  const headlineLine1 = content?.headlineLine1 ?? "Craft Your";
+  const headlineLine2 = content?.headlineLine2 ?? "Brand Identity.";
+  const heroImage = content?.heroImage ?? "/LUOGIA2.webp";
+  const heroImageAlt = content?.heroImageAlt ?? "Potret kreator Logia Creative";
+  const primaryCta = content?.primaryCta ?? "Mulai Proyek";
+  const secondaryCta = content?.secondaryCta ?? "Lihat Portfolio";
+
   return (
     <section
       id="top"
@@ -25,7 +34,7 @@ export function HeroSection({ onOpenCollaboration }: HeroSectionProps) {
             <h1 className="w-full font-righteous text-[clamp(2.1rem,9vw,3.5rem)] sm:text-[clamp(2rem,6vw,5rem)] leading-[1.08] tracking-normal text-black dark:text-white min-w-0">
               <span className="overflow-hidden block pb-1">
                 <span className="block">
-                  Craft Your<br />Brand Identity.
+                  {headlineLine1}<br />{headlineLine2}
                 </span>
               </span>
             </h1>
@@ -49,8 +58,8 @@ export function HeroSection({ onOpenCollaboration }: HeroSectionProps) {
                     style={{ transform: "translateZ(50px)" }}
                   >
                     <Image
-                      src="/LUOGIA2.webp"
-                      alt="Potret kreator Logia Creative"
+                      src={heroImage}
+                      alt={heroImageAlt}
                       width={420}
                       height={420}
                       priority
@@ -71,13 +80,13 @@ export function HeroSection({ onOpenCollaboration }: HeroSectionProps) {
 
           {/* CTA Buttons - pada mobile melebar penuh (col-span-2) agar tidak bertabrakan */}
           <div className="col-span-2 sm:col-span-1 sm:col-start-1 sm:row-start-2 w-full flex flex-col min-[350px]:flex-row items-stretch sm:items-center gap-2.5 sm:gap-4">
-            <HeroCtaButton onOpenCollaboration={onOpenCollaboration} />
+            <HeroCtaButton onOpenCollaboration={onOpenCollaboration} label={primaryCta} />
 
             <a
               href="#portfolio"
               className="flex-1 sm:flex-none justify-center whitespace-nowrap px-4 sm:px-8 py-3.5 sm:py-4 min-h-[48px] sm:min-h-[52px] inline-flex items-center text-sm font-semibold text-black dark:text-white border border-black/15 dark:border-white/15 rounded-full hover:bg-black/5 dark:hover:bg-white/5 transition-colors duration-200"
             >
-              Lihat Portfolio
+              {secondaryCta}
             </a>
           </div>
         </div>

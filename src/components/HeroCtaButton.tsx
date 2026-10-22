@@ -5,9 +5,10 @@ import { openCollaborationModal } from "@/lib/collaboration-events";
 
 interface HeroCtaButtonProps {
   onOpenCollaboration?: () => void;
+  label?: string;
 }
 
-export function HeroCtaButton({ onOpenCollaboration }: HeroCtaButtonProps) {
+export function HeroCtaButton({ onOpenCollaboration, label = "Mulai Proyek" }: HeroCtaButtonProps) {
   const handleClick = () => {
     if (onOpenCollaboration) {
       onOpenCollaboration();
@@ -21,7 +22,7 @@ export function HeroCtaButton({ onOpenCollaboration }: HeroCtaButtonProps) {
       onClick={handleClick}
       className="btn-solid flex-1 sm:flex-none justify-center whitespace-nowrap px-4 sm:px-8 py-3.5 sm:py-4 min-h-[48px] sm:min-h-[52px] bg-black dark:bg-white text-white dark:text-black text-sm font-semibold rounded-full flex items-center gap-2 group transition-transform hover:scale-[1.02] active:scale-[0.98]"
     >
-      <span>Mulai Proyek</span>
+      <span>{label}</span>
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="16"

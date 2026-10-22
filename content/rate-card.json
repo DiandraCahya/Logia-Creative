@@ -1,0 +1,201 @@
+{
+  "sectionTitle": "Rate Card",
+  "sectionSubtitle": "Pilih paket layanan yang sesuai dengan tahap pertumbuhan bisnis Anda.",
+  "termsTitle": "Syarat & Ketentuan Layanan",
+  "startFromLabel": "Start From",
+  "customInquiryText": "Butuh solusi di luar paket? Diskusikan kebutuhanmu bersama kami.",
+  "customInquiryButton": "Diskusikan Kebutuhan Anda",
+  "solutions": [
+    {
+      "id": "technology",
+      "name": "Technology Solution",
+      "packages": [
+        {
+          "id": "technology-web-starter",
+          "name": "WEB STARTER",
+          "tagline": "Langsung online, Tanpa ribet",
+          "price": 250000,
+          "unit": "project",
+          "popular": false,
+          "items": [
+            "Landing page / Company Profile (1 halaman, responsive)",
+            "Panduan setup domain & hosting",
+            "Tombol WhatsApp",
+            "Basic speed optimization",
+            "Revisi 2x"
+          ]
+        },
+        {
+          "id": "technology-web-app-system",
+          "name": "WEB APP & SYSTEM",
+          "tagline": "Otomasi & pelaporan untuk bisnis yang sudah berjalan",
+          "price": 1500000,
+          "unit": "bulan",
+          "popular": false,
+          "items": [
+            "Dashboard monitoring bisnis",
+            "Reporting dashboard terintegrasi",
+            "Simple workflow automation (tugas repetitif, notifikasi, rekap otomatis)",
+            "Integrasi antar sistem (kasir, WhatsApp, spreadsheet)",
+            "Support teknis prioritas"
+          ]
+        },
+        {
+          "id": "technology-smart-automation",
+          "name": "SMART AUTOMATION",
+          "tagline": "Sistem digital sesuai cara kerja bisnismu",
+          "price": 700000,
+          "unit": "project",
+          "popular": false,
+          "intro": "WEB & APP SYSTEM kebutuhanmu. Sudah termasuk:",
+          "items": [
+            "Desain UI / UX",
+            "Panel Admin",
+            "Pelatihan penggunaan 1x sesi",
+            "Garansi bug 14 hari"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "creative",
+      "name": "Creative Solution",
+      "packages": [
+        {
+          "id": "creative-brand-starter",
+          "name": "BRAND STARTER",
+          "tagline": "Bikin bisnismu tampil profesional dari nol",
+          "price": 150000,
+          "unit": "project",
+          "popular": false,
+          "items": [
+            "Desain Logo (Utama & Alternatif/Monokrom)",
+            "Panduan warna & tipografi dasar (Color Palette & Typography Guide)",
+            "File master siap pakai (PNG transparan, JPG, PDF)"
+          ]
+        },
+        {
+          "id": "creative-visual-campaign",
+          "name": "VISUAL CAMPAIGN",
+          "tagline": "Paket desain komplit (Promosi/event)",
+          "price": 350000,
+          "unit": "project",
+          "popular": false,
+          "intro": "Pilih fokus kebutuhanmu:",
+          "numbered": true,
+          "items": [
+            "Packaging & Merch: Desain label, kemasan simple, atau merchandise (kaos, stiker).",
+            "Social Media Kit: 9-12 template feed/story siap pakai (bisa diedit di Canva).",
+            "Event / Print Promo: Desain banner, spanduk, brosur, dan flyer."
+          ]
+        },
+        {
+          "id": "creative-creative-growth",
+          "name": "CREATIVE GROWTH",
+          "tagline": "Terima beres urusan konten, kamu fokus jualan aja",
+          "price": 500000,
+          "unit": "bulan",
+          "popular": false,
+          "items": [
+            "Desain 12 Konten Feed & 3 Video Pendek (Reels/TikTok) ringan",
+            "Optimasi profil sosmed (Desain Feeds & Video Konten Ringan)",
+            "Event / Print Promo: Desain banner, spanduk, brosur, dan flyer.",
+            "Laporan engagement bulanan"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "integrated",
+      "name": "Integrated Solution",
+      "packages": [
+        {
+          "id": "integrated-digital-presence",
+          "name": "DIGITAL PRESENCE",
+          "tagline": "Paket kombo maut buat yang pengen terima beres dengan harga diskon",
+          "price": 350000,
+          "unit": "project",
+          "popular": false,
+          "items": [
+            "Solusi all-in-one paling hemat buat bisnis yang baru go-digital",
+            "Desain Logo & Panduan Visual",
+            "Landing Page / Web 1 Halaman",
+            "Tombol integrasi langsung ke WhatsApp"
+          ],
+          "notes": [
+            "*Bundle ini hemat Rp 50.000 dibanding order terpisah!"
+          ]
+        },
+        {
+          "id": "integrated-business-launchpad",
+          "name": "BUSINESS LAUNCHPAD",
+          "tagline": "Sistem Digital + Visual premium siap mendongkrak bisnismu",
+          "price": 1500000,
+          "unit": "project",
+          "popular": false,
+          "items": [
+            "Web App / Sistem Custom (E-commerce, Kasir, atau Reservasi) dari paket Web App & System.",
+            "UI/UX Design yang dikustomisasi 100% dengan karakter logomu.",
+            "Pembuatan banner web promosi & input 10 katalog produk awal."
+          ]
+        },
+        {
+          "id": "integrated-ultimate-partner",
+          "name": "ULTIMATE PARTNER",
+          "tagline": "Punya tim IT dan Tim Kreatif sendiri tanpa pusing bayar gaji",
+          "price": 1200000,
+          "unit": "bulan",
+          "popular": false,
+          "items": [
+            "Maintenance website, dashboard bisnis, dan perbaikan minor.",
+            "Konten sosmed bulanan (12 Feed + 3 Reels).",
+            "Update rutin aset visual di dalam website (ganti banner, update foto).",
+            "Layanan prioritas dari tim LOGIA."
+          ],
+          "notes": [
+            "*Mengambil paket integrasi dipastikan lebih murah dibandingkan memesan layanan IT dan Desain secara terpisah.",
+            "*Biaya operasional pihak ketiga (hosting, domain, API payment) ditanggung oleh klien."
+          ]
+        }
+      ]
+    }
+  ],
+  "terms": [
+    {
+      "title": "Cara Memesan di Website",
+      "body": [
+        "Isi rincian langkah pemesanan di sini, kirim teksnya dan saya pasang (placeholder sementara).",
+        "Langkah 1: pilih paket di Rate Card lalu tekan kirim pada form kolaborasi.",
+        "Langkah 2: terima struk + total bayar, lalu selesaikan DP 50%."
+      ]
+    },
+    {
+      "title": "Pembayaran",
+      "body": [
+        "Uang muka (DP) sebesar 50% dibayarkan untuk memulai pekerjaan; pelunasan 50% sebelum handover/go-live.",
+        "Paket bulanan (Web App & System, Creative Growth, Ultimate Partner) dibayar di awal setiap bulan berjalan."
+      ]
+    },
+    {
+      "title": "Revisi",
+      "body": [
+        "Maksimal 2x revisi minor termasuk dalam setiap paket.",
+        "Revisi ke-3+ atau ganti konsep dikenakan Rp 50.000 / revisi."
+      ]
+    },
+    {
+      "title": "Teknologi",
+      "body": [
+        "Website default menggunakan CMS/No-Code builder; custom code = biaya terpisah.",
+        "Harga belum termasuk domain & hosting premium tahunan."
+      ]
+    },
+    {
+      "title": "Waktu Pengerjaan",
+      "body": [
+        "Timeline branding 3 - 7 hari kerja per paket.",
+        "Timeline website & otomasi 7 - 14 hari kerja tergantung kompleksitas."
+      ]
+    }
+  ]
+}

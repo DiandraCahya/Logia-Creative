@@ -9,7 +9,7 @@ const nextConfig: NextConfig = {
   },
   images: {
     formats: ["image/avif", "image/webp"],
-    qualities: [60, 75, 85, 90],
+    qualities: [30, 60, 75, 85, 90],
     minimumCacheTTL: 604800, // 7 days
     // Ukuran device: jaga agar mobile tidak mengambil file 2560px
     deviceSizes: [320, 480, 640, 750, 828, 1080, 1200, 1920],
@@ -18,6 +18,9 @@ const nextConfig: NextConfig = {
     localPatterns: [
       { pathname: "/**" },
     ],
+  },
+  outputFileTracingIncludes: {
+    "/**": ["content/**/*"],
   },
 };
 

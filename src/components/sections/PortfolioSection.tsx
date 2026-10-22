@@ -6,7 +6,7 @@ import { useScrollReveal } from "@/lib/useScrollReveal";
 import Image from "next/image";
 import { ArrowRight, ArrowUpRight, X } from "lucide-react";
 import SplitWords from "@/components/animations/SplitWords";
-import { HeroCarousel, type HeroCarouselItem } from "@/components/ui/hero-carousel";
+import { HeroCarousel, type HeroCarouselItem, FOCAL_POSITION_MAP } from "@/components/ui/hero-carousel";
 import { openCollaborationModal } from "@/components/CollaborationManager";
 
 const ART = (id: string) =>
@@ -23,6 +23,13 @@ type Project = {
   link?: string;
   /** True bila gambarnya cut-out transparan (bukan foto) - panggung menampilkannya sebagai figur utuh. */
   figure?: boolean;
+  /** Mode tampilan foto: cover (penuh) atau contain (utuh tanpa terpotong) */
+  fit?: "cover" | "contain";
+  /** Titik fokus framing/pemotongan: center, top, bottom, left, right */
+  focalPoint?: "center" | "top" | "bottom" | "left" | "right";
+  id?: string;
+  featured?: boolean;
+  order?: number;
 };
 
 const projects: Project[] = [
@@ -113,7 +120,9 @@ const allProjects: Project[] = [
   }
 ];
 
-const categories = ["Semua", "Branding", "Web Development", "UI/UX", "Marketing"];
+import type { ProjectItem } from "@/lib/cms/types";
+
+const defaultCategories = ["Semua", "Branding", "Web Development", "UI/UX", "Marketing"];
 
 function PortfolioCard({
   project,
@@ -216,7 +225,17 @@ function PortfolioCard({
         />
 
         {/* Image */}
-        <div className="aspect-[4/3] overflow-hidden relative bg-slate-100 dark:bg-white/5" style={{ transform: "translateZ(20px)" }}>
+        <div className="aspect-[4/3] overflow-hidden relative bg-slate-100 dark:bg-white/5 flex items-center justify-center" style={{ transform: "translateZ(20px)" }}>
+          {project.fit === "contain" && !project.figure && (
+            <Image
+              src={project.image}
+              alt=""
+              aria-hidden
+              fill
+              sizes="33vw"
+              className="object-cover blur-md scale-125 opacity-30 pointer-events-none"
+            />
+          )}
           <Image
             src={project.image}
             alt={project.title.replace(/\n/g, ' ')}
@@ -224,9 +243,22 @@ function PortfolioCard({
             loading="lazy"
             decoding="async"
             sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
-            className="object-cover transition-all duration-700 ease-out [@media(hover:hover)]:grayscale [@media(hover:hover)]:group-hover:grayscale-0 group-hover:scale-105"
+            className={`${
+              project.fit === "contain" || project.figure
+                ? "object-contain p-2 relative z-10"
+                : "object-cover"
+            } transition-all duration-700 ease-out [@media(hover:hover)]:grayscale [@media(hover:hover)]:group-hover:grayscale-0 group-hover:scale-105`}
+            style={{
+              objectPosition: project.figure
+                ? "50% 100%"
+                : project.fit === "contain"
+                ? "50% 50%"
+                : project.focalPoint
+                ? (FOCAL_POSITION_MAP[project.focalPoint] || "50% 50%")
+                : "50% 50%",
+            }}
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-20" />
         </div>
 
         {/* Content */}
@@ -270,7 +302,22 @@ function PortfolioCard({
 // tapi parrallax/gyroscope lain belum. Satu hakim terpusat = hemat CPU saat overlay.
 const stillAnimating = () => !document.documentElement.dataset.overlay;
 
-export function PortfolioSection() {
+export function PortfolioSection({ content }: { content?: ProjectItem[] } = {}) {
+  const itemsToUse: Project[] = content && content.length > 0
+    ? [...content].sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
+    : allProjects;
+
+  const carouselProjectsToUse: Project[] = content && content.length > 0
+    ? (() => {
+        const feat = itemsToUse.filter((p) => (p as ProjectItem).featured !== false);
+        return feat.length > 0 ? feat : itemsToUse;
+      })()
+    : projects;
+
+  const categories = content && content.length > 0
+    ? Array.from(new Set(["Semua", ...itemsToUse.map((p) => p.category)]))
+    : defaultCategories;
+
   const [activeCategory, setActiveCategory] = useState("Semua");
   const [displayedCategory, setDisplayedCategory] = useState("Semua");
   const [isExiting, setIsExiting] = useState(false);
@@ -312,19 +359,21 @@ export function PortfolioSection() {
     }, 180);
   };
 
-  const filteredProjects = projects.filter(
+  const filteredProjects = carouselProjectsToUse.filter(
     (project) => displayedCategory === "Semua" || project.category === displayedCategory
   );
 
   const carouselItems: HeroCarouselItem[] = filteredProjects.map((p, i) => ({
-    id: i,
+    id: p.id || i,
     title: p.title,
     image: p.image,
     description: p.description,
     category: p.category,
     meta: p.tags,
     href: p.link,
-    figure: p.figure,
+    figure: Boolean(p.figure),
+    fit: p.fit || "cover",
+    focalPoint: p.focalPoint || "center",
   }));
 
   const openArchive = useCallback(() => {
@@ -449,7 +498,7 @@ export function PortfolioSection() {
           {/* Mobile view: 2 baris terstruktur simetris */}
           <div className="flex sm:hidden flex-col items-center gap-2">
             <div className="flex items-center justify-center gap-1.5">
-              {["Semua", "Branding", "UI/UX"].map((category, idx) => {
+              {categories.slice(0, 3).map((category, idx) => {
                 const isActive = activeCategory === category;
                 return (
                   <button
@@ -472,39 +521,41 @@ export function PortfolioSection() {
                 );
               })}
             </div>
-            <div className="flex items-center justify-center gap-1.5">
-              {["Web Development", "Marketing"].map((category, idx) => {
-                const isActive = activeCategory === category;
-                return (
-                  <button
-                    key={category}
-                    role="tab"
-                    aria-selected={isActive}
-                    onClick={() => setActiveCategory(category)}
-                    style={{ animationDelay: `${(idx + 3) * 60}ms` }}
-                    className={`animate-category-pill px-3.5 py-2 min-h-[40px] rounded-full text-xs font-semibold whitespace-nowrap transition-all duration-300 active:scale-95 border flex items-center justify-center ${
-                      isActive
-                        ? "bg-black text-white dark:bg-white dark:text-black border-black dark:border-white shadow-md backdrop-blur-md scale-[1.02]"
-                        : "bg-white/60 dark:bg-white/10 text-neutral-800 dark:text-neutral-200 hover:text-black dark:hover:text-white hover:bg-white/80 dark:hover:bg-white/20 hover:scale-[1.02] border-black/10 dark:border-white/15 backdrop-blur-md shadow-sm"
-                    }`}
-                  >
-                    {isActive && (
-                      <span className="w-1.5 h-1.5 rounded-full bg-white dark:bg-black mr-1.5 shrink-0 animate-scale-in" aria-hidden="true" />
-                    )}
-                    <span>
-                      {category === "Web Development" ? (
-                        <>
-                          <span className="min-[350px]:hidden">Web Dev</span>
-                          <span className="hidden min-[350px]:inline">Web Development</span>
-                        </>
-                      ) : (
-                        category
+            {categories.length > 3 && (
+              <div className="flex items-center justify-center gap-1.5">
+                {categories.slice(3).map((category, idx) => {
+                  const isActive = activeCategory === category;
+                  return (
+                    <button
+                      key={category}
+                      role="tab"
+                      aria-selected={isActive}
+                      onClick={() => setActiveCategory(category)}
+                      style={{ animationDelay: `${(idx + 3) * 60}ms` }}
+                      className={`animate-category-pill px-3.5 py-2 min-h-[40px] rounded-full text-xs font-semibold whitespace-nowrap transition-all duration-300 active:scale-95 border flex items-center justify-center ${
+                        isActive
+                          ? "bg-black text-white dark:bg-white dark:text-black border-black dark:border-white shadow-md backdrop-blur-md scale-[1.02]"
+                          : "bg-white/60 dark:bg-white/10 text-neutral-800 dark:text-neutral-200 hover:text-black dark:hover:text-white hover:bg-white/80 dark:hover:bg-white/20 hover:scale-[1.02] border-black/10 dark:border-white/15 backdrop-blur-md shadow-sm"
+                      }`}
+                    >
+                      {isActive && (
+                        <span className="w-1.5 h-1.5 rounded-full bg-white dark:bg-black mr-1.5 shrink-0 animate-scale-in" aria-hidden="true" />
                       )}
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
+                      <span>
+                        {category === "Web Development" ? (
+                          <>
+                            <span className="min-[350px]:hidden">Web Dev</span>
+                            <span className="hidden min-[350px]:inline">Web Development</span>
+                          </>
+                        ) : (
+                          category
+                        )}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            )}
           </div>
 
           {/* Desktop view: 1 baris horizontal rapi */}
@@ -624,7 +675,7 @@ export function PortfolioSection() {
                   <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${
                     isOverlayFiltering ? "opacity-0 translate-y-3 scale-[0.99]" : "opacity-100 translate-y-0 scale-100"
                   }`}>
-                    {allProjects
+                    {itemsToUse
                       .filter((p) => activeCategory === "Semua" || p.category === activeCategory)
                       .map((project, idx) => (
                         <PortfolioCard
@@ -665,13 +716,23 @@ export function PortfolioSection() {
             </button>
 
             {/* Gambar Proyek */}
-            <div className="relative aspect-video w-full rounded-2xl overflow-hidden mb-5 border border-black/5 dark:border-white/10 bg-slate-100 dark:bg-neutral-900 shrink-0">
+            <div
+              className={`relative w-full rounded-2xl overflow-hidden mb-5 border border-black/5 dark:border-white/10 bg-slate-100 dark:bg-neutral-900 shrink-0 ${
+                selectedProject.fit === "contain" || selectedProject.figure
+                  ? "h-64 sm:h-80 flex items-center justify-center p-2.5"
+                  : "aspect-video"
+              }`}
+            >
               <Image
                 src={selectedProject.image}
                 alt={selectedProject.title.replace(/\n/g, " ")}
                 fill
                 sizes="(max-width: 640px) 100vw, 600px"
-                className="object-cover"
+                className={
+                  selectedProject.fit === "contain" || selectedProject.figure
+                    ? "object-contain drop-shadow-md"
+                    : "object-cover"
+                }
               />
             </div>
 

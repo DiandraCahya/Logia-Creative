@@ -1,0 +1,110 @@
+[
+  {
+    "id": "media-logo-main",
+    "path": "/LOGO.webp",
+    "alt": "Logia Logo Main",
+    "width": 128,
+    "height": 64,
+    "size": 26074,
+    "createdAt": "2026-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "media-group-1",
+    "path": "/Group 1.webp",
+    "alt": "Creative Wordmark",
+    "width": 96,
+    "height": 24,
+    "size": 13672,
+    "createdAt": "2026-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "media-group-3",
+    "path": "/Group 3.webp",
+    "alt": "Logia Creative Logo Group",
+    "width": 112,
+    "height": 32,
+    "size": 21600,
+    "createdAt": "2026-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "media-hero-portrait",
+    "path": "/LUOGIA2.webp",
+    "alt": "Potret kreator Logia Creative",
+    "width": 420,
+    "height": 420,
+    "size": 13852,
+    "createdAt": "2026-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "media-logo3d",
+    "path": "/logo3d.webp",
+    "alt": "Logia Creative 3D Background",
+    "width": 1424,
+    "height": 764,
+    "size": 227230,
+    "createdAt": "2026-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "media-justicia",
+    "path": "/justicia.webp",
+    "alt": "KWN Kelompok 2 Justicia",
+    "width": 1200,
+    "height": 800,
+    "size": 42190,
+    "createdAt": "2026-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "media-testi-sakura",
+    "path": "/miyawaki sakura.webp",
+    "alt": "Miyawaki Sakura",
+    "width": 200,
+    "height": 200,
+    "size": 8076,
+    "createdAt": "2026-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "media-testi-chaewon",
+    "path": "/kim chaewon.webp",
+    "alt": "Kim Chaewon",
+    "width": 200,
+    "height": 200,
+    "size": 6418,
+    "createdAt": "2026-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "media-testi-eunchae",
+    "path": "/hong eunchae.webp",
+    "alt": "Hong Eunchae",
+    "width": 200,
+    "height": 200,
+    "size": 4586,
+    "createdAt": "2026-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "media-testi-yeji",
+    "path": "/hwang ye-ji.webp",
+    "alt": "Hwang Ye-ji",
+    "width": 200,
+    "height": 200,
+    "size": 8518,
+    "createdAt": "2026-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "media-testi-asa",
+    "path": "/enami asa.webp",
+    "alt": "Enami Asa",
+    "width": 200,
+    "height": 200,
+    "size": 5076,
+    "createdAt": "2026-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "media-testi-hanni",
+    "path": "/pham hanni.webp",
+    "alt": "Pham Hanni",
+    "width": 200,
+    "height": 200,
+    "size": 3840,
+    "createdAt": "2026-01-01T00:00:00.000Z"
+  }
+]

@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import { useScrollReveal } from "@/lib/useScrollReveal";
+import type { AboutContent } from "@/lib/cms/types";
 
 const tabs = [
   { id: "visi", label: "Visi" },
@@ -10,11 +11,22 @@ const tabs = [
   { id: "filosofi", label: "Filosofi" },
 ] as const;
 
-export function CompanyProfileSection() {
+interface CompanyProfileSectionProps {
+  content?: AboutContent;
+}
+
+export function CompanyProfileSection({ content }: CompanyProfileSectionProps = {}) {
   const [activeTab, setActiveTab] = useState<typeof tabs[number]["id"]>("visi");
   const { ref, isInView } = useScrollReveal();
 
-  const missions = [
+  const title = content?.title || "Logia Creative Agency";
+  const subtitle = content?.subtitle || "Kami membangun keseimbangan antara kreativitas visual dan ketangguhan teknologi.";
+  const visiQuote = content?.visiQuote || "“Menjadi mitra kreatif dan teknologi terdepan yang memberdayakan bisnis di Indonesia melalui integrasi identitas visual yang berkarakter dan solusi digital yang berdampak nyata.”";
+  const visiAuthor = content?.visiAuthor || "Logia Creative";
+  const filosofiLogo1 = content?.filosofiLogo1 || "/LOGO.webp";
+  const filosofiLogo2 = content?.filosofiLogo2 || "/Group 1.webp";
+
+  const missions = content?.missions && content.missions.length > 0 ? content.missions : [
     {
       title: "Desain Berdampak",
       desc: "Menghadirkan identitas visual yang profesional, berkarakter, dan berkesan.",
@@ -29,7 +41,7 @@ export function CompanyProfileSection() {
     },
   ];
 
-  const brandPillars = [
+  const brandPillars = content?.brandPillars && content.brandPillars.length > 0 ? content.brandPillars : [
     {
       title: "Logika & Kreativitas",
       desc: "Menggabungkan daya nalar logis sistemik dan kebebasan ekspresi visual.",
@@ -56,10 +68,10 @@ export function CompanyProfileSection() {
           >
             <div className="mb-10">
               <h2 className="font-righteous text-[clamp(2.1rem,4.5vw,3.75rem)] leading-[1.08] tracking-normal text-black dark:text-white mb-4">
-                Logia Creative Agency
+                {title}
               </h2>
               <p className="text-[#666666] dark:text-[#999999] text-base leading-relaxed">
-                Kami membangun keseimbangan antara kreativitas visual dan ketangguhan teknologi.
+                {subtitle}
               </p>
             </div>
 
@@ -92,11 +104,11 @@ export function CompanyProfileSection() {
               {activeTab === "visi" && (
                 <div className="p-5 sm:p-12 glass-card rounded-3xl animate-fade-up">
                   <h3 className="text-xl sm:text-2xl font-bold leading-[1.5] text-black dark:text-white mb-8">
-                    &ldquo;Menjadi mitra kreatif dan teknologi terdepan yang memberdayakan bisnis di Indonesia melalui integrasi identitas visual yang berkarakter dan solusi digital yang berdampak nyata.&rdquo;
+                    {visiQuote}
                   </h3>
                   <div className="flex justify-center items-center pt-2">
                     <p className="text-sm font-bold uppercase tracking-[0.15em] text-[#666666] dark:text-[#999999] text-center">
-                      Logia Creative
+                      {visiAuthor}
                     </p>
                   </div>
                 </div>
@@ -132,7 +144,7 @@ export function CompanyProfileSection() {
                   <div className="p-5 sm:p-8 glass-card rounded-2xl flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8 transition-all duration-300 hover:scale-[1.01]">
                     <div className="relative w-32 h-16">
                       <Image
-                        src="/LOGO.webp"
+                        src={filosofiLogo1}
                         alt="Logo Logia"
                         fill
                         loading="lazy"
@@ -144,7 +156,7 @@ export function CompanyProfileSection() {
                     <div className="hidden sm:block w-px h-12 bg-black/10 dark:bg-white/10" />
                     <div className="relative w-24 h-6">
                       <Image
-                        src="/Group 1.webp"
+                        src={filosofiLogo2}
                         alt="Creative Wordmark"
                         fill
                         loading="lazy"

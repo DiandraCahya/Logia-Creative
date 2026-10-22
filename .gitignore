@@ -3,10 +3,12 @@ node_modules/
 .pnp
 .pnp.js
 
-# Next.js Build Output
+# Next.js & Deployment Output
 .next/
 out/
 build/
+.vercel/
+.turbo/
 
 # Environment Variables & Secrets
 .env

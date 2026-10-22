@@ -1,0 +1,59 @@
+{
+  "sectionTitle": "Kata Mereka",
+  "testimonials": [
+    {
+      "id": "miyawaki-sakura",
+      "quote": "Identitas brand kami terliat jauh lebih profesional setelah bekerja sama dengan Logia Creative.",
+      "author": "Miyawaki Sakura",
+      "role": "Brand Owner",
+      "image": "/miyawaki sakura.webp",
+      "alt": "Miyawaki Sakura",
+      "active": true
+    },
+    {
+      "id": "kim-chaewon",
+      "quote": "Proses kerjanya rapi dan hasil desainnya konsisten dari awal sampai serah-terima.",
+      "author": "Kim Chaewon",
+      "role": "Marketing Director",
+      "image": "/kim chaewon.webp",
+      "alt": "Kim Chaewon",
+      "active": true
+    },
+    {
+      "id": "hong-eunchae",
+      "quote": "Website-nya cepat, rapi di mobile, dan mudah kami kelola sendiri setelahnya.",
+      "author": "Hong Eunchae",
+      "role": "Founder Startup",
+      "image": "/hong eunchae.webp",
+      "alt": "Hong Eunchae",
+      "active": true
+    },
+    {
+      "id": "hwang-ye-ji",
+      "quote": "Setiap detail visual dikerjakan dengan teliti, hasil akhirnya sesuai ekspektasi kami.",
+      "author": "Hwang Ye-ji",
+      "role": "Creative Lead",
+      "image": "/hwang ye-ji.webp",
+      "alt": "Hwang Ye-ji",
+      "active": true
+    },
+    {
+      "id": "enami-asa",
+      "quote": "Konten sosmed yang dibuat membuat feed kami terliat konsisten dan rapi.",
+      "author": "Enami Asa",
+      "role": "F&B Business Owner",
+      "image": "/enami asa.webp",
+      "alt": "Enami Asa",
+      "active": true
+    },
+    {
+      "id": "pham-hanni",
+      "quote": "Otomatisasi yang dipasang menghemat waktu tim kami untuk hal-hal lain.",
+      "author": "Pham Hanni",
+      "role": "Operations Manager",
+      "image": "/pham hanni.webp",
+      "alt": "Pham Hanni",
+      "active": true
+    }
+  ]
+}

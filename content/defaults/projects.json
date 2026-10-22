@@ -1,0 +1,103 @@
+[
+  {
+    "id": "revitalisasi-identitas-nusantara",
+    "title": "Revitalisasi\nIdentitas\nNusantara",
+    "category": "Branding",
+    "image": "https://images.unsplash.com/photo-1518770660439-4636190af475?q=70&w=1400&auto=format&fit=crop",
+    "description": "Mendesain ulang identitas visual brand lokal untuk menembus pasar internasional tanpa menghilangkan akar budaya.",
+    "tags": ["Logo Design", "Identity", "Brand Book"],
+    "accent": "#ff4114",
+    "featured": true
+  },
+  {
+    "id": "platform-edukasi-kreatif",
+    "title": "Platform\nEdukasi\nKreatif",
+    "category": "Web Development",
+    "image": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=70&w=1400&auto=format&fit=crop",
+    "description": "Pengembangan platform e-learning responsif dan interaktif menggunakan ekosistem Next.js modern.",
+    "tags": ["Next.js", "Tailwind CSS", "UI/UX"],
+    "accent": "#00c8ff",
+    "featured": true
+  },
+  {
+    "id": "aplikasi-manajemen-bisnis",
+    "title": "Aplikasi\nManajemen\nBisnis",
+    "category": "UI/UX",
+    "image": "https://images.unsplash.com/photo-1614850523459-c2f4c699c52e?q=70&w=1400&auto=format&fit=crop",
+    "description": "Antarmuka intuitif untuk SaaS B2B, mempercepat proses onboarding pengguna baru hingga 40%.",
+    "tags": ["Figma", "Prototyping", "User Research"],
+    "accent": "#7b61ff",
+    "featured": true
+  },
+  {
+    "id": "video-profile-korporat",
+    "title": "Video\nProfile\nKorporat",
+    "category": "Marketing",
+    "image": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=70&w=1400&auto=format&fit=crop",
+    "description": "Produksi video profil perusahaan energi terbarukan untuk investor asing.",
+    "tags": ["Motion", "Premiere", "Storyboarding"],
+    "accent": "#2f7bff",
+    "featured": true
+  },
+  {
+    "id": "kwn-kelompok-2",
+    "title": "KWN\nKelompok\n2",
+    "category": "Web Development",
+    "image": "/justicia.webp",
+    "description": "Website profil kelompok KWN yang mengangkat isu kebebasan berekspresi dan regulasi ruang digital. Dibangun dengan Next.js dan siap tayang.",
+    "tags": ["Next.js", "Web Design", "Responsive"],
+    "link": "https://kwn-kelompok-2.vercel.app/",
+    "figure": true,
+    "featured": true
+  },
+  {
+    "id": "e-commerce-artisan",
+    "title": "E-Commerce\nArtisan",
+    "category": "Web Development",
+    "image": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=70&w=1400&auto=format&fit=crop",
+    "description": "Toko online untuk pengrajin lokal dengan pengalaman belanja yang mulus dan cepat.",
+    "tags": ["React", "API", "E-Commerce"],
+    "accent": "#4356c8",
+    "featured": true
+  },
+  {
+    "id": "rebranding-kafe-urban",
+    "title": "Rebranding\nKafe\nUrban",
+    "category": "Branding",
+    "image": "https://images.unsplash.com/photo-1614850523459-c2f4c699c52e?q=70&w=1400&auto=format&fit=crop",
+    "description": "Penyegaran visual kafe kopi urban mulai dari logo, kemasan, hingga desain menu digital.",
+    "tags": ["Packaging", "Visual", "Typography"],
+    "accent": "#ff3b6b",
+    "featured": true
+  },
+  {
+    "id": "aplikasi-finance-track",
+    "title": "Aplikasi\nFinance\nTrack",
+    "category": "UI/UX",
+    "image": "https://images.unsplash.com/photo-1518770660439-4636190af475?q=70&w=1400&auto=format&fit=crop",
+    "description": "Dashboard analitik keuangan untuk startup dengan tampilan dark mode premium.",
+    "tags": ["Figma", "Dashboard", "Fintech"],
+    "accent": "#14307a",
+    "featured": false
+  },
+  {
+    "id": "kampanye-digital-omnichannel",
+    "title": "Kampanye\nDigital\nOmnichannel",
+    "category": "Marketing",
+    "image": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=70&w=1400&auto=format&fit=crop",
+    "description": "Strategi aktivasi kampanye digital terpadu yang meningkatkan engagement dan konversi brand.",
+    "tags": ["Growth", "Campaign", "Performance"],
+    "accent": "#2f7bff",
+    "featured": false
+  },
+  {
+    "id": "aplikasi-booking-klinik",
+    "title": "Aplikasi\nBooking\nKlinik",
+    "category": "Web Development",
+    "image": "https://images.unsplash.com/photo-1614850523459-c2f4c699c52e?q=70&w=1400&auto=format&fit=crop",
+    "description": "Sistem reservasi online rumah sakit dengan sinkronisasi jadwal real-time.",
+    "tags": ["Next.js", "PostgreSQL", "Tailwind CSS"],
+    "accent": "#e5231b",
+    "featured": false
+  }
+]

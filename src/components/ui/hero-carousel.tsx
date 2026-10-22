@@ -52,6 +52,10 @@ export interface HeroCarouselItem {
    * @default false
    */
   figure?: boolean
+  /** Mode tampilan foto: cover (default) atau contain (tanpa terpotong) */
+  fit?: "cover" | "contain"
+  /** Fokus pemotongan foto: center, top, bottom, left, right */
+  focalPoint?: "center" | "top" | "bottom" | "left" | "right"
   /** @deprecated kept for API compatibility; no longer used for colour grading. */
   accent?: string
   /** @deprecated no longer rendered. */
@@ -95,6 +99,14 @@ const WHEEL_COOLDOWN = 420
 
 const clamp = (n: number, min: number, max: number) =>
   Math.min(max, Math.max(min, n))
+
+export const FOCAL_POSITION_MAP: Record<string, string> = {
+  center: "50% 50%",
+  top: "50% 15%",
+  bottom: "50% 85%",
+  left: "15% 50%",
+  right: "85% 50%",
+}
 
 const prefersReducedMotion = () =>
   typeof window !== "undefined" &&
@@ -303,6 +315,18 @@ export function HeroCarousel({
                     }
               }
             >
+              {active.fit === "contain" && !active.figure && (
+                <Image
+                  src={active.image}
+                  alt=""
+                  aria-hidden
+                  draggable={false}
+                  fill
+                  sizes="100vw"
+                  quality={60}
+                  className="object-cover blur-xl scale-125 opacity-40 brightness-75 dark:brightness-50 pointer-events-none"
+                />
+              )}
               <Image
                 src={active.image}
                 alt={titleFlat}
@@ -312,7 +336,23 @@ export function HeroCarousel({
                 loading="lazy"
                 decoding="async"
                 draggable={false}
-                className={active.figure ? "object-contain object-bottom" : "object-cover"}
+                className={cn(
+                  "relative z-10",
+                  active.fit === "contain"
+                    ? "object-contain object-center p-3"
+                    : active.figure
+                    ? "object-contain object-bottom p-2"
+                    : "object-cover"
+                )}
+                style={{
+                  objectPosition: active.figure
+                    ? "50% 100%"
+                    : active.fit === "contain"
+                    ? "50% 50%"
+                    : active.focalPoint
+                    ? (FOCAL_POSITION_MAP[active.focalPoint] || "50% 26%")
+                    : "50% 26%",
+                }}
               />
             </div>
           </div>
@@ -534,6 +574,11 @@ export function HeroCarousel({
               loading="lazy"
               decoding="async"
               className="object-cover grayscale opacity-100"
+              style={{
+                objectPosition: active.focalPoint
+                  ? (FOCAL_POSITION_MAP[active.focalPoint] || "50% 26%")
+                  : "50% 26%",
+              }}
             />
           </div>
         )}
@@ -676,6 +721,19 @@ export function HeroCarousel({
                   : `height 0.55s cubic-bezier(0.22,1,0.36,1), opacity 0.55s cubic-bezier(0.22,1,0.36,1)`,
               }}
             >
+              {/* Latar belakang blur lembut bila mode contain agar kartu tidak menyisakan ruang hampa hitam */}
+              {item.fit === "contain" && !item.figure && (
+                <Image
+                  src={item.image}
+                  alt=""
+                  aria-hidden
+                  draggable={false}
+                  fill
+                  sizes={`${Math.round(cardW)}px`}
+                  quality={60}
+                  className="object-cover blur-md scale-125 opacity-40 brightness-75 dark:brightness-50 pointer-events-none"
+                />
+              )}
               <Image
                 src={item.image}
                 alt=""
@@ -686,10 +744,23 @@ export function HeroCarousel({
                 loading="lazy"
                 decoding="async"
                 className={cn(
-                  "h-full w-full object-cover transition-[filter] duration-500",
+                  "h-full w-full transition-[filter] duration-500 relative z-10",
+                  item.fit === "contain"
+                    ? "object-contain p-2.5"
+                    : item.figure
+                    ? "object-contain p-2"
+                    : "object-cover",
                   i === index ? "grayscale-0" : "grayscale"
                 )}
-                style={{ objectPosition: item.figure ? "50% 100%" : "50% 26%" }}
+                style={{
+                  objectPosition: item.figure
+                    ? "50% 100%"
+                    : item.fit === "contain"
+                    ? "50% 50%"
+                    : item.focalPoint
+                    ? (FOCAL_POSITION_MAP[item.focalPoint] || "50% 26%")
+                    : "50% 26%",
+                }}
               />
             </button>
           ))}
