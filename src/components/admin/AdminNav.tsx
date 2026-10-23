@@ -17,6 +17,7 @@ import {
   ArrowLeft,
   ChevronRight,
   Home,
+  Receipt,
 } from "lucide-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
@@ -25,6 +26,7 @@ const NAV_ITEMS = [
   { name: "Editor Teks", href: "/admin/teks", icon: FileText },
   { name: "Koleksi", href: "/admin/koleksi", icon: FolderKanban },
   { name: "Galeri Foto", href: "/admin/media", icon: ImageIcon },
+  { name: "Invoice", href: "/admin/invoice", icon: Receipt },
   { name: "Publikasi", href: "/admin/publikasi", icon: Send },
 ];
 

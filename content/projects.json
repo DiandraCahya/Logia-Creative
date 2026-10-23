@@ -1,5 +1,20 @@
 [
   {
+    "id": "project-1792747690470",
+    "title": "mopek",
+    "category": "Branding",
+    "image": "/uploads/2026/10/crop-16x9-6e8b959a.webp",
+    "description": "yoes",
+    "tags": [
+      "Next.js",
+      "Design"
+    ],
+    "figure": false,
+    "fit": "contain",
+    "focalPoint": "top",
+    "featured": true
+  },
+  {
     "id": "revitalisasi-identitas-nusantara",
     "title": "Revitalisasi\nIdentitas\nNusantara",
     "category": "Branding",
