@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useCallback, useEffect, useState, useTransition } from "react";
+import React, { useCallback, useEffect, useState, useTransition, Suspense } from "react";
 import Image from "next/image";
+import { useSearchParams } from "next/navigation";
 import {
   FolderKanban,
   Tag,
@@ -14,7 +15,7 @@ import {
   ArrowDown,
   Check,
   AlertCircle,
-  Sparkles,
+  Info,
   Save,
   RotateCcw,
   Star,
@@ -44,8 +45,21 @@ interface ToastState {
   message: string;
 }
 
-export default function AdminKoleksiPage() {
-  const [activeTab, setActiveTab] = useState<ActiveTab>("projects");
+function KoleksiContent() {
+  const searchParams = useSearchParams();
+  const tabParam = searchParams.get("tab") as ActiveTab | null;
+  const [activeTab, setActiveTab] = useState<ActiveTab>(() => {
+    if (tabParam && ["projects", "promos", "testimonials", "rate-card"].includes(tabParam)) {
+      return tabParam;
+    }
+    return "projects";
+  });
+
+  useEffect(() => {
+    if (tabParam && ["projects", "promos", "testimonials", "rate-card"].includes(tabParam)) {
+      setActiveTab(tabParam);
+    }
+  }, [tabParam]);
   const [isPending, startTransition] = useTransition();
   const [toast, setToast] = useState<ToastState | null>(null);
 
@@ -234,7 +248,7 @@ export default function AdminKoleksiPage() {
         >
           {toast.type === "success" && <Check className="w-4 h-4 text-emerald-400" />}
           {toast.type === "error" && <AlertCircle className="w-4 h-4 text-red-400" />}
-          {toast.type === "info" && <Sparkles className="w-4 h-4 text-amber-400" />}
+          {toast.type === "info" && <Info className="w-4 h-4 text-amber-400" />}
           <span>{toast.message}</span>
         </div>
       )}
@@ -1958,5 +1972,19 @@ function ModalWrapper({
         <div className="p-6 overflow-y-auto">{children}</div>
       </div>
     </div>
+  );
+}
+
+export default function AdminKoleksiPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="p-12 text-center text-sm font-semibold text-neutral-500 animate-pulse">
+          Memuat data koleksi CMS...
+        </div>
+      }
+    >
+      <KoleksiContent />
+    </Suspense>
   );
 }

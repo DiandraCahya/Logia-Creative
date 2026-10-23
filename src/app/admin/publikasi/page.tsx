@@ -9,7 +9,6 @@ import {
   AlertTriangle,
   CheckCircle2,
   Clock,
-  Sparkles,
   FileText,
   FolderKanban,
   ImageIcon,
@@ -140,21 +139,20 @@ export default function AdminPublikasiPage() {
               window.location.href = "/admin";
             }
           }}
-          className="inline-flex items-center gap-1.5 text-xs font-semibold text-neutral-500 hover:text-black dark:hover:text-white transition-colors mb-3 cursor-pointer group"
+          className="inline-flex items-center gap-2 text-xs font-semibold text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white transition-colors mb-3 cursor-pointer group min-h-[44px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black dark:focus-visible:ring-white rounded-lg px-1"
         >
           <ArrowLeft className="w-3.5 h-3.5 transition-transform group-hover:-translate-x-1" />
           <span>Kembali ke Ringkasan</span>
         </button>
-        <div className="flex items-center gap-2 mb-1">
-          <span className="text-xs font-mono uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
+        <div className="flex items-center gap-2 mb-1.5">
+          <span className="text-[11px] font-mono uppercase tracking-wider px-2 py-0.5 rounded border border-neutral-200 dark:border-neutral-800 bg-neutral-100 dark:bg-neutral-900 text-neutral-600 dark:text-neutral-400 font-semibold">
             Pusat Rilis
           </span>
-          <span className="w-1.5 h-1.5 rounded-full bg-black/40 dark:bg-white/40" />
-          <span className="text-xs font-semibold text-neutral-600 dark:text-neutral-400">
-            Fase 6: Draft & Publikasi
+          <span className="text-xs font-semibold text-neutral-500 dark:text-neutral-400">
+            Sinkronisasi & Publikasi Konten
           </span>
         </div>
-        <h1 className="font-righteous text-2xl sm:text-3xl text-black dark:text-white">
+        <h1 className="font-righteous text-2xl sm:text-3xl text-neutral-900 dark:text-neutral-100">
           Publikasi Konten
         </h1>
         <p className="text-sm text-neutral-600 dark:text-neutral-400 mt-1">

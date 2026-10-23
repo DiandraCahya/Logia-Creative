@@ -70,7 +70,7 @@ export function AdminNav() {
   );
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-black/10 dark:border-white/10 bg-white/85 dark:bg-[#0a0a0a]/85 backdrop-blur-xl">
+    <header className="sticky top-0 z-40 w-full border-b border-neutral-200 dark:border-neutral-800 bg-white/95 dark:bg-[#0a0a0a]/95 backdrop-blur-md">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-3">
         {/* Left: Back Button + Brand Logo + Nav Links */}
         <div className="flex items-center gap-2.5 sm:gap-4 min-w-0">
@@ -78,7 +78,7 @@ export function AdminNav() {
           {isRootDashboard ? (
             <Link
               href="/"
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 min-h-[38px] rounded-xl border border-black/10 dark:border-white/15 bg-black/[0.04] dark:bg-white/[0.06] hover:bg-black/[0.08] dark:hover:bg-white/[0.12] text-xs font-semibold text-neutral-800 dark:text-neutral-200 transition-all active:scale-95 shrink-0"
+              className="inline-flex items-center gap-2 px-3.5 min-h-[44px] rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-100/70 dark:bg-neutral-900/70 hover:bg-neutral-200/70 dark:hover:bg-neutral-800/70 text-xs font-semibold text-neutral-800 dark:text-neutral-200 transition-all active:scale-95 shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black dark:focus-visible:ring-white"
               title="Kembali ke website utama Logia Creative"
             >
               <ArrowLeft className="w-3.5 h-3.5" />
@@ -89,7 +89,7 @@ export function AdminNav() {
             <button
               type="button"
               onClick={handleBack}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 min-h-[38px] rounded-xl border border-black/10 dark:border-white/15 bg-black/[0.04] dark:bg-white/[0.06] hover:bg-black/[0.08] dark:hover:bg-white/[0.12] text-xs font-semibold text-neutral-800 dark:text-neutral-200 transition-all active:scale-95 cursor-pointer shrink-0"
+              className="inline-flex items-center gap-2 px-3.5 min-h-[44px] rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-100/70 dark:bg-neutral-900/70 hover:bg-neutral-200/70 dark:hover:bg-neutral-800/70 text-xs font-semibold text-neutral-800 dark:text-neutral-200 transition-all active:scale-95 cursor-pointer shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black dark:focus-visible:ring-white"
               title="Kembali ke halaman sebelumnya"
             >
               <ArrowLeft className="w-3.5 h-3.5" />
@@ -97,10 +97,13 @@ export function AdminNav() {
             </button>
           )}
 
-          <div className="h-4 w-px bg-black/10 dark:border-white/10 hidden min-[480px]:block" />
+          <div className="h-5 w-px bg-neutral-200 dark:bg-neutral-800 hidden min-[480px]:block" />
 
           {/* Logo & Brand */}
-          <Link href="/admin" className="flex items-center gap-2 shrink-0 group">
+          <Link
+            href="/admin"
+            className="flex items-center gap-2 shrink-0 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black dark:focus-visible:ring-white rounded-lg p-1"
+          >
             <div className="relative w-20 sm:w-24 h-6 sm:h-7">
               <Image
                 src="/Group 3.webp"
@@ -111,23 +114,23 @@ export function AdminNav() {
                 priority
               />
             </div>
-            <span className="text-[10px] sm:text-xs font-mono px-2 py-0.5 rounded-full border border-black/10 dark:border-white/15 bg-black/5 dark:bg-white/10 font-bold tracking-wider">
+            <span className="text-[10px] sm:text-xs font-mono px-2 py-0.5 rounded-md border border-neutral-200 dark:border-neutral-800 bg-neutral-100 dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100 font-bold tracking-wider">
               CMS
             </span>
           </Link>
 
           {/* Active section breadcrumb badge (small to tablet screens) */}
           {currentItem && (
-            <div className="hidden min-[520px]:flex lg:hidden items-center gap-1 text-xs text-neutral-500 truncate">
+            <div className="hidden min-[520px]:flex lg:hidden items-center gap-1.5 text-xs text-neutral-500 truncate">
               <ChevronRight className="w-3.5 h-3.5 shrink-0 text-neutral-400" />
-              <span className="font-semibold text-black dark:text-white truncate">
+              <span className="font-semibold text-neutral-900 dark:text-neutral-100 truncate">
                 {currentItem.name}
               </span>
             </div>
           )}
 
           {/* Desktop Navigation Links */}
-          <nav className="hidden lg:flex items-center gap-1 ml-2" aria-label="Menu Admin">
+          <nav className="hidden lg:flex items-center gap-1 ml-2" aria-label="Menu Navigasi Admin">
             {NAV_ITEMS.map((item) => {
               const Icon = item.icon;
               const isActive = pathname === item.href || (item.href !== "/admin" && pathname.startsWith(item.href));
@@ -135,10 +138,10 @@ export function AdminNav() {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${
+                  className={`flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black dark:focus-visible:ring-white ${
                     isActive
-                      ? "bg-black text-white dark:bg-white dark:text-black shadow-sm"
-                      : "text-neutral-600 dark:text-neutral-300 hover:text-black dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10"
+                      ? "bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 shadow-sm"
+                      : "text-neutral-700 dark:text-neutral-300 hover:text-black dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800/80"
                   }`}
                 >
                   <Icon className="w-3.5 h-3.5 shrink-0" />
@@ -156,7 +159,7 @@ export function AdminNav() {
             target="_blank"
             rel="noopener noreferrer"
             title="Buka website publik di tab baru"
-            className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 min-h-[38px] rounded-xl border border-black/10 dark:border-white/15 text-xs font-semibold text-neutral-700 dark:text-neutral-300 hover:text-black dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10 transition-colors"
+            className="hidden sm:inline-flex items-center gap-2 px-3.5 min-h-[44px] rounded-xl border border-neutral-200 dark:border-neutral-800 text-xs font-semibold text-neutral-700 dark:text-neutral-300 hover:text-black dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800/80 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black dark:focus-visible:ring-white"
           >
             <span>Lihat Web</span>
             <ExternalLink className="w-3.5 h-3.5" />
@@ -170,7 +173,7 @@ export function AdminNav() {
             disabled={loggingOut}
             aria-label="Keluar dari admin"
             title="Logout"
-            className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 min-h-[38px] rounded-xl border border-black/10 dark:border-white/15 text-xs font-semibold text-neutral-700 dark:text-neutral-300 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-500/10 transition-colors cursor-pointer"
+            className="hidden sm:inline-flex items-center gap-2 px-3.5 min-h-[44px] rounded-xl border border-neutral-200 dark:border-neutral-800 text-xs font-semibold text-neutral-700 dark:text-neutral-300 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-500/10 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500"
           >
             <LogOut className="w-3.5 h-3.5" />
             <span>Keluar</span>
@@ -181,7 +184,7 @@ export function AdminNav() {
             type="button"
             onClick={() => setMobileMenuOpen((prev) => !prev)}
             aria-label={mobileMenuOpen ? "Tutup menu" : "Buka menu"}
-            className="lg:hidden p-2 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-xl border border-black/10 dark:border-white/15 text-neutral-800 dark:text-neutral-200"
+            className="lg:hidden p-2 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-xl border border-neutral-200 dark:border-neutral-800 text-neutral-800 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black dark:focus-visible:ring-white"
           >
             {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
@@ -190,7 +193,7 @@ export function AdminNav() {
 
       {/* Mobile Drawer Menu */}
       {mobileMenuOpen && (
-        <div className="lg:hidden border-t border-black/10 dark:border-white/10 bg-white dark:bg-[#0e0e0e] px-4 pt-3 pb-5 space-y-1.5">
+        <div className="lg:hidden border-t border-neutral-200 dark:border-neutral-800 bg-white dark:bg-[#0c0c0e] px-4 pt-3 pb-5 space-y-2">
           {!isRootDashboard && (
             <button
               type="button"
@@ -198,10 +201,10 @@ export function AdminNav() {
                 setMobileMenuOpen(false);
                 handleBack();
               }}
-              className="w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-sm font-semibold text-neutral-700 dark:text-neutral-300 bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10 transition-colors mb-2"
+              className="w-full flex items-center gap-2.5 px-3.5 min-h-[44px] rounded-xl text-sm font-semibold text-neutral-700 dark:text-neutral-300 bg-neutral-100 dark:bg-neutral-900 hover:bg-neutral-200 dark:hover:bg-neutral-800 transition-colors mb-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black dark:focus-visible:ring-white"
             >
               <ArrowLeft className="w-4 h-4" />
-              <span>← Kembali ke Halaman Sebelumnya</span>
+              <span>Kembali ke Halaman Sebelumnya</span>
             </button>
           )}
 
@@ -213,10 +216,10 @@ export function AdminNav() {
                 key={item.href}
                 href={item.href}
                 onClick={() => setMobileMenuOpen(false)}
-                className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all ${
+                className={`flex items-center gap-3 px-3.5 min-h-[44px] rounded-xl text-sm font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black dark:focus-visible:ring-white ${
                   isActive
-                    ? "bg-black text-white dark:bg-white dark:text-black"
-                    : "text-neutral-700 dark:text-neutral-300 hover:bg-black/5 dark:hover:bg-white/10"
+                    ? "bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 shadow-sm"
+                    : "text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800/80"
                 }`}
               >
                 <Icon className="w-4 h-4" />
@@ -225,20 +228,20 @@ export function AdminNav() {
             );
           })}
 
-          <div className="pt-3 mt-3 border-t border-black/10 dark:border-white/10 flex items-center justify-between">
+          <div className="pt-3 mt-3 border-t border-neutral-200 dark:border-neutral-800 flex items-center justify-between">
             <Link
               href="/"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 text-xs font-semibold text-neutral-600 dark:text-neutral-400 py-1"
+              className="inline-flex items-center gap-2 text-xs font-semibold text-neutral-700 dark:text-neutral-300 hover:text-black dark:hover:text-white min-h-[44px] px-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black dark:focus-visible:ring-white rounded-lg"
             >
               <ExternalLink className="w-3.5 h-3.5" />
-              <span>Buka Website</span>
+              <span>Buka Website Publik</span>
             </Link>
             <button
               type="button"
               onClick={handleLogout}
-              className="inline-flex items-center gap-1.5 text-xs font-semibold text-red-600 dark:text-red-400 py-1"
+              className="inline-flex items-center gap-2 text-xs font-semibold text-red-600 dark:text-red-400 hover:text-red-700 min-h-[44px] px-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 rounded-lg cursor-pointer"
             >
               <LogOut className="w-3.5 h-3.5" />
               <span>Keluar</span>

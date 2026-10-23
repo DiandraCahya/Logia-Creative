@@ -7,7 +7,7 @@ import {
   ExternalLink,
   Save,
   RotateCcw,
-  Sparkles,
+  Info,
   Check,
   AlertCircle,
   ImageIcon,
@@ -210,7 +210,7 @@ export default function AdminTeksPage() {
         >
           {toast.type === "success" && <Check className="w-4 h-4 text-emerald-400" />}
           {toast.type === "error" && <AlertCircle className="w-4 h-4 text-red-400" />}
-          {toast.type === "info" && <Sparkles className="w-4 h-4 text-amber-400" />}
+          {toast.type === "info" && <Info className="w-4 h-4 text-amber-400" />}
           <span>{toast.message}</span>
         </div>
       )}

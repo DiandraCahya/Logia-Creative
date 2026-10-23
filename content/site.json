@@ -5,14 +5,14 @@
     "keywords": "Logia Creative, Creative Agency, Technology Agency, Branding, UI/UX Design, Web Development, Workflow Automation, Digital Solutions, UMKM, Startup",
     "ogTitle": "Logia Creative | Creative & Technology Agency",
     "ogDescription": "Mengintegrasikan Kreativitas dan Teknologi untuk Bisnis yang Lebih Kuat. Solusi branding, web modern, dan otomatisasi alur kerja.",
-    "ogImage": "/LOGO.png"
+    "ogImage": "/LUOGIA2.webp"
   },
   "splash": {
     "text": "LOGIA CREATIVE",
     "skipText": "Skip Intro"
   },
   "navbar": {
-    "logoImage": "/Group 3.webp",
+    "logoImage": "/LOGO.webp",
     "logoAlt": "Logia Logo",
     "collabButton": "Kolaborasi",
     "collabExpanded": "Mulai Kolaborasi",
@@ -43,8 +43,16 @@
         "problemTitle": "Tantangan Utama",
         "problemText": "Produk laku keras, namun kemasan dan logo belum profesional. Sulit masuk retail karena kurangnya identitas visual yang konsisten.",
         "stats": [
-          { "value": "+300%", "label": "Daya Tarik Visual", "sublabel": "Kredibilitas kemasan retail" },
-          { "value": "100%", "label": "Master Siap Cetak", "sublabel": "Vector SVG & PDF anti pecah" }
+          {
+            "value": "+300%",
+            "label": "Daya Tarik Visual",
+            "sublabel": "Kredibilitas kemasan retail"
+          },
+          {
+            "value": "100%",
+            "label": "Master Siap Cetak",
+            "sublabel": "Vector SVG & PDF anti pecah"
+          }
         ],
         "solutions": [
           {
@@ -76,8 +84,16 @@
         "problemTitle": "Tantangan Utama",
         "problemText": "Butuh website rilis cepat dengan UI/UX yang rapi dan terukur, serta optimasi kecepatan untuk performa terbaik.",
         "stats": [
-          { "value": "98+", "label": "Lighthouse Score", "sublabel": "Audit performa" },
-          { "value": "100%", "label": "Design System", "sublabel": "Figma tokens rapi" }
+          {
+            "value": "98+",
+            "label": "Lighthouse Score",
+            "sublabel": "Audit performa"
+          },
+          {
+            "value": "100%",
+            "label": "Design System",
+            "sublabel": "Figma tokens rapi"
+          }
         ],
         "solutions": [
           {
@@ -112,8 +128,16 @@
         "problemTitle": "Tantangan Utama",
         "problemText": "Manajemen peserta manual yang merepotkan dan visual promosi event yang kurang terpadu.",
         "stats": [
-          { "value": "100%", "label": "Automasi", "sublabel": "Tiket digital instan" },
-          { "value": "0 Antrean", "label": "Check-in QR", "sublabel": "Validasi panitia kilat" }
+          {
+            "value": "100%",
+            "label": "Automasi",
+            "sublabel": "Tiket digital instan"
+          },
+          {
+            "value": "0 Antrean",
+            "label": "Check-in QR",
+            "sublabel": "Validasi panitia kilat"
+          }
         ],
         "solutions": [
           {

@@ -6,14 +6,18 @@ import {
   Image as ImageIcon,
   Send,
   ArrowRight,
-  ArrowLeft,
-  Sparkles,
   Server,
   GitBranch,
   ShieldCheck,
+  Receipt,
+  ExternalLink,
+  Layers,
+  Tag,
+  MessageSquareQuote,
+  CreditCard,
   CheckCircle2,
 } from "lucide-react";
-import { getSite, getProjects, getPromos, getTestimonials, getRateCard, getMediaRegistry } from "@/lib/cms/content";
+import { getProjects, getPromos, getTestimonials, getRateCard, getMediaRegistry } from "@/lib/cms/content";
 import { getStore } from "@/lib/cms/store";
 
 export const dynamic = "force-dynamic";
@@ -36,244 +40,384 @@ export default async function AdminDashboardPage() {
   );
 
   return (
-    <div className="max-w-6xl mx-auto space-y-8 animate-fade-in pb-12">
-      {/* Welcome Banner */}
-      <div className="p-6 sm:p-8 rounded-3xl border border-black/10 dark:border-white/10 bg-white/70 dark:bg-[#111]/70 backdrop-blur-xl relative overflow-hidden">
-        <div className="relative z-10 max-w-2xl">
-          <div className="flex items-center gap-2 mb-2">
-            <span className="text-xs font-mono uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
-              Panel Kendali
-            </span>
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-            <span className="text-xs font-semibold text-emerald-600 dark:text-emerald-400">
-              Sistem Terhubung
-            </span>
+    <div className="max-w-6xl mx-auto space-y-8 pb-12">
+      {/* Workspace Header Banner */}
+      <div className="p-6 sm:p-8 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-[#121214] shadow-sm relative overflow-hidden">
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+          <div className="max-w-2xl space-y-2">
+            <div className="flex items-center gap-2">
+              <span className="text-[11px] font-mono uppercase tracking-wider px-2 py-0.5 rounded border border-neutral-200 dark:border-neutral-800 bg-neutral-100 dark:bg-neutral-900 text-neutral-600 dark:text-neutral-400 font-semibold">
+                Panel Kendali
+              </span>
+              <span className="text-xs font-semibold text-neutral-500 dark:text-neutral-400">
+                Logia Creative CMS
+              </span>
+            </div>
+
+            <h1 className="font-righteous text-2xl sm:text-3xl text-neutral-900 dark:text-neutral-100 leading-tight">
+              Pusat Pengelolaan Konten & Administrasi
+            </h1>
+            <p className="text-xs sm:text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
+              Kelola salinan teks website, portofolio karya, paket harga rate card, testimoni klien,
+              galeri foto terkompresi WebP, dan cetak invoice resmi Logia Creative.
+            </p>
           </div>
 
-          <h1 className="font-righteous text-2xl sm:text-4xl text-black dark:text-white leading-tight">
-            Selamat Datang di CMS Logia Creative
-          </h1>
-          <p className="text-sm text-neutral-600 dark:text-neutral-400 mt-2 leading-relaxed">
-            Kelola seluruh teks website, portofolio karya, paket harga rate card, testimoni klien, dan
-            galeri foto dengan penyimpanan file mandiri tanpa layanan pihak ketiga.
-          </p>
-
-          <div className="mt-4 flex items-center gap-3">
+          <div className="flex flex-wrap sm:flex-nowrap items-center gap-3 shrink-0">
             <Link
               href="/"
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-black dark:bg-white text-white dark:text-black font-semibold text-xs hover:opacity-90 active:scale-95 transition-all shadow-sm"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center gap-2 px-4 min-h-[44px] rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-xs font-semibold text-neutral-800 dark:text-neutral-200 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black dark:focus-visible:ring-white"
             >
-              <ArrowLeft className="w-3.5 h-3.5" />
-              <span>Kembali ke Website Utama</span>
+              <span>Lihat Website</span>
+              <ExternalLink className="w-3.5 h-3.5" />
+            </Link>
+
+            <Link
+              href="/admin/publikasi"
+              className="inline-flex items-center justify-center gap-2 px-4 min-h-[44px] rounded-xl bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-100 text-xs font-semibold shadow-sm transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400"
+            >
+              <Send className="w-3.5 h-3.5" />
+              <span>Pusat Publikasi & Rilis</span>
             </Link>
           </div>
         </div>
 
-        <div className="mt-6 pt-6 border-t border-black/5 dark:border-white/5 flex items-center justify-between flex-wrap gap-4 text-xs">
+        {/* System Meta Telemetry Strip */}
+        <div className="mt-6 pt-6 border-t border-neutral-100 dark:border-neutral-800/80 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 text-xs">
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-xl bg-black/5 dark:bg-white/5">
+            <div className="p-2 rounded-lg bg-neutral-100 dark:bg-neutral-800/80 text-neutral-700 dark:text-neutral-300">
               {driverName === "github" ? (
-                <GitBranch className="w-4 h-4 text-black dark:text-white" />
+                <GitBranch className="w-4 h-4" />
               ) : (
-                <Server className="w-4 h-4 text-black dark:text-white" />
+                <Server className="w-4 h-4" />
               )}
             </div>
             <div>
-              <span className="text-neutral-500 dark:text-neutral-400 block">Driver Penyimpanan</span>
-              <strong className="font-semibold text-black dark:text-white uppercase font-mono">
-                {driverName}
+              <span className="text-neutral-500 dark:text-neutral-400 block text-[11px]">
+                Driver Penyimpanan
+              </span>
+              <strong className="font-mono font-semibold text-neutral-900 dark:text-neutral-100 uppercase">
+                {driverName === "github" ? "GitHub API (Produksi)" : "Sistem File Lokal"}
               </strong>
             </div>
           </div>
 
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-xl bg-black/5 dark:bg-white/5">
-              <ShieldCheck className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+            <div className="p-2 rounded-lg bg-neutral-100 dark:bg-neutral-800/80 text-emerald-600 dark:text-emerald-400">
+              <ShieldCheck className="w-4 h-4" />
             </div>
             <div>
-              <span className="text-neutral-500 dark:text-neutral-400 block">Status Keamanan</span>
-              <strong className="font-semibold text-black dark:text-white">
-                Sesi HMAC Aktif (12 Jam)
+              <span className="text-neutral-500 dark:text-neutral-400 block text-[11px]">
+                Keamanan Sesi
+              </span>
+              <strong className="font-semibold text-neutral-900 dark:text-neutral-100">
+                HMAC SHA-256 (Masa Aktif 12 Jam)
               </strong>
             </div>
           </div>
 
+          <div className="flex items-center gap-3 sm:col-span-2 md:col-span-1">
+            <div className="p-2 rounded-lg bg-neutral-100 dark:bg-neutral-800/80 text-neutral-700 dark:text-neutral-300">
+              <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+            </div>
+            <div>
+              <span className="text-neutral-500 dark:text-neutral-400 block text-[11px]">
+                Penyimpanan Mandiri
+              </span>
+              <strong className="font-semibold text-neutral-900 dark:text-neutral-100">
+                Bebas Vendor Lock-in (Zero DB Eksternal)
+              </strong>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Inventory Summary (Clickable Shortcuts) */}
+      <section aria-labelledby="inventory-heading">
+        <div className="flex items-center justify-between mb-3">
+          <h2 id="inventory-heading" className="font-righteous text-base text-neutral-900 dark:text-neutral-100">
+            Ringkasan Konten & Data
+          </h2>
+          <span className="text-xs text-neutral-500 dark:text-neutral-400">
+            Klik kartu untuk langsung mengedit bagian terkait
+          </span>
+        </div>
+
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+          {/* Card 1: Selected Work */}
           <Link
-            href="/admin/publikasi"
-            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-black text-white dark:bg-white dark:text-black font-semibold hover:scale-[1.02] active:scale-[0.98] transition-transform"
+            href="/admin/koleksi?tab=projects"
+            className="p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-[#121214] hover:border-neutral-400 dark:hover:border-neutral-600 transition-colors group flex flex-col justify-between focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black dark:focus-visible:ring-white"
           >
-            <span>Pusat Publikasi</span>
-            <ArrowRight className="w-3.5 h-3.5" />
+            <div className="flex items-center justify-between text-neutral-500 dark:text-neutral-400">
+              <span className="text-[11px] font-semibold uppercase tracking-wider">Karya</span>
+              <FolderKanban className="w-4 h-4 group-hover:text-neutral-900 dark:group-hover:text-neutral-100 transition-colors" />
+            </div>
+            <div className="mt-3">
+              <p className="text-2xl font-righteous text-neutral-900 dark:text-neutral-100">
+                {projects.length}
+              </p>
+              <span className="text-[11px] text-neutral-500 dark:text-neutral-400 block mt-0.5">
+                Proyek terdaftar
+              </span>
+            </div>
+          </Link>
+
+          {/* Card 2: Rate Card */}
+          <Link
+            href="/admin/koleksi?tab=rate-card"
+            className="p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-[#121214] hover:border-neutral-400 dark:hover:border-neutral-600 transition-colors group flex flex-col justify-between focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black dark:focus-visible:ring-white"
+          >
+            <div className="flex items-center justify-between text-neutral-500 dark:text-neutral-400">
+              <span className="text-[11px] font-semibold uppercase tracking-wider">Rate Card</span>
+              <CreditCard className="w-4 h-4 group-hover:text-neutral-900 dark:group-hover:text-neutral-100 transition-colors" />
+            </div>
+            <div className="mt-3">
+              <p className="text-2xl font-righteous text-neutral-900 dark:text-neutral-100">
+                {totalPackages}
+              </p>
+              <span className="text-[11px] text-neutral-500 dark:text-neutral-400 block mt-0.5 truncate">
+                {rateCard.solutions.length} Solusi layanan
+              </span>
+            </div>
+          </Link>
+
+          {/* Card 3: Testimoni */}
+          <Link
+            href="/admin/koleksi?tab=testimonials"
+            className="p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-[#121214] hover:border-neutral-400 dark:hover:border-neutral-600 transition-colors group flex flex-col justify-between focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black dark:focus-visible:ring-white"
+          >
+            <div className="flex items-center justify-between text-neutral-500 dark:text-neutral-400">
+              <span className="text-[11px] font-semibold uppercase tracking-wider">Testimoni</span>
+              <MessageSquareQuote className="w-4 h-4 group-hover:text-neutral-900 dark:group-hover:text-neutral-100 transition-colors" />
+            </div>
+            <div className="mt-3">
+              <p className="text-2xl font-righteous text-neutral-900 dark:text-neutral-100">
+                {testimonials.testimonials.length}
+              </p>
+              <span className="text-[11px] text-neutral-500 dark:text-neutral-400 block mt-0.5">
+                Ulasan klien
+              </span>
+            </div>
+          </Link>
+
+          {/* Card 4: Promo */}
+          <Link
+            href="/admin/koleksi?tab=promos"
+            className="p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-[#121214] hover:border-neutral-400 dark:hover:border-neutral-600 transition-colors group flex flex-col justify-between focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black dark:focus-visible:ring-white"
+          >
+            <div className="flex items-center justify-between text-neutral-500 dark:text-neutral-400">
+              <span className="text-[11px] font-semibold uppercase tracking-wider">Promo</span>
+              <Tag className="w-4 h-4 group-hover:text-neutral-900 dark:group-hover:text-neutral-100 transition-colors" />
+            </div>
+            <div className="mt-3">
+              <p className="text-2xl font-righteous text-neutral-900 dark:text-neutral-100">
+                {promos.length}
+              </p>
+              <span className="text-[11px] text-neutral-500 dark:text-neutral-400 block mt-0.5">
+                Penawaran aktif
+              </span>
+            </div>
+          </Link>
+
+          {/* Card 5: Galeri Media */}
+          <Link
+            href="/admin/media"
+            className="p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-[#121214] hover:border-neutral-400 dark:hover:border-neutral-600 transition-colors group flex flex-col justify-between focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black dark:focus-visible:ring-white"
+          >
+            <div className="flex items-center justify-between text-neutral-500 dark:text-neutral-400">
+              <span className="text-[11px] font-semibold uppercase tracking-wider">Media</span>
+              <ImageIcon className="w-4 h-4 group-hover:text-neutral-900 dark:group-hover:text-neutral-100 transition-colors" />
+            </div>
+            <div className="mt-3">
+              <p className="text-2xl font-righteous text-neutral-900 dark:text-neutral-100">
+                {media.length}
+              </p>
+              <span className="text-[11px] text-neutral-500 dark:text-neutral-400 block mt-0.5">
+                Foto WebP
+              </span>
+            </div>
+          </Link>
+
+          {/* Card 6: Invoice */}
+          <Link
+            href="/admin/invoice"
+            className="p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-[#121214] hover:border-neutral-400 dark:hover:border-neutral-600 transition-colors group flex flex-col justify-between focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black dark:focus-visible:ring-white"
+          >
+            <div className="flex items-center justify-between text-neutral-500 dark:text-neutral-400">
+              <span className="text-[11px] font-semibold uppercase tracking-wider">Invoice</span>
+              <Receipt className="w-4 h-4 group-hover:text-neutral-900 dark:group-hover:text-neutral-100 transition-colors" />
+            </div>
+            <div className="mt-3">
+              <p className="text-2xl font-righteous text-neutral-900 dark:text-neutral-100">
+                Figma
+              </p>
+              <span className="text-[11px] text-neutral-500 dark:text-neutral-400 block mt-0.5">
+                Format resmi PDF
+              </span>
+            </div>
           </Link>
         </div>
-      </div>
+      </section>
 
-      {/* Content Statistics Cards */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
-        <div className="p-5 rounded-2xl border border-black/10 dark:border-white/10 bg-white/60 dark:bg-[#111]/60">
-          <span className="text-xs font-semibold text-neutral-500 dark:text-neutral-400">
-            Selected Work
-          </span>
-          <p className="text-2xl sm:text-3xl font-righteous text-black dark:text-white mt-1">
-            {projects.length}
-          </p>
-          <span className="text-[11px] text-neutral-500 mt-1 block">Proyek terdaftar</span>
-        </div>
-
-        <div className="p-5 rounded-2xl border border-black/10 dark:border-white/10 bg-white/60 dark:bg-[#111]/60">
-          <span className="text-xs font-semibold text-neutral-500 dark:text-neutral-400">
-            Rate Card
-          </span>
-          <p className="text-2xl sm:text-3xl font-righteous text-black dark:text-white mt-1">
-            {totalPackages}
-          </p>
-          <span className="text-[11px] text-neutral-500 mt-1 block">
-            Paket dari {rateCard.solutions.length} solusi
-          </span>
-        </div>
-
-        <div className="p-5 rounded-2xl border border-black/10 dark:border-white/10 bg-white/60 dark:bg-[#111]/60">
-          <span className="text-xs font-semibold text-neutral-500 dark:text-neutral-400">
-            Testimoni Klien
-          </span>
-          <p className="text-2xl sm:text-3xl font-righteous text-black dark:text-white mt-1">
-            {testimonials.testimonials.length}
-          </p>
-          <span className="text-[11px] text-neutral-500 mt-1 block">Ulasan aktif</span>
-        </div>
-
-        <div className="p-5 rounded-2xl border border-black/10 dark:border-white/10 bg-white/60 dark:bg-[#111]/60">
-          <span className="text-xs font-semibold text-neutral-500 dark:text-neutral-400">
-            Galeri Media
-          </span>
-          <p className="text-2xl sm:text-3xl font-righteous text-black dark:text-white mt-1">
-            {media.length}
-          </p>
-          <span className="text-[11px] text-neutral-500 mt-1 block">Foto terkompresi WebP</span>
-        </div>
-      </div>
-
-      {/* Main Modules Grid */}
-      <div>
-        <h2 className="font-righteous text-lg text-black dark:text-white mb-4">
-          Modul Pengelolaan
+      {/* Primary Management Modules (Grid 5 Modules) */}
+      <section aria-labelledby="modules-heading">
+        <h2 id="modules-heading" className="font-righteous text-base text-neutral-900 dark:text-neutral-100 mb-4">
+          Modul Pengelolaan Utama
         </h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {/* Module 1: Editor Teks */}
           <Link
             href="/admin/teks"
-            className="p-6 rounded-3xl border border-black/10 dark:border-white/10 bg-white/60 dark:bg-[#111]/60 hover:bg-black/[0.02] dark:hover:bg-white/[0.02] hover:border-black/20 dark:hover:border-white/20 transition-all group flex flex-col justify-between"
+            className="p-6 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-[#121214] hover:border-neutral-400 dark:hover:border-neutral-600 transition-all group flex flex-col justify-between shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black dark:focus-visible:ring-white"
           >
-            <div>
-              <div className="w-10 h-10 rounded-2xl bg-black/5 dark:bg-white/5 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                <FileText className="w-5 h-5 text-black dark:text-white" />
+            <div className="space-y-3">
+              <div className="w-11 h-11 rounded-xl bg-neutral-100 dark:bg-neutral-800/80 flex items-center justify-center text-neutral-900 dark:text-neutral-100 group-hover:scale-105 transition-transform">
+                <FileText className="w-5 h-5" />
               </div>
-              <h3 className="font-righteous text-lg text-black dark:text-white">
-                Editor Teks Halaman
-              </h3>
-              <p className="text-xs text-neutral-600 dark:text-neutral-400 mt-1 leading-relaxed">
-                Ubah seluruh salinan teks per section: Splash Screen, Navigasi, Hero, Background
-                & Target Pasar, Profil Visi Misi, Layanan Kreatif & Teknis, hingga Footer.
-              </p>
+              <div>
+                <h3 className="font-righteous text-lg text-neutral-900 dark:text-neutral-100">
+                  Editor Teks Halaman
+                </h3>
+                <p className="text-xs text-neutral-600 dark:text-neutral-400 mt-1.5 leading-relaxed">
+                  Perbarui salinan teks per section website: Splash Screen, Navigasi, Hero, Target Pasar,
+                  Profil Visi Misi, Layanan Kreatif & Teknis, hingga Footer.
+                </p>
+              </div>
             </div>
-            <div className="mt-6 flex items-center gap-1.5 text-xs font-semibold text-black dark:text-white group-hover:translate-x-1 transition-transform">
+
+            <div className="mt-6 pt-4 border-t border-neutral-100 dark:border-neutral-800/80 flex items-center justify-between text-xs font-semibold text-neutral-900 dark:text-neutral-100">
               <span>Buka Editor Teks</span>
-              <ArrowRight className="w-4 h-4" />
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </div>
           </Link>
 
           {/* Module 2: Koleksi */}
           <Link
             href="/admin/koleksi"
-            className="p-6 rounded-3xl border border-black/10 dark:border-white/10 bg-white/60 dark:bg-[#111]/60 hover:bg-black/[0.02] dark:hover:bg-white/[0.02] hover:border-black/20 dark:hover:border-white/20 transition-all group flex flex-col justify-between"
+            className="p-6 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-[#121214] hover:border-neutral-400 dark:hover:border-neutral-600 transition-all group flex flex-col justify-between shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black dark:focus-visible:ring-white"
           >
-            <div>
-              <div className="w-10 h-10 rounded-2xl bg-black/5 dark:bg-white/5 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                <FolderKanban className="w-5 h-5 text-black dark:text-white" />
+            <div className="space-y-3">
+              <div className="w-11 h-11 rounded-xl bg-neutral-100 dark:bg-neutral-800/80 flex items-center justify-center text-neutral-900 dark:text-neutral-100 group-hover:scale-105 transition-transform">
+                <FolderKanban className="w-5 h-5" />
               </div>
-              <h3 className="font-righteous text-lg text-black dark:text-white">
-                Pengelola Koleksi
-              </h3>
-              <p className="text-xs text-neutral-600 dark:text-neutral-400 mt-1 leading-relaxed">
-                Kelola data terstruktur: kartu Selected Work (kategori, tag, link karya), promo
-                diskon musiman, daftar testimoni klien, dan paket katalog harga Rate Card.
-              </p>
+              <div>
+                <h3 className="font-righteous text-lg text-neutral-900 dark:text-neutral-100">
+                  Pengelola Koleksi
+                </h3>
+                <p className="text-xs text-neutral-600 dark:text-neutral-400 mt-1.5 leading-relaxed">
+                  Kelola data berulang: portofolio Selected Work (kategori, tag, link karya), penawaran
+                  promo musiman, ulasan testimoni klien, dan katalog paket harga Rate Card.
+                </p>
+              </div>
             </div>
-            <div className="mt-6 flex items-center gap-1.5 text-xs font-semibold text-black dark:text-white group-hover:translate-x-1 transition-transform">
+
+            <div className="mt-6 pt-4 border-t border-neutral-100 dark:border-neutral-800/80 flex items-center justify-between text-xs font-semibold text-neutral-900 dark:text-neutral-100">
               <span>Buka Koleksi</span>
-              <ArrowRight className="w-4 h-4" />
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </div>
           </Link>
 
           {/* Module 3: Galeri Media */}
           <Link
             href="/admin/media"
-            className="p-6 rounded-3xl border border-black/10 dark:border-white/10 bg-white/60 dark:bg-[#111]/60 hover:bg-black/[0.02] dark:hover:bg-white/[0.02] hover:border-black/20 dark:hover:border-white/20 transition-all group flex flex-col justify-between"
+            className="p-6 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-[#121214] hover:border-neutral-400 dark:hover:border-neutral-600 transition-all group flex flex-col justify-between shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black dark:focus-visible:ring-white"
           >
-            <div>
-              <div className="w-10 h-10 rounded-2xl bg-black/5 dark:bg-white/5 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                <ImageIcon className="w-5 h-5 text-black dark:text-white" />
+            <div className="space-y-3">
+              <div className="w-11 h-11 rounded-xl bg-neutral-100 dark:bg-neutral-800/80 flex items-center justify-center text-neutral-900 dark:text-neutral-100 group-hover:scale-105 transition-transform">
+                <ImageIcon className="w-5 h-5" />
               </div>
-              <h3 className="font-righteous text-lg text-black dark:text-white">
-                Galeri Foto & Upload
-              </h3>
-              <p className="text-xs text-neutral-600 dark:text-neutral-400 mt-1 leading-relaxed">
-                Unggah foto dengan kompresi Canvas otomatis (maks 1600px, WebP &lt; 1MB). Dilengkapi
-                proteksi hapus aman agar foto yang masih aktif di halaman tidak terhapus.
-              </p>
+              <div>
+                <h3 className="font-righteous text-lg text-neutral-900 dark:text-neutral-100">
+                  Galeri Foto & Upload
+                </h3>
+                <p className="text-xs text-neutral-600 dark:text-neutral-400 mt-1.5 leading-relaxed">
+                  Unggah foto dengan kompresi Canvas otomatis (maks 1600px, WebP &lt; 1MB). Dilengkapi
+                  proteksi hapus aman agar media yang aktif di situs tidak terhapus.
+                </p>
+              </div>
             </div>
-            <div className="mt-6 flex items-center gap-1.5 text-xs font-semibold text-black dark:text-white group-hover:translate-x-1 transition-transform">
+
+            <div className="mt-6 pt-4 border-t border-neutral-100 dark:border-neutral-800/80 flex items-center justify-between text-xs font-semibold text-neutral-900 dark:text-neutral-100">
               <span>Buka Galeri Foto</span>
-              <ArrowRight className="w-4 h-4" />
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </div>
           </Link>
 
-          {/* Module 4: Publikasi */}
+          {/* Module 4: Invoice Generator */}
+          <Link
+            href="/admin/invoice"
+            className="p-6 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-[#121214] hover:border-neutral-400 dark:hover:border-neutral-600 transition-all group flex flex-col justify-between shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black dark:focus-visible:ring-white"
+          >
+            <div className="space-y-3">
+              <div className="w-11 h-11 rounded-xl bg-neutral-100 dark:bg-neutral-800/80 flex items-center justify-center text-neutral-900 dark:text-neutral-100 group-hover:scale-105 transition-transform">
+                <Receipt className="w-5 h-5" />
+              </div>
+              <div>
+                <h3 className="font-righteous text-lg text-neutral-900 dark:text-neutral-100">
+                  Generator Invoice Resmi
+                </h3>
+                <p className="text-xs text-neutral-600 dark:text-neutral-400 mt-1.5 leading-relaxed">
+                  Buat dan cetak invoice resmi klien berstandar desain Figma Logia Creative. Dilengkapi
+                  perhitungan otomatis DP 50% atau Lunas, preset bank pembayaran, dan ekspor PDF.
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-6 pt-4 border-t border-neutral-100 dark:border-neutral-800/80 flex items-center justify-between text-xs font-semibold text-neutral-900 dark:text-neutral-100">
+              <span>Buka Generator Invoice</span>
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            </div>
+          </Link>
+
+          {/* Module 5: Publikasi & Rilis */}
           <Link
             href="/admin/publikasi"
-            className="p-6 rounded-3xl border border-black/10 dark:border-white/10 bg-white/60 dark:bg-[#111]/60 hover:bg-black/[0.02] dark:hover:bg-white/[0.02] hover:border-black/20 dark:hover:border-white/20 transition-all group flex flex-col justify-between"
+            className="p-6 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-[#121214] hover:border-neutral-400 dark:hover:border-neutral-600 transition-all group flex flex-col justify-between shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black dark:focus-visible:ring-white lg:col-span-2"
           >
-            <div>
-              <div className="w-10 h-10 rounded-2xl bg-black/5 dark:bg-white/5 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                <Send className="w-5 h-5 text-black dark:text-white" />
+            <div className="space-y-3">
+              <div className="w-11 h-11 rounded-xl bg-neutral-100 dark:bg-neutral-800/80 flex items-center justify-center text-neutral-900 dark:text-neutral-100 group-hover:scale-105 transition-transform">
+                <Send className="w-5 h-5" />
               </div>
-              <h3 className="font-righteous text-lg text-black dark:text-white">
-                Publikasi & Rilis
-              </h3>
-              <p className="text-xs text-neutral-600 dark:text-neutral-400 mt-1 leading-relaxed">
-                Tinjau ringkasan perubahan, periksa konflik commit Git, dan rilis semua perubahan ke
-                website publik secara atomik. Terdapat juga tombol darurat Reset ke Default Pabrik.
-              </p>
+              <div>
+                <h3 className="font-righteous text-lg text-neutral-900 dark:text-neutral-100">
+                  Pusat Publikasi & Git Sync
+                </h3>
+                <p className="text-xs text-neutral-600 dark:text-neutral-400 mt-1.5 leading-relaxed">
+                  Tinjau ringkasan perubahan yang belum dirilis, periksa status SHA repository GitHub untuk
+                  mencegah penimpaan data (race condition), dan rilis pembaruan ke website publik secara
+                  atomik. Tersedia juga opsi reset darurat ke default pabrik jika diperlukan.
+                </p>
+              </div>
             </div>
-            <div className="mt-6 flex items-center gap-1.5 text-xs font-semibold text-black dark:text-white group-hover:translate-x-1 transition-transform">
-              <span>Buka Publikasi</span>
-              <ArrowRight className="w-4 h-4" />
+
+            <div className="mt-6 pt-4 border-t border-neutral-100 dark:border-neutral-800/80 flex items-center justify-between text-xs font-semibold text-neutral-900 dark:text-neutral-100">
+              <span>Buka Pusat Publikasi</span>
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </div>
           </Link>
         </div>
-      </div>
+      </section>
 
-      {/* Guide Workflow Section */}
-      <div className="p-6 rounded-3xl border border-black/10 dark:border-white/10 bg-black/[0.02] dark:bg-white/[0.02] space-y-3">
-        <h3 className="font-righteous text-sm text-black dark:text-white flex items-center gap-2">
-          <Sparkles className="w-4 h-4" />
-          <span>Cara Kerja CMS Logia Creative</span>
-        </h3>
-        <ol className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs text-neutral-600 dark:text-neutral-400">
-          <li className="p-3 rounded-2xl bg-white dark:bg-[#111] border border-black/5 dark:border-white/5 space-y-1">
-            <span className="font-bold text-black dark:text-white block">1. Edit atau Tambah</span>
-            <p>Ubah teks atau koleksi sesuai kebutuhan. Perubahan tersimpan di sesi editor.</p>
-          </li>
-          <li className="p-3 rounded-2xl bg-white dark:bg-[#111] border border-black/5 dark:border-white/5 space-y-1">
-            <span className="font-bold text-black dark:text-white block">2. Unggah Media</span>
-            <p>Pilih atau upload foto WebP terkompresi langsung dari uploader terintegrasi.</p>
-          </li>
-          <li className="p-3 rounded-2xl bg-white dark:bg-[#111] border border-black/5 dark:border-white/5 space-y-1">
-            <span className="font-bold text-black dark:text-white block">3. Publikasikan</span>
-            <p>Buka menu Publikasi dan klik rilis. Driver GitHub akan membuat commit atomik.</p>
-          </li>
-        </ol>
+      {/* Operational Note */}
+      <div className="p-4 sm:p-5 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900/50 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+        <div className="text-neutral-600 dark:text-neutral-400">
+          <strong className="text-neutral-900 dark:text-neutral-100 font-semibold block mb-0.5">
+            Penyimpanan Data Atomik
+          </strong>
+          Semua perubahan yang disimpan di editor akan dicatat dalam format JSON di content/. Rilis publikasi
+          melalui menu Publikasi untuk menerapkannya langsung ke website publik.
+        </div>
+        <Link
+          href="/admin/publikasi"
+          className="inline-flex items-center gap-1.5 font-semibold text-neutral-900 dark:text-neutral-100 hover:underline shrink-0 min-h-[44px]"
+        >
+          <span>Tinjau Perubahan</span>
+          <ArrowRight className="w-3.5 h-3.5" />
+        </Link>
       </div>
     </div>
   );
