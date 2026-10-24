@@ -5,12 +5,10 @@ import Image from "next/image";
 import { Sparkles, ArrowUpRight, ChevronDown, ChevronUp } from "lucide-react";
 import { ThemeToggle } from "./ThemeToggle";
 import { openCollaborationModal } from "./CollaborationManager";
-import type { NavbarContent } from "@/lib/cms/types";
 
 interface LiquidNavbarProps {
   onOpenCollaboration?: () => void;
   isSplashDone?: boolean;
-  content?: NavbarContent;
 }
 
 function isAuditEnvironment(): boolean {
@@ -42,13 +40,7 @@ const rightNavLinks = navLinks.slice(3);
 
 const sectionIds = ["top", "about", "layanan", "portfolio", "pricing", "kontak"];
 
-export function LiquidNavbar({ onOpenCollaboration, isSplashDone: propSplashDone, content }: LiquidNavbarProps) {
-  const logoImage = content?.logoImage || "/Group 3.webp";
-  const logoAlt = content?.logoAlt || "Logia Logo";
-  const collabButton = content?.collabButton || "Kolaborasi";
-  const collabExpanded = content?.collabExpanded || "Mulai Kolaborasi";
-  const collabSubtitle = content?.collabSubtitle || "Konsultasi Project";
-
+export function LiquidNavbar({ onOpenCollaboration, isSplashDone: propSplashDone }: LiquidNavbarProps) {
   const [activeSection, setActiveSection] = useState("#top");
   const [isExpanded, setIsExpanded] = useState(false);
   const [isCompacted, setIsCompacted] = useState(false);
@@ -428,8 +420,8 @@ export function LiquidNavbar({ onOpenCollaboration, isSplashDone: propSplashDone
                     className="relative shrink-0 transition-opacity duration-300 w-[68px] h-[20px] sm:w-[76px] sm:h-[22px] lg:w-[88px] lg:h-[26px]"
                   >
                     <Image
-                      src={logoImage}
-                      alt={logoAlt}
+                      src="/Group 3.webp"
+                      alt="Logia Logo"
                       fill
                       sizes="(max-width: 640px) 76px, 110px"
                       className="object-contain brightness-0 dark:invert transition-all duration-300"
@@ -486,7 +478,7 @@ export function LiquidNavbar({ onOpenCollaboration, isSplashDone: propSplashDone
                         className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-black dark:bg-white text-white dark:text-black hover:bg-neutral-800 dark:hover:bg-neutral-200 active:scale-95 shadow-sm shrink-0 cursor-pointer transition-all duration-300 ml-1"
                       >
                         <Sparkles className="w-2.5 h-2.5 text-[#A08C6A]" />
-                        <span>{collabButton}</span>
+                        <span>Kolaborasi</span>
                         <ArrowUpRight className="w-2.5 h-2.5" />
                       </button>
                     )}
@@ -580,10 +572,10 @@ export function LiquidNavbar({ onOpenCollaboration, isSplashDone: propSplashDone
                     >
                       <div className="flex items-center gap-1.5">
                         <Sparkles className="w-3 h-3 text-[#A08C6A] group-hover:rotate-12 transition-transform" />
-                        <span className="font-bold">{collabExpanded}</span>
+                        <span className="font-bold">Mulai Kolaborasi</span>
                       </div>
                       <div className="flex items-center gap-1 opacity-80 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all">
-                        <span className="text-[10px] hidden sm:inline">{collabSubtitle}</span>
+                        <span className="text-[10px] hidden sm:inline">Konsultasi Project</span>
                         <ArrowUpRight className="w-3 h-3" />
                       </div>
                     </button>

@@ -15,11 +15,9 @@ import {
   Globe,
   ArrowRight,
 } from "lucide-react";
-import type { FooterContent } from "@/lib/cms/types";
 
 interface FooterSectionProps {
   onOpenCollaboration?: () => void;
-  content?: FooterContent;
 }
 
 const wibFormatter = new Intl.DateTimeFormat("id-ID", {
@@ -30,23 +28,7 @@ const wibFormatter = new Intl.DateTimeFormat("id-ID", {
   hour12: false,
 });
 
-export function FooterSection({ onOpenCollaboration, content }: FooterSectionProps) {
-  const ctaHeading = content?.ctaHeading || "Ready to elevate your brand?";
-  const ctaSubtitle = content?.ctaSubtitle || "Mari diskusikan bagaimana kami bisa membantu mentransformasi identitas visual dan infrastruktur digital bisnis Anda ke level selanjutnya.";
-  const ctaButton = content?.ctaButton || "Mulai Diskusi Proyek";
-  const logoImage = content?.logoImage || "/Group 3.webp";
-  const description = content?.description || "Agensi kreatif dan teknologi terintegrasi yang menghadirkan solusi branding, perancangan antarmuka pengguna interaktif, dan automasi sistem kerja digital bagi UMKM, startup, dan organisasi.";
-  const studioTimePrefix = content?.studioTimePrefix || "Studio Time";
-  const email = content?.email || "logiacreative.id@gmail.com";
-  const phone = content?.phone || "+62 895-2137-5477";
-  const phoneWaLink = content?.phoneWaLink || "https://wa.me/6289521375477";
-  const website = content?.website || "https://logia-creative.vercel.app/";
-  const location = content?.location || "Surabaya";
-  const instagram = content?.instagram || "https://www.instagram.com/logiacreative.studio/";
-  const watermark = content?.watermark || "Logia Creative";
-  const copyright = content?.copyright || "Logia Creative Agency. All rights reserved.";
-  const backToTop = content?.backToTop || "Kembali ke Atas";
-
+export function FooterSection({ onOpenCollaboration }: FooterSectionProps) {
   const [wibTime, setWibTime] = useState<string>("");
   const { ref: ctaRef, isInView: ctaVisible } = useScrollReveal();
   const { ref: contactRef, isInView: contactVisible } = useScrollReveal();
@@ -81,10 +63,10 @@ export function FooterSection({ onOpenCollaboration, content }: FooterSectionPro
           <div className="absolute top-0 inset-x-0 h-px bg-white/25" aria-hidden="true" />
           <div className="relative z-10 max-w-3xl mx-auto flex flex-col items-center">
             <h2 className="text-white font-righteous tracking-normal text-[clamp(1.75rem,7vw,4rem)] leading-[1.12] mb-4 sm:mb-6">
-              {ctaHeading}
+              Ready to elevate your brand?
             </h2>
             <p className="text-white/90 text-sm sm:text-base mb-7 sm:mb-10 max-w-xl leading-[1.55] sm:leading-relaxed">
-              {ctaSubtitle}
+              Mari diskusikan bagaimana kami bisa membantu mentransformasi identitas visual dan infrastruktur digital bisnis Anda ke level selanjutnya.
             </p>
             <button
               onClick={() => {
@@ -93,7 +75,7 @@ export function FooterSection({ onOpenCollaboration, content }: FooterSectionPro
               }}
               className="w-full sm:w-auto justify-center px-6 sm:px-8 py-4 min-h-[48px] bg-white text-black text-sm font-bold rounded-full hover:scale-[1.02] active:scale-[0.98] transition-transform duration-200 flex items-center gap-2 group shadow-lg"
             >
-              <span className="text-black font-bold">{ctaButton}</span>
+              <span className="text-black font-bold">Mulai Diskusi Proyek</span>
               <ArrowRight className="w-4 h-4 text-black transition-transform group-hover:translate-x-1" />
             </button>
           </div>
@@ -110,7 +92,7 @@ export function FooterSection({ onOpenCollaboration, content }: FooterSectionPro
           <div className="lg:col-span-5 space-y-4">
             <div className="relative w-28 h-8">
               <Image
-                src={logoImage}
+                src="/Group 3.webp"
                 alt="Logia Creative Logo"
                 fill
                 loading="lazy"
@@ -120,14 +102,14 @@ export function FooterSection({ onOpenCollaboration, content }: FooterSectionPro
               />
             </div>
             <p className="text-sm text-neutral-700 dark:text-neutral-200 font-medium leading-relaxed max-w-sm">
-              {description}
+              Agensi kreatif dan teknologi terintegrasi yang menghadirkan solusi branding, perancangan antarmuka pengguna interaktif, dan automasi sistem kerja digital bagi UMKM, startup, dan organisasi.
             </p>
 
             {/* Live WIB Clock */}
             <div className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-black/5 dark:bg-white/10 border border-black/10 dark:border-white/15 text-xs font-mono text-black dark:text-white">
               <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shrink-0" />
               <Clock className="w-3.5 h-3.5 shrink-0 text-neutral-500 dark:text-neutral-400" />
-              <span>{studioTimePrefix}: {wibTime || "--:--:--"} WIB</span>
+              <span>Studio Time: {wibTime || "--:--:--"} WIB</span>
             </div>
           </div>
 
@@ -200,44 +182,44 @@ export function FooterSection({ onOpenCollaboration, content }: FooterSectionPro
             <ul className="space-y-2.5 text-neutral-600 dark:text-neutral-300 font-medium">
               <li>
                 <a
-                  href={`mailto:${email}`}
+                  href="mailto:logiacreative.id@gmail.com"
                   className="inline-flex items-center gap-2.5 py-1 text-xs sm:text-sm hover:text-black dark:hover:text-white transition-colors"
                 >
                   <Mail className="w-4 h-4 text-black dark:text-white shrink-0" />
-                  <span className="break-all">{email}</span>
+                  <span className="break-all">logiacreative.id@gmail.com</span>
                 </a>
               </li>
               <li>
                 <a
-                  href={phoneWaLink}
+                  href="https://wa.me/6289521375477"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2.5 py-1 text-xs sm:text-sm hover:text-black dark:hover:text-white transition-colors"
                 >
                   <Phone className="w-4 h-4 text-black dark:text-white shrink-0" />
-                  <span>{phone}</span>
+                  <span>+62 895-2137-5477</span>
                 </a>
               </li>
               <li>
                 <a
-                  href={website}
+                  href="https://logia-creative.vercel.app/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2.5 py-1 text-xs sm:text-sm hover:text-black dark:hover:text-white transition-colors"
                 >
                   <Globe className="w-4 h-4 text-black dark:text-white shrink-0" />
-                  <span className="break-all">{website}</span>
+                  <span className="break-all">https://logia-creative.vercel.app/</span>
                 </a>
               </li>
               <li className="flex items-center gap-2.5 py-1 text-xs sm:text-sm">
                 <MapPin className="w-4 h-4 text-black dark:text-white shrink-0" />
-                <span>{location}</span>
+                <span>Surabaya</span>
               </li>
             </ul>
 
             <div className="flex items-center gap-2.5 pt-3">
               <a
-                href={instagram}
+                href="https://www.instagram.com/logiacreative.studio/"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Instagram Logia Creative"
@@ -262,21 +244,21 @@ export function FooterSection({ onOpenCollaboration, content }: FooterSectionPro
         {/* Watermark Big Text: Logia Creative - elevated in front of background with high contrast */}
         <div className="relative z-10 py-4 select-none pointer-events-none overflow-hidden pt-8 sm:pt-14" aria-hidden="true">
           <p className="block w-full max-w-full text-center leading-none font-black tracking-tighter text-black/20 dark:text-white/25 sm:text-black/25 sm:dark:text-white/30 whitespace-nowrap text-[clamp(2.2rem,9vw,9.5rem)]">
-            {watermark}
+            Logia Creative
           </p>
         </div>
 
         {/* Bottom Bar: Copyright & Back to Top */}
         <div className="relative z-10 pb-4 sm:pb-8 flex flex-col sm:flex-row items-center justify-between gap-3 text-[12px] font-semibold text-neutral-600 dark:text-neutral-300">
           <p>
-            &copy; {new Date().getFullYear()} {copyright}
+            &copy; {new Date().getFullYear()} Logia Creative Agency. All rights reserved.
           </p>
 
           <button
             onClick={scrollToTop}
             className="flex items-center gap-2 px-4 py-2 min-h-[44px] rounded-full border border-black/10 dark:border-white/10 hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-all group bg-white/40 dark:bg-black/40 backdrop-blur-sm"
           >
-            <span>{backToTop}</span>
+            <span>Kembali ke Atas</span>
             <ArrowUp className="w-3.5 h-3.5 transition-transform group-hover:-translate-y-0.5" />
           </button>
         </div>

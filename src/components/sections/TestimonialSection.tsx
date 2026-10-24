@@ -1,7 +1,6 @@
 "use client";
 
 import { TestimonialCarousel } from "@/components/ui/testimonial-carousel";
-import type { TestimonialsContent } from "@/lib/cms/types";
 
 // ponytail: nama memakai nama sesuai foto di public/; kutipan masih placeholder.
 const TESTIMONIALS = [
@@ -43,26 +42,14 @@ const TESTIMONIALS = [
   },
 ];
 
-export function TestimonialSection({ content }: { content?: TestimonialsContent } = {}) {
-  const title = content?.sectionTitle?.trim() || "Kata Mereka";
-  const itemsToUse = content && content.testimonials && content.testimonials.length > 0
-    ? content.testimonials
-        .filter((item) => item.active !== false)
-        .map((item) => ({
-          quote: item.quote,
-          author: item.author,
-          image: item.image,
-          alt: item.alt || item.author,
-        }))
-    : TESTIMONIALS;
-
+export function TestimonialSection() {
   return (
     <section id="testimoni" className="w-full py-14 md:py-28">
       <div className="mx-auto w-full max-w-4xl flex flex-col items-center px-4 sm:px-6">
         <h2 className="font-righteous tracking-normal text-[clamp(2.25rem,6vw,4.5rem)] text-center text-black dark:text-white mb-6 sm:mb-8 leading-[1.05]">
-          {title}
+          Kata Mereka
         </h2>
-        <TestimonialCarousel testimonials={itemsToUse.length > 0 ? itemsToUse : TESTIMONIALS} />
+        <TestimonialCarousel testimonials={TESTIMONIALS} />
       </div>
     </section>
   );

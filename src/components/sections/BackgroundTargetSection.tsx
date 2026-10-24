@@ -18,29 +18,8 @@ import {
   Megaphone,
   ArrowRight,
 } from "lucide-react";
-import type { TargetPasarContent } from "@/lib/cms/types";
 
-const iconMap: Record<string, React.ElementType> = {
-  Store,
-  Rocket,
-  CalendarCheck,
-  Palette,
-  PackageCheck,
-  LayoutGrid,
-  Code2,
-  Layers,
-  Workflow,
-  Ticket,
-  MessageSquare,
-  Megaphone,
-};
-
-function resolveIcon(name: string | React.ElementType, fallback: React.ElementType = Store): React.ElementType {
-  if (typeof name === "function") return name;
-  return iconMap[name] || fallback;
-}
-
-const defaultMarkets = [
+const targetMarkets = [
   {
     id: "umkm",
     stepNumber: "01",
@@ -146,24 +125,18 @@ const defaultMarkets = [
       },
     ],
   },
-];
+] as const;
 
 interface Props {
   onOpenCollaboration?: () => void;
-  content?: TargetPasarContent;
 }
 
-export function BackgroundTargetSection({ onOpenCollaboration, content }: Props) {
+export function BackgroundTargetSection({ onOpenCollaboration }: Props) {
   const { ref, isInView } = useScrollReveal();
-  const markets = content?.markets && content.markets.length > 0 ? content.markets : defaultMarkets;
-  const sectionTitle = content?.title || "Target Pasar";
-  const sectionSubtitle = content?.subtitle || "Solusi yang diadaptasi khusus untuk tantangan industri Anda.";
-  const ctaText = content?.ctaText || "Konsultasikan Bisnis Anda";
+  const [activeTab, setActiveTab] = useState<typeof targetMarkets[number]["id"]>("umkm");
 
-  const [activeTab, setActiveTab] = useState<string>(markets[0]?.id || "umkm");
-
-  const currentMarket = markets.find((m) => m.id === activeTab) || markets[0];
-  const ActiveIcon = resolveIcon(currentMarket.icon, Store);
+  const currentMarket = targetMarkets.find((m) => m.id === activeTab) || targetMarkets[0];
+  const ActiveIcon = currentMarket.icon;
 
   return (
     <section id="target-pasar" className="py-12 md:py-20 relative bg-transparent">
@@ -171,17 +144,17 @@ export function BackgroundTargetSection({ onOpenCollaboration, content }: Props)
         {/* Header */}
         <div className={`text-center max-w-2xl mx-auto mb-16 transition-all duration-700 ${isInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
           <h2 className="font-righteous text-[clamp(2.1rem,4.5vw,3.75rem)] tracking-normal text-black dark:text-white mb-4">
-            {sectionTitle}
+            Target Pasar
           </h2>
           <p className="text-base text-[#666666] dark:text-[#999999]">
-            {sectionSubtitle}
+            Solusi yang diadaptasi khusus untuk tantangan industri Anda.
           </p>
         </div>
 
         {/* Individual Tab Buttons tanpa card pembungkus */}
         <div className="flex flex-wrap justify-center gap-2 sm:gap-3 mb-12 sm:mb-16" role="tablist" aria-label="Target pasar">
-          {markets.map((market) => {
-            const Icon = resolveIcon(market.icon, Store);
+          {targetMarkets.map((market) => {
+            const Icon = market.icon;
             const isActive = activeTab === market.id;
             return (
               <button
@@ -259,9 +232,9 @@ export function BackgroundTargetSection({ onOpenCollaboration, content }: Props)
                   <h4 className="text-sm font-bold uppercase tracking-wider text-black dark:text-white mb-4">
                     Solusi Utama
                   </h4>
-                    <div className="space-y-4">
+                  <div className="space-y-4">
                     {currentMarket.solutions.map((sol, i) => {
-                      const SolIcon = resolveIcon(sol.icon, Palette);
+                      const SolIcon = sol.icon;
                       return (
                         <div key={i} className="flex gap-4 p-4 glass-card rounded-xl transition-all hover:scale-[1.01]">
                           <div className="w-10 h-10 rounded-lg bg-black/[0.05] dark:bg-white/[0.05] flex items-center justify-center shrink-0">
@@ -294,7 +267,7 @@ export function BackgroundTargetSection({ onOpenCollaboration, content }: Props)
               }}
               className="btn-solid px-6 py-3 min-h-[44px] bg-black dark:bg-white text-white dark:text-black text-sm font-semibold rounded-full hover:scale-[1.02] active:scale-[0.98] transition-transform duration-200 inline-flex items-center gap-2 group"
             >
-              <span>{ctaText}</span>
+              <span>Konsultasikan Bisnis Anda</span>
               <ArrowRight className="w-4 h-4 text-white dark:text-black group-hover:translate-x-1 transition-transform" />
             </button>
           </div>

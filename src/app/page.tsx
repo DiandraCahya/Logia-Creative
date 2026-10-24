@@ -37,28 +37,14 @@ const FooterSection = dynamic(
   () => import("@/components/sections/FooterSection").then((m) => m.FooterSection)
 );
 
-import { getSite, getProjects, getRateCard, getTestimonials, getPromos } from "@/lib/cms/content";
-import { PromoBanner } from "@/components/PromoBanner";
-
-export default async function Home() {
-  const [site, projects, rateCard, testimonials, promos] = await Promise.all([
-    getSite(),
-    getProjects(),
-    getRateCard(),
-    getTestimonials(),
-    getPromos(),
-  ]);
-
+export default function Home() {
   return (
     <main className="relative min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)] overflow-x-hidden pb-[env(safe-area-inset-bottom)]">
-      {/* Active Promo Announcement Banner (if any) */}
-      <PromoBanner promos={promos} />
-
       {/* Full-Length Ambient Background Artwork */}
       <div className="site-bg-overlay" aria-hidden="true" />
 
       {/* Faux-3D Perspective Initial Splash Screen */}
-      <SplashScreen content={site.splash} />
+      <SplashScreen />
 
       {/* Scroll progress indicator */}
       <ScrollProgress />
@@ -69,57 +55,57 @@ export default async function Home() {
       </React.Suspense>
 
       {/* Floating Liquid Glass Navbar */}
-      <LiquidNavbar content={site.navbar} />
+      <LiquidNavbar />
 
       {/* Hero Section with Kinetic Typography & Parallax */}
       <div className="relative z-10">
-        <HeroSection content={site.hero} />
+        <HeroSection />
       </div>
 
       {/* Proposal Poin 3: Background & Target Market */}
       <section data-cv="true" className="relative z-10">
         <React.Suspense fallback={null}>
-          <BackgroundTargetSection content={site.targetPasar} />
+          <BackgroundTargetSection />
         </React.Suspense>
       </section>
 
       {/* Proposal Poin 4 (Part 1): Profile, Visi, Misi, Filosofi */}
       <section data-cv="true" className="relative z-10">
         <React.Suspense fallback={null}>
-          <CompanyProfileSection content={site.about} />
+          <CompanyProfileSection />
         </React.Suspense>
       </section>
 
       {/* Creative & Tech Services */}
       <section data-cv="true" className="relative z-10">
-        <ServicesSection content={site.services} />
+        <ServicesSection />
       </section>
 
       {/* Karya & Portfolio */}
       <section data-cv="true" className="relative z-10">
         <React.Suspense fallback={null}>
-          <PortfolioSection content={projects} />
+          <PortfolioSection />
         </React.Suspense>
       </section>
 
       {/* Pricing Catalog */}
       <section data-cv="true" className="relative z-10">
         <React.Suspense fallback={null}>
-          <PricingSection content={rateCard} />
+          <PricingSection />
         </React.Suspense>
       </section>
 
       {/* Client Testimonials */}
       <section data-cv="true" className="relative z-10">
         <React.Suspense fallback={null}>
-          <TestimonialSection content={testimonials} />
+          <TestimonialSection />
         </React.Suspense>
       </section>
 
       {/* Footer & Collaboration Closing */}
       <section data-cv="true" className="relative z-10">
         <React.Suspense fallback={null}>
-          <FooterSection content={site.footer} />
+          <FooterSection />
         </React.Suspense>
       </section>
 

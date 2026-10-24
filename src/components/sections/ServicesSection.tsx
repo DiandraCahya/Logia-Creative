@@ -7,24 +7,9 @@ import {
   MonitorCheck,
   Cpu,
 } from "lucide-react";
-import type { ServicesContent } from "@/lib/cms/types";
 
-const iconMap: Record<string, React.ElementType> = {
-  Palette,
-  Code2,
-  Share2,
-  Megaphone,
-  MonitorCheck,
-  Cpu,
-};
-
-function resolveServiceIcon(icon: string | React.ElementType, fallback: React.ElementType = Palette): React.ElementType {
-  if (typeof icon === "function") return icon;
-  return iconMap[icon] || fallback;
-}
-
-/* ── Default Services Data ── */
-const defaultServices = [
+/* ── Services Data (Simplified) ── */
+const services = [
   {
     title: "Brand Identity",
     icon: Palette,
@@ -57,32 +42,25 @@ const defaultServices = [
   },
 ];
 
-interface ServicesSectionProps {
-  content?: ServicesContent;
-}
-
-export function ServicesSection({ content }: ServicesSectionProps = {}) {
-  const title = content?.title || "Layanan Kami";
-  const subtitle = content?.subtitle || "Satu pintu untuk kebutuhan visual dan teknologi. Tidak perlu repot mencari banyak vendor berbeda.";
-  const items = content?.items && content.items.length > 0 ? content.items : defaultServices;
-
+export function ServicesSection() {
   return (
     <section id="layanan" className="py-12 sm:py-20 relative bg-transparent">
       <div className="max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-12">
         {/* Header */}
         <div className="max-w-3xl mb-5 sm:mb-10">
           <h2 className="font-righteous text-[clamp(1.75rem,5vw,3.5rem)] tracking-normal text-black dark:text-white leading-[1.12] mb-2.5">
-            {title}
+            Layanan Kami
           </h2>
           <p className="text-sm sm:text-base text-[#1A1A1A] dark:text-[#999999] max-w-xl leading-[1.55]">
-            {subtitle}
+            Satu pintu untuk kebutuhan visual dan teknologi. Tidak perlu repot
+            mencari banyak vendor berbeda.
           </p>
         </div>
 
         {/* Daftar layanan */}
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-6 lg:gap-8">
-          {items.map((srv) => {
-            const Icon = resolveServiceIcon(srv.icon, Palette);
+          {services.map((srv) => {
+            const Icon = srv.icon;
             return (
               <div
                 key={srv.title}

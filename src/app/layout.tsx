@@ -26,63 +26,47 @@ const fontRighteous = Righteous({
 //   const anthropic = localFont({ src: [...], variable: "--font-anthropic", display: "swap" });
 //   → gabungkan di <html>: `${fontSubstitute.variable} ${anthropic.variable}`
 
-import { getSite } from "@/lib/cms/content";
-
-export async function generateMetadata(): Promise<Metadata> {
-  const site = await getSite();
-  const seo = site?.seo;
-
-  const title = seo?.title || "Logia Creative | Creative & Technology Agency";
-  const description =
-    seo?.description ||
-    "Innovative Branding & Digital Solutions Provider. Mengintegrasikan Kreativitas dan Teknologi untuk Pertumbuhan Bisnis Anda.";
-  const keywords = seo?.keywords
-    ? seo.keywords.split(",").map((k) => k.trim()).filter(Boolean)
-    : [
-        "Logia Creative",
-        "Creative Agency",
-        "Technology Agency",
-        "Branding",
-        "UI/UX Design",
-        "Web Development",
-        "Workflow Automation",
-        "Digital Solutions",
-        "UMKM",
-        "Startup",
-      ];
-  const ogTitle = seo?.ogTitle || title;
-  const ogDescription = seo?.ogDescription || description;
-  const ogImage = seo?.ogImage || "/LOGO.png";
-
-  return {
-    metadataBase: new URL("https://logia.id"),
-    title,
-    description,
-    keywords,
-    authors: [{ name: "Logia Creative Team", url: "https://logia.id" }],
-    creator: "Logia Creative",
-    openGraph: {
-      title: ogTitle,
-      description: ogDescription,
-      url: "https://logia.id",
-      siteName: "Logia Creative",
-      images: [
-        {
-          url: ogImage,
-          width: 1200,
-          height: 630,
-          alt: "Logia Creative Brand Identity & Overview",
-        },
-      ],
-      locale: "id_ID",
-      type: "website",
-    },
-    icons: {
-      icon: "/favicon-32.png",
-      apple: "/LOGO.png",
-    },
-  };
-}
+export const metadata: Metadata = {
+  metadataBase: new URL("https://logia.id"),
+  title: "Logia Creative | Creative & Technology Agency",
+  description:
+    "Innovative Branding & Digital Solutions Provider. Mengintegrasikan Kreativitas dan Teknologi untuk Pertumbuhan Bisnis Anda.",
+  keywords: [
+    "Logia Creative",
+    "Creative Agency",
+    "Technology Agency",
+    "Branding",
+    "UI/UX Design",
+    "Web Development",
+    "Workflow Automation",
+    "Digital Solutions",
+    "UMKM",
+    "Startup",
+  ],
+  authors: [{ name: "Logia Creative Team", url: "https://logia.id" }],
+  creator: "Logia Creative",
+  openGraph: {
+    title: "Logia Creative | Creative & Technology Agency",
+    description:
+      "Mengintegrasikan Kreativitas dan Teknologi untuk Bisnis yang Lebih Kuat. Solusi branding, web modern, dan otomatisasi alur kerja.",
+    url: "https://logia.id",
+    siteName: "Logia Creative",
+    images: [
+      {
+        url: "/LOGO.png",
+        width: 1200,
+        height: 630,
+        alt: "Logia Creative Brand Identity & Overview",
+      },
+    ],
+    locale: "id_ID",
+    type: "website",
+  },
+  icons: {
+    icon: "/favicon-32.png",
+    apple: "/LOGO.png",
+  },
+};
 
 export default function RootLayout({
   children,

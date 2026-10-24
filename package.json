@@ -6,8 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "cms:hash": "node scripts/hash-password.mjs"
+    "lint": "next lint"
   },
   "dependencies": {
     "canvas-confetti": "^1.9.4",
