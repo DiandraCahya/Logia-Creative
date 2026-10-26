@@ -1,4 +1,6 @@
-import React from "react";
+"use client";
+
+import React, { useEffect, useState } from "react";
 import {
   Palette,
   Code2,
@@ -6,43 +8,80 @@ import {
   Megaphone,
   MonitorCheck,
   Cpu,
+  Globe,
+  Sparkles,
+  Layers,
+  Terminal,
+  LucideIcon,
 } from "lucide-react";
+import { api, ServiceItem } from "@/lib/api";
 
-/* ── Services Data (Simplified) ── */
-const services = [
+const ICON_MAP: Record<string, LucideIcon> = {
+  Palette,
+  MonitorCheck,
+  Share2,
+  Cpu,
+  Megaphone,
+  Code2,
+  Globe,
+  Sparkles,
+  Layers,
+  Terminal,
+};
+
+const DEFAULT_SERVICES: { title: string; icon: string; desc: string }[] = [
   {
     title: "Brand Identity",
-    icon: Palette,
+    icon: "Palette",
     desc: "Logo tajam, sistem warna rapi, dan berkas siap cetak.",
   },
   {
     title: "UI/UX & Web Dev",
-    icon: MonitorCheck,
+    icon: "MonitorCheck",
     desc: "Website responsif dan elegan dengan performa kilat.",
   },
   {
     title: "Social Media",
-    icon: Share2,
+    icon: "Share2",
     desc: "Desain konten yang terarah untuk membangun trust audiens.",
   },
   {
     title: "Workflow Automation",
-    icon: Cpu,
+    icon: "Cpu",
     desc: "Integrasi sistem dan form untuk pangkas tugas admin manual.",
   },
   {
     title: "Creative Campaign",
-    icon: Megaphone,
+    icon: "Megaphone",
     desc: "Materi promosi terpadu untuk momen peluncuran atau event.",
   },
   {
     title: "Tech Convergence",
-    icon: Code2,
+    icon: "Code2",
     desc: "Sinkronisasi desain antarmuka dan basis kode tanpa friksi.",
   },
 ];
 
 export function ServicesSection() {
+  const [items, setItems] = useState<{ title: string; icon: string; desc: string }[]>(DEFAULT_SERVICES);
+
+  useEffect(() => {
+    let isMounted = true;
+    api
+      .getServices()
+      .then((res) => {
+        if (isMounted && res.data && res.data.length > 0) {
+          setItems(res.data);
+        }
+      })
+      .catch(() => {
+        // Fallback to DEFAULT_SERVICES if API is offline
+      });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
   return (
     <section id="layanan" className="py-12 sm:py-20 relative bg-transparent">
       <div className="max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-12">
@@ -59,14 +98,13 @@ export function ServicesSection() {
 
         {/* Daftar layanan */}
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-6 lg:gap-8">
-          {services.map((srv) => {
-            const Icon = srv.icon;
+          {items.map((srv) => {
+            const Icon = ICON_MAP[srv.icon] || Palette;
             return (
               <div
                 key={srv.title}
                 className="group cursor-default transition-all duration-300"
               >
-                {/* Tilt ringan via CSS hover - tanpa runtime framer */}
                 <div className="glass-card rounded-2xl sm:rounded-3xl px-4 py-3.5 sm:p-8 flex flex-row items-center gap-3.5 sm:gap-6 sm:items-start h-full transition-transform duration-300 group-hover:-translate-y-1">
                   <div className="w-11 h-11 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-black/5 dark:bg-white/10 border border-black/10 dark:border-white/15 flex items-center justify-center shrink-0 transition-colors duration-300 shadow-sm group-hover:bg-black group-hover:border-black dark:group-hover:bg-white dark:group-hover:border-white">
                     <Icon className="w-5 h-5 sm:w-6 sm:h-6 text-black dark:text-white transition-colors duration-300 group-hover:text-white dark:group-hover:text-black" />

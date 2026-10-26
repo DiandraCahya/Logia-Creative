@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { useScrollReveal } from "@/lib/useScrollReveal";
+import { api } from "@/lib/api";
 
 const tabs = [
   { id: "visi", label: "Visi" },
@@ -10,39 +11,72 @@ const tabs = [
   { id: "filosofi", label: "Filosofi" },
 ] as const;
 
+const DEFAULT_MISSIONS = [
+  {
+    title: "Desain Berdampak",
+    desc: "Menghadirkan identitas visual yang profesional, berkarakter, dan berkesan.",
+  },
+  {
+    title: "Teknologi Cerdas",
+    desc: "Membangun sistem web modern yang cepat, andal, dan mudah dikelola.",
+  },
+  {
+    title: "Otomasi Efisien",
+    desc: "Menyederhanakan alur kerja kompleks menjadi sistem terotomasi.",
+  },
+];
+
+const DEFAULT_PILLARS = [
+  {
+    title: "Logika & Kreativitas",
+    desc: "Menggabungkan daya nalar logis sistemik dan kebebasan ekspresi visual.",
+  },
+  {
+    title: "Tetesan Ide",
+    desc: "Gagasan kreatif murni yang menetes dan berkembang menjadi dampak nyata.",
+  },
+  {
+    title: "Dinamis Adaptif",
+    desc: "Representasi fleksibilitas terhadap dinamika kebutuhan klien.",
+  },
+];
+
 export function CompanyProfileSection() {
   const [activeTab, setActiveTab] = useState<typeof tabs[number]["id"]>("visi");
   const { ref, isInView } = useScrollReveal();
 
-  const missions = [
-    {
-      title: "Desain Berdampak",
-      desc: "Menghadirkan identitas visual yang profesional, berkarakter, dan berkesan.",
-    },
-    {
-      title: "Teknologi Cerdas",
-      desc: "Membangun sistem web modern yang cepat, andal, dan mudah dikelola.",
-    },
-    {
-      title: "Otomasi Efisien",
-      desc: "Menyederhanakan alur kerja kompleks menjadi sistem terotomasi.",
-    },
-  ];
+  const [headline, setHeadline] = useState("Logia Creative Agency");
+  const [tagline, setTagline] = useState(
+    "Kami membangun keseimbangan antara kreativitas visual dan ketangguhan teknologi."
+  );
+  const [vision, setVision] = useState(
+    "Menjadi mitra kreatif dan teknologi terdepan yang memberdayakan bisnis di Indonesia melalui integrasi identitas visual yang berkarakter dan solusi digital yang berdampak nyata."
+  );
+  const [missions, setMissions] = useState(DEFAULT_MISSIONS);
+  const [brandPillars, setBrandPillars] = useState(DEFAULT_PILLARS);
 
-  const brandPillars = [
-    {
-      title: "Logika & Kreativitas",
-      desc: "Menggabungkan daya nalar logis sistemik dan kebebasan ekspresi visual.",
-    },
-    {
-      title: "Tetesan Ide",
-      desc: "Gagasan kreatif murni yang menetes dan berkembang menjadi dampak nyata.",
-    },
-    {
-      title: "Dinamis Adaptif",
-      desc: "Representasi fleksibilitas terhadap dinamika kebutuhan klien.",
-    },
-  ];
+  useEffect(() => {
+    let isMounted = true;
+    api
+      .getProfile()
+      .then((res) => {
+        if (isMounted && res.data) {
+          if (res.data.headline) setHeadline(res.data.headline);
+          if (res.data.tagline) setTagline(res.data.tagline);
+          if (res.data.vision) setVision(res.data.vision);
+          if (res.data.missions && res.data.missions.length > 0) {
+            setMissions(res.data.missions);
+          }
+          if (res.data.pillars && res.data.pillars.length > 0) {
+            setBrandPillars(res.data.pillars);
+          }
+        }
+      })
+      .catch(() => {});
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   return (
     <section id="about" className="py-12 md:py-20 relative bg-transparent">
@@ -56,10 +90,10 @@ export function CompanyProfileSection() {
           >
             <div className="mb-10">
               <h2 className="font-righteous text-[clamp(2.1rem,4.5vw,3.75rem)] leading-[1.08] tracking-normal text-black dark:text-white mb-4">
-                Logia Creative Agency
+                {headline}
               </h2>
               <p className="text-[#666666] dark:text-[#999999] text-base leading-relaxed">
-                Kami membangun keseimbangan antara kreativitas visual dan ketangguhan teknologi.
+                {tagline}
               </p>
             </div>
 
@@ -92,7 +126,7 @@ export function CompanyProfileSection() {
               {activeTab === "visi" && (
                 <div className="p-5 sm:p-12 glass-card rounded-3xl animate-fade-up">
                   <h3 className="text-xl sm:text-2xl font-bold leading-[1.5] text-black dark:text-white mb-8">
-                    &ldquo;Menjadi mitra kreatif dan teknologi terdepan yang memberdayakan bisnis di Indonesia melalui integrasi identitas visual yang berkarakter dan solusi digital yang berdampak nyata.&rdquo;
+                    &ldquo;{vision}&rdquo;
                   </h3>
                   <div className="flex justify-center items-center pt-2">
                     <p className="text-sm font-bold uppercase tracking-[0.15em] text-[#666666] dark:text-[#999999] text-center">
@@ -112,7 +146,7 @@ export function CompanyProfileSection() {
                           idx === 2 ? "sm:col-span-2" : ""
                         }`}
                       >
-                        <span className="text-black/30 dark:text-white/30 font-black text-3xl sm:text-4xl block mb-3">
+                        <span className="text-black/30 dark:text-white/30 font-black text-3xl sm:text-4xl block mb-3 font-mono">
                           0{idx + 1}
                         </span>
                         <h4 className="text-base sm:text-lg font-bold mb-2 text-black dark:text-white">

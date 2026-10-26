@@ -309,6 +309,7 @@ export function HeroCarousel({
                 fill
                 sizes="100vw"
                 quality={85}
+                unoptimized
                 loading="lazy"
                 decoding="async"
                 draggable={false}
@@ -505,6 +506,7 @@ export function HeroCarousel({
               fill
               sizes="100vw"
               quality={90}
+              unoptimized
               loading="lazy"
               decoding="async"
               className="object-cover grayscale opacity-100"
@@ -531,6 +533,7 @@ export function HeroCarousel({
               fill
               sizes="100vw"
               quality={60}
+              unoptimized
               loading="lazy"
               decoding="async"
               className="object-cover grayscale opacity-100"
@@ -683,6 +686,7 @@ export function HeroCarousel({
                 fill
                 sizes={`${Math.round(cardW)}px`}
                 quality={60}
+                unoptimized
                 loading="lazy"
                 decoding="async"
                 className={cn(

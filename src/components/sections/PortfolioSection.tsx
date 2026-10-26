@@ -8,6 +8,7 @@ import { ArrowRight, ArrowUpRight, X } from "lucide-react";
 import SplitWords from "@/components/animations/SplitWords";
 import { HeroCarousel, type HeroCarouselItem } from "@/components/ui/hero-carousel";
 import { openCollaborationModal } from "@/components/CollaborationManager";
+import { api, getMediaUrl } from "@/lib/api";
 
 const ART = (id: string) =>
   `https://images.unsplash.com/photo-${id}?q=70&w=1400&auto=format&fit=crop`
@@ -23,6 +24,7 @@ type Project = {
   link?: string;
   /** True bila gambarnya cut-out transparan (bukan foto) - panggung menampilkannya sebagai figur utuh. */
   figure?: boolean;
+  isFeatured?: boolean;
 };
 
 const projects: Project[] = [
@@ -221,6 +223,7 @@ function PortfolioCard({
             src={project.image}
             alt={project.title.replace(/\n/g, ' ')}
             fill
+            unoptimized
             loading="lazy"
             decoding="async"
             sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
@@ -271,6 +274,8 @@ function PortfolioCard({
 const stillAnimating = () => !document.documentElement.dataset.overlay;
 
 export function PortfolioSection() {
+  const [liveProjects, setLiveProjects] = useState<Project[]>(projects);
+  const [liveAllProjects, setLiveAllProjects] = useState<Project[]>(allProjects);
   const [activeCategory, setActiveCategory] = useState("Semua");
   const [displayedCategory, setDisplayedCategory] = useState("Semua");
   const [isExiting, setIsExiting] = useState(false);
@@ -282,6 +287,34 @@ export function PortfolioSection() {
   const { ref: gridRef, isInView: gridVisible } = useScrollReveal();
 
   useEffect(() => setMounted(true), []);
+
+  useEffect(() => {
+    let isMounted = true;
+    api
+      .getPortfolio()
+      .then((res) => {
+        if (isMounted && res.data && res.data.length > 0) {
+          const mapped: Project[] = res.data.map((p) => ({
+            title: p.title,
+            category: p.category,
+            image: getMediaUrl(p.image),
+            description: p.description,
+            tags: p.tags,
+            accent: p.accent,
+            link: p.link,
+            figure: p.figure,
+            isFeatured: p.isFeatured !== false,
+          }));
+          setLiveAllProjects(mapped);
+          const featured = mapped.filter((p) => p.isFeatured !== false);
+          setLiveProjects(featured.length > 0 ? featured : mapped);
+        }
+      })
+      .catch(() => {});
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const transitioningToCollabRef = useRef(false);
   const selectedProjectRef = useRef<Project | null>(null);
@@ -312,7 +345,7 @@ export function PortfolioSection() {
     }, 180);
   };
 
-  const filteredProjects = projects.filter(
+  const filteredProjects = liveProjects.filter(
     (project) => displayedCategory === "Semua" || project.category === displayedCategory
   );
 
@@ -624,7 +657,7 @@ export function PortfolioSection() {
                   <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${
                     isOverlayFiltering ? "opacity-0 translate-y-3 scale-[0.99]" : "opacity-100 translate-y-0 scale-100"
                   }`}>
-                    {allProjects
+                    {liveAllProjects
                       .filter((p) => activeCategory === "Semua" || p.category === activeCategory)
                       .map((project, idx) => (
                         <PortfolioCard
@@ -670,6 +703,7 @@ export function PortfolioSection() {
                 src={selectedProject.image}
                 alt={selectedProject.title.replace(/\n/g, " ")}
                 fill
+                unoptimized
                 sizes="(max-width: 640px) 100vw, 600px"
                 className="object-cover"
               />

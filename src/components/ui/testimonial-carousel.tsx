@@ -135,6 +135,7 @@ export function TestimonialCarousel({ testimonials }: { testimonials: Testimonia
                       alt={t.alt}
                       width={40}
                       height={40}
+                      unoptimized
                       loading="lazy"
                       decoding="async"
                       className="h-10 w-10 shrink-0 rounded-full object-cover ring-2 ring-[var(--accent-bronze)]"
@@ -260,6 +261,7 @@ export function TestimonialCarousel({ testimonials }: { testimonials: Testimonia
                   alt={t.alt}
                   width={64}
                   height={64}
+                  unoptimized
                   loading="lazy"
                   decoding="async"
                   className="shrink-0 h-14 w-14 sm:h-16 sm:w-16 rounded-full object-cover ring-2 ring-[var(--accent-bronze)]"

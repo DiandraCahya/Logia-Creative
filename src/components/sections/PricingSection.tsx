@@ -1,10 +1,11 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useScrollReveal } from "@/lib/useScrollReveal";
 import { Check, ChevronDown, Code2, Palette, Layers } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { openCollaborationModal } from "@/components/CollaborationManager";
+import { api } from "@/lib/api";
 import {
   SOLUTIONS,
   TERMS,
@@ -24,11 +25,27 @@ const ease = [0.22, 1, 0.36, 1] as const; // --ease-out-expo, satu easing global
 
 export function PricingSection({ onSelectPackage }: { onSelectPackage?: (packageId: string) => void }) {
   const { ref, isInView } = useScrollReveal();
+  const [liveSolutions, setLiveSolutions] = useState(SOLUTIONS);
   const [tab, setTab] = useState(SOLUTIONS[0].id);
   const [expanded, setExpanded] = useState<string | null>(null);
   const [openTerm, setOpenTerm] = useState<number | null>(null);
 
-  const active = SOLUTIONS.find((s) => s.id === tab) ?? SOLUTIONS[0];
+  useEffect(() => {
+    let isMounted = true;
+    api
+      .getPricing()
+      .then((res) => {
+        if (isMounted && res.data && res.data.length > 0) {
+          setLiveSolutions(res.data as any);
+        }
+      })
+      .catch(() => {});
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const active = liveSolutions.find((s) => s.id === tab) ?? liveSolutions[0] ?? SOLUTIONS[0];
 
   // "Pilih {PAKET}" → buka form kolaborasi dengan paket sudah ter-prefill.
   const pick = (packageId: string) => {
@@ -75,7 +92,7 @@ export function PricingSection({ onSelectPackage }: { onSelectPackage?: (package
           role="tablist"
           aria-label="Jenis solusi"
         >
-          {SOLUTIONS.map((s) => {
+          {liveSolutions.map((s) => {
             const Icon = solutionIcons[s.id] || Layers;
             const isActive = tab === s.id;
             return (

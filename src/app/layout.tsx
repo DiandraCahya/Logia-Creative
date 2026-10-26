@@ -26,8 +26,10 @@ const fontRighteous = Righteous({
 //   const anthropic = localFont({ src: [...], variable: "--font-anthropic", display: "swap" });
 //   → gabungkan di <html>: `${fontSubstitute.variable} ${anthropic.variable}`
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://logia.chyas.my.id";
+
 export const metadata: Metadata = {
-  metadataBase: new URL("https://logia.id"),
+  metadataBase: new URL(siteUrl),
   title: "Logia Creative | Creative & Technology Agency",
   description:
     "Innovative Branding & Digital Solutions Provider. Mengintegrasikan Kreativitas dan Teknologi untuk Pertumbuhan Bisnis Anda.",
@@ -43,13 +45,13 @@ export const metadata: Metadata = {
     "UMKM",
     "Startup",
   ],
-  authors: [{ name: "Logia Creative Team", url: "https://logia.id" }],
+  authors: [{ name: "Logia Creative Team", url: siteUrl }],
   creator: "Logia Creative",
   openGraph: {
     title: "Logia Creative | Creative & Technology Agency",
     description:
       "Mengintegrasikan Kreativitas dan Teknologi untuk Bisnis yang Lebih Kuat. Solusi branding, web modern, dan otomatisasi alur kerja.",
-    url: "https://logia.id",
+    url: siteUrl,
     siteName: "Logia Creative",
     images: [
       {

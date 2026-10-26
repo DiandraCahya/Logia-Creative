@@ -116,11 +116,28 @@ export async function POST(req: NextRequest) {
     // Telegram SELALU dikirim bila bot terkonfigurasi: formatnya SAMA dengan
     // struk, termasuk untuk pesanan tanpa paket (mis. "Custom / Konsultasi").
     const tgHtml = botToken && chatId ? receiptTelegramHtml(receipt, notes, budget) : null;
+    // Simpan juga ke CMS API Express bila aktif
+    const cmsApiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
+    const cmsPromise = fetch(`${cmsApiUrl}/inquiries`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name,
+        contact,
+        brandName,
+        budget,
+        services: serviceLabels,
+        notes,
+        website: "",
+      }),
+    }).catch((err) => console.warn("[CMS API] tidak dapat menyimpan inquiry:", err.message));
+
     const [emailResult, tgResult] = await Promise.allSettled([
       resend.emails.send({ from: FROM, to: TO, subject, html }),
       tgHtml && botToken && chatId
         ? sendReceiptTelegram(botToken, chatId, tgHtml)
         : Promise.resolve({ ok: false, error: "skipped" }),
+      cmsPromise,
     ]);
     const emailOk =
       emailResult.status === "fulfilled" && !(emailResult.value as { error?: unknown }).error;
