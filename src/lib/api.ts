@@ -251,6 +251,7 @@ export async function fetchFromAPI<T>(
   let res: Response;
   try {
     res = await fetch(targetUrl, {
+      cache: options.cache || "no-store",
       ...options,
       headers,
     });

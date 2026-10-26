@@ -306,8 +306,7 @@ export function PortfolioSection() {
             isFeatured: p.isFeatured !== false,
           }));
           setLiveAllProjects(mapped);
-          const featured = mapped.filter((p) => p.isFeatured !== false);
-          setLiveProjects(featured.length > 0 ? featured : mapped);
+          setLiveProjects(mapped);
         }
       })
       .catch(() => {});
@@ -346,7 +345,9 @@ export function PortfolioSection() {
   };
 
   const filteredProjects = liveProjects.filter(
-    (project) => displayedCategory === "Semua" || project.category === displayedCategory
+    (project) =>
+      displayedCategory === "Semua" ||
+      project.category.toLowerCase() === displayedCategory.toLowerCase()
   );
 
   const carouselItems: HeroCarouselItem[] = filteredProjects.map((p, i) => ({
@@ -573,6 +574,7 @@ export function PortfolioSection() {
         }`}>
           {carouselItems.length > 0 ? (
             <HeroCarousel
+              key={`${displayedCategory}-${carouselItems.length}-${carouselItems[0]?.title || ""}`}
               items={carouselItems}
               defaultIndex={Math.floor(carouselItems.length / 2)}
             />
@@ -658,7 +660,7 @@ export function PortfolioSection() {
                     isOverlayFiltering ? "opacity-0 translate-y-3 scale-[0.99]" : "opacity-100 translate-y-0 scale-100"
                   }`}>
                     {liveAllProjects
-                      .filter((p) => activeCategory === "Semua" || p.category === activeCategory)
+                      .filter((p) => activeCategory === "Semua" || p.category.toLowerCase() === activeCategory.toLowerCase())
                       .map((project, idx) => (
                         <PortfolioCard
                           key={`overlay-${project.title.replace(/\s+/g, "-")}-${idx}`}
