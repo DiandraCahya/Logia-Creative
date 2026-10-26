@@ -1,7 +1,47 @@
+const PROD_API_URL = "https://logia.chyas.my.id/api";
+const DEV_API_URL = "http://localhost:5000/api";
+
+/**
+ * Mengembalikan Base URL API secara cerdas:
+ * 1. Jika ada NEXT_PUBLIC_API_URL eksplisit, gunakan itu.
+ * 2. Jika di peramban dan hostname bukan localhost/127.0.0.1 (misal di domain Vercel atau domain custom),
+ *    selalu gunakan API produksi https://logia.chyas.my.id/api (tidak pernah fallback ke localhost di production).
+ * 3. Jika saat compile build produksi, gunakan PROD_API_URL.
+ * 4. Hanya saat pengembangan lokal (localhost) gunakan DEV_API_URL.
+ */
+export function getApiBaseUrl(): string {
+  if (process.env.NEXT_PUBLIC_API_URL) {
+    return process.env.NEXT_PUBLIC_API_URL;
+  }
+  if (typeof window !== "undefined") {
+    const host = window.location.hostname;
+    if (host !== "localhost" && host !== "127.0.0.1") {
+      return PROD_API_URL;
+    }
+    return DEV_API_URL;
+  }
+  return process.env.NODE_ENV === "production" ? PROD_API_URL : DEV_API_URL;
+}
+
+export function getApiMediaUrl(): string {
+  const base = getApiBaseUrl();
+  return (
+    base.replace(/\/api\/?$/, "") ||
+    (process.env.NODE_ENV === "production"
+      ? "https://logia.chyas.my.id"
+      : "http://localhost:5000")
+  );
+}
+
 export const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
+  process.env.NEXT_PUBLIC_API_URL ||
+  (process.env.NODE_ENV === "production" ? PROD_API_URL : DEV_API_URL);
+
 export const API_MEDIA_URL =
-  API_BASE_URL.replace(/\/api\/?$/, "") || "http://localhost:5000";
+  API_BASE_URL.replace(/\/api\/?$/, "") ||
+  (process.env.NODE_ENV === "production"
+    ? "https://logia.chyas.my.id"
+    : "http://localhost:5000");
 
 /**
  * Resolves media URLs for dynamic CMS assets (portfolio, testimonials, uploaded files).
@@ -10,20 +50,21 @@ export const API_MEDIA_URL =
  */
 export function getMediaUrl(url?: string | null): string {
   if (!url) return "";
+  const mediaBase = getApiMediaUrl();
   if (url.startsWith("http://localhost:5000/uploads/")) {
-    return url.replace("http://localhost:5000", API_MEDIA_URL);
+    return url.replace("http://localhost:5000", mediaBase);
   }
   if (url.startsWith("http://127.0.0.1:5000/uploads/")) {
-    return url.replace("http://127.0.0.1:5000", API_MEDIA_URL);
+    return url.replace("http://127.0.0.1:5000", mediaBase);
   }
   if (url.startsWith("http://") || url.startsWith("https://")) {
     return url;
   }
   if (url.startsWith("/uploads/")) {
-    return `${API_MEDIA_URL}${url}`;
+    return `${mediaBase}${url}`;
   }
   if (url.startsWith("uploads/")) {
-    return `${API_MEDIA_URL}/${url}`;
+    return `${mediaBase}/${url}`;
   }
   return url;
 }
@@ -245,8 +286,9 @@ export async function fetchFromAPI<T>(
     headers.set("Authorization", `Bearer ${token}`);
   }
 
+  const baseUrl = getApiBaseUrl();
   const cleanEndpoint = endpoint.startsWith("/") ? endpoint : `/${endpoint}`;
-  const targetUrl = `${API_BASE_URL}${cleanEndpoint}`;
+  const targetUrl = `${baseUrl}${cleanEndpoint}`;
 
   let res: Response;
   try {
