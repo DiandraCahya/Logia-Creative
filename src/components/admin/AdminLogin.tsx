@@ -11,8 +11,8 @@ interface AdminLoginProps {
 }
 
 export function AdminLogin({ onSuccess }: AdminLoginProps) {
-  const [username, setUsername] = useState("admin");
-  const [password, setPassword] = useState("admin123");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -137,11 +137,6 @@ export function AdminLogin({ onSuccess }: AdminLoginProps) {
             </div>
           </div>
 
-          <div className="p-3 rounded-xl bg-black/5 dark:bg-white/5 border border-black/5 dark:border-white/5 text-[11px] text-neutral-500 dark:text-neutral-400 leading-relaxed">
-            <span className="font-semibold text-neutral-700 dark:text-neutral-300">Kredensial Default:</span>
-            <br />
-            admin / admin123 atau Logiaaa / rakhakucrut
-          </div>
 
           <button
             type="submit"

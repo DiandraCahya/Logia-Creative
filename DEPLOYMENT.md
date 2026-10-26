@@ -77,8 +77,8 @@ File `Dockerfile` dan `docker-compose.yml` telah disiapkan di dalam folder `API-
    JWT_SECRET=buat_kunci_rahasia_acak_yang_panjang_disini
    JWT_EXPIRES_IN=7d
    REQUIRE_AUTH=false
-   ADMIN_USERNAME=admin
-   ADMIN_PASSWORD=ganti_password_admin_123
+   ADMIN_USERNAME=Logiaaa
+   ADMIN_PASSWORD=rakhakucrut
    CORS_ORIGIN=https://logia.chyas.my.id,http://localhost:3000
    ```
 3. Jalankan container dengan persistent volume:
