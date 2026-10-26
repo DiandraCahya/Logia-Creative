@@ -90,21 +90,23 @@ export default function AdminPage() {
       const cachedUser = getStoredUser();
 
       if (token && cachedUser) {
-        setCurrentUser(cachedUser);
         try {
           const res = await api.getMe();
-          if (res.data) setCurrentUser(res.data);
+          if (res.data) {
+            setCurrentUser(res.data);
+          } else {
+            clearStoredAuth();
+            setCurrentUser(null);
+          }
         } catch {
-          // Token might be invalid if strict auth is on
+          // Token tidak valid atau kedaluwarsa
+          clearStoredAuth();
+          setCurrentUser(null);
         }
       } else {
-        // If REQUIRE_AUTH=false on backend, we allow guest-admin or prompt login
-        try {
-          const res = await api.getMe();
-          if (res.data) setCurrentUser(res.data);
-        } catch {
-          // Keep currentUser null to prompt login
-        }
+        // Belum login, pastikan currentUser null agar menampilkan form login
+        clearStoredAuth();
+        setCurrentUser(null);
       }
       setAuthChecked(true);
     };
