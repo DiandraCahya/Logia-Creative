@@ -249,6 +249,8 @@ export function LiquidNavbar({ onOpenCollaboration, isSplashDone: propSplashDone
           top: elementTop - NAVBAR_OFFSET,
           behavior: "smooth",
         });
+      } else {
+        window.location.href = href === "#top" ? "/" : `/${href}`;
       }
       setIsExpanded(false);
       if (isCollabOpen) {

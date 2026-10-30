@@ -5,7 +5,6 @@ import { openCollaborationModal } from "@/components/CollaborationManager";
 import { useScrollReveal } from "@/lib/useScrollReveal";
 import Image from "next/image";
 import {
-  ArrowUp,
   Mail,
   Phone,
   MapPin,
@@ -43,10 +42,6 @@ export function FooterSection({ onOpenCollaboration }: FooterSectionProps) {
     const interval = setInterval(updateTime, 1000);
     return () => clearInterval(interval);
   }, []);
-
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
 
   return (
     <footer id="kontak" className="relative pt-6 sm:pt-14 pb-6 sm:pb-10 overflow-hidden max-w-[100vw] bg-transparent">
@@ -248,27 +243,11 @@ export function FooterSection({ onOpenCollaboration }: FooterSectionProps) {
           </p>
         </div>
 
-        {/* Bottom Bar: Copyright & Back to Top */}
-        <div className="relative z-10 pb-4 sm:pb-8 flex flex-col sm:flex-row items-center justify-between gap-3 text-[12px] font-semibold text-neutral-600 dark:text-neutral-300">
+        {/* Bottom Bar: Copyright (Centered) */}
+        <div className="relative z-10 pb-4 sm:pb-8 flex items-center justify-center text-center text-[12px] font-semibold text-neutral-600 dark:text-neutral-300">
           <p>
             &copy; {new Date().getFullYear()} Logia Creative Agency. All rights reserved.
           </p>
-
-          <div className="flex items-center gap-4">
-            <a
-              href="/admin"
-              className="text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white transition-colors underline-offset-4 hover:underline"
-            >
-              Panel CMS
-            </a>
-            <button
-              onClick={scrollToTop}
-              className="flex items-center gap-2 px-4 py-2 min-h-[44px] rounded-full border border-black/10 dark:border-white/10 hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-all group bg-white/40 dark:bg-black/40 backdrop-blur-sm"
-            >
-              <span>Kembali ke Atas</span>
-              <ArrowUp className="w-3.5 h-3.5 transition-transform group-hover:-translate-y-0.5" />
-            </button>
-          </div>
         </div>
       </div>
     </footer>

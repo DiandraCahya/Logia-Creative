@@ -230,7 +230,7 @@ export function CompanyProfileTab() {
   if (!profile) return null;
 
   return (
-    <div className="space-y-8 max-w-4xl">
+    <div className="space-y-8 w-full">
       {/* Header & Save Action */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>

@@ -348,7 +348,7 @@ export function PricingTab() {
                         )}
 
                         <div className="mb-4">
-                          <span className="text-xl sm:text-2xl font-bold font-righteous text-black dark:text-white">
+                          <span className="text-xl sm:text-2xl font-bold font-sans tracking-tight text-black dark:text-white">
                             {formatIDR(pkg.price)}
                           </span>
                           <span className="text-xs text-neutral-500 ml-1">/{pkg.unit}</span>

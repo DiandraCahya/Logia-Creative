@@ -3,6 +3,7 @@ import { Resend } from "resend";
 import { findPackage } from "@/lib/rate-card";
 import { buildReceipt, buildConsultationReceipt, formatIDR, serviceLabel, wibTimestamp, RECEIPT_TERMS } from "@/lib/receipt";
 import { receiptTelegramHtml, sendReceiptTelegram } from "@/lib/telegram";
+import { normalizeApiUrl } from "@/lib/api";
 
 const TO = process.env.COLLABORATION_TO || "logiacreative.id@gmail.com";
 const FROM = process.env.COLLABORATION_FROM || "onboarding@resend.dev";
@@ -117,7 +118,7 @@ export async function POST(req: NextRequest) {
     // struk, termasuk untuk pesanan tanpa paket (mis. "Custom / Konsultasi").
     const tgHtml = botToken && chatId ? receiptTelegramHtml(receipt, notes, budget) : null;
     // Simpan juga ke CMS API Express bila aktif
-    const cmsApiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
+    const cmsApiUrl = normalizeApiUrl(process.env.NEXT_PUBLIC_API_URL);
     const cmsPromise = fetch(`${cmsApiUrl}/inquiries`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },

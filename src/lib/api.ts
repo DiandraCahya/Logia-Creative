@@ -2,25 +2,38 @@ const PROD_API_URL = "https://logia.chyas.my.id/api";
 const DEV_API_URL = "http://localhost:5000/api";
 
 /**
+ * Normalizes any API URL to ensure it always includes the `/api` prefix
+ * and removes any trailing slashes.
+ */
+export function normalizeApiUrl(raw?: string | null): string {
+  const url = (raw || "").trim();
+  if (!url) {
+    if (typeof window !== "undefined") {
+      const host = window.location.hostname;
+      if (host !== "localhost" && host !== "127.0.0.1") {
+        return PROD_API_URL;
+      }
+      return DEV_API_URL;
+    }
+    return process.env.NODE_ENV === "production" ? PROD_API_URL : DEV_API_URL;
+  }
+  let clean = url.replace(/\/+$/, "");
+  if (!clean.endsWith("/api")) {
+    clean = `${clean}/api`;
+  }
+  return clean;
+}
+
+/**
  * Mengembalikan Base URL API secara cerdas:
- * 1. Jika ada NEXT_PUBLIC_API_URL eksplisit, gunakan itu.
+ * 1. Jika ada NEXT_PUBLIC_API_URL eksplisit, gunakan itu (dinormalisasi otomatis agar berakhiran /api).
  * 2. Jika di peramban dan hostname bukan localhost/127.0.0.1 (misal di domain Vercel atau domain custom),
- *    selalu gunakan API produksi https://logia.chyas.my.id/api (tidak pernah fallback ke localhost di production).
+ *    selalu gunakan API produksi https://logia.chyas.my.id/api.
  * 3. Jika saat compile build produksi, gunakan PROD_API_URL.
  * 4. Hanya saat pengembangan lokal (localhost) gunakan DEV_API_URL.
  */
 export function getApiBaseUrl(): string {
-  if (process.env.NEXT_PUBLIC_API_URL) {
-    return process.env.NEXT_PUBLIC_API_URL;
-  }
-  if (typeof window !== "undefined") {
-    const host = window.location.hostname;
-    if (host !== "localhost" && host !== "127.0.0.1") {
-      return PROD_API_URL;
-    }
-    return DEV_API_URL;
-  }
-  return process.env.NODE_ENV === "production" ? PROD_API_URL : DEV_API_URL;
+  return normalizeApiUrl(process.env.NEXT_PUBLIC_API_URL);
 }
 
 export function getApiMediaUrl(): string {
@@ -33,9 +46,10 @@ export function getApiMediaUrl(): string {
   );
 }
 
-export const API_BASE_URL =
+export const API_BASE_URL = normalizeApiUrl(
   process.env.NEXT_PUBLIC_API_URL ||
-  (process.env.NODE_ENV === "production" ? PROD_API_URL : DEV_API_URL);
+    (process.env.NODE_ENV === "production" ? PROD_API_URL : DEV_API_URL)
+);
 
 export const API_MEDIA_URL =
   API_BASE_URL.replace(/\/api\/?$/, "") ||
@@ -287,7 +301,10 @@ export async function fetchFromAPI<T>(
   }
 
   const baseUrl = getApiBaseUrl();
-  const cleanEndpoint = endpoint.startsWith("/") ? endpoint : `/${endpoint}`;
+  let cleanEndpoint = endpoint.startsWith("/") ? endpoint : `/${endpoint}`;
+  if (cleanEndpoint.startsWith("/api/")) {
+    cleanEndpoint = cleanEndpoint.replace(/^\/api/, "");
+  }
   const targetUrl = `${baseUrl}${cleanEndpoint}`;
 
   let res: Response;
@@ -532,6 +549,10 @@ export const api = {
     return fetchFromAPI<{ success: boolean; count: number; data: TestimonialItem[] }>(`/testimonials${query}`);
   },
 
+  async getTestimonial(id: string) {
+    return fetchFromAPI<{ success: boolean; data: TestimonialItem }>(`/testimonials/${id}`);
+  },
+
   async createTestimonial(data: Omit<TestimonialItem, "id">) {
     return fetchFromAPI<{ success: boolean; message: string; data: TestimonialItem }>("/testimonials", {
       method: "POST",
@@ -639,6 +660,10 @@ export const api = {
     return fetchFromAPI<{ success: boolean; data: InquiryStats }>("/inquiries/stats");
   },
 
+  async getInquiry(id: string) {
+    return fetchFromAPI<{ success: boolean; data: InquiryItem }>(`/inquiries/${id}`);
+  },
+
   async updateInquiryStatus(id: string, status: InquiryStatus, adminNotes?: string) {
     return fetchFromAPI<{ success: boolean; message: string; data: InquiryItem }>(
       `/inquiries/${id}/status`,
@@ -656,9 +681,9 @@ export const api = {
   },
 
   // Media / Upload
-  async uploadFile(file: File) {
+  async uploadFile(file: File, fieldName: "file" | "image" = "file") {
     const formData = new FormData();
-    formData.append("file", file);
+    formData.append(fieldName, file);
     return fetchFromAPI<{ success: boolean; message: string; data: UploadResult }>("/upload", {
       method: "POST",
       body: formData,

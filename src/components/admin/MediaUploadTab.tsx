@@ -157,7 +157,7 @@ export function MediaUploadTab() {
   });
 
   return (
-    <div className="space-y-10 max-w-5xl">
+    <div className="space-y-10 w-full">
       <div>
         <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-black dark:text-white">
           Pusat Unggah File & Koleksi Media
