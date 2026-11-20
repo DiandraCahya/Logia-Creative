@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { openCollaborationModal } from "@/components/CollaborationManager";
 import { useScrollReveal } from "@/lib/useScrollReveal";
 import Image from "next/image";
@@ -8,7 +8,6 @@ import {
   Mail,
   Phone,
   MapPin,
-  Clock,
   Instagram,
   Linkedin,
   Globe,
@@ -19,29 +18,9 @@ interface FooterSectionProps {
   onOpenCollaboration?: () => void;
 }
 
-const wibFormatter = new Intl.DateTimeFormat("id-ID", {
-  timeZone: "Asia/Jakarta",
-  hour: "2-digit",
-  minute: "2-digit",
-  second: "2-digit",
-  hour12: false,
-});
-
 export function FooterSection({ onOpenCollaboration }: FooterSectionProps) {
-  const [wibTime, setWibTime] = useState<string>("");
   const { ref: ctaRef, isInView: ctaVisible } = useScrollReveal();
   const { ref: contactRef, isInView: contactVisible } = useScrollReveal();
-
-  useEffect(() => {
-    const updateTime = () => {
-      if (document.hidden) return; // skip tick saat tab tak terlihat
-      setWibTime(wibFormatter.format(new Date()));
-    };
-
-    updateTime();
-    const interval = setInterval(updateTime, 1000);
-    return () => clearInterval(interval);
-  }, []);
 
   return (
     <footer id="kontak" className="relative pt-6 sm:pt-14 pb-6 sm:pb-10 overflow-hidden max-w-[100vw] bg-transparent">
@@ -99,13 +78,6 @@ export function FooterSection({ onOpenCollaboration }: FooterSectionProps) {
             <p className="text-sm text-neutral-700 dark:text-neutral-200 font-medium leading-relaxed max-w-sm">
               Agensi kreatif dan teknologi terintegrasi yang menghadirkan solusi branding, perancangan antarmuka pengguna interaktif, dan automasi sistem kerja digital bagi UMKM, startup, dan organisasi.
             </p>
-
-            {/* Live WIB Clock */}
-            <div className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-black/5 dark:bg-white/10 border border-black/10 dark:border-white/15 text-xs font-mono text-black dark:text-white">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shrink-0" />
-              <Clock className="w-3.5 h-3.5 shrink-0 text-neutral-500 dark:text-neutral-400" />
-              <span>Studio Time: {wibTime || "--:--:--"} WIB</span>
-            </div>
           </div>
 
           {/* Quick Links Section: 2 cols side-by-side on mobile, individual on desktop */}
@@ -197,13 +169,13 @@ export function FooterSection({ onOpenCollaboration }: FooterSectionProps) {
               </li>
               <li>
                 <a
-                  href="https://logia-creative.vercel.app/"
+                  href="https://www.logiacreative.com"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2.5 py-1 text-xs sm:text-sm hover:text-black dark:hover:text-white transition-colors"
                 >
                   <Globe className="w-4 h-4 text-black dark:text-white shrink-0" />
-                  <span className="break-all">https://logia-creative.vercel.app/</span>
+                  <span className="break-all">https://www.logiacreative.com</span>
                 </a>
               </li>
               <li className="flex items-center gap-2.5 py-1 text-xs sm:text-sm">

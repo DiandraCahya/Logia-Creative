@@ -25,7 +25,7 @@ export function HeroSection({ onOpenCollaboration }: HeroSectionProps) {
             <h1 className="w-full font-righteous text-[clamp(2.1rem,9vw,3.5rem)] sm:text-[clamp(2rem,6vw,5rem)] leading-[1.08] tracking-normal text-black dark:text-white min-w-0">
               <span className="overflow-hidden block pb-1">
                 <span className="block">
-                  Craft Your<br />Brand Identity.
+                  Growth Your<br />Brand With Us
                 </span>
               </span>
             </h1>

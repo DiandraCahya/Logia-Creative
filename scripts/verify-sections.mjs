@@ -2,7 +2,7 @@ import fs from "node:fs";
 const read = (f) => fs.readFileSync(f, "utf8");
 const fails = [];
 const hero = read("src/components/sections/HeroSection.tsx");
-if (!hero.includes("Craft Your") || !hero.includes("Mulai Proyek") || !hero.includes("Lihat Portfolio")) fails.push("hero copy changed");
+if (!hero.includes("Growth Your") || !hero.includes("Mulai Proyek") || !hero.includes("Lihat Portfolio")) fails.push("hero copy changed");
 if (!hero.includes("font-display")) fails.push("hero must use font-display");
 const tgt = read("src/components/sections/BackgroundTargetSection.tsx");
 if (!tgt.includes("+300%") || !tgt.includes("UMKM")) fails.push("target copy changed");
@@ -19,7 +19,7 @@ if (!about.includes("id=\"about\"")) fails.push("about must keep id=about");
 const foot = read("src/components/sections/FooterSection.tsx");
 if (!foot.includes("font-display")) fails.push("footer must use font-display");
 if (!foot.includes("id=\"kontak\"")) fails.push("footer must keep id=kontak");
-if (!foot.includes("Studio Time")) fails.push("footer must keep Studio Time");
+if (foot.includes("Studio Time")) fails.push("footer must not show Studio Time anymore");
 const page = read("src/app/page.tsx");
 if (page.includes("MarqueeStrip") || page.includes("animations/Marquee")) fails.push("marquee must be removed from page");
 if (fails.length) { console.error(fails.join("\n")); process.exit(1); }
