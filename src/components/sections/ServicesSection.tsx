@@ -12,6 +12,8 @@ import {
   Sparkles,
   Layers,
   Terminal,
+  BookOpen,
+  GraduationCap,
   LucideIcon,
 } from "lucide-react";
 import { api, ServiceItem } from "@/lib/api";
@@ -27,6 +29,8 @@ const ICON_MAP: Record<string, LucideIcon> = {
   Sparkles,
   Layers,
   Terminal,
+  BookOpen,
+  GraduationCap,
 };
 
 const DEFAULT_SERVICES: { title: string; icon: string; desc: string }[] = [
@@ -59,6 +63,16 @@ const DEFAULT_SERVICES: { title: string; icon: string; desc: string }[] = [
     title: "Tech Convergence",
     icon: "Code2",
     desc: "Sinkronisasi desain antarmuka dan basis kode tanpa friksi.",
+  },
+  {
+    title: "Academic Publishing",
+    icon: "BookOpen",
+    desc: "Penyusunan modul, buku ajar, referensi, dan legalitas izin QRCBN.",
+  },
+  {
+    title: "Interactive Learning",
+    icon: "GraduationCap",
+    desc: "Pengembangan media simulasi bahan ajar interaktif sekolah dan kuliah.",
   },
 ];
 

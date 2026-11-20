@@ -260,22 +260,11 @@ html:not(.dark) .macbook-ear {
   filter: contrast(0.98);
 }
 
-@media (min-width: 768px) {
-  .site-bg-overlay {
-    background-image: url('/modeTerang.webp');
-  }
-  .dark .site-bg-overlay {
-    background-image: url('/modeGelap.webp');
-  }
+.site-bg-overlay {
+  background-image: url('/modeTerang-mobile.webp');
 }
-
-@media (max-width: 767px) {
-  .site-bg-overlay {
-    background-image: url('/modeTerang-mobile.webp');
-  }
-  .dark .site-bg-overlay {
-    background-image: url('/modeGelap-mobile.webp');
-  }
+.dark .site-bg-overlay {
+  background-image: url('/modeGelap-mobile.webp');
 }
 
 /* ============= PERFORMANCE TIERING ============= */

@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useScrollReveal } from "@/lib/useScrollReveal";
-import { Check, ChevronDown, Code2, Palette, Layers } from "lucide-react";
+import { Check, ChevronDown, Code2, Palette, Layers, GraduationCap } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { openCollaborationModal } from "@/components/CollaborationManager";
 import { api } from "@/lib/api";
@@ -17,8 +17,10 @@ import {
 
 const solutionIcons: Record<string, React.ElementType> = {
   tech: Code2,
+  technology: Code2,
   creative: Palette,
   integrated: Layers,
+  academic: GraduationCap,
 };
 
 const ease = [0.22, 1, 0.36, 1] as const; // --ease-out-expo, satu easing global
@@ -117,11 +119,21 @@ export function PricingSection({ onSelectPackage }: { onSelectPackage?: (package
           })}
         </div>
 
-        <div key={tab} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-8 animate-fade-up">
+        <div
+          key={tab}
+          className={cn(
+            "grid gap-4 sm:gap-6 lg:gap-6 xl:gap-8 animate-fade-up",
+            active.packages.length === 4
+              ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-4"
+              : "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+          )}
+        >
           {active.packages.map((pkg, idx) => (
             <div
               key={pkg.id}
-              className={`relative flex flex-col p-5 sm:p-8 rounded-2xl sm:rounded-3xl transition-all duration-500 hover:-translate-y-1 ${
+              className={`relative flex flex-col p-5 sm:p-7 ${
+                active.packages.length === 4 ? "lg:p-5 xl:p-6" : "lg:p-8"
+              } rounded-2xl sm:rounded-3xl transition-all duration-500 hover:-translate-y-1 ${
                 pkg.popular
                   ? "bg-black dark:bg-white border-2 border-black dark:border-white text-white dark:text-black shadow-xl"
                   : "glass-card"

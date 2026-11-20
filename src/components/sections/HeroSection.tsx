@@ -54,6 +54,7 @@ export function HeroSection({ onOpenCollaboration }: HeroSectionProps) {
                       width={420}
                       height={420}
                       priority
+                      fetchPriority="high"
                       sizes="(max-width: 640px) 144px, 420px"
                       className="w-full h-full object-cover"
                     />

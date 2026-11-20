@@ -187,6 +187,73 @@ export const SOLUTIONS: Solution[] = [
       },
     ],
   },
+  {
+    id: "academic",
+    name: "Academic Solution",
+    packages: [
+      {
+        id: "academic-buku-modul",
+        name: "BUKU & MODUL AJAR",
+        tagline: "Penyusunan modul dan buku referensi akademik terstandar",
+        price: 800000,
+        unit: "project",
+        popular: false,
+        items: [
+          "Buku Ajar: Mulai Rp 800.000",
+          "Buku Referensi: Mulai Rp 950.000",
+          "Pembuatan Modul Ajar: Mulai Rp 1.200.000",
+          "Tata letak (layout) isi & tipografi naskah standar akademik",
+          "Desain cover buku depan, punggung, & belakang",
+          "File master PDF siap cetak & format digital",
+        ],
+      },
+      {
+        id: "academic-penerbitan-legalitas",
+        name: "PENERBITAN & QRCBN",
+        tagline: "Legalitas resmi penerbitan buku dan pencatatan karya",
+        price: 1500000,
+        unit: "project",
+        popular: false,
+        items: [
+          "Jasa Penerbit Lengkap: Rp 1.500.000 – Rp 2.000.000",
+          "Pengurusan QRCBN Resmi: Rp 1.800.000",
+          "Uji kesesuaian format naskah & proofreading dasar",
+          "Pendaftaran barcode resmi & metadata karya",
+          "Penyerahan berkas terbitan digital resmi",
+        ],
+      },
+      {
+        id: "academic-publikasi-ilmiah",
+        name: "PUBLIKASI ILMIAH",
+        tagline: "Pendampingan naskah jurnal terindeks SINTA & Scopus",
+        price: 3500000,
+        unit: "project",
+        popular: true,
+        items: [
+          "Pembuatan / Penataan Artikel SINTA (Lokal): Mulai Rp 3.500.000",
+          "Bantuan Pembuatan Artikel Scopus: Rp 5.000.000 – Rp 8.000.000",
+          "Penyesuaian template & gaya selingkung jurnal target",
+          "Uji Turnitin & parafrase kalimat akademik",
+          "Perapian referensi & sitasi (Mendeley/Zotero)",
+        ],
+      },
+      {
+        id: "academic-simulasi-ajar",
+        name: "SIMULASI BAHAN AJAR",
+        tagline: "Media pembelajaran interaktif berbasis visual & web",
+        price: 1000000,
+        unit: "project",
+        popular: false,
+        items: [
+          "Simulasi Bahan Ajar Tingkat SD – SMA: Mulai Rp 1.000.000",
+          "Simulasi Bahan Ajar Tingkat Perkuliahan: Mulai Rp 1.800.000",
+          "Visualisasi interaktif alur materi / konsep praktikum",
+          "Format web responsif dapat diakses via browser / LMS",
+          "Panduan teknis pengoperasian media simulasi",
+        ],
+      },
+    ],
+  },
 ];
 
 /** Daftar rata untuk lookup. */
@@ -290,6 +357,7 @@ export const TERMS: TermGroup[] = [
     body: [
       "Timeline branding 3 - 7 hari kerja per paket.",
       "Timeline website & otomasi 7 - 14 hari kerja tergantung kompleksitas.",
+      "Timeline buku, publikasi, & simulasi 7 - 21 hari kerja sesuai lingkup naskah.",
     ],
   },
 ];

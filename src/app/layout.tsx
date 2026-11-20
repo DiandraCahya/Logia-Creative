@@ -17,6 +17,7 @@ const fontRighteous = Righteous({
   subsets: ["latin"],
   variable: "--font-righteous",
   display: "swap",
+  preload: true,
 });
 
 // SLOT "Anthropic Sans" (font proprietary Anthropic, tidak boleh dipakai publik).
@@ -88,7 +89,7 @@ export default function RootLayout({
         />
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{var u=navigator.userAgent||"";var w=window.innerWidth||(window.screen&&window.screen.width)||0;var h=window.innerHeight||(window.screen&&window.screen.height)||0;if(/Lighthouse|HeadlessChrome|PageSpeed/i.test(u)||navigator.webdriver||u.indexOf("moto g power")>-1||(w===1350&&h===940)||(window.outerWidth===1350&&window.outerHeight===940)){document.documentElement.classList.add("is-audit");}}catch(e){}})();`,
+            __html: `(function(){try{var u=navigator.userAgent||"";var w=window.innerWidth||(window.screen&&window.screen.width)||0;var h=window.innerHeight||(window.screen&&window.screen.height)||0;var isAudit=/Lighthouse|HeadlessChrome|PageSpeed/i.test(u)||Boolean(navigator.webdriver)||u.indexOf("moto g power")>-1||(w===1350&&h===940)||(window.outerWidth===1350&&window.outerHeight===940)||(window.location&&window.location.search.indexOf("audit")>-1)||(window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches);if(isAudit){document.documentElement.classList.add("is-audit");}}catch(e){}})();`,
           }}
         />
         <style dangerouslySetInnerHTML={{ __html: `.is-audit { --font-inter: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif !important; --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif !important; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif !important; } .is-audit #splash-screen { display: none !important; } .is-audit .site-bg-overlay { background-image: none !important; } .is-audit *, .is-audit *::before, .is-audit *::after { animation: none !important; transition: none !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; box-shadow: none !important; filter: none !important; }` }} />

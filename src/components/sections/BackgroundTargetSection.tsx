@@ -17,6 +17,10 @@ import {
   MessageSquare,
   Megaphone,
   ArrowRight,
+  GraduationCap,
+  BookOpen,
+  FileText,
+  Laptop,
 } from "lucide-react";
 
 const targetMarkets = [
@@ -122,6 +126,42 @@ const targetMarkets = [
         title: "Aset Visual Event",
         description: "Desain backdrop, nametag panitia, dan sertifikat.",
         deliverableTag: "Print Kit",
+      },
+    ],
+  },
+  {
+    id: "akademisi",
+    stepNumber: "04",
+    sectorTag: "Pendidikan Tinggi, Guru, & Lembaga Riset",
+    title: "Dosen, Guru, & Peneliti",
+    subtitle: "Standarisasi luaran tridharma: dari buku berizin resmi, naskah jurnal ilmiah, hingga simulasi digital.",
+    tabLabel: "Dosen & Peneliti",
+    icon: GraduationCap,
+    turnaround: "7 - 21 Hari",
+    problemTitle: "Tantangan Utama",
+    problemText: "Beban mengajar dan tugas administratif membuat penulisan buku ajar, pemenuhan naskah jurnal, dan media interaktif kerap tertunda.",
+    stats: [
+      { value: "100%", label: "Standar Penerbitan", sublabel: "Layout & legalitas QRCBN" },
+      { value: "0 Plagiarisme", label: "Uji Turnitin", sublabel: "Parafrase & cek sitasi" },
+    ],
+    solutions: [
+      {
+        icon: BookOpen,
+        title: "Buku & Legalitas",
+        description: "Buku ajar, referensi, modul, dan pengurusan izin QRCBN resmi.",
+        deliverableTag: "PDF & QRCBN",
+      },
+      {
+        icon: FileText,
+        title: "Naskah Ilmiah",
+        description: "Pendampingan artikel SINTA lokal hingga publikasi Scopus.",
+        deliverableTag: "Manuscript",
+      },
+      {
+        icon: Laptop,
+        title: "Simulasi Bahan Ajar",
+        description: "Media simulasi materi ajar interaktif untuk jenjang SD–SMA dan perkuliahan.",
+        deliverableTag: "Interactive App",
       },
     ],
   },

@@ -140,17 +140,14 @@ export function Logo3DBackground() {
         @keyframes logo3d-entrance-desktop {
           0% {
             opacity: 0;
-            filter: blur(20px);
-            transform: translateZ(-2000px) scale(0) rotateX(60deg) rotateY(-180deg);
+            transform: translateZ(-800px) scale(0.6) rotateX(20deg) rotateY(-45deg);
           }
           60% {
-            opacity: 0.85;
-            filter: blur(0px);
-            transform: translateZ(200px) scale(1.15) rotateX(-10deg) rotateY(20deg);
+            opacity: 0.9;
+            transform: translateZ(100px) scale(1.05) rotateX(-5deg) rotateY(10deg);
           }
           100% {
             opacity: 1;
-            filter: blur(0px);
             transform: translateZ(0px) scale(1) rotateX(0deg) rotateY(0deg);
           }
         }

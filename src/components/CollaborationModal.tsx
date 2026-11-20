@@ -2,15 +2,17 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { X, Send, CheckCircle2, Phone, Mail, AlertCircle, Loader2, ImageDown, FileDown, MessageCircle, Check, Code2, Palette, Layers, Sparkles } from "lucide-react";
+import { X, Send, CheckCircle2, Phone, Mail, AlertCircle, Loader2, ImageDown, FileDown, MessageCircle, Check, Code2, Palette, Layers, Sparkles, GraduationCap } from "lucide-react";
 import { SOLUTIONS, CUSTOM_SERVICE_OPTION, packageOptionLabel, onePerSolution, formatPrice } from "@/lib/rate-card";
 import type { CollabDraft, Receipt } from "@/lib/receipt";
 import { ReceiptView } from "./Receipt";
 
 const solIcons: Record<string, React.ElementType> = {
   tech: Code2,
+  technology: Code2,
   creative: Palette,
   integrated: Layers,
+  academic: GraduationCap,
 };
 
 interface CollaborationModalProps {
@@ -354,7 +356,7 @@ export function CollaborationModal({ isOpen, onClose, initialDraft, onDraftConsu
                                   {sol.name}
                                 </p>
                               </div>
-                              <div className="grid grid-cols-1 min-[420px]:grid-cols-2 sm:grid-cols-3 gap-2">
+                              <div className={`grid grid-cols-1 min-[420px]:grid-cols-2 ${sol.packages.length === 4 ? "sm:grid-cols-2 lg:grid-cols-4" : "sm:grid-cols-3"} gap-2`}>
                                 {sol.packages.map((pkg) => {
                                   const active = selectedServices.includes(pkg.id);
                                   return (
